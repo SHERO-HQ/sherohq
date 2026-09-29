@@ -53,7 +53,7 @@ function CookieNotice() {
     <div
       role="region"
       aria-label="Cookie notice"
-      className="fixed inset-x-3 bottom-3 z-50 mx-auto flex max-w-[640px] flex-col gap-4 rounded-md border border-border bg-surface-raised p-4 shadow-float sm:inset-x-6 sm:bottom-6 sm:flex-row sm:items-center sm:p-5"
+      className="fixed inset-x-3 bottom-3 z-50 mx-auto flex max-w-measure flex-col gap-4 rounded-md border border-border bg-surface-raised p-4 shadow-float sm:inset-x-6 sm:bottom-6 sm:flex-row sm:items-center sm:p-5"
     >
       <p className="text-body-sm text-ink-secondary">
         We&rsquo;d like to use Google Analytics and Microsoft Clarity to see how the site is used. They only run if

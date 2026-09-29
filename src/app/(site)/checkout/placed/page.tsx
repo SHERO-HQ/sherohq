@@ -31,7 +31,7 @@ export default async function OrderPlacedPage() {
         : null;
 
   return (
-    <section className="container-site flex flex-col gap-8 pt-10 pb-20 lg:grid lg:grid-cols-[1fr_380px] lg:gap-[72px] lg:pt-[72px] lg:pb-[120px]">
+    <section className="container-site flex flex-col gap-8 lg:grid lg:grid-cols-[1fr_380px] lg:gap-18 py-section">
       <OrderPlacedEvent
         number={order.number}
         value={order.totalPesewas / 100}
@@ -39,22 +39,22 @@ export default async function OrderPlacedPage() {
         payment={order.paymentMethod}
       />
       <div className="flex flex-col items-start gap-5">
-        <CircleCheck aria-hidden="true" size={32} strokeWidth={1.5} className="text-accent" />
-        <h1 className="font-display text-[34px]/[38px] font-bold tracking-[-0.03em] text-heading lg:text-[52px]/[56px] lg:tracking-[-0.035em]">
+        <CircleCheck aria-hidden="true" size={32} strokeWidth={1.5} className="text-secondary" />
+        <h1 className="font-display text-h1 text-heading">
           Order {order.number} is placed.
         </h1>
-        <p className="max-w-[620px] text-base/[26px] text-ink-secondary lg:text-lg/7">
+        <p className="max-w-measure text-body lg:text-body-lg text-ink-secondary">
           We&rsquo;ll confirm it on WhatsApp and send your tracking link. To track it yourself, use this order number
           with the phone number you ordered with.
         </p>
-        {payNote && <p className="max-w-[620px] text-base/[26px] font-medium text-ink lg:text-lg/7">{payNote}</p>}
+        {payNote && <p className="max-w-measure text-body lg:text-body-lg font-medium text-ink">{payNote}</p>}
         {order.deliveryMethod === "bus" && (
-          <DispatchCountdown fallback="Orders before 5:00 PM go to the bus station the same day." className="font-mono text-[13px]/[17px] text-ink-secondary" />
+          <DispatchCountdown fallback="Orders before 5:00 PM go to the bus station the same day." className="font-mono text-meta text-ink-secondary" />
         )}
         <div className="flex flex-wrap gap-3 pt-2">
           <Link
             href={`${routes.track}?n=${order.number}`}
-            className="inline-flex h-[52px] items-center rounded-sm bg-primary px-7 text-base/5 font-medium text-on-primary hover:bg-primary-hover"
+            className="inline-flex h-13 items-center rounded-sm bg-primary px-7 text-body font-medium text-on-primary hover:bg-primary-hover"
           >
             Track this order
           </Link>
@@ -62,7 +62,7 @@ export default async function OrderPlacedPage() {
             href={whatsappLink(`Hi SHERO, about my order ${order.number}: `)}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex h-[52px] items-center rounded-sm border border-border-strong px-[22px] text-[15px]/5 font-medium text-ink hover:border-ink"
+            className="inline-flex h-13 items-center rounded-sm border border-border-strong px-5.5 text-body font-medium text-ink hover:border-ink"
           >
             Message us on WhatsApp
           </a>
@@ -70,18 +70,18 @@ export default async function OrderPlacedPage() {
       </div>
 
       <aside aria-label="In this order" className="flex flex-col gap-3.5 self-start rounded-md border border-border p-6">
-        <h2 className="font-mono text-xs/4 font-normal text-ink-muted">in this order</h2>
+        <h2 className="font-mono text-meta font-normal text-ink-muted">in this order</h2>
         <ul className="flex flex-col gap-2">
           {order.items.map((item, i) => (
-            <li key={i} className="flex justify-between gap-3 text-[15px]/[22px] text-ink">
+            <li key={i} className="flex justify-between gap-3 text-body text-ink">
               <span>{item.model}</span>
               <span className="font-mono whitespace-nowrap">{formatCedis(item.pricePesewas)}</span>
             </li>
           ))}
         </ul>
         <div className="flex justify-between gap-3 border-t border-border pt-3">
-          <span className="text-sm/5 text-ink-secondary">{paymentLabel(order.paymentMethod)}</span>
-          <span className="font-mono text-[15px]/5 font-medium text-ink">{total}</span>
+          <span className="text-body-sm text-ink-secondary">{paymentLabel(order.paymentMethod)}</span>
+          <span className="font-mono text-body font-medium text-ink">{total}</span>
         </div>
       </aside>
     </section>

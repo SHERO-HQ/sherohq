@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Minus, Plus } from "lucide-react";
-import { InlineArrow } from "@/components/ui/InlineArrow";
+import { ButtonLink } from "@/components/ui/Button";
 import { LinkRows, type LinkRow } from "@/components/ui/LinkRows";
 import { OpenNow } from "@/components/ui/LiveStatus";
 import { faq } from "@/content/faq";
@@ -59,30 +59,33 @@ export default function SupportPage() {
   return (
     <>
       <FaqJsonLd />
-      <section className="container-site grid gap-6 border-b border-border pt-8 pb-8 lg:grid-cols-[1fr_1.5fr] lg:items-end lg:gap-24 lg:pt-24 lg:pb-[88px]">
-        <h1 className="font-display text-[40px]/[42px] font-bold tracking-[-0.03em] text-heading lg:text-[72px]/[74px] lg:tracking-[-0.035em]">
-          How can we help?
-        </h1>
+      <section className="container-site flex flex-col gap-8 border-b border-border lg:gap-10 py-section">
+        <div className="flex max-w-measure flex-col gap-5">
+          <h1 className="text-h1">How can we help?</h1>
+          <p className="text-body-lg text-ink-secondary">
+            Questions about an order, a device or a project. Pick one, or call us on {business.phoneDisplay}.
+          </p>
+        </div>
         <LinkRows rows={paths} />
       </section>
 
-      <section className="container-site grid gap-10 py-10 lg:grid-cols-[1fr_340px] lg:gap-20 lg:pt-20 lg:pb-[104px]">
+      <section className="container-site grid gap-10 py-section lg:grid-cols-[1fr_320px] lg:gap-16">
         <div id="faq" className="flex scroll-mt-20 flex-col gap-2">
-          <h2 className="font-display text-[26px]/[29px] font-bold text-heading lg:text-[40px]/[44px] lg:tracking-[-0.025em]">
+          <h2 className="font-display text-h2 text-heading">
             Common questions.
           </h2>
           {faq.map((group) => (
             <div key={group.topic} className="grid gap-3 pt-5 lg:grid-cols-[200px_1fr] lg:gap-10 lg:pt-7">
-              <h3 className="font-mono text-xs/4 font-medium text-accent">{group.topic}</h3>
+              <h3 className="font-mono text-meta font-medium text-secondary">{group.topic}</h3>
               <div className="border-t border-border">
                 {group.items.map((item, i) => (
                   <details key={item.q} open={i === 0} className="group border-b border-border">
-                    <summary className="flex cursor-pointer list-none items-start justify-between gap-6 py-4 text-base/[23px] font-medium text-ink lg:py-[18px] lg:text-lg/[26px] [&::-webkit-details-marker]:hidden">
+                    <summary className="flex cursor-pointer list-none items-start justify-between gap-6 py-4 text-body font-medium text-ink [&::-webkit-details-marker]:hidden">
                       {item.q}
                       <Plus aria-hidden="true" size={18} strokeWidth={1.5} className="mt-0.5 shrink-0 text-ink-muted group-open:hidden" />
                       <Minus aria-hidden="true" size={18} strokeWidth={1.5} className="mt-0.5 hidden shrink-0 text-ink-muted group-open:block" />
                     </summary>
-                    <p className="mb-5 max-w-[640px] text-[15px]/[23px] text-ink-secondary lg:text-base/[26px]">{item.a}</p>
+                    <p className="mb-5 max-w-measure text-body text-ink-secondary">{item.a}</p>
                   </details>
                 ))}
               </div>
@@ -92,34 +95,31 @@ export default function SupportPage() {
 
         <aside
           aria-label="Contact"
-          className="flex flex-col gap-4 self-start rounded-md border border-inverse-border bg-surface-inverse p-6 lg:gap-[18px] lg:p-7"
+          className="flex flex-col gap-4 self-start rounded-md border border-border bg-surface p-6 lg:sticky lg:top-24"
         >
-          <span className="font-mono text-xs/4 font-medium text-emerald-300">contact</span>
-          <p className="font-display text-[19px]/[26px] font-semibold text-ink-inverse lg:text-h3 lg:leading-[30px]">
+          <p className="font-mono text-eyebrow text-secondary">contact</p>
+          <p className="flex flex-col text-body-lg font-semibold text-ink">
             <a href={`mailto:${business.email}`} className="hover:underline">
               {business.email}
             </a>
-            <br />
             <a href={`tel:${business.phoneE164}`} className="hover:underline">
               {business.phoneDisplay}
             </a>
           </p>
-          <span className="text-sm/[22px] text-ink-inverse-muted">{business.city}</span>
-          <div className="flex flex-col gap-2 border-t border-inverse-border pt-3.5 font-mono text-xs/4">
+          <dl className="flex flex-col gap-1 border-t border-border pt-4 text-body-sm">
             <div className="flex justify-between gap-4">
-              <span className="text-readout-label">hours</span>
-              <span className="font-medium text-navy-100">{business.hoursShort}</span>
+              <dt className="text-ink-muted">Where</dt>
+              <dd className="text-ink">{business.city}</dd>
             </div>
-            <OpenNow fallback="" dotClassName="bg-emerald-400" className="text-navy-100" />
-          </div>
-          <a
-            href={whatsappLink("Hi SHERO")}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-sm/5 font-medium text-navy-300 hover:underline"
-          >
-            Chat on WhatsApp <InlineArrow />
-          </a>
+            <div className="flex justify-between gap-4">
+              <dt className="text-ink-muted">Hours</dt>
+              <dd className="text-ink">{business.hours}</dd>
+            </div>
+          </dl>
+          <OpenNow fallback="" className="text-body-sm text-ink" />
+          <ButtonLink href={whatsappLink("Hi SHERO")} variant="secondary" external full>
+            Chat on WhatsApp
+          </ButtonLink>
         </aside>
       </section>
     </>

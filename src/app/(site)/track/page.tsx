@@ -14,11 +14,11 @@ export default async function TrackPage({ searchParams }: { searchParams: Promis
   const initialNumber = typeof n === "string" ? (normaliseOrderNumber(n) ?? undefined) : undefined;
 
   return (
-    <section className="container-site flex flex-col gap-6 pt-10 pb-20 lg:gap-7 lg:pt-20 lg:pb-28">
-      <h1 className="font-display text-[38px]/[40px] font-bold tracking-[-0.03em] text-heading lg:text-[56px]/[58px] lg:tracking-[-0.035em]">
+    <section className="container-site flex flex-col gap-6 lg:gap-7 py-section">
+      <h1 className="font-display text-h1 text-heading">
         Track your order
       </h1>
-      <p className="max-w-[620px] text-base/[26px] text-ink-secondary lg:text-[19px]/[30px]">
+      <p className="max-w-measure text-body lg:text-body-lg text-ink-secondary">
         Enter the order number from your WhatsApp message and the phone number you ordered with. No account needed.
       </p>
       <TrackOrder initialNumber={initialNumber} />

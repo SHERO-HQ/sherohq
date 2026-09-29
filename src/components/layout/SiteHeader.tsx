@@ -6,6 +6,7 @@ import { useEffect, useState, useSyncExternalStore } from "react";
 import { ArrowRight, Menu, ShoppingCart, X } from "lucide-react";
 import { Logo } from "@/components/ui/Logo";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
+import { ButtonLink, buttonClass } from "@/components/ui/Button";
 import { cartSnapshot, serverCartSnapshot, subscribeCart } from "@/lib/cart";
 import { business, mainNav, routes } from "@/lib/site";
 import { cn } from "@/lib/cn";
@@ -35,7 +36,7 @@ function CartLink({ pathname }: { pathname: string }) {
       {count > 0 && (
         <span
           aria-hidden="true"
-          className="absolute top-1 right-0 h-[18px] min-w-[18px] rounded-full bg-accent px-[5px] text-center font-mono text-[11px]/[18px] font-medium text-page"
+          className="absolute top-1 right-0 flex h-4 min-w-4 items-center justify-center rounded-full bg-secondary px-1 font-mono text-meta text-on-secondary"
         >
           {count}
         </span>
@@ -58,12 +59,12 @@ export function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-page">
-      <div className="container-site flex h-[60px] items-center justify-between !pr-3 lg:h-[76px] lg:!pr-20">
-        <div className="flex items-center gap-14">
+      <div className="container-site flex h-16 items-center justify-between">
+        <div className="flex items-center gap-10">
           <Link href={routes.home} aria-label="SHERO home" className="rounded-sm">
-            <Logo className="h-[22px] w-auto lg:h-7" />
+            <Logo className="h-6 w-auto" />
           </Link>
-          <nav aria-label="Main" className="hidden gap-8 lg:flex">
+          <nav aria-label="Main" className="hidden gap-6 lg:flex">
             {mainNav.map((item) => {
               const current = isCurrent(pathname, item.href);
               return (
@@ -72,7 +73,7 @@ export function SiteHeader() {
                   href={item.href}
                   aria-current={current ? "page" : undefined}
                   className={cn(
-                    "rounded-sm text-[15px]/5 font-medium transition-colors duration-150 hover:text-primary",
+                    "rounded-sm text-label transition-colors duration-150 hover:text-primary",
                     current ? "text-primary" : "text-ink-secondary",
                   )}
                 >
@@ -83,15 +84,12 @@ export function SiteHeader() {
           </nav>
         </div>
 
-        <div className="flex items-center lg:gap-2">
+        <div className="-mr-3 flex items-center lg:mr-0 lg:gap-1">
           <CartLink pathname={pathname} />
           <ThemeToggle />
-          <Link
-            href={routes.consultation}
-            className="hidden h-10 items-center whitespace-nowrap rounded-sm border border-primary bg-primary px-[18px] text-[15px]/5 font-medium text-on-primary transition-colors duration-150 hover:border-primary-hover hover:bg-primary-hover lg:inline-flex"
-          >
-            Book a consultation
-          </Link>
+          <span className="ml-2 hidden lg:contents">
+            <ButtonLink href={routes.consultation}>Book a consultation</ButtonLink>
+          </span>
 
           <button
             type="button"
@@ -114,22 +112,22 @@ export function SiteHeader() {
           aria-label="Menu"
           className="fixed inset-0 z-50 flex flex-col overflow-y-auto bg-page shadow-float lg:hidden"
         >
-          <div className="flex h-[60px] shrink-0 items-center justify-between border-b border-border pr-3 pl-5">
+          <div className="container-site flex h-16 shrink-0 items-center justify-between border-b border-border">
             <Link href={routes.home} aria-label="SHERO home" className="rounded-sm">
-              <Logo className="h-[22px] w-auto" />
+              <Logo className="h-6 w-auto" />
             </Link>
             <button
               type="button"
               aria-label="Close menu"
               onClick={() => setMenuOpen(false)}
               autoFocus
-              className="flex size-11 items-center justify-center rounded-sm text-ink"
+              className="-mr-3 flex size-11 items-center justify-center rounded-sm text-ink"
             >
               <X size={22} strokeWidth={1.5} aria-hidden="true" />
             </button>
           </div>
 
-          <nav aria-label="Main" className="flex flex-col px-5 pt-3">
+          <nav aria-label="Main" className="container-site flex flex-col pt-3">
             {menuNav.map((item) => (
               <Link
                 key={item.href}
@@ -138,7 +136,7 @@ export function SiteHeader() {
                 aria-current={isCurrent(pathname, item.href) ? "page" : undefined}
                 className="flex items-center justify-between border-b border-border py-4"
               >
-                <span className="font-display text-[30px]/[34px] font-bold tracking-[-0.02em] text-heading">
+                <span className="font-display text-h2 text-heading">
                   {item.label}
                 </span>
                 <ArrowRight aria-hidden="true" size={20} strokeWidth={1.5} className="text-primary" />
@@ -146,31 +144,31 @@ export function SiteHeader() {
             ))}
           </nav>
 
-          <div className="flex flex-col gap-3.5 px-5 py-7">
+          <div className="container-site flex flex-col gap-3 py-8">
             <Link
               href={routes.consultation}
               onClick={() => setMenuOpen(false)}
-              className="flex h-[52px] items-center justify-center rounded-sm bg-primary text-base/5 font-medium text-on-primary"
+              className={buttonClass({ size: "lg", full: true })}
             >
               Book a free consultation
             </Link>
             <Link
               href={routes.track}
               onClick={() => setMenuOpen(false)}
-              className="flex h-12 items-center justify-center rounded-sm border border-border-strong text-[15px]/5 font-medium text-ink"
+              className={buttonClass({ variant: "outline", size: "lg", full: true })}
             >
               Track an order
             </Link>
           </div>
 
-          <div className="mt-auto flex flex-col gap-1 border-t border-border px-5 pt-6 pb-8 font-mono">
-            <a href={`mailto:${business.email}`} className="text-[13px]/[17px] text-ink-secondary">
+          <div className="container-site mt-auto flex flex-col gap-1 border-t border-border pt-6 pb-8 font-mono text-meta">
+            <a href={`mailto:${business.email}`} className="text-ink-secondary">
               {business.email}
             </a>
-            <a href={`tel:${business.phoneE164}`} className="text-[13px]/[17px] text-ink-secondary">
+            <a href={`tel:${business.phoneE164}`} className="text-ink-secondary">
               {business.phoneDisplay}
             </a>
-            <span className="text-xs/4 text-ink-muted">{business.hoursShort}</span>
+            <span className="text-ink-muted">{business.hoursShort}</span>
           </div>
         </div>
       )}

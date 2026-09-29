@@ -21,29 +21,29 @@ const steps = [
 
 export default function ConsultationPage() {
   return (
-    <section className="container-site grid gap-8 pt-8 pb-16 lg:grid-cols-2 lg:items-start lg:gap-24 lg:pt-[88px] lg:pb-28">
+    <section className="container-site grid gap-8 lg:grid-cols-2 lg:items-start lg:gap-24 py-section">
       <div className="flex flex-col gap-5 lg:gap-7">
-        <h1 className="font-display text-4xl/[38px] font-bold tracking-[-0.03em] text-heading lg:text-[64px]/[66px] lg:tracking-[-0.035em]">
+        <h1 className="font-display text-h1 text-heading">
           Book a free consultation.
         </h1>
-        <p className="max-w-[540px] text-[17px]/[26px] text-ink-secondary lg:text-xl/[31px]">
+        <p className="max-w-measure text-body-lg text-ink-secondary">
           Tell us what&rsquo;s slowing your business down. We&rsquo;ll suggest a practical next step, whether
           that&rsquo;s software, hardware or just advice.
         </p>
         <ol className="lg:mt-2">
           {steps.map((step, i) => (
             <li key={step.title} className="grid grid-cols-[36px_1fr] gap-4 border-t border-border py-4 lg:py-5">
-              <span className="font-mono text-sm/6 font-medium text-accent">{String(i + 1).padStart(2, "0")}</span>
+              <span className="font-mono text-body-sm font-medium text-secondary">{String(i + 1).padStart(2, "0")}</span>
               <div className="flex flex-col gap-1">
-                <span className="font-display text-[19px]/[26px] font-semibold text-heading">{step.title}</span>
-                <span className="text-[15px]/[23px] text-ink-secondary lg:text-base/[25px]">{step.text}</span>
+                <span className="font-display text-body-lg font-semibold text-heading">{step.title}</span>
+                <span className="text-body text-ink-secondary">{step.text}</span>
               </div>
             </li>
           ))}
         </ol>
         <div className="flex flex-col gap-1 border-t border-border pt-5">
-          <span className="text-sm/5 text-ink-secondary">Prefer to call or WhatsApp?</span>
-          <span className="flex flex-wrap gap-x-4 font-display text-xl/7 font-semibold text-heading">
+          <span className="text-body-sm text-ink-secondary">Prefer to call or WhatsApp?</span>
+          <span className="flex flex-wrap gap-x-4 font-display text-h3 text-heading">
             <a href={`tel:${business.phoneE164}`} className="hover:underline">
               {business.phoneDisplay}
             </a>
@@ -51,12 +51,12 @@ export default function ConsultationPage() {
               href={whatsappLink("Hi SHERO, I'd like to book a consultation.")}
               target="_blank"
               rel="noopener noreferrer"
-              className="font-text text-sm/7 font-medium text-primary hover:underline"
+              className="font-text text-body-sm font-medium text-primary hover:underline"
             >
               WhatsApp us
             </a>
           </span>
-          <span className="font-mono text-[13px]/[18px] text-ink-muted">mon–fri, 8:00 am – 6:00 pm</span>
+          <span className="font-mono text-meta text-ink-muted">mon–fri, 8:00 am – 6:00 pm</span>
         </div>
       </div>
 

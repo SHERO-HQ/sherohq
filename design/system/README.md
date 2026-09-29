@@ -12,9 +12,9 @@ SHERO is the master brand behind SHERO's services (custom software, hardware, ma
 
 ## Visual foundations
 
-- **Colour.** Pages sit on `page`, with alternating bands on `surface`; cards on `surface-raised`. Text is `ink`, supporting copy `ink-secondary`, metadata `ink-muted`. Headings use `heading` (the logo navy in light). `primary` is the one main action per view. `accent` (logo emerald) appears only as eyebrows, the live dot, success states and small highlights, never as a large fill or body text. One `surface-inverse` band per page, usually the footer.
+- **Colour.** Pages sit on `page`, with alternating bands on `surface`; cards on `surface-raised`. Text is `ink`, supporting copy `ink-secondary`, metadata `ink-muted`. Headings use `heading` (the logo navy in light). Navy `primary` is SHERO's primary colour: the one main action per view, links and selected states. Emerald `secondary` is the secondary colour (owner, 29 Sep 2026): status and success (in stock, battery, open now, order progress), short section labels, and secondary buttons such as WhatsApp; never body text. One `surface-inverse` band per page, usually the footer.
 - **Type.** Red Hat, one family in three cuts. `display` (Red Hat Display) for headings; `text` (Red Hat Text) for everything people read; `mono` (Red Hat Mono) for eyebrows, prices, specs, statuses and small print. Its geometric shapes echo the SHERO wordmark. Use the `display` style only in the home hero. Mobile steps: display 36/40, h1 30/36, h2 24/30.
-- **The mono layer** is SHERO's signature: `// section eyebrows` in `accent`, prices in `price`, specs and statuses in `meta`. It marks facts. Don't set sentences in mono.
+- **The mono layer** is SHERO's signature: section eyebrows in `secondary`, prices in `price`, specs and statuses in `meta`. It marks facts. Don't set sentences in mono.
 - **Edges.** Nearly square: `radius-sm` (2px) for buttons, inputs, badges; `radius-md` for cards; `radius-lg` only for photos. No pill buttons.
 - **Structure over decoration.** 1px `border` hairlines separate things. `shadow-float` only for things that float (menus, the mobile nav sheet). No gradients, no glass, no coloured left-border cards, no stock illustration.
 - **Space.** 4px grid. Sections `space-9` top and bottom on desktop, `space-7` on mobile. Content max `container-max` (1200px); paragraphs max `measure` (640px).
@@ -23,7 +23,7 @@ SHERO is the master brand behind SHERO's services (custom software, hardware, ma
 
 ## Product pages and theming
 
-SHERO pages use only SHERO tokens. A product page (Merchander, Pharmasyst) keeps SHERO's header, footer, type and spacing, and swaps its colour tokens (`primary`, `heading`, `accent` and their pairs) for the product's own from that product's design system, plus the product's logo. Content structure is the same on every product page: status, problem, who it's for, what it will do, waitlist.
+SHERO pages use only SHERO tokens. A product page (Merchander, Pharmasyst) keeps SHERO's header, footer, type and spacing, and swaps its colour tokens (`primary`, `heading`, `secondary` and their pairs) for the product's own from that product's design system, plus the product's logo. Content structure is the same on every product page: status, problem, who it's for, what it will do, waitlist.
 
 ## Iconography
 

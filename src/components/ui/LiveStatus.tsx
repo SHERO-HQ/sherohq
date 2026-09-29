@@ -7,7 +7,7 @@ import { cn } from "@/lib/cn";
 /** "Open now · until 6:00 PM" with the live dot, or when SHERO opens next. */
 export function OpenNow({
   className,
-  dotClassName = "bg-accent",
+  dotClassName = "bg-secondary",
   fallback,
 }: {
   className?: string;

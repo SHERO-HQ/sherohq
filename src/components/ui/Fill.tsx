@@ -5,7 +5,7 @@ import { cn } from "@/lib/cn";
 export function Fill({ value, scale = 0.8, className }: { value: Content; scale?: number; className?: string }) {
   if (isMissing(value)) {
     return (
-      <span className={cn("font-mono font-normal tracking-normal text-ink-muted", className)} style={{ fontSize: `${scale}em` }}>
+      <span className={cn("font-mono font-normal  text-ink-muted", className)} style={{ fontSize: `${scale}em` }}>
         [{value.missing}]
       </span>
     );

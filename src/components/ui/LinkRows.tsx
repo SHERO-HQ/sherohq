@@ -13,17 +13,17 @@ export type LinkRow = {
 /** Big "where to next" rows: title, a line of text and an arrow. */
 export function LinkRows({ rows, className }: { rows: LinkRow[]; className?: string }) {
   const rowClass =
-    "group grid grid-cols-[1fr_24px] gap-x-3 gap-y-1 border-b border-border py-4 lg:grid-cols-[1fr_1.4fr_24px] lg:items-center lg:gap-8 lg:py-[22px]";
+    "group grid grid-cols-[1fr_24px] gap-x-3 gap-y-1 border-b border-border py-4 lg:grid-cols-[1fr_1.4fr_24px] lg:items-center lg:gap-8 lg:py-5.5";
 
   return (
-    <ul className={`border-t border-rule-strong ${className ?? ""}`}>
+    <ul className={`border-t border-border ${className ?? ""}`}>
       {rows.map((row) => {
         const inner = (
           <>
-            <span className="col-start-1 font-display text-[19px]/6 font-semibold text-heading lg:text-h3">
+            <span className="col-start-1 font-display text-body-lg font-semibold text-heading lg:text-h3">
               {row.title}
             </span>
-            <span className="col-start-1 text-[15px]/[22px] text-ink-secondary lg:col-start-2 lg:row-start-1 lg:text-[15px]/[23px]">
+            <span className="col-start-1 text-body text-ink-secondary lg:col-start-2 lg:row-start-1">
               {row.textMobile ? (
                 <>
                   <span className="lg:hidden">{row.textMobile}</span>

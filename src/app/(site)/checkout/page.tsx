@@ -24,13 +24,13 @@ export default async function CheckoutPage() {
 
   return (
     <>
-      <section className="container-site flex flex-col gap-3 pt-10 pb-4 lg:pt-[72px] lg:pb-6">
-        <h1 className="font-display text-[38px]/[40px] font-bold tracking-[-0.03em] text-heading lg:text-[56px]/[58px] lg:tracking-[-0.035em]">
+      <section className="container-site flex flex-col gap-3 pb-4 lg:pb-6 pt-section">
+        <h1 className="font-display text-h1 text-heading">
           Checkout
         </h1>
-        <p className="font-mono text-[13px]/[17px] text-ink-secondary">no account needed · pay how you prefer</p>
+        <p className="font-mono text-meta text-ink-secondary">no account needed · pay how you prefer</p>
       </section>
-      <div className="container-site pt-2 pb-20 lg:pt-4 lg:pb-[120px]">
+      <div className="container-site pt-2 lg:pt-4 pb-section">
         <CheckoutForm
           items={items}
           thresholdPesewas={settings.freeDeliveryThresholdPesewas}

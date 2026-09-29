@@ -39,19 +39,19 @@ export function SiteFooter() {
 
   return (
     <footer className="bg-surface-inverse text-ink-inverse">
-      <div className="container-site flex flex-col gap-8 pt-12 pb-8 lg:gap-10 lg:pt-16 lg:pb-9">
-        <div className="grid grid-cols-2 gap-x-4 gap-y-7 lg:grid-cols-[2fr_1fr_1fr_1fr] lg:gap-12">
-          <div className="col-span-2 flex flex-col gap-8 lg:col-span-1 lg:gap-4">
-            <Logo variant="light" className="h-6 w-auto self-start lg:h-7" />
+      <div className="container-site flex flex-col gap-10 pb-8 pt-section">
+        <div className="grid grid-cols-2 gap-x-4 gap-y-8 lg:grid-cols-[2fr_1fr_1fr_1fr] lg:gap-12">
+          <div className="col-span-2 flex flex-col gap-4 lg:col-span-1">
+            <Logo variant="light" className="h-6 w-auto self-start" />
             {/* Email and phone get full-height tap targets on phones (24px+). */}
-            <div className="flex flex-col items-start font-mono text-xs/5 text-ink-inverse-muted">
+            <div className="flex flex-col items-start gap-1 text-body-sm text-ink-inverse-muted">
               <a href={`mailto:${business.email}`} className="py-1.5 hover:text-ink-inverse lg:py-0">
                 {business.email}
               </a>
               <a href={`tel:${business.phoneE164}`} className="py-1.5 hover:text-ink-inverse lg:py-0">
                 {business.phoneDisplay}
               </a>
-              <span className="pt-1.5 lg:pt-0">
+              <span className="pt-1 lg:pt-0">
                 {business.city} · {business.hours}
               </span>
               <OpenNow fallback="" dotClassName="bg-emerald-400" className="text-ink-inverse" />
@@ -59,15 +59,15 @@ export function SiteFooter() {
           </div>
 
           {columns.map((column) => (
-            <div key={column.heading} className="flex flex-col gap-2.5">
-              <span className="mb-0 font-mono text-xs/4 font-medium text-ink-inverse lg:mb-1">
+            <div key={column.heading} className="flex flex-col gap-2">
+              <span className="mb-1 font-mono text-eyebrow text-ink-inverse">
                 {column.heading}
               </span>
               {column.links.map((link) => (
                 <Link
                   key={link.label}
                   href={link.href}
-                  className="self-start rounded-sm text-[15px]/[22px] text-ink-inverse-muted transition-colors duration-150 hover:text-ink-inverse lg:text-sm/5"
+                  className="self-start rounded-sm py-1 text-body-sm text-ink-inverse-muted transition-colors duration-150 hover:text-ink-inverse lg:py-0"
                 >
                   {link.label}
                 </Link>
@@ -76,7 +76,7 @@ export function SiteFooter() {
           ))}
         </div>
 
-        <div className="flex flex-col gap-2.5 border-t border-inverse-border pt-5 font-mono text-xs/[18px] text-ink-inverse-muted lg:flex-row lg:justify-between lg:gap-6 lg:pt-6">
+        <div className="flex flex-col gap-2 border-t border-border-inverse pt-6 font-mono text-meta text-ink-inverse-muted lg:flex-row lg:justify-between lg:gap-6">
           <p>
             ©{year} SHERO. {business.legalLine} ·{" "}
             <Link href={routes.terms} className="hover:text-ink-inverse">

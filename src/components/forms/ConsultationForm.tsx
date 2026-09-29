@@ -56,7 +56,7 @@ export function ConsultationForm({ initialNeed = "software" }: { initialNeed?: s
   if (sent) {
     return (
       <div role="status" className="flex flex-col gap-3 rounded-md border border-border bg-surface p-6 lg:p-9">
-        <CircleCheck aria-hidden="true" size={28} strokeWidth={1.5} className="text-accent" />
+        <CircleCheck aria-hidden="true" size={28} strokeWidth={1.5} className="text-secondary" />
         <h2 className="font-display text-h3 text-heading">Thanks, we&rsquo;ve got your request.</h2>
         <p className="text-ink-secondary">We&rsquo;ll get in touch on your chosen channel, Monday to Friday.</p>
       </div>
@@ -120,7 +120,7 @@ export function ConsultationForm({ initialNeed = "software" }: { initialNeed?: s
         value={contact}
         onChange={(value) => setContact(value as ContactMethod)}
       />
-      {errors.contact && <span className="text-[13px]/[18px] text-danger">{errors.contact}</span>}
+      {errors.contact && <span className="text-body-sm text-danger">{errors.contact}</span>}
 
       <SubmitButton pending={pending}>{pending ? "Sending…" : "Request a consultation"}</SubmitButton>
       {message && (
@@ -128,7 +128,7 @@ export function ConsultationForm({ initialNeed = "software" }: { initialNeed?: s
           {message}
         </p>
       )}
-      <p className="text-[13px]/[19px] text-ink-muted">We&rsquo;ll only use your details to reply to this request.</p>
+      <p className="text-body-sm text-ink-muted">We&rsquo;ll only use your details to reply to this request.</p>
     </form>
   );
 }

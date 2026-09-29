@@ -57,9 +57,9 @@ export default function CookiesPage() {
           title: "The cookies we use",
           body: (
             <div className="overflow-x-auto">
-              <table className="w-full min-w-[520px] border-collapse text-left text-[15px]/[22px]">
+              <table className="w-full min-w-130 border-collapse text-left text-body">
                 <thead>
-                  <tr className="border-b border-rule-strong font-mono text-xs/4 text-ink-muted">
+                  <tr className="border-b border-border font-mono text-meta text-ink-muted">
                     <th className="py-2.5 pr-4 font-normal">cookie</th>
                     <th className="py-2.5 pr-4 font-normal">set by</th>
                     <th className="py-2.5 pr-4 font-normal">what it&rsquo;s for</th>
@@ -69,7 +69,7 @@ export default function CookiesPage() {
                 <tbody>
                   {cookies.map((cookie) => (
                     <tr key={cookie.name} className="border-b border-border align-top">
-                      <td className="py-3 pr-4 font-mono text-[13px]/[22px]">{cookie.name}</td>
+                      <td className="py-3 pr-4 font-mono text-meta">{cookie.name}</td>
                       <td className="py-3 pr-4">{cookie.who}</td>
                       <td className="py-3 pr-4 text-ink-secondary">{cookie.purpose}</td>
                       <td className="py-3 whitespace-nowrap text-ink-secondary">{cookie.lasts}</td>

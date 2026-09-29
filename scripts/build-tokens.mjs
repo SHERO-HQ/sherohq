@@ -26,7 +26,15 @@ const semantic = colors.filter((t) => typeof t.value === "object");
 const light = semantic.map((t) => `  --${t.name}: ${colorValue(t.value.light)};`);
 const dark = semantic.map((t) => `  --${t.name}: ${colorValue(t.value.dark)};`);
 
-const scalar = (group) => group.tokens.map((t) => `  --${t.name}: ${t.value};`);
+// Values that differ on phones are { mobile, desktop }; desktop applies from
+// Tailwind's lg breakpoint (64rem), the same point the page layouts switch.
+const DESKTOP = "(min-width: 64rem)";
+const isResponsive = (value) => typeof value === "object" && value !== null;
+const scalar = (group) =>
+  group.tokens.map((t) => `  --${t.name}: ${isResponsive(t.value) ? t.value.mobile : t.value};`);
+const scalarDesktop = (group) =>
+  group.tokens.filter((t) => isResponsive(t.value)).map((t) => `    --${t.name}: ${t.value.desktop};`);
+const responsiveSpacing = tokens.spacing.tokens.filter((t) => isResponsive(t.value));
 const shadowLight = tokens.shadow.tokens.map((t) => `  --sh-${t.name}: ${t.value.light};`);
 const shadowDark = tokens.shadow.tokens.map((t) => `  --sh-${t.name}: ${t.value.dark};`);
 
@@ -34,17 +42,37 @@ const families = Object.entries(tokens.type.families).map(
   ([name, stack]) => `  --font-${name}-stack: ${stack.replaceAll('"', "'").replace(/^'([^']+)'/, "'$1 Variable', '$1'")};`,
 );
 
-const typeStyles = tokens.type.groups.flatMap((group) =>
-  group.styles.flatMap((s) => {
-    const lines = [
-      `  --text-${s.name}: ${s.fontSize};`,
-      `  --text-${s.name}--line-height: ${s.lineHeight};`,
-      `  --text-${s.name}--font-weight: ${s.fontWeight};`,
-    ];
-    if (s.letterSpacing) lines.push(`  --text-${s.name}--letter-spacing: ${s.letterSpacing};`);
-    return lines;
-  }),
-);
+const allStyles = tokens.type.groups.flatMap((group) => group.styles);
+const responsiveStyles = allStyles.filter((s) => s.mobile);
+
+// Fixed styles go straight into the theme. Responsive ones point at variables
+// that switch at the desktop breakpoint, so \`text-h2\` is right at every width.
+const typeStyles = allStyles.filter((s) => !s.mobile).flatMap((s) => {
+  const lines = [
+    `  --text-${s.name}: ${s.fontSize};`,
+    `  --text-${s.name}--line-height: ${s.lineHeight};`,
+    `  --text-${s.name}--font-weight: ${s.fontWeight};`,
+  ];
+  if (s.letterSpacing) lines.push(`  --text-${s.name}--letter-spacing: ${s.letterSpacing};`);
+  return lines;
+});
+const responsiveTypeTheme = responsiveStyles.flatMap((s) => {
+  const lines = [
+    `  --text-${s.name}: var(--type-${s.name});`,
+    `  --text-${s.name}--line-height: var(--type-${s.name}-leading);`,
+    `  --text-${s.name}--font-weight: ${s.fontWeight};`,
+  ];
+  if (s.letterSpacing) lines.push(`  --text-${s.name}--letter-spacing: ${s.letterSpacing};`);
+  return lines;
+});
+const typeMobile = responsiveStyles.flatMap((s) => [
+  `  --type-${s.name}: ${s.mobile.fontSize};`,
+  `  --type-${s.name}-leading: ${s.mobile.lineHeight};`,
+]);
+const typeDesktop = responsiveStyles.flatMap((s) => [
+  `    --type-${s.name}: ${s.fontSize};`,
+  `    --type-${s.name}-leading: ${s.lineHeight};`,
+]);
 
 // Tailwind utilities (bg-page, text-ink, border-border, ...) read these.
 const themeColors = [...primitives.keys(), ...semantic.map((t) => t.name)].map(
@@ -59,8 +87,16 @@ ${[...primitives].map(([name, value]) => `  --${name}: ${value};`).join("\n")}
 ${light.join("\n")}
 
 ${scalar(tokens.spacing).join("\n")}
+${typeMobile.join("\n")}
 ${shadowLight.join("\n")}
 ${families.join("\n")}
+}
+
+@media ${DESKTOP} {
+  :root {
+${scalarDesktop(tokens.spacing).join("\n")}
+${typeDesktop.join("\n")}
+  }
 }
 
 /* Dark follows the system setting unless the visitor picked a theme
@@ -84,6 +120,8 @@ ${themeColors.join("\n")}
   --font-display: var(--font-display-stack);
   --font-text: var(--font-text-stack);
   --font-mono: var(--font-mono-stack);
+${responsiveSpacing.map((t) => `  --spacing-${t.name}: var(--${t.name});`).join("\n")}
+${responsiveTypeTheme.join("\n")}
 ${tokens.shadow.tokens.map((t) => `  --shadow-${t.name.replace(/^shadow-/, "")}: var(--sh-${t.name});`).join("\n")}
 }
 

@@ -9,7 +9,7 @@ export function InlineArrow({ direction = "right", className }: { direction?: "r
       aria-hidden="true"
       size="1.1em"
       strokeWidth={1.5}
-      className={cn("inline shrink-0 align-[-0.2em]", className)}
+      className={cn("inline shrink-0 -translate-y-px align-middle", className)}
     />
   );
 }

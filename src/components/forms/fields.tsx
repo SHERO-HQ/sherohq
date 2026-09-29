@@ -1,7 +1,7 @@
 import { cn } from "@/lib/cn";
 
 const control =
-  "w-full rounded-sm border border-border-strong bg-surface-raised px-3.5 text-base/6 text-ink placeholder:text-ink-muted aria-invalid:border-danger";
+  "w-full rounded-sm border border-border-strong bg-surface-raised px-3.5 text-body text-ink placeholder:text-ink-muted aria-invalid:border-danger";
 
 type FieldProps = {
   id: string;
@@ -19,12 +19,12 @@ function Field({ id, label, hint, error, className, children }: FieldProps & { c
       </label>
       {children}
       {error ? (
-        <span id={`${id}-error`} className="text-[13px]/[18px] text-danger">
+        <span id={`${id}-error`} className="text-body-sm text-danger">
           {error}
         </span>
       ) : (
         hint && (
-          <span id={`${id}-hint`} className="text-[13px]/[18px] text-ink-muted">
+          <span id={`${id}-hint`} className="text-body-sm text-ink-muted">
             {hint}
           </span>
         )
@@ -74,7 +74,7 @@ export function TextArea({
         rows={4}
         aria-invalid={error ? true : undefined}
         aria-describedby={describedBy(id, hint, error)}
-        className={cn(control, "min-h-[120px] resize-y py-3")}
+        className={cn(control, "min-h-30 resize-y py-3")}
         {...input}
       />
     </Field>
@@ -132,7 +132,7 @@ export function RadioCards({
       {options.map((option) => (
         <label
           key={option.value}
-          className="flex cursor-pointer items-center gap-3 rounded-sm border border-border-strong bg-surface-raised px-4 py-3.5 text-[15px]/[22px] font-medium text-ink has-checked:border-primary has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-focus"
+          className="flex cursor-pointer items-center gap-3 rounded-sm border border-border-strong bg-surface-raised px-4 py-3.5 text-body font-medium text-ink has-checked:border-primary has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-focus"
         >
           <input
             type="radio"
@@ -154,7 +154,7 @@ export function SubmitButton({ children, pending }: { children: React.ReactNode;
     <button
       type="submit"
       disabled={pending}
-      className="h-[52px] w-full rounded-sm bg-primary text-base/5 font-medium text-on-primary transition-colors duration-150 hover:bg-primary-hover disabled:opacity-60"
+      className="h-13 w-full rounded-sm bg-primary text-body font-medium text-on-primary transition-colors duration-150 hover:bg-primary-hover disabled:opacity-60"
     >
       {children}
     </button>

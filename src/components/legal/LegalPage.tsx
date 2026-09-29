@@ -30,11 +30,11 @@ export function LegalPage({
 }) {
   return (
     <>
-      <section className="container-site flex flex-col gap-4 pt-8 lg:gap-5 lg:pt-20">
-        <h1 className="font-display text-[40px]/[42px] font-bold tracking-[-0.03em] text-heading lg:text-[64px]/[66px] lg:tracking-[-0.035em]">
+      <section className="container-site flex flex-col gap-4 lg:gap-5 pt-section">
+        <h1 className="font-display text-h1 text-heading">
           {title}
         </h1>
-        <span className="font-mono text-[13px]/[17px] text-ink-secondary">
+        <span className="font-mono text-meta text-ink-secondary">
           last updated <Fill value={updated} scale={1} /> · [review with a lawyer before publishing]
         </span>
         <nav aria-label="Legal pages" className="mt-2 flex gap-8 border-b border-border lg:mt-4">
@@ -44,8 +44,8 @@ export function LegalPage({
               href={tab.href}
               aria-current={tab.href === current ? "page" : undefined}
               className={cn(
-                "-mb-px py-3 text-[15px]/5 font-medium",
-                tab.href === current ? "border-b-2 border-accent text-ink" : "text-ink-muted hover:text-ink",
+                "-mb-px py-3 text-body font-medium",
+                tab.href === current ? "border-b-2 border-secondary text-ink" : "text-ink-muted hover:text-ink",
               )}
             >
               {tab.label}
@@ -54,23 +54,23 @@ export function LegalPage({
         </nav>
       </section>
 
-      <section className="container-site grid gap-8 pt-8 pb-16 lg:grid-cols-[260px_1fr] lg:gap-20 lg:pt-12 lg:pb-[104px]">
+      <section className="container-site grid gap-8 lg:grid-cols-[260px_1fr] lg:gap-20 py-section">
         <nav aria-label="On this page" className="hidden self-start lg:sticky lg:top-28 lg:flex lg:flex-col">
-          <span className="mb-2.5 font-mono text-xs/4 font-medium text-ink-secondary">on this page</span>
+          <span className="mb-2.5 font-mono text-meta font-medium text-ink-secondary">on this page</span>
           {sections.map((section, i) => (
             <a
               key={section.id}
               href={`#${section.id}`}
-              className="flex gap-3 py-[9px] text-sm/5 text-ink-secondary hover:text-primary"
+              className="flex gap-3 py-2 text-body-sm text-ink-secondary hover:text-primary"
             >
-              <span className="font-mono text-xs/5 text-ink-muted">{pad(i + 1)}</span>
+              <span className="font-mono text-meta text-ink-muted">{pad(i + 1)}</span>
               {section.title}
             </a>
           ))}
         </nav>
 
         <div className="flex flex-col">
-          <div className="max-w-[720px] pb-6 text-lg/7 text-ink lg:text-xl/[31px]">{intro}</div>
+          <div className="max-w-measure pb-6 text-h3 text-ink">{intro}</div>
           {sections.map((section, i) => (
             <section
               key={section.id}
@@ -78,11 +78,11 @@ export function LegalPage({
               aria-labelledby={`${section.id}-title`}
               className="flex scroll-mt-24 flex-col gap-3 border-t border-border py-7 lg:py-8"
             >
-              <h2 id={`${section.id}-title`} className="font-display text-[21px]/7 font-semibold text-heading lg:text-2xl/[30px]">
-                <span className="mr-3.5 font-mono text-sm/[30px] font-normal text-ink-muted">{pad(i + 1)}</span>
+              <h2 id={`${section.id}-title`} className="font-display text-h2 text-heading">
+                <span className="mr-3.5 font-mono text-body-sm font-normal text-ink-muted">{pad(i + 1)}</span>
                 {section.title}
               </h2>
-              <div className="flex max-w-[680px] flex-col gap-3 text-base/[26px] text-ink lg:text-[17px]/7">
+              <div className="flex max-w-measure flex-col gap-3 text-body lg:text-body-lg text-ink">
                 {section.body}
               </div>
             </section>

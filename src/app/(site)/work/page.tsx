@@ -18,12 +18,12 @@ export const metadata: Metadata = {
 export default function WorkPage() {
   return (
     <>
-      <section className="container-site flex flex-col gap-3.5 pt-8 pb-7 lg:flex-row lg:items-end lg:justify-between lg:gap-16 lg:pt-24 lg:pb-[72px]">
-        <h1 className="font-display text-4xl/[37px] font-bold tracking-[-0.03em] text-heading lg:text-[72px]/[74px] lg:tracking-[-0.035em]">
+      <section className="container-site flex flex-col gap-3.5 lg:flex-row lg:items-end lg:justify-between lg:gap-16 py-section">
+        <h1 className="font-display text-h1 text-heading">
           Built by SHERO,
           <br className="hidden lg:block" /> running today.
         </h1>
-        <p className="max-w-[420px] text-[17px]/[26px] text-ink-secondary lg:text-lg/7">
+        <p className="max-w-md text-body-lg text-ink-secondary">
           Systems we&rsquo;ve built for clients, now live and in use. Every one is shown with the client&rsquo;s
           permission.
         </p>
@@ -39,48 +39,48 @@ export default function WorkPage() {
           >
             <div
               className={cn(
-                "container-site grid gap-5 py-9 lg:gap-[72px] lg:py-[72px]",
+                "container-site grid gap-5 lg:gap-18 py-section",
                 imageFirst ? "lg:grid-cols-[1.3fr_1fr]" : "lg:grid-cols-[1fr_1.3fr]",
               )}
             >
               <Placeholder
                 label={`Screenshot or photo of ${project.name} in use`}
                 className={cn(
-                  "h-[240px] rounded-md border border-border bg-surface lg:h-[560px]",
+                  "h-60 rounded-md border border-border bg-surface lg:h-140",
                   !imageFirst && "lg:order-2",
                 )}
               />
               <div className="flex flex-col justify-center gap-3.5 lg:gap-5">
                 <div className="flex items-center gap-3.5">
                   <StatusBadge status="live" />
-                  <span className="font-mono text-xs/4 text-ink-muted lg:hidden">
+                  <span className="font-mono text-meta text-ink-muted lg:hidden">
                     for <Fill value={project.client} />
                   </span>
                 </div>
                 <h2
                   id={`${project.slug}-title`}
-                  className="font-display text-[32px]/9 font-bold tracking-[-0.02em] text-heading lg:text-5xl/[52px] lg:tracking-[-0.025em]"
+                  className="font-display text-h1 text-heading"
                 >
                   {project.name}
                 </h2>
-                <p className="text-[17px]/[26px] text-ink lg:text-xl/[31px]">
+                <p className="text-h3 text-ink">
                   <Fill value={project.summary} />
                 </p>
-                <dl className="flex flex-col gap-2 border-t border-border pt-4 text-[15px]/5">
+                <dl className="flex flex-col gap-2 border-t border-border pt-4 text-body">
                   <div className="hidden gap-4 lg:flex">
-                    <dt className="w-[110px] shrink-0 font-mono text-xs/5 text-ink-muted">client</dt>
+                    <dt className="w-27.5 shrink-0 font-mono text-meta text-ink-muted">client</dt>
                     <dd className="text-ink">
                       <Fill value={project.client} />
                     </dd>
                   </div>
                   <div className="flex gap-4">
-                    <dt className="w-[110px] shrink-0 font-mono text-xs/5 text-ink-muted">what we built</dt>
+                    <dt className="w-27.5 shrink-0 font-mono text-meta text-ink-muted">what we built</dt>
                     <dd className="text-ink">
                       <Fill value={project.built} />
                     </dd>
                   </div>
                 </dl>
-                <div className="flex flex-wrap gap-6 text-[15px]/[22px] font-medium text-primary lg:text-sm/5">
+                <div className="flex flex-wrap gap-6 text-body font-medium text-primary">
                   <Link href={`${routes.work}/${project.slug}`} className="hover:underline">
                     Read the story <InlineArrow />
                   </Link>

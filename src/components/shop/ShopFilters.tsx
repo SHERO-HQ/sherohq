@@ -33,8 +33,8 @@ function submit() {
 }
 
 const groupClass = "border-t border-border py-5";
-const legendClass = "mb-1 font-mono text-xs/4 font-medium text-ink-secondary";
-const optionClass = "flex min-h-6 cursor-pointer items-center gap-2.5 text-[15px]/[22px] text-ink";
+const legendClass = "mb-1 font-mono text-meta font-medium text-ink-secondary";
+const optionClass = "flex min-h-6 cursor-pointer items-center gap-2.5 text-body text-ink";
 const controlClass = "size-4 shrink-0 accent-primary";
 
 /**
@@ -60,14 +60,14 @@ export function ShopFilters({
         aria-expanded={open}
         aria-controls={FORM_ID}
         onClick={() => setOpen(!open)}
-        className="flex h-11 items-center gap-2 rounded-sm border border-border-strong px-4 text-[15px]/5 font-medium text-ink lg:hidden"
+        className="flex h-11 items-center gap-2 rounded-sm border border-border-strong px-4 text-body font-medium text-ink lg:hidden"
       >
         {open ? (
           <X aria-hidden="true" size={18} strokeWidth={1.5} />
         ) : (
           <SlidersHorizontal aria-hidden="true" size={18} strokeWidth={1.5} />
         )}
-        Filters{active > 0 && <span className="font-mono text-xs/4 text-ink-secondary">({active})</span>}
+        Filters{active > 0 && <span className="font-mono text-meta text-ink-secondary">({active})</span>}
       </button>
 
       <Form
@@ -107,7 +107,7 @@ export function ShopFilters({
             <input type="checkbox" name="battery" value="new" defaultChecked={current.newBattery} className={controlClass} />
             New battery (100%)
           </label>
-          <p className="text-[13px]/[19px] text-ink-muted">Every listing is at {minBattery}% or more.</p>
+          <p className="text-body-sm text-ink-muted">Every listing is at {minBattery}% or more.</p>
         </fieldset>
 </div>
 
@@ -133,12 +133,12 @@ export function ShopFilters({
           {/* Needed without JavaScript; with it, filters apply on change. */}
           <button
             type="submit"
-            className="h-11 rounded-sm bg-primary px-5 text-[15px]/5 font-medium text-on-primary lg:sr-only lg:focus:not-sr-only"
+            className="h-11 rounded-sm bg-primary px-5 text-body font-medium text-on-primary lg:sr-only lg:focus:not-sr-only"
           >
             Show results
           </button>
           {active > 0 && (
-            <a href={routes.shop} className="flex h-11 items-center text-[15px]/5 font-medium text-primary underline underline-offset-3">
+            <a href={routes.shop} className="flex h-11 items-center text-body font-medium text-primary underline underline-offset-3">
               Clear filters
             </a>
           )}
@@ -150,14 +150,14 @@ export function ShopFilters({
 
 export function SortSelect({ value }: { value: string }) {
   return (
-    <label className="flex items-center gap-2.5 text-sm/5 text-ink-secondary">
+    <label className="flex items-center gap-2.5 text-body-sm text-ink-secondary">
       Sort
       <select
         name="sort"
         form={FORM_ID}
         defaultValue={value}
         onChange={submit}
-        className="h-11 rounded-sm border border-border-strong bg-surface-raised px-2.5 text-sm/5 text-ink lg:h-9"
+        className="h-11 rounded-sm border border-border-strong bg-surface-raised px-2.5 text-body-sm text-ink lg:h-9"
       >
         {sortOptions.map((option) => (
           <option key={option.value} value={option.value}>

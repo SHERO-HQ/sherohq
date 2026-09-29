@@ -11,7 +11,7 @@ export function Placeholder({ label, className }: { label: string; className?: s
       role="img"
       aria-label={`Placeholder: ${label}`}
       className={cn(
-        "flex items-center justify-center px-4 text-center font-mono text-xs/4 text-ink-muted",
+        "flex items-center justify-center px-4 text-center font-mono text-meta text-ink-muted",
         className,
       )}
     >

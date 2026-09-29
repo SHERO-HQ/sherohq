@@ -21,8 +21,8 @@ type Item = { id: string; model: string; pricePesewas: number };
 function Step({ number, title, children }: { number: string; title: string; children: React.ReactNode }) {
   return (
     <section className="flex flex-col gap-5 border-t border-border py-7 lg:py-8">
-      <h2 className="flex items-baseline gap-3.5 font-display text-[22px]/7 font-semibold text-heading lg:text-2xl/[30px]">
-        <span className="font-mono text-sm/5 font-medium text-accent">{number}</span>
+      <h2 className="flex items-baseline gap-3.5 font-display text-h2 text-heading">
+        <span className="font-mono text-body-sm font-medium text-secondary">{number}</span>
         {title}
       </h2>
       {children}
@@ -59,16 +59,16 @@ function Choices<T extends string>({
             value={option.value}
             checked={value === option.value}
             onChange={() => onChange(option.value)}
-            className="mt-[3px] size-4 shrink-0 accent-primary focus-visible:outline-none"
+            className="mt-1 size-4 shrink-0 accent-primary focus-visible:outline-none"
           />
           <span className="flex flex-col gap-0.5">
-            <span className="text-[15px]/[22px] font-medium text-ink">{option.label}</span>
-            <span className="text-[13px]/[19px] text-ink-secondary">{option.detail}</span>
+            <span className="text-body font-medium text-ink">{option.label}</span>
+            <span className="text-body-sm text-ink-secondary">{option.detail}</span>
           </span>
         </label>
       ))}
       {error && (
-        <span id={`${name}-error`} className="text-[13px]/[18px] text-danger">
+        <span id={`${name}-error`} className="text-body-sm text-danger">
           {error}
         </span>
       )}
@@ -242,12 +242,12 @@ export function CheckoutForm({
         aria-labelledby="summary-heading"
         className="flex flex-col self-start rounded-md border border-border bg-surface p-5 lg:sticky lg:top-24 lg:p-7"
       >
-        <h2 id="summary-heading" className="mb-2 font-display text-xl/[26px] font-semibold text-heading">
+        <h2 id="summary-heading" className="mb-2 font-display text-h2 text-heading">
           Order summary
         </h2>
         <ul className="flex flex-col gap-3 border-b border-border pb-4">
           {items.map((item) => (
-            <li key={item.id} className="flex justify-between gap-3 text-sm/5 text-ink">
+            <li key={item.id} className="flex justify-between gap-3 text-body-sm text-ink">
               <span>{item.model}</span>
               <span className="font-mono font-medium whitespace-nowrap">{formatCedis(item.pricePesewas)}</span>
             </li>
@@ -263,12 +263,12 @@ export function CheckoutForm({
           <SummaryTotal value={formatCedis(subtotal + (fee ?? 0))} />
         </dl>
         {fee === null && (
-          <p className="-mt-1 mb-3 text-[13px]/[19px] text-ink-secondary">
+          <p className="-mt-1 mb-3 text-body-sm text-ink-secondary">
             We&rsquo;ll confirm the delivery fee for your region on WhatsApp before we dispatch.
           </p>
         )}
         {message && (
-          <p role="alert" className="mb-3 text-sm/5 text-danger">
+          <p role="alert" className="mb-3 text-body-sm text-danger">
             {message}
           </p>
         )}
@@ -276,12 +276,12 @@ export function CheckoutForm({
           type="submit"
           disabled={pending}
           className={cn(
-            "h-[52px] w-full rounded-sm bg-primary text-base/5 font-medium text-on-primary transition-colors duration-150 hover:bg-primary-hover disabled:opacity-60",
+            "h-13 w-full rounded-sm bg-primary text-body font-medium text-on-primary transition-colors duration-150 hover:bg-primary-hover disabled:opacity-60",
           )}
         >
           {pending ? "Placing your order…" : "Place order"}
         </button>
-        <p className="mt-3 text-[13px]/[19px] text-ink-muted">
+        <p className="mt-3 text-body-sm text-ink-muted">
           No account needed. By placing this order you agree to our{" "}
           <a href={routes.terms} className="underline underline-offset-3">
             Terms

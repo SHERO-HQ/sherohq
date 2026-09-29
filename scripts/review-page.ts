@@ -10,6 +10,8 @@ const manifest = JSON.parse(readFileSync(resolve(root, "review/manifest.json"), 
 // What differs from the mockup on purpose. Anything else that differs is a bug.
 const notes: Record<string, string[]> = {
   home: [
+    "Hero is the motto, one sentence and two buttons; the four \"what do you need\" paths sit below it as tiles.",
+    "Laptop cards reuse the shop's card instead of a separate table.",
     "Client names are set as type until the real logos arrive.",
     "The empty photo band is replaced by the four device checks, under the laptop list.",
     "The desktop laptop table has a battery column; every listing shows battery health.",
@@ -48,6 +50,7 @@ const notes: Record<string, string[]> = {
     "No wishlist button until the wishlist exists.",
     "Phones get a sticky price and Add to cart bar, as in the mobile design.",
     "Search engines get product data (price, availability, used condition).",
+    "Ask about it on WhatsApp is a green secondary button.",
   ],
   cart: [
     "No quantity stepper: each listing is one specific checked device.",
@@ -79,6 +82,9 @@ const notes: Record<string, string[]> = {
 };
 
 const everywhere = [
+  "Sizes follow the design system's own scale (56/40/30/22px headings, 1200px container, one section spacing), not the mockups' one-off pixel sizes, so pages are calmer and shorter.",
+  "Navy is the primary colour; green is secondary: status, short labels and WhatsApp buttons.",
+  "No dark \"illustration\" readout cards or big faded numbers; the laptop page keeps its real device check as a plain table.",
   "Fonts load without shifting the page (layout shift 0 on every page).",
   "Light/dark toggle in the header; the site still starts from the device setting.",
   "Live Open now status in the footer.",

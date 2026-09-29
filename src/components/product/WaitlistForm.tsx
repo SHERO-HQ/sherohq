@@ -42,9 +42,9 @@ export function WaitlistForm({ product }: { product: ProductPageContent }) {
   return (
     <div
       id="waitlist"
-      className="flex scroll-mt-24 flex-col gap-4 self-start rounded-md border border-t-[3px] border-border border-t-product-stripe bg-surface p-5 lg:p-8"
+      className="flex scroll-mt-24 flex-col gap-4 self-start rounded-md border border-t-4 border-border border-t-product-stripe bg-surface p-5 lg:p-8"
     >
-      <h2 className="font-display text-[22px]/7 font-semibold text-heading lg:text-2xl/[30px]">Join the waitlist</h2>
+      <h2 className="font-display text-h2 text-heading">Join the waitlist</h2>
       {joined ? (
         <p role="status" className="flex items-start gap-3 text-ink">
           <CircleCheck aria-hidden="true" size={22} strokeWidth={1.5} className="mt-0.5 shrink-0 text-product-accent" />
@@ -52,7 +52,7 @@ export function WaitlistForm({ product }: { product: ProductPageContent }) {
         </p>
       ) : (
         <>
-          <p className="text-[15px]/[23px] text-ink-secondary">
+          <p className="text-body text-ink-secondary">
             Be among the first to use {product.name}. We&rsquo;ll contact you when it&rsquo;s ready.
           </p>
           <form noValidate onSubmit={onSubmit} data-clarity-mask="True" className="flex flex-col gap-4">
@@ -87,7 +87,7 @@ export function WaitlistForm({ product }: { product: ProductPageContent }) {
             <button
               type="submit"
               disabled={pending}
-              className="h-12 rounded-sm bg-product-action text-[15px]/5 font-medium text-on-product-action transition-opacity duration-150 hover:opacity-90 disabled:opacity-60"
+              className="h-12 rounded-sm bg-product-action text-body font-medium text-on-product-action transition-opacity duration-150 hover:opacity-90 disabled:opacity-60"
             >
               {pending ? "Joining…" : "Join the waitlist"}
             </button>

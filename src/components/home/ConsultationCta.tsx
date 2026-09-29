@@ -12,23 +12,18 @@ export function ConsultationCta({
   body = "Tell us what’s slowing your business down. We’ll suggest a practical next step, free.",
 }: ConsultationCtaProps) {
   return (
-    <div className="container-site my-16 lg:my-[104px]">
+    <div className="container-site pb-section">
       {/* Stays logo navy in both themes. */}
-      <section className="flex flex-col gap-3.5 rounded-md bg-navy-700 px-6 py-9 lg:flex-row lg:items-center lg:justify-between lg:gap-12 lg:px-16 lg:py-[72px]">
-        <div className="flex max-w-[640px] flex-col gap-3.5">
-          <h2 className="font-display text-[30px]/[34px] font-bold text-white lg:text-[44px]/[48px] lg:tracking-[-0.025em]">
-            {title}
-          </h2>
-          <p className="text-base/[25px] text-on-navy-muted lg:text-lg/7">{body}</p>
+      <section className="flex flex-col gap-6 rounded-md bg-navy-700 p-8 lg:flex-row lg:items-center lg:justify-between lg:gap-12 lg:p-12">
+        <div className="flex max-w-measure flex-col gap-3">
+          <h2 className="text-h2 text-ink-inverse">{title}</h2>
+          <p className="text-body-lg text-navy-100">{body}</p>
         </div>
         <Link
           href={routes.consultation}
-          className="mt-2 flex h-[52px] shrink-0 items-center justify-center whitespace-nowrap rounded-sm bg-white px-6 text-base/5 font-medium text-navy-700 transition-colors duration-150 hover:bg-navy-50 focus-visible:outline-white lg:mt-0 lg:text-[15px]/5"
+          className="inline-flex h-12 shrink-0 items-center justify-center gap-2 self-start rounded-sm bg-ink-inverse px-6 text-label whitespace-nowrap text-navy-700 transition-colors duration-150 hover:bg-navy-50 focus-visible:outline-ink-inverse lg:self-auto"
         >
-          Book a free consultation
-          <span className="hidden lg:inline">
-            <InlineArrow className="ml-1.5" />
-          </span>
+          Book a free consultation <InlineArrow />
         </Link>
       </section>
     </div>

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { AddToCart } from "@/components/shop/AddToCart";
+import { buttonClass } from "@/components/ui/Button";
 import { Gallery } from "@/components/shop/Gallery";
 import { ListingCard } from "@/components/shop/ListingCard";
 import { InlineArrow } from "@/components/ui/InlineArrow";
@@ -116,7 +117,7 @@ export default async function ListingPage({ params }: Props) {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd).replace(/</g, "\\u003c") }} />
 
-      <nav aria-label="Breadcrumb" className="container-site pt-5 font-mono text-[13px]/[18px] text-ink-muted lg:pt-6">
+      <nav aria-label="Breadcrumb" className="container-site pt-5 font-mono text-meta text-ink-muted lg:pt-6">
         <ol className="flex flex-wrap gap-2.5">
           <li>
             <Link href={routes.shop} className="text-ink-secondary underline underline-offset-3 hover:text-primary">
@@ -137,24 +138,24 @@ export default async function ListingPage({ params }: Props) {
         </ol>
       </nav>
 
-      <section className="container-site grid gap-7 pt-5 pb-16 lg:grid-cols-[1.15fr_1fr] lg:gap-[72px] lg:pt-8 lg:pb-24">
+      <section className="container-site grid gap-7 pt-5 lg:grid-cols-[1.15fr_1fr] lg:gap-18 lg:pt-8 pb-section">
         <Gallery photos={listing.photos} model={listing.model} />
 
-        <div className="flex flex-col gap-5 lg:gap-[22px]">
-          <p className={available ? "font-mono text-[13px]/[17px] font-medium text-accent" : "font-mono text-[13px]/[17px] font-medium text-warning"}>
+        <div className="flex flex-col gap-5 lg:gap-5.5">
+          <p className={available ? "font-mono text-meta font-medium text-secondary" : "font-mono  font-medium text-warning"}>
             {available ? `uk-used · grade ${listing.grade.toLowerCase()}` : "reserved · another order is in progress"}
           </p>
-          <h1 className="font-display text-[32px]/[36px] font-bold tracking-[-0.025em] text-heading lg:text-[44px]/12">
+          <h1 className="font-display text-h1 text-heading">
             {listing.model}
           </h1>
-          {listing.note && <p className="text-base/[25px] text-ink-secondary lg:text-lg/[27px]">{listing.note}</p>}
-          <p className="font-mono text-[28px]/[34px] font-medium text-ink lg:text-[34px]/10">{formatCedis(listing.pricePesewas)}</p>
+          {listing.note && <p className="text-body lg:text-body-lg text-ink-secondary">{listing.note}</p>}
+          <p className="font-mono text-h2 font-medium text-ink">{formatCedis(listing.pricePesewas)}</p>
 
           {check?.batteryHealth != null && (
-            <div className="flex flex-col gap-2.5 rounded-md border border-border bg-surface p-[18px]">
+            <div className="flex flex-col gap-2.5 rounded-md border border-border bg-surface p-4.5">
               <div className="flex items-baseline justify-between">
-                <span className="text-[15px]/[22px] font-medium text-ink">Battery health</span>
-                <span className="font-mono text-[26px]/[30px] font-medium text-accent">{check.batteryHealth}%</span>
+                <span className="text-body font-medium text-ink">Battery health</span>
+                <span className="font-mono text-h2 font-medium text-secondary">{check.batteryHealth}%</span>
               </div>
               <div
                 role="meter"
@@ -162,20 +163,20 @@ export default async function ListingPage({ params }: Props) {
                 aria-valuenow={check.batteryHealth}
                 aria-valuemin={0}
                 aria-valuemax={100}
-                className="h-2 rounded-[1px] bg-border"
+                className="h-2 rounded-sm bg-border"
               >
-                <div className="h-2 rounded-[1px] bg-accent" style={{ width: `${check.batteryHealth}%` }} />
+                <div className="h-2 rounded-sm bg-secondary" style={{ width: `${check.batteryHealth}%` }} />
               </div>
-              <p className="text-[13px]/[19px] text-ink-secondary">{batteryNote(check)}</p>
+              <p className="text-body-sm text-ink-secondary">{batteryNote(check)}</p>
             </div>
           )}
 
           {specs.length > 0 && (
             <dl>
               {specs.map((row) => (
-                <div key={row.key} className="grid grid-cols-[96px_1fr] gap-4 border-t border-border py-[11px] lg:grid-cols-[120px_1fr]">
-                  <dt className="pt-0.5 font-mono text-xs/4 text-ink-muted">{row.label}</dt>
-                  <dd className="text-[15px]/[22px] text-ink">{listing.specs[row.key]}</dd>
+                <div key={row.key} className="grid grid-cols-[96px_1fr] gap-4 border-t border-border py-3 lg:grid-cols-[120px_1fr]">
+                  <dt className="pt-0.5 font-mono text-meta text-ink-muted">{row.label}</dt>
+                  <dd className="text-body text-ink">{listing.specs[row.key]}</dd>
                 </div>
               ))}
             </dl>
@@ -190,17 +191,17 @@ export default async function ListingPage({ params }: Props) {
               href={whatsappLink(`Hi SHERO, I'm asking about the ${listing.model}: ${url}`)}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex h-[52px] items-center rounded-sm border border-border-strong px-[22px] text-[15px]/5 font-medium text-ink hover:border-ink"
+              className={buttonClass({ variant: "secondary", size: "lg" })}
             >
               Ask about it on WhatsApp
             </a>
           </div>
 
-          <dl className="flex flex-col gap-2.5 border-t border-border pt-[18px]">
+          <dl className="flex flex-col gap-2.5 border-t border-border pt-4.5">
             {facts.map((fact) => (
               <div key={fact.label} className="flex items-baseline gap-3">
-                <dt className="w-[90px] shrink-0 font-mono text-xs/4 text-ink-muted">{fact.label}</dt>
-                <dd className="text-sm/[21px] text-ink">{fact.text}</dd>
+                <dt className="w-22.5 shrink-0 font-mono text-meta text-ink-muted">{fact.label}</dt>
+                <dd className="text-body-sm text-ink">{fact.text}</dd>
               </div>
             ))}
           </dl>
@@ -208,19 +209,19 @@ export default async function ListingPage({ params }: Props) {
       </section>
 
       {check && (
-        <section aria-labelledby="check-heading" className="border-y border-border bg-surface py-14 lg:py-24">
+        <section aria-labelledby="check-heading" className="border-y border-border bg-surface py-section">
           <div className="container-site grid gap-8 lg:grid-cols-[1fr_460px] lg:gap-24">
             <div className="flex flex-col items-start gap-4 lg:gap-5">
               <h2
                 id="check-heading"
-                className="font-display text-[28px]/[32px] font-bold tracking-[-0.02em] text-heading lg:text-[40px]/11 lg:tracking-[-0.025em]"
+                className="font-display text-h1 text-heading"
               >
                 How we checked this {isLaptop ? "laptop" : "device"}.
               </h2>
-              <p className="max-w-[620px] text-base/[25px] text-ink-secondary lg:text-lg/7">
+              <p className="max-w-measure text-body lg:text-body-lg text-ink-secondary">
                 Every device goes through the same check before it&rsquo;s listed. This is the result for this one.
               </p>
-              <Link href={`${routes.shop}#grade`} className="text-sm/5 font-medium whitespace-nowrap text-primary hover:underline">
+              <Link href={`${routes.shop}#grade`} className="text-body-sm font-medium whitespace-nowrap text-primary hover:underline">
                 What Grade A++ means <InlineArrow />
               </Link>
             </div>
@@ -234,10 +235,10 @@ export default async function ListingPage({ params }: Props) {
       )}
 
       {similar.length > 0 && (
-        <section aria-labelledby="similar-heading" className="container-site flex flex-col gap-6 pt-14 pb-20 lg:gap-8 lg:pt-24 lg:pb-[104px]">
+        <section aria-labelledby="similar-heading" className="container-site flex flex-col gap-6 lg:gap-8 py-section">
           <h2
             id="similar-heading"
-            className="font-display text-[26px]/[30px] font-bold tracking-[-0.02em] text-heading lg:text-4xl/[39px] lg:tracking-[-0.025em]"
+            className="font-display text-h1 text-heading"
           >
             Similar {isLaptop ? "laptops" : listing.category.toLowerCase()}.
           </h2>
@@ -254,8 +255,8 @@ export default async function ListingPage({ params }: Props) {
       {/* Phones: price and Add to cart stay in reach while scrolling. */}
       <div className="sticky bottom-0 z-30 flex items-center justify-between gap-4 border-t border-border bg-page px-5 py-3 sm:hidden">
         <span className="flex flex-col">
-          <span className="font-mono text-[11px]/4 text-ink-muted">total</span>
-          <span className="font-mono text-lg/6 font-medium text-ink">{formatCedis(listing.pricePesewas)}</span>
+          <span className="font-mono text-meta text-ink-muted">total</span>
+          <span className="font-mono text-price font-medium text-ink">{formatCedis(listing.pricePesewas)}</span>
         </span>
         <AddToCart listingId={listing.id} available={available} className="h-12 px-6" />
       </div>

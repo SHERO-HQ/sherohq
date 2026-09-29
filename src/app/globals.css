@@ -8,41 +8,10 @@
   --font-mono-stack: var(--font-red-hat-mono), ui-monospace, monospace;
 }
 
-/*
- * Colours the page designs use that aren't design-system tokens. Keep this list
- * short; anything reused widely belongs in design/system/tokens.json.
- */
+/* Product identity colours (product pages theme with these). */
 :root {
-  /* Strong 1px rule above lists and grids: ink in light, heading in dark. */
-  --rule-strong: var(--ink);
-  /* Full-width photo band behind "Set up and supported by SHERO". */
-  --band: #1b2a47;
-  /* Supporting text on navy blocks (the closing call to action). */
-  --on-navy-muted: #c9d4ee;
-  /* Divider inside the footer. */
-  --inverse-border: #1e2c4a;
-  /* Readout panels (the mono "illustration" cards on Services). */
-  --readout-label: #8a94a6;
-  --readout-pending: #f3c06b;
-  /* Product identity colours (product pages theme with these). */
   --merchander: #ff6a00;
   --pharmasyst: #13a56b;
-}
-
-/*
- * Dark theme: the system setting applies unless the visitor picked a theme
- * with the toggle (data-theme on <html>). Every dark rule below uses both
- * selectors so the two routes stay in step.
- */
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --rule-strong: var(--navy-100);
-    --band: #0e1a33;
-  }
-}
-:root[data-theme="dark"] {
-  --rule-strong: var(--navy-100);
-  --band: #0e1a33;
 }
 
 :root[data-theme="light"] {
@@ -117,12 +86,6 @@
   --color-product-action: var(--product-action);
   --color-on-product-action: var(--on-product-action);
   --color-product-stripe: var(--product-stripe);
-  --color-rule-strong: var(--rule-strong);
-  --color-band: var(--band);
-  --color-on-navy-muted: var(--on-navy-muted);
-  --color-inverse-border: var(--inverse-border);
-  --color-readout-label: var(--readout-label);
-  --color-readout-pending: var(--readout-pending);
   --color-merchander: var(--merchander);
   --color-pharmasyst: var(--pharmasyst);
 }
@@ -137,9 +100,17 @@
     background: var(--page);
     color: var(--ink);
     font-family: var(--font-text-stack);
-    font-size: 16px;
-    line-height: 26px;
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
     -webkit-font-smoothing: antialiased;
+  }
+
+  /* Headings take the display face and heading colour; size comes from text-h*. */
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display-stack);
+    color: var(--heading);
   }
 
   :focus-visible {
@@ -157,16 +128,12 @@
   }
 }
 
+/* The page container: design-system max width plus the page gutter. */
 @utility container-site {
   width: 100%;
-  /* Designs are drawn at 1440px with 80px gutters. */
-  max-width: 1440px;
+  max-width: calc(var(--container-max) + 2 * var(--gutter));
   margin-inline: auto;
-  padding-inline: 20px;
-
-  @media (width >= 64rem) {
-    padding-inline: 80px;
-  }
+  padding-inline: var(--gutter);
 }
 
 /* The logo's slanted bars. Only the home hero, About hero and 404 use them. */

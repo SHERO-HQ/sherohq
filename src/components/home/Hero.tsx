@@ -1,33 +1,33 @@
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
 import { StatusBadge } from "@/components/ui/StatusBadge";
 import { routes } from "@/lib/site";
 import { InlineArrow } from "@/components/ui/InlineArrow";
+import { ButtonLink } from "@/components/ui/Button";
 
 const paths = [
   {
     title: "I need a laptop",
     description: "Strong enough for your work, with a battery you can trust.",
-    tag: "shop laptops",
+    action: "Shop laptops",
     href: routes.shop,
   },
   {
     title: "I need software built",
     description: "Your own system, built around how your business works.",
-    tag: "custom software",
+    action: "Custom software",
     href: `${routes.services}#software`,
   },
   {
     title: "I sell on social media",
     description: "Orders, payments and stock in one place.",
-    tag: "merchander",
+    action: "Join the waitlist",
     href: `${routes.merchander}#waitlist`,
     waitlist: true,
   },
   {
     title: "I run a pharmacy",
     description: "Sales, stock and NHIS claims across your branches.",
-    tag: "pharmasyst",
+    action: "Join the waitlist",
     href: `${routes.pharmasyst}#waitlist`,
     waitlist: true,
   },
@@ -35,64 +35,55 @@ const paths = [
 
 export function Hero() {
   return (
-    <section className="grid lg:grid-cols-[1.1fr_1fr]">
-      <div className="flex flex-col gap-5 px-5 pt-10 pb-7 lg:justify-between lg:gap-12 lg:pt-24 lg:pr-16 lg:pb-16 lg:pl-20">
-        <div className="flex flex-col gap-5 lg:gap-8">
-          {/* The motto appears only here, on About and in the footer. */}
-          <h1 className="font-display text-[60px]/[56px] font-bold tracking-[-0.045em] text-heading lg:text-[120px]/[112px]">
-            Redefine
-            <br />
-            Possible.
-          </h1>
-          <p className="max-w-[520px] text-[17px]/[26px] text-ink-secondary lg:text-xl/[31px]">
-            SHERO builds software, supplies tested laptops and supports the technology businesses run on. From
-            Tamale, Ghana.
-          </p>
-        </div>
+    <section className="container-site flex flex-col gap-12 lg:gap-16 py-section">
+      <div className="flex flex-col gap-6">
         {/* The logo's slanted bars, in the fixed brand inks. */}
-        <div aria-hidden="true" className="flex gap-2.5 lg:gap-3.5">
-          <span className="slant h-[26px] w-[90px] bg-navy-700 lg:h-11 lg:w-[150px]" />
-          <span className="slant h-[26px] w-[54px] bg-emerald-700 lg:h-11 lg:w-[90px]" />
+        <div aria-hidden="true" className="flex gap-2">
+          <span className="slant h-4 w-14 bg-navy-700" />
+          <span className="slant h-4 w-8 bg-emerald-700" />
+        </div>
+        <div className="flex max-w-measure flex-col gap-5">
+          {/* The motto appears only here, on About and in the footer. */}
+          <h1 className="text-display">Redefine Possible.</h1>
+          <p className="text-body-lg text-ink-secondary">
+            SHERO builds software, supplies tested laptops and supports the technology businesses run on. From
+            Tamale, delivering across Ghana.
+          </p>
+          <div className="flex flex-wrap gap-3 pt-2">
+            <ButtonLink href={routes.shop} size="lg">
+              Shop laptops
+            </ButtonLink>
+            <ButtonLink href={routes.consultation} variant="outline" size="lg">
+              Book a free consultation
+            </ButtonLink>
+          </div>
         </div>
       </div>
 
-      <div className="flex flex-col border-y border-border bg-surface px-5 pt-6 pb-8 lg:border-y-0 lg:border-l lg:pt-24 lg:pr-20 lg:pb-16 lg:pl-16">
-        <p className="border-b border-rule-strong pb-3 font-mono text-xs/4 font-medium text-accent lg:pb-4">
+      <nav aria-labelledby="paths-heading" className="flex flex-col gap-4">
+        <h2 id="paths-heading" className="font-mono text-eyebrow text-secondary">
           what do you need?
-        </p>
-        <ul>
+        </h2>
+        <ul className="grid overflow-hidden rounded-md border border-border sm:grid-cols-2 lg:grid-cols-4">
           {paths.map((path) => (
-            <li key={path.title}>
-              <Link
-                href={path.href}
-                className="group grid grid-cols-[1fr_24px] items-center gap-3 border-b border-border py-[18px] lg:grid-cols-[1fr_40px] lg:gap-4 lg:py-[26px]"
-              >
-                <span className="flex flex-col gap-1.5 lg:gap-2">
-                  <span className="flex flex-wrap items-center gap-2.5 lg:gap-3">
-                    <span className="font-display text-[21px]/[26px] font-semibold text-heading lg:text-[30px]/9 lg:tracking-[-0.015em]">
-                      {path.title}
-                    </span>
-                    {path.waitlist && <StatusBadge status="dev" label="waitlist" size="sm" />}
-                  </span>
-                  <span className="text-[15px]/[22px] text-ink-secondary lg:text-base/6">{path.description}</span>
-                  <span className="hidden font-mono text-xs/4 font-medium text-accent lg:block">{path.tag}</span>
+            <li key={path.title} className="border-border not-last:border-b sm:odd:border-r lg:border-b-0 lg:not-last:border-r">
+              <Link href={path.href} className="group flex h-full flex-col gap-2 p-5 transition-colors hover:bg-surface">
+                <span className="flex flex-wrap items-center gap-2 text-body font-semibold text-heading">
+                  {path.title}
+                  {path.waitlist && <StatusBadge status="dev" size="sm" />}
                 </span>
-                <ArrowRight
-                  aria-hidden="true"
-                  strokeWidth={1.5}
-                  className="size-5 justify-self-end text-primary transition-transform duration-150 group-hover:translate-x-1 lg:size-6"
-                />
+                <span className="text-body-sm text-ink-secondary">{path.description}</span>
+                <span className="mt-auto pt-2 text-label text-primary">
+                  {path.action} <InlineArrow className="transition-transform group-hover:translate-x-0.5" />
+                </span>
               </Link>
             </li>
           ))}
         </ul>
-        <Link
-          href={routes.consultation}
-          className="mt-[18px] self-start text-[15px]/[22px] font-medium text-primary hover:underline hover:underline-offset-3 lg:mt-6 lg:text-sm/5"
-        >
+        <Link href={routes.consultation} className="self-start text-label text-primary hover:underline">
           Something else? Book a free consultation <InlineArrow />
         </Link>
-      </div>
+      </nav>
     </section>
   );
 }

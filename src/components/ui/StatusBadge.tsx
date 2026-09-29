@@ -1,7 +1,7 @@
 import { cn } from "@/lib/cn";
 
 const styles = {
-  live: "bg-accent-subtle text-accent",
+  live: "bg-secondary-subtle text-secondary",
   dev: "bg-warning-subtle text-warning",
   validation: "bg-info-subtle text-primary",
 } as const;
@@ -26,14 +26,14 @@ export function StatusBadge({ status, label, size = "md", className }: StatusBad
     <span
       className={cn(
         "inline-flex shrink-0 items-center rounded-sm font-mono",
-        size === "sm" ? "h-[22px] gap-1.5 px-[7px] text-[11px]/4" : "h-6 gap-1.5 px-2 text-xs/4",
+        size === "sm" ? "h-5.5 gap-1.5 px-2 text-meta" : "h-6 gap-1.5 px-2 ",
         styles[status],
         className,
       )}
     >
       <span
         aria-hidden="true"
-        className={cn("rounded-full bg-current", size === "sm" ? "size-[5px]" : "size-1.5")}
+        className={cn("rounded-full bg-current", size === "sm" ? "size-1" : "size-1.5")}
       />
       {label ?? labels[status]}
     </span>

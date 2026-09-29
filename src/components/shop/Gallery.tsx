@@ -13,10 +13,10 @@ export function Gallery({ photos, model }: { photos: string[]; model: string }) 
   if (photos.length === 0) {
     return (
       <div className="flex flex-col gap-3">
-        <ListingPhoto alt={model} label="Main photo of this exact device" className="h-[280px] w-full lg:h-[520px]" />
+        <ListingPhoto alt={model} label="Main photo of this exact device" className="h-70 w-full lg:h-130" />
         <div className="hidden grid-cols-4 gap-3 lg:grid">
           {shotLabels.map((label) => (
-            <ListingPhoto key={label} alt="" label={label} className="h-[110px]" />
+            <ListingPhoto key={label} alt="" label={label} className="h-27.5" />
           ))}
         </div>
       </div>
@@ -29,7 +29,7 @@ export function Gallery({ photos, model }: { photos: string[]; model: string }) 
         src={photos[current]}
         alt={`${model}, photo ${current + 1} of ${photos.length}`}
         priority
-        className="h-[280px] w-full lg:h-[520px]"
+        className="h-70 w-full lg:h-130"
       />
       {photos.length > 1 && (
         <ul className="grid grid-cols-4 gap-3">
@@ -42,7 +42,7 @@ export function Gallery({ photos, model }: { photos: string[]; model: string }) 
                 onClick={() => setCurrent(i)}
                 className={cn("block w-full rounded-md", i === current && "outline-2 outline-primary")}
               >
-                <ListingPhoto src={photo} alt="" className="h-16 w-full lg:h-[110px]" />
+                <ListingPhoto src={photo} alt="" className="h-16 w-full lg:h-27.5" />
               </button>
             </li>
           ))}

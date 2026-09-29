@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { Check } from "lucide-react";
 import { ConsultationCta } from "@/components/home/ConsultationCta";
-import { Readout, type ReadoutRow } from "@/components/ui/Readout";
+import { Section, SectionHeader } from "@/components/ui/Section";
 import { business, routes } from "@/lib/site";
 import { InlineArrow } from "@/components/ui/InlineArrow";
 
@@ -18,7 +18,6 @@ type Service = {
   title: string;
   intro: string;
   offers: string[];
-  readout: { title: string; rows: ReadoutRow[] };
   links: Array<{ label: string; href: string }>;
 };
 
@@ -30,16 +29,6 @@ const services: Service[] = [
     title: "Custom software",
     intro: "Software shaped around your workflow, not the other way round.",
     offers: ["Web applications and dashboards", "Internal business tools", "Mobile and web apps", "Cloud-based products"],
-    readout: {
-      title: "project / your-business",
-      rows: [
-        { label: "1 · talk", value: "done", tone: "done" },
-        { label: "2 · plan and quote", value: "done", tone: "done" },
-        { label: "3 · build", value: "in progress", tone: "pending" },
-        { label: "4 · test", value: "next" },
-        { label: "5 · hand over and train", value: "—" },
-      ],
-    },
     links: [{ label: "Talk to us about custom software", href: consult("software") }],
   },
   {
@@ -52,16 +41,6 @@ const services: Service[] = [
       "Office hardware sourcing and setup",
       "Advice on what to buy for your needs and budget",
     ],
-    readout: {
-      title: "device check / grade a++",
-      rows: [
-        { label: "screen · keyboard · trackpad", value: "pass", tone: "done" },
-        { label: "ports · speakers · camera", value: "pass", tone: "done" },
-        { label: "wi-fi · charging", value: "pass", tone: "done" },
-        { label: "battery health", value: "90%+" },
-        { label: "cosmetic condition", value: "90%+", tone: "done" },
-      ],
-    },
     links: [
       { label: "See laptops in stock", href: routes.shop },
       { label: "Talk to us about office hardware", href: consult("hardware") },
@@ -77,15 +56,6 @@ const services: Service[] = [
       "Data backups and maintenance",
       `Troubleshooting and support, ${business.hours}`,
     ],
-    readout: {
-      title: "support / your-office",
-      rows: [
-        { label: "new staff laptop setup", value: "scheduled", tone: "pending" },
-        { label: "office wi-fi", value: "configured", tone: "done" },
-        { label: "weekly backup", value: "set up", tone: "done" },
-        { label: "support hours", value: "mon–fri 8–6" },
-      ],
-    },
     links: [{ label: "Talk to us about managed IT", href: consult("managed-it") }],
   },
   {
@@ -98,15 +68,6 @@ const services: Service[] = [
       "Connecting third-party software",
       "Automating repetitive steps",
     ],
-    readout: {
-      title: "flow / sale recorded",
-      rows: [
-        { label: "customer pays by momo", value: <InlineArrow /> },
-        { label: "point of sale", value: "updated", tone: "done" },
-        { label: "stock count", value: "updated", tone: "done" },
-        { label: "receipt", value: "sent", tone: "done" },
-      ],
-    },
     links: [{ label: "Talk to us about systems integration", href: consult("integrations") }],
   },
 ];
@@ -125,24 +86,21 @@ const pad = (n: number) => String(n).padStart(2, "0");
 export default function ServicesPage() {
   return (
     <>
-      <section className="container-site grid gap-8 border-b border-border pt-8 pb-7 lg:grid-cols-[1.4fr_1fr] lg:items-end lg:gap-24 lg:pt-24 lg:pb-[88px]">
-        <div className="flex flex-col gap-3.5 lg:gap-7">
-          <h1 className="font-display text-4xl/[37px] font-bold tracking-[-0.03em] text-heading lg:text-[72px]/[74px] lg:tracking-[-0.035em]">
-            Set up, built and supported by SHERO.
-          </h1>
-          <p className="max-w-[620px] text-[17px]/[26px] text-ink-secondary lg:text-xl/[31px]">
+      <section className="container-site flex flex-col gap-8 border-b border-border py-section">
+        <div className="flex max-w-measure flex-col gap-5">
+          <h1 className="text-h1">Set up, built and supported by SHERO.</h1>
+          <p className="text-body-lg text-ink-secondary">
             Start with one service or combine them. Either way, support comes from the same place that set it up.
           </p>
         </div>
-        <nav aria-label="Services on this page" className="hidden border-t border-rule-strong lg:block">
-          {services.map((service, i) => (
+        <nav aria-label="Services on this page" className="flex flex-wrap gap-2">
+          {services.map((service) => (
             <a
               key={service.id}
               href={`#${service.id}`}
-              className="grid grid-cols-[40px_1fr_20px] items-center gap-3 border-b border-border py-3.5 hover:text-primary"
+              className="inline-flex h-10 items-center gap-2 rounded-sm border border-border px-4 text-label text-ink hover:border-border-strong"
             >
-              <span className="font-mono text-xs/4 text-ink-muted">{pad(i + 1)}</span>
-              <span className="text-[17px]/6 font-medium text-ink">{service.title}</span>
+              {service.title}
               <InlineArrow direction="down" className="text-primary" />
             </a>
           ))}
@@ -150,78 +108,50 @@ export default function ServicesPage() {
       </section>
 
       {services.map((service, i) => (
-        <section
+        <Section
           key={service.id}
           id={service.id}
+          divider={i > 0}
           aria-labelledby={`${service.id}-title`}
-          className="container-site grid scroll-mt-20 gap-3.5 border-b border-border py-9 lg:grid-cols-[120px_1fr_1fr] lg:gap-14 lg:py-20"
+          className="grid scroll-mt-16 gap-8 lg:grid-cols-2 lg:gap-16"
         >
-          <span
-            aria-hidden="true"
-            data-decorative
-            className="font-mono text-[13px]/[17px] text-ink-muted lg:font-display lg:text-[64px]/[64px] lg:font-bold lg:tracking-[-0.04em] lg:text-border"
-          >
-            {pad(i + 1)}
-          </span>
-          <div className="flex flex-col gap-3.5 lg:gap-[18px]">
-            <h2
-              id={`${service.id}-title`}
-              className="font-display text-[28px]/[31px] font-bold tracking-[-0.02em] text-heading lg:text-[40px]/[44px] lg:tracking-[-0.025em]"
-            >
+          <div className="flex flex-col gap-4">
+            <p className="font-mono text-eyebrow text-secondary">{pad(i + 1)}</p>
+            <h2 id={`${service.id}-title`} className="text-h2">
               {service.title}
             </h2>
-            <p className="max-w-[620px] text-base/[25px] text-ink-secondary lg:text-lg/7">{service.intro}</p>
-            <ul className="lg:mt-2">
-              {service.offers.map((offer) => (
-                <li key={offer} className="flex gap-3 border-t border-border py-2.5 lg:gap-3.5 lg:py-3">
-                  <ArrowRight aria-hidden="true" size={16} strokeWidth={1.5} className="mt-[3px] shrink-0 text-accent lg:mt-1" />
-                  <span className="text-[15px]/[22px] text-ink lg:text-base/6">{offer}</span>
-                </li>
-              ))}
-            </ul>
-            <Readout {...service.readout} className="lg:hidden" />
-            <div className="flex flex-col gap-2 lg:mt-2">
+            <p className="max-w-measure text-body-lg text-ink-secondary">{service.intro}</p>
+            <div className="flex flex-col gap-2 pt-2">
               {service.links.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className="self-start text-[15px]/[22px] font-medium text-primary hover:underline hover:underline-offset-3 lg:text-sm/5"
-                >
+                <Link key={link.href} href={link.href} className="self-start text-label text-primary hover:underline">
                   {link.label} <InlineArrow />
                 </Link>
               ))}
             </div>
           </div>
-          <div className="hidden pt-2 lg:block">
-            <Readout {...service.readout} />
-          </div>
-        </section>
+          <ul className="self-start rounded-md border border-border">
+            {service.offers.map((offer) => (
+              <li key={offer} className="flex gap-3 border-border px-5 py-4 not-last:border-b">
+                <Check aria-hidden="true" size={18} strokeWidth={1.5} className="mt-1 shrink-0 text-secondary" />
+                <span className="text-body text-ink">{offer}</span>
+              </li>
+            ))}
+          </ul>
+        </Section>
       ))}
 
-      <section className="container-site flex flex-col gap-8 pt-16 lg:gap-12 lg:pt-[104px]">
-        <h2 className="font-display text-[30px]/[33px] font-bold tracking-[-0.02em] text-heading lg:text-[44px]/[48px] lg:tracking-[-0.025em]">
-          From first conversation to ongoing support.
-        </h2>
-        <ol className="grid gap-0 lg:grid-cols-6 lg:gap-5">
-          {steps.map((step, i) => {
-            const last = i === steps.length - 1;
-            return (
-              <li key={step.title} className="grid grid-cols-[22px_1fr] gap-x-4 lg:flex lg:flex-col lg:gap-3.5">
-                {/* Timeline: vertical on mobile, horizontal on desktop. */}
-                <div aria-hidden="true" className="flex flex-col items-center lg:flex-row lg:gap-2.5">
-                  <span className="mt-1 size-3 shrink-0 rounded-full bg-accent lg:mt-0 lg:ml-[5px]" />
-                  <span className={`w-px flex-1 lg:h-px lg:w-auto ${last ? "bg-transparent" : "bg-border"}`} />
-                </div>
-                <div className="flex flex-col gap-1.5 pb-7 lg:gap-3.5 lg:pb-0">
-                  <span className="font-mono text-xs/4 font-medium text-accent">step {pad(i + 1)}</span>
-                  <span className="font-display text-h3 text-heading">{step.title}</span>
-                  <span className="text-[15px]/[23px] text-ink-secondary">{step.text}</span>
-                </div>
-              </li>
-            );
-          })}
+      <Section tone="surface" aria-labelledby="process-heading">
+        <SectionHeader id="process-heading" eyebrow="how we work" title="From first conversation to ongoing support." />
+        <ol className="grid gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
+          {steps.map((step, i) => (
+            <li key={step.title} className="flex flex-col gap-2 border-t border-border pt-4">
+              <span className="font-mono text-eyebrow text-secondary">step {pad(i + 1)}</span>
+              <span className="text-h3 font-display text-heading">{step.title}</span>
+              <span className="text-body text-ink-secondary">{step.text}</span>
+            </li>
+          ))}
         </ol>
-      </section>
+      </Section>
 
       <ConsultationCta />
     </>

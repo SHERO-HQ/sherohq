@@ -17,34 +17,21 @@ export function ListingCard({ listing, compact }: { listing: ShopListing; compac
   const spec = specSummary(listing.specs);
   const reserved = listing.status === "reserved";
   return (
-    <Link href={listingHref(listing.slug)} className="group flex flex-col gap-2.5">
+    <Link href={listingHref(listing.slug)} className="group flex flex-col gap-3">
       <ListingPhoto
         src={listing.photos[0]}
         alt={listing.model}
         className="aspect-[4/3] w-full transition-colors group-hover:border-border-strong"
       />
-      {!compact && (
-        <span className="flex justify-between gap-2 font-mono text-xs/4 font-medium">
-          <span className={reserved ? "text-warning" : "text-accent"}>
-            {reserved ? "reserved" : `uk-used · ${listing.grade.toLowerCase()}`}
-          </span>
-          <span className="text-ink-secondary">
-            <BatteryLabel health={listing.batteryHealth} />
-          </span>
-        </span>
-      )}
-      <span className="font-display text-[17px]/[23px] font-semibold text-heading group-hover:underline lg:text-[19px]/[25px]">
-        {listing.model}
+      <span className="flex flex-col gap-1">
+        {reserved && <span className="font-mono text-meta text-warning">reserved</span>}
+        <span className="text-body font-semibold text-heading group-hover:underline">{listing.model}</span>
+        {!compact && spec && <span className="hidden text-body-sm text-ink-muted sm:block">{spec}</span>}
       </span>
-      {!compact && spec && <span className="font-mono text-xs/4 text-ink-muted">{spec}</span>}
-      <span className="mt-1 flex items-baseline justify-between gap-2">
-        {compact && (
-          <span className="font-mono text-xs/4 font-medium text-ink-secondary">
-            <BatteryLabel health={listing.batteryHealth} />
-          </span>
-        )}
-        <span className="font-mono text-base/5 font-medium text-ink lg:text-[19px]/6">
-          {formatCedis(listing.pricePesewas)}
+      <span className="flex flex-wrap items-baseline justify-between gap-x-2 gap-y-1">
+        <span className="font-mono text-price text-ink">{formatCedis(listing.pricePesewas)}</span>
+        <span className="font-mono text-meta text-secondary">
+          <BatteryLabel health={listing.batteryHealth} />
         </span>
       </span>
     </Link>

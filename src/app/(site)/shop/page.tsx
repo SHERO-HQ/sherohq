@@ -4,7 +4,7 @@ import { ListingCard } from "@/components/shop/ListingCard";
 import { GradeExplainer } from "@/components/shop/GradeExplainer";
 import { ShopFilters, SortSelect } from "@/components/shop/ShopFilters";
 import { DispatchCountdown } from "@/components/ui/LiveStatus";
-import { InlineArrow } from "@/components/ui/InlineArrow";
+import { buttonClass } from "@/components/ui/Button";
 import { formatCedis } from "@/lib/orders";
 import { getShopListings, getShopSettings, parseShopFilters, SHOP_PAGE_SIZE } from "@/lib/shop";
 import { routes, whatsappLink } from "@/lib/site";
@@ -47,17 +47,17 @@ export default async function ShopPage({ searchParams }: { searchParams: Promise
 
   return (
     <>
-      <section className="container-site flex flex-col gap-4 pt-10 pb-6 lg:flex-row lg:items-end lg:justify-between lg:gap-12 lg:pt-[72px] lg:pb-10">
-        <h1 className="max-w-[900px] font-display text-[38px]/[40px] font-bold tracking-[-0.03em] text-heading lg:text-[60px]/[62px] lg:tracking-[-0.035em]">
+      <section className="container-site flex flex-col gap-4 pb-6 lg:flex-row lg:items-end lg:justify-between lg:gap-12 lg:pb-10 pt-section">
+        <h1 className="max-w-4xl font-display text-h1 text-heading">
           UK-used laptops, tested and ready for work.
         </h1>
-        <p className="shrink-0 font-mono text-[13px]/[17px] text-ink-secondary">
+        <p className="shrink-0 font-mono text-meta text-ink-secondary">
           {inStock === 1 ? "1 device" : `${inStock} devices`} in stock
         </p>
       </section>
 
-      <section aria-label="What every device comes with" className="border-y border-border lg:border-t-rule-strong">
-        <ul className="container-site flex flex-wrap gap-x-10 gap-y-1 py-3.5 font-mono text-xs/5 text-ink lg:py-[18px] lg:font-sans lg:text-sm/5 lg:font-medium">
+      <section aria-label="What every device comes with" className="border-y border-border lg:border-t-border">
+        <ul className="container-site flex flex-wrap gap-x-10 gap-y-1 py-3.5 font-mono text-meta lg:text-body-sm text-ink lg:py-4.5 lg:font-sans lg:font-medium">
           {promises.map((promise, i) => (
             <li key={promise} className={i > 2 ? "hidden sm:block" : undefined}>
               {promise}
@@ -68,21 +68,21 @@ export default async function ShopPage({ searchParams }: { searchParams: Promise
 
       <section className="container-site pt-6 lg:pt-8">
         <div className="flex flex-col gap-3 rounded-md border border-border bg-surface px-5 py-4 lg:flex-row lg:items-center lg:justify-between lg:gap-6 lg:px-6 lg:py-5">
-          <p className="text-base/6 font-medium text-ink lg:text-[17px]/[26px]">
+          <p className="text-body lg:text-body-lg font-medium text-ink">
             Buying for school, work or design? Tell us what it&rsquo;s for and we&rsquo;ll recommend one.
           </p>
           <a
             href={whatsappLink(recommendMessage)}
             target="_blank"
             rel="noopener noreferrer"
-            className="shrink-0 text-[15px]/5 font-medium whitespace-nowrap text-primary hover:underline"
+            className={buttonClass({ variant: "secondary", className: "self-start lg:self-auto" })}
           >
-            Ask on WhatsApp <InlineArrow />
+            Ask on WhatsApp
           </a>
         </div>
       </section>
 
-      <section aria-label="Devices" className="container-site grid gap-6 pt-6 pb-16 lg:grid-cols-[240px_1fr] lg:gap-14 lg:pt-10 lg:pb-24">
+      <section aria-label="Devices" className="container-site grid gap-6 pt-6 lg:grid-cols-[240px_1fr] lg:gap-14 lg:pt-10 pb-section">
         <ShopFilters
           categories={settings.categories}
           minBattery={settings.minBatteryHealth}
@@ -96,7 +96,7 @@ export default async function ShopPage({ searchParams }: { searchParams: Promise
 
         <div>
           <div className="flex items-center justify-between gap-4 pb-5">
-            <p aria-live="polite" className="font-mono text-[13px]/[17px] text-ink-secondary">
+            <p aria-live="polite" className="font-mono text-meta text-ink-secondary">
               showing {categoryLabel} · {listings.length} of {matching}
             </p>
             <SortSelect value={filters.sort} />
@@ -115,7 +115,7 @@ export default async function ShopPage({ searchParams }: { searchParams: Promise
               <h2 className="font-display text-h3 text-heading">
                 {filtered ? "Nothing matches these filters right now." : "New stock is being checked."}
               </h2>
-              <p className="max-w-[560px] text-ink-secondary">
+              <p className="max-w-measure text-ink-secondary">
                 Every device is tested before it&rsquo;s listed, so stock comes in batches.{" "}
                 <a
                   href={whatsappLink("Hi SHERO, I'm looking for: ")}
@@ -140,14 +140,14 @@ export default async function ShopPage({ searchParams }: { searchParams: Promise
               <Link
                 href={`${routes.shop}?${moreParams}`}
                 scroll={false}
-                className="inline-flex h-12 items-center rounded-sm border border-border-strong px-6 text-[15px]/5 font-medium text-ink hover:border-ink"
+                className="inline-flex h-12 items-center rounded-sm border border-border-strong px-6 text-body font-medium text-ink hover:border-ink"
               >
                 Show more
               </Link>
             )}
             <DispatchCountdown
               fallback="Order before 5:00 PM for same-day dispatch to the bus station"
-              className="font-mono text-xs/4 text-ink-muted"
+              className="font-mono text-meta text-ink-muted"
             />
           </div>
         </div>
