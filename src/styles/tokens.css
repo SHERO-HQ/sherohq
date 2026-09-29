@@ -62,8 +62,8 @@
   --space-9: 96px;
   --section: 48px;
   --gutter: 20px;
-  --type-display: 36px;
-  --type-display-leading: 40px;
+  --type-display: 40px;
+  --type-display-leading: 42px;
   --type-h1: 30px;
   --type-h1-leading: 36px;
   --type-h2: 24px;
@@ -80,8 +80,8 @@
   :root {
     --section: 96px;
     --gutter: 32px;
-    --type-display: 56px;
-    --type-display-leading: 60px;
+    --type-display: 64px;
+    --type-display-leading: 64px;
     --type-h1: 40px;
     --type-h1-leading: 46px;
     --type-h2: 30px;
@@ -213,8 +213,8 @@
   --spacing-gutter: var(--gutter);
   --text-display: var(--type-display);
   --text-display--line-height: var(--type-display-leading);
-  --text-display--font-weight: 600;
-  --text-display--letter-spacing: -0.02em;
+  --text-display--font-weight: 700;
+  --text-display--letter-spacing: -0.03em;
   --text-h1: var(--type-h1);
   --text-h1--line-height: var(--type-h1-leading);
   --text-h1--font-weight: 600;

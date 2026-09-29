@@ -345,3 +345,92 @@ export function PharmacySpot({ className }: ArtProps) {
     </Frame>
   );
 }
+
+// ── Home hero ──────────────────────────────────────────────────────────────
+
+/** What SHERO does, in one scene: a business dashboard, a tested laptop and a MoMo payment. */
+export function HeroArt({ className }: ArtProps) {
+  const bars = [30, 46, 38, 58, 50, 70, 84];
+  return (
+    <Frame
+      label="Illustration: a business dashboard, a tested laptop and a mobile money payment"
+      viewBox="0 0 480 400"
+      className={className}
+    >
+      {/* The dashboard, at the back. */}
+      <Panel x={70} y={24} w={390} h={250} r={8} />
+      <rect x="70.5" y="48" width="70" height="225.5" className="fill-surface" />
+      <path d="M70.5 48 H459.5" className="stroke-border" />
+      {[84, 94, 104].map((x) => (
+        <circle key={x} cx={x} cy="36" r="3" className="fill-border" />
+      ))}
+      <rect x="80" y="60" width="50" height="14" rx="3" className="fill-primary" opacity={0.12} />
+      <Line x={86} y={64.5} w={36} tone="brand" />
+      {[88, 104, 120, 136].map((y) => (
+        <Line key={y} x={86} y={y} w={y === 120 ? 24 : 36} />
+      ))}
+      <Line x={156} y={62} w={80} h={8} tone="strong" />
+      {[156, 256, 356].map((x, i) => (
+        <g key={x}>
+          <rect x={x} y="80" width="88" height="48" rx="5" className="fill-page stroke-border" />
+          <Line x={x + 12} y={91} w={34} />
+          <Line x={x + 12} y={105} w={i === 1 ? 40 : 52} h={9} tone="strong" />
+        </g>
+      ))}
+      <rect x="156" y="140" width="184" height="120" rx="5" className="fill-page stroke-border" />
+      <path d="M168 246 H328" className="stroke-border" />
+      {bars.map((h, i) => (
+        <rect
+          key={i}
+          x={172 + i * 22}
+          y={246 - h}
+          width="12"
+          height={h}
+          rx="2"
+          className={i === bars.length - 1 ? "fill-secondary" : "fill-primary"}
+          opacity={i === bars.length - 1 ? 1 : 0.3 + i * 0.1}
+        />
+      ))}
+      <rect x="352" y="140" width="96" height="120" rx="5" className="fill-page stroke-border" />
+      {[158, 178, 198, 218, 238].map((y) => (
+        <g key={y}>
+          <circle cx="366" cy={y} r="4" className="fill-secondary" opacity={0.35} />
+          <Line x={376} y={y - 2.5} w={y === 198 ? 40 : 56} />
+        </g>
+      ))}
+
+      {/* A tested laptop, front left. */}
+      <rect x="41" y="197" width="188" height="122" rx="8" className="fill-ink" opacity={0.07} />
+      <rect x="40" y="192" width="188" height="122" rx="8" className="fill-surface-raised stroke-border-strong" />
+      <rect x="50" y="202" width="168" height="102" rx="3" className="fill-surface" />
+      <rect x="86" y="224" width="94" height="36" rx="6" className="fill-page stroke-secondary" strokeWidth={2} />
+      <rect x="181" y="235" width="5" height="14" rx="2" className="fill-secondary" />
+      <rect x="91" y="229" width="84" height="26" rx="3" className="fill-secondary" />
+      {[276, 290].map((y) => (
+        <g key={y}>
+          <Tick x={94} y={y} r={4.5} />
+          <Line x={104} y={y - 2.5} w={y === 276 ? 70 : 54} />
+        </g>
+      ))}
+      <path d="M24 314 H244 L256 330 Q257 334 252 334 H16 Q11 334 12 330 Z" className="fill-surface-raised stroke-border-strong" />
+      <rect x="112" y="328" width="44" height="3" rx="1.5" className="fill-border" />
+
+      {/* A MoMo payment, front right. */}
+      <rect x="351" y="156" width="104" height="206" rx="16" className="fill-ink" opacity={0.07} />
+      <rect x="350" y="150" width="104" height="206" rx="16" className="fill-surface-raised stroke-border-strong" />
+      <rect x="360" y="168" width="84" height="172" rx="6" className="fill-surface" />
+      <rect x="392" y="156" width="20" height="4" rx="2" className="fill-border" />
+      <Line x={372} y={186} w={30} />
+      <Line x={372} y={198} w={58} h={12} tone="strong" />
+      <Tick x={402} y={262} r={18} />
+      <Line x={376} y={300} w={52} />
+      <Line x={384} y={312} w={36} />
+
+      {/* Done: floating over the dashboard's edge. */}
+      <Panel x={18} y={72} w={150} h={52} />
+      <Tick x={40} y={98} r={10} />
+      <Line x={58} y={88} w={82} h={7} tone="strong" />
+      <Line x={58} y={102} w={56} />
+    </Frame>
+  );
+}

@@ -10,7 +10,7 @@ const manifest = JSON.parse(readFileSync(resolve(root, "review/manifest.json"), 
 // What differs from the mockup on purpose. Anything else that differs is a bug.
 const notes: Record<string, string[]> = {
   home: [
-    "Hero is centred over a faint dot grid that fades out, with the four What do you need cards below.",
+    "Hero: bold 64px headline on the left, an illustration of SHERO's work on the right (dashboard, tested laptop, MoMo payment), over a faint dot grid.",
     "We've worked with, Clerk style: a small centred label over slowly scrolling names (pause on hover; still if motion is off), with no band. Narrow so no name shows twice until there are more clients.",
     "Laptop cards reuse the shop's card instead of a separate table.",
     "Services are four cards with illustrations (drawn in SHERO's colours) until real photos and screenshots arrive: four across on large screens, two on tablets, one on phones.",
