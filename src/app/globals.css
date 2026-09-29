@@ -136,9 +136,17 @@
   padding-inline: var(--gutter);
 }
 
-/* The phone menu fades and drops in. */
+/* The phone menu fades and drops in; a client name rises into its spot. */
 @theme {
   --animate-menu-in: menu-in 180ms ease-out;
+  --animate-logo-in: logo-in 500ms ease-out;
+}
+/* No opacity change, so the text never passes through low contrast. */
+@keyframes logo-in {
+  from {
+    transform: translateY(8px);
+    filter: blur(6px);
+  }
 }
 @keyframes menu-in {
   from {
@@ -152,44 +160,6 @@
   background-image: radial-gradient(var(--border) 1px, transparent 1.25px);
   background-size: 16px 16px;
   background-position: center;
-}
-
-/* The client strip: an endless, slow scroll with faded edges (Marquee.tsx). */
-@keyframes marquee {
-  to {
-    transform: translateX(-50%);
-  }
-}
-@layer components {
-  .marquee {
-    overflow: hidden;
-    mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
-  }
-  .marquee-track {
-    display: flex;
-    width: max-content;
-    animation: marquee 40s linear infinite;
-  }
-  .marquee:hover .marquee-track {
-    animation-play-state: paused;
-  }
-  /* Still, once, and unfaded for visitors who turned motion off. */
-  @media (prefers-reduced-motion: reduce) {
-    .marquee {
-      mask-image: none;
-    }
-    .marquee-track {
-      animation: none !important;
-    }
-    .marquee-copy {
-      display: none !important; /* beats the copy's own flex utility */
-    }
-  }
-}
-
-/* Fades an element out towards its bottom (the hero's dot grid). */
-@utility mask-fade-down {
-  mask-image: linear-gradient(to bottom, black, transparent);
 }
 
 /* The logo's slanted bars. Only the home hero, About hero and 404 use them. */

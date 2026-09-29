@@ -12,7 +12,7 @@ const notes: Record<string, string[]> = {
   home: [
     "Each thing said once: hero, clients, one What do you need? row, laptops, our own products, closing panel. 18 cards down to 10.",
     "Hero: bold 64px headline on the left, an illustration of SHERO's work on the right, over a faint dot grid.",
-    "We've worked with, Clerk style: small centred label over slowly scrolling names (pause on hover; still if motion is off). Narrow so no name shows twice until there are more clients.",
+    "We've worked with, Clerk style: the text beside one row of names on large screens, above a two-column grid on phones. Spots swap names one at a time when there are more clients than spots (phones now; large screens from the fifth client). Still if motion is off.",
     "What do you need? merges the old paths and services rows: four illustrated cards titled in the visitor's words.",
     "Laptop cards reuse the shop's card; delivery, payment and warranty sit under them; the device checks moved to the shop and laptop pages.",
     "Merchander and Pharmasyst appear once, in Our own products, each with its illustration and In development label.",
