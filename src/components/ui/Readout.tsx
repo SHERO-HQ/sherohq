@@ -9,10 +9,20 @@ const tones = {
 };
 
 /**
- * A mono "spec sheet" card: the one data moment on a page. Always labelled as
- * an illustration so it's never mistaken for a real client's system.
+ * A mono "spec sheet" card: the one data moment on a page. Labelled as an
+ * illustration unless it shows a real record (a listed device's own check).
  */
-export function Readout({ title, rows, className }: { title: string; rows: ReadoutRow[]; className?: string }) {
+export function Readout({
+  title,
+  rows,
+  caption = "illustration",
+  className,
+}: {
+  title: string;
+  rows: ReadoutRow[];
+  caption?: string;
+  className?: string;
+}) {
   return (
     <figure
       className={cn(
@@ -22,7 +32,7 @@ export function Readout({ title, rows, className }: { title: string; rows: Reado
     >
       <figcaption className="mb-2.5 flex justify-between gap-4">
         <span className="font-medium text-navy-100">{title}</span>
-        <span className="text-[11px] text-readout-label">illustration</span>
+        <span className="text-[11px] text-readout-label">{caption}</span>
       </figcaption>
       <dl>
         {rows.map((row) => (

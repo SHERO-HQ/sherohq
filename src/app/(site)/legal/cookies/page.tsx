@@ -3,6 +3,7 @@ import { ConsentSettings } from "@/components/analytics/ConsentSettings";
 import { LegalPage } from "@/components/legal/LegalPage";
 import { missing } from "@/lib/content";
 import { CONSENT_COOKIE } from "@/lib/analytics";
+import { CART_COOKIE, PLACED_COOKIE } from "@/lib/cart";
 import { business, routes } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -13,6 +14,13 @@ export const metadata: Metadata = {
 
 const cookies = [
   { name: CONSENT_COOKIE, who: "SHERO", purpose: "Remembers whether you allowed analytics.", lasts: "6 months" },
+  { name: CART_COOKIE, who: "SHERO", purpose: "Remembers which devices are in your cart.", lasts: "30 days" },
+  {
+    name: PLACED_COOKIE,
+    who: "SHERO",
+    purpose: "Shows your order confirmation after checkout. Holds only the order number.",
+    lasts: "1 day",
+  },
   { name: "_ga, _ga_*", who: "Google Analytics", purpose: "Counts visits and tells returning visitors apart.", lasts: "Up to 2 years" },
   { name: "_clck", who: "Microsoft Clarity", purpose: "Tells returning visitors apart.", lasts: "1 year" },
   { name: "_clsk", who: "Microsoft Clarity", purpose: "Groups page views into one visit.", lasts: "1 day" },
@@ -26,8 +34,8 @@ export default function CookiesPage() {
       updated={missing("date")}
       intro={
         <p>
-          Cookies are small files a website stores in your browser. We use one of our own, and analytics cookies only
-          if you allow them.
+          Cookies are small files a website stores in your browser. We use a few of our own to make the site work, and
+          analytics cookies only if you allow them.
         </p>
       }
       sections={[

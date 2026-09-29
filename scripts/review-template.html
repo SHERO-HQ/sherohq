@@ -1,0 +1,231 @@
+<title>SHERO Site Review</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@600;700&family=Red+Hat+Mono:wght@400;500&family=Red+Hat+Text:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  /* Layout: page index on the left, the selected page's built/design pair on the right; stacks on phones. */
+  :root {
+    --page: #ffffff;
+    --surface: #f5f7fa;
+    --ink: #0b1220;
+    --ink-2: #4b5563;
+    --ink-3: #5f6877;
+    --heading: #043284;
+    --primary: #043284;
+    --on-primary: #ffffff;
+    --accent: #05735a;
+    --warn: #8a4b08;
+    --warn-bg: #fdf3e3;
+    --border: #dde2ea;
+    --rule: #0b1220;
+    --focus: #2f5ebc;
+    --display: "Red Hat Display", system-ui, sans-serif;
+    --text: "Red Hat Text", system-ui, sans-serif;
+    --mono: "Red Hat Mono", ui-monospace, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --page: #0a0f1a; --surface: #111827; --ink: #f1f4f9; --ink-2: #b4bdcb; --ink-3: #8a94a6;
+      --heading: #dce6f8; --primary: #86a7e3; --on-primary: #0a0f1a; --accent: #62c3a4;
+      --warn: #f3c06b; --warn-bg: #2b1d08; --border: #243044; --rule: #dce6f8; --focus: #86a7e3;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --page: #0a0f1a; --surface: #111827; --ink: #f1f4f9; --ink-2: #b4bdcb; --ink-3: #8a94a6;
+    --heading: #dce6f8; --primary: #86a7e3; --on-primary: #0a0f1a; --accent: #62c3a4;
+    --warn: #f3c06b; --warn-bg: #2b1d08; --border: #243044; --rule: #dce6f8; --focus: #86a7e3;
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  body { background: var(--page); color: var(--ink); font: 400 15px/1.6 var(--text); }
+  :focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+  .wrap { padding-inline: 16px; padding-block: 24px 64px; max-width: 1600px; margin-inline: auto; display: flex; flex-direction: column; gap: 24px; }
+  @media (min-width: 900px) { .wrap { padding-inline: 32px; } }
+
+  header.top { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 12px 32px; padding-bottom: 20px; border-bottom: 1px solid var(--rule); }
+  .eyebrow { font: 500 12px/16px var(--mono); color: var(--accent); }
+  h1 { margin: 6px 0 0; font: 700 clamp(28px, 4vw, 40px)/1.1 var(--display); letter-spacing: -0.02em; color: var(--heading); text-wrap: balance; }
+  .meta { font: 400 12px/18px var(--mono); color: var(--ink-3); }
+  .intro { max-width: 68ch; margin: 0; color: var(--ink-2); }
+
+  .layout { display: grid; gap: 24px; }
+  @media (min-width: 900px) { .layout { grid-template-columns: 260px minmax(0, 1fr); gap: 40px; } }
+
+  nav.pages { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; }
+  nav.pages a { flex: none; display: flex; justify-content: space-between; gap: 12px; padding: 8px 12px; border: 1px solid var(--border); border-radius: 2px; color: var(--ink-2); text-decoration: none; font: 500 14px/20px var(--text); white-space: nowrap; }
+  nav.pages a[aria-current="true"] { border-color: var(--primary); color: var(--ink); }
+  nav.pages .route { min-width: 0; overflow: hidden; text-overflow: ellipsis; font: 400 12px/20px var(--mono); color: var(--ink-3); }
+  @media (min-width: 900px) {
+    nav.pages { flex-direction: column; gap: 0; overflow: visible; position: sticky; top: calc(16px + env(safe-area-inset-top, 0px)); align-self: start; border-top: 1px solid var(--rule); }
+    nav.pages a { border: 0; border-bottom: 1px solid var(--border); border-radius: 0; padding: 10px 0; }
+    nav.pages a[aria-current="true"] { color: var(--primary); box-shadow: inset 2px 0 0 var(--accent); padding-left: 10px; }
+  }
+
+  main { min-width: 0; display: flex; flex-direction: column; gap: 20px; }
+  .page-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 16px; }
+  h2 { margin: 0; font: 700 28px/1.15 var(--display); letter-spacing: -0.015em; color: var(--heading); }
+  .route-big { font: 400 13px/18px var(--mono); color: var(--ink-3); }
+
+  .controls { display: flex; flex-wrap: wrap; gap: 8px; }
+  .seg { display: inline-flex; border: 1px solid var(--border); border-radius: 2px; }
+  .seg button { appearance: none; border: 0; background: transparent; color: var(--ink-2); padding: 7px 12px; font: 500 13px/18px var(--text); cursor: pointer; }
+  .seg button + button { border-left: 1px solid var(--border); }
+  .seg button[aria-pressed="true"] { background: var(--primary); color: var(--on-primary); }
+
+  .notes { border: 1px solid var(--border); border-radius: 4px; background: var(--surface); padding: 16px 18px; display: flex; flex-direction: column; gap: 8px; }
+  .notes h3 { margin: 0; font: 500 12px/16px var(--mono); color: var(--accent); }
+  .notes ul { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 4px; color: var(--ink-2); }
+  .notes .none { margin: 0; color: var(--ink-2); }
+
+  .pair { display: grid; gap: 16px; align-items: start; }
+  .pair.side { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .pair.mobile.side { grid-template-columns: repeat(2, minmax(0, 390px)); justify-content: start; }
+  @media (max-width: 700px) { .pair.side { grid-template-columns: minmax(0, 1fr); } }
+  figure { margin: 0; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+  figcaption { display: flex; justify-content: space-between; gap: 8px; font: 500 12px/16px var(--mono); color: var(--ink-3); }
+  figcaption b { color: var(--ink); font-weight: 500; }
+  .shot { border: 1px solid var(--border); border-radius: 4px; overflow: hidden; background: var(--surface); }
+  .shot img { display: block; width: 100%; height: auto; }
+  .missing { padding: 32px 20px; font: 400 13px/20px var(--mono); color: var(--ink-3); }
+  .tag { display: inline-flex; align-items: center; gap: 6px; padding: 0 7px; height: 22px; border-radius: 2px; background: var(--warn-bg); color: var(--warn); font: 400 11px/16px var(--mono); }
+
+  details.global { border-top: 1px solid var(--border); padding-top: 16px; color: var(--ink-2); }
+  details.global summary { cursor: pointer; font: 500 14px/20px var(--text); color: var(--ink); }
+  details.global ul { margin: 10px 0 0; padding-left: 18px; }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div>
+      <div class="eyebrow">sherohq.com rebuild · rebuild branch</div>
+      <h1>Built pages next to their designs</h1>
+    </div>
+    <div class="meta">captured __CAPTURED__ · commit __COMMIT__</div>
+  </header>
+
+  <p class="intro">
+    Each page as built, beside its mockup. Switch between desktop and mobile, light and dark. Differences listed under
+    “Changed on purpose” are deliberate; anything else that looks different or wrong, leave a comment on it.
+  </p>
+
+  <div class="layout">
+    <nav class="pages" aria-label="Pages" id="pages"></nav>
+
+    <main id="main" aria-live="polite">
+      <div class="page-head">
+        <div>
+          <h2 id="title"></h2>
+          <div class="route-big" id="route"></div>
+        </div>
+        <div class="controls">
+          <div class="seg" role="group" aria-label="Screen size" id="viewport">
+            <button type="button" data-value="desktop">Desktop</button>
+            <button type="button" data-value="mobile">Mobile</button>
+          </div>
+          <div class="seg" role="group" aria-label="Theme" id="theme">
+            <button type="button" data-value="light">Light</button>
+            <button type="button" data-value="dark">Dark</button>
+          </div>
+          <div class="seg" role="group" aria-label="Show" id="show">
+            <button type="button" data-value="side">Side by side</button>
+            <button type="button" data-value="built">Built</button>
+            <button type="button" data-value="design">Design</button>
+          </div>
+        </div>
+      </div>
+
+      <section class="notes" aria-labelledby="notes-title">
+        <h3 id="notes-title">changed on purpose</h3>
+        <div id="notes"></div>
+      </section>
+
+      <div class="pair" id="pair"></div>
+
+      <details class="global">
+        <summary>Changes on every page</summary>
+        <ul>__EVERYWHERE__</ul>
+      </details>
+    </main>
+  </div>
+</div>
+
+<script>
+  const pages = __DATA__;
+  const state = { slug: pages[0].slug, viewport: "desktop", theme: "light", show: "side" };
+
+  // Remember the viewer's choices between visits (best effort).
+  try {
+    const saved = JSON.parse(localStorage.getItem("shero-review") || "{}");
+    for (const key of ["viewport", "theme", "show"]) if (saved[key]) state[key] = saved[key];
+  } catch {}
+  const hash = location.hash.slice(1);
+  if (pages.some((p) => p.slug === hash)) state.slug = hash;
+
+  const $ = (id) => document.getElementById(id);
+
+  $("pages").innerHTML = pages
+    .map((p) => `<a href="#${p.slug}" data-slug="${p.slug}"><span>${p.title}</span><span class="route">${p.route === "/this-page-does-not-exist" ? "any bad link" : p.route}</span></a>`)
+    .join("");
+
+  function shot(label, file, fallback) {
+    const body = file
+      ? `<img src="shots/${file}" alt="${label}" loading="lazy">`
+      : `<div class="missing">${fallback}</div>`;
+    return `<figure><figcaption><b>${label}</b></figcaption><div class="shot">${body}</div></figure>`;
+  }
+
+  function render() {
+    const page = pages.find((p) => p.slug === state.slug);
+    const viewports = Object.keys(page.shots);
+    if (!viewports.includes(state.viewport)) state.viewport = viewports[0];
+    const pair = page.shots[state.viewport][state.theme];
+
+    $("title").textContent = page.title;
+    $("route").textContent = page.route === "/this-page-does-not-exist" ? "shown for any link that doesn't exist" : page.route;
+    for (const a of document.querySelectorAll("#pages a")) a.setAttribute("aria-current", String(a.dataset.slug === state.slug));
+    for (const [group, value] of [["viewport", state.viewport], ["theme", state.theme], ["show", state.show]]) {
+      for (const b of $(group).querySelectorAll("button")) {
+        b.setAttribute("aria-pressed", String(b.dataset.value === value));
+        if (group === "viewport") b.disabled = !viewports.includes(b.dataset.value);
+      }
+    }
+
+    $("notes").innerHTML = page.notes.length
+      ? `<ul>${page.notes.map((n) => `<li>${n}</li>`).join("")}</ul>`
+      : `<p class="none">Nothing; it should match the design apart from [bracketed] content still to come.</p>`;
+
+    const designFallback = "No mockup for this page.";
+    const parts = [];
+    if (state.show !== "design") parts.push(shot("Built", pair.built, ""));
+    if (state.show !== "built") parts.push(shot("Design", pair.design, designFallback));
+    const el = $("pair");
+    el.className = `pair ${state.viewport}${parts.length === 2 ? " side" : ""}`;
+    el.innerHTML = parts.join("");
+
+    try { localStorage.setItem("shero-review", JSON.stringify({ viewport: state.viewport, theme: state.theme, show: state.show })); } catch {}
+  }
+
+  for (const group of ["viewport", "theme", "show"]) {
+    $(group).addEventListener("click", (e) => {
+      const b = e.target.closest("button");
+      if (!b || b.disabled) return;
+      state[group] = b.dataset.value;
+      render();
+    });
+  }
+  $("pages").addEventListener("click", (e) => {
+    const a = e.target.closest("a");
+    if (!a) return;
+    state.slug = a.dataset.slug;
+    render();
+    $("title").scrollIntoView({ block: "nearest" });
+  });
+  window.addEventListener("hashchange", () => {
+    const slug = location.hash.slice(1);
+    if (pages.some((p) => p.slug === slug)) { state.slug = slug; render(); }
+  });
+
+  render();
+</script>

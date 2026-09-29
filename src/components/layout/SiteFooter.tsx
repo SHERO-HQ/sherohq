@@ -43,19 +43,19 @@ export function SiteFooter() {
         <div className="grid grid-cols-2 gap-x-4 gap-y-7 lg:grid-cols-[2fr_1fr_1fr_1fr] lg:gap-12">
           <div className="col-span-2 flex flex-col gap-8 lg:col-span-1 lg:gap-4">
             <Logo variant="light" className="h-6 w-auto self-start lg:h-7" />
-            <p className="font-mono text-xs/5 text-ink-inverse-muted">
-              <a href={`mailto:${business.email}`} className="hover:text-ink-inverse">
+            {/* Email and phone get full-height tap targets on phones (24px+). */}
+            <div className="flex flex-col items-start font-mono text-xs/5 text-ink-inverse-muted">
+              <a href={`mailto:${business.email}`} className="py-1.5 hover:text-ink-inverse lg:py-0">
                 {business.email}
               </a>
-              <br />
-              <a href={`tel:${business.phoneE164}`} className="hover:text-ink-inverse">
+              <a href={`tel:${business.phoneE164}`} className="py-1.5 hover:text-ink-inverse lg:py-0">
                 {business.phoneDisplay}
               </a>
-              <br />
-              {business.city} · {business.hours}
-              <br />
+              <span className="pt-1.5 lg:pt-0">
+                {business.city} · {business.hours}
+              </span>
               <OpenNow fallback="" dotClassName="bg-emerald-400" className="text-ink-inverse" />
-            </p>
+            </div>
           </div>
 
           {columns.map((column) => (

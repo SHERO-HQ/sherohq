@@ -60,7 +60,7 @@ export default async function CaseStudyPage({ params }: Props) {
   return (
     <>
       <nav aria-label="Breadcrumb" className="container-site pt-5 font-mono text-[13px]/[18px] text-ink-muted lg:pt-7">
-        <Link href={routes.work} className="text-ink-secondary hover:text-primary">
+        <Link href={routes.work} className="text-ink-secondary underline underline-offset-3 hover:text-primary">
           work
         </Link>{" "}
         / {project.slug}

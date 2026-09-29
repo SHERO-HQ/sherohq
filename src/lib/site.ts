@@ -21,6 +21,8 @@ export const routes = {
   home: "/",
   services: "/services",
   shop: "/shop",
+  cart: "/cart",
+  checkout: "/checkout",
   products: "/#products",
   merchander: "/merchander",
   pharmasyst: "/pharmasyst",
@@ -39,7 +41,7 @@ export const routes = {
 export const siteUrl = "https://sherohq.com";
 
 /** Pages that exist today. The sitemap lists these; add each page as it ships. */
-export const livePages: string[] = [routes.home, routes.services, routes.about, routes.work, routes.support, routes.consultation, routes.careers, routes.terms, routes.privacy, routes.cookies, routes.merchander, routes.pharmasyst];
+export const livePages: string[] = [routes.home, routes.services, routes.shop, routes.track, routes.about, routes.work, routes.support, routes.consultation, routes.careers, routes.terms, routes.privacy, routes.cookies, routes.merchander, routes.pharmasyst];
 
 export const mainNav = [
   { label: "Services", href: routes.services },

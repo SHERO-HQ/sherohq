@@ -21,3 +21,46 @@ jobs:
       - run: yarn typecheck
       - run: yarn test
       - run: yarn build
+
+  # Accessibility (WCAG 2.1 AA, every page, both themes, desktop and mobile)
+  # and mobile speed budgets (Lighthouse on throttled 4G).
+  # The shop reads a throwaway Postgres filled with `yarn db:seed` samples.
+  browser:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: shero
+          POSTGRES_PASSWORD: shero
+          POSTGRES_DB: shero
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U shero"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgres://shero:shero@localhost:5432/shero
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: corepack enable
+      - run: yarn install --immutable
+      - run: yarn playwright install --with-deps chromium
+      - run: yarn db:migrate
+      - run: yarn db:seed
+      - run: yarn build
+      - run: yarn test:a11y
+      - name: Speed budgets
+        run: yarn test:speed
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: browser-reports
+          path: |
+            test-results/
+            .lighthouseci/
+          retention-days: 14
