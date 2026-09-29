@@ -2,15 +2,19 @@ import type { NextConfig } from "next";
 
 const siteUrl = "https://sherohq.com";
 
+// In `next dev`, React uses eval() for debugging and hot reload uses a
+// WebSocket; production needs neither, so they're allowed in development only.
+const isDev = process.env.NODE_ENV === "development";
+
 // Google Analytics and Microsoft Clarity load only after cookie consent,
 // but their hosts must be allowed for when they do.
 const contentSecurityPolicy = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.clarity.ms https://*.clarity.ms",
+  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""} https://www.googletagmanager.com https://www.clarity.ms https://*.clarity.ms`,
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob: https:",
   "font-src 'self' data:",
-  "connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com https://*.clarity.ms https://c.bing.com",
+  `connect-src 'self'${isDev ? " ws:" : ""} https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com https://*.clarity.ms https://c.bing.com`,
   "frame-ancestors 'none'",
   "base-uri 'self'",
   "form-action 'self'",
