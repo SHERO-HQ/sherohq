@@ -182,7 +182,10 @@ export default async function ListingPage({ params }: Props) {
           )}
 
           <div className="flex flex-wrap gap-3">
-            <AddToCart listingId={listing.id} available={available} className="hidden sm:inline-flex" />
+            {/* Phones use the sticky bar below instead. */}
+            <span className="hidden sm:contents">
+              <AddToCart listingId={listing.id} available={available} />
+            </span>
             <a
               href={whatsappLink(`Hi SHERO, I'm asking about the ${listing.model}: ${url}`)}
               target="_blank"
