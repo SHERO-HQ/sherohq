@@ -1,112 +1,76 @@
 import type { NextConfig } from "next";
 
+const siteUrl = "https://sherohq.com";
+
+// Google Analytics and Microsoft Clarity load only after cookie consent,
+// but their hosts must be allowed for when they do.
+const contentSecurityPolicy = [
+  "default-src 'self'",
+  "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.clarity.ms https://*.clarity.ms",
+  "style-src 'self' 'unsafe-inline'",
+  "img-src 'self' data: blob: https:",
+  "font-src 'self' data:",
+  "connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com https://*.clarity.ms https://c.bing.com",
+  "frame-ancestors 'none'",
+  "base-uri 'self'",
+  "form-action 'self'",
+].join("; ");
+
 const nextConfig: NextConfig = {
-  compress: true,
-  serverExternalPackages: ["pdfkit"],
-  transpilePackages: ["motion"],
-  outputFileTracingRoot: process.cwd(),
-
-
-  // Note: All /api routes are now handled natively by Next.js API Routes.
-  // The Express proxy has been decommissioned for performance and stability.
-
-  // Image optimization
-  images: {
-    minimumCacheTTL: 31536000,
-    dangerouslyAllowSVG: true,
-    contentDispositionType: "attachment",
-    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
-    formats: ["image/avif", "image/webp"],
-    deviceSizes: [360, 480, 640, 750, 828, 1080, 1200, 1920],
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "*.supabase.co",
-        port: "",
-        pathname: "/storage/v1/object/public/**",
-      },
-      {
-        protocol: "https",
-        hostname: "placehold.co",
-      },
-      {
-        protocol: "https",
-        hostname: "images.unsplash.com",
-      },
-      {
-        protocol: "https",
-        hostname: "api.dicebear.com",
-      },
-    ],
-  },
-
   reactStrictMode: true,
+  poweredByHeader: false,
 
-  // Optimise production builds
-  productionBrowserSourceMaps: false,
-
-  // Redirect old checkout complete URLs to the new success page
   async redirects() {
     return [
+      // Old site paths → their new homes (PRD: "Existing URLs").
+      { source: "/consultation", destination: "/support/consultation", permanent: true },
+      { source: "/contact-us", destination: "/support", permanent: true },
+      { source: "/products", destination: "/shop", permanent: true },
+      { source: "/products/:path*", destination: "/shop", permanent: true },
+      { source: "/partners", destination: "/work", permanent: true },
+      { source: "/careers", destination: "/about/careers", permanent: true },
+
+      // Product subdomains point at their pages until launch, when they become
+      // the product itself, so these are temporary (not cached by browsers).
       {
-        source: "/checkout/complete",
-        destination: "/shop/checkout/success",
+        source: "/:path*",
+        has: [{ type: "host", value: "merchander.sherohq.com" }],
+        destination: `${siteUrl}/merchander`,
+        permanent: false,
+      },
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "pharmasyst.sherohq.com" }],
+        destination: `${siteUrl}/pharmasyst`,
+        permanent: false,
+      },
+
+      // Old site's shop and support subdomains.
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "shop.sherohq.com" }],
+        destination: `${siteUrl}/shop`,
         permanent: true,
       },
       {
-        source: "/shop/checkout/complete",
-        destination: "/shop/checkout/success",
+        source: "/:path*",
+        has: [{ type: "host", value: "support.sherohq.com" }],
+        destination: `${siteUrl}/support`,
         permanent: true,
       },
     ];
   },
 
-  // Cache headers for static assets and security headers
   async headers() {
     return [
-
       {
         source: "/:path*",
         headers: [
-          {
-            key: "X-Frame-Options",
-            value: "DENY",
-          },
-          {
-            key: "X-Content-Type-Options",
-            value: "nosniff",
-          },
-          {
-            key: "Referrer-Policy",
-            value: "strict-origin-when-cross-origin",
-          },
-          {
-            key: "Permissions-Policy",
-            value: "camera=(), microphone=(), geolocation=()",
-          },
-          {
-            key: "Strict-Transport-Security",
-            value: "max-age=31536000; includeSubDomains; preload",
-          },
-          {
-            key: "Cross-Origin-Opener-Policy",
-            value: "same-origin-allow-popups",
-          },
-          {
-            key: "Content-Security-Policy",
-            value:
-              "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.supabase.co https://*.vercel-scripts.com https://*.vercel-analytics.com https://*.googletagmanager.com https://connect.facebook.net; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https: wss:; frame-ancestors 'none';",
-          },
-        ],
-      },
-      {
-        // Cache static assets aggressively
-        source: "/:path*.(woff2|woff|ttf|otf|ico|svg|png|jpg|jpeg|webp|avif|gif)",
-        headers: [
-          {
-            key: "Cache-Control",
-            value: "public, max-age=31536000, immutable",
-          },
+          { key: "Content-Security-Policy", value: contentSecurityPolicy },
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+          { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
+          { key: "Strict-Transport-Security", value: "max-age=31536000; includeSubDomains" },
         ],
       },
     ];

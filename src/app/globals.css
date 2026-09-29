@@ -1,0 +1,86 @@
+@import "tailwindcss";
+@import "@fontsource-variable/red-hat-display";
+@import "@fontsource-variable/red-hat-text";
+@import "@fontsource-variable/red-hat-mono";
+@import "../styles/tokens.css";
+
+/*
+ * Colours the page designs use that aren't design-system tokens. Keep this list
+ * short; anything reused widely belongs in design/system/tokens.json.
+ */
+:root {
+  /* Strong 1px rule above lists and grids: ink in light, heading in dark. */
+  --rule-strong: var(--ink);
+  /* Full-width photo band behind "Set up and supported by SHERO". */
+  --band: #1b2a47;
+  /* Supporting text on navy blocks (the closing call to action). */
+  --on-navy-muted: #c9d4ee;
+  /* Divider inside the footer. */
+  --inverse-border: #1e2c4a;
+  /* Product identity colours (product pages theme with these). */
+  --merchander: #ff6a00;
+  --pharmasyst: #13a56b;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --rule-strong: var(--navy-100);
+    --band: #0e1a33;
+  }
+}
+
+@theme inline {
+  --color-rule-strong: var(--rule-strong);
+  --color-band: var(--band);
+  --color-on-navy-muted: var(--on-navy-muted);
+  --color-inverse-border: var(--inverse-border);
+  --color-merchander: var(--merchander);
+  --color-pharmasyst: var(--pharmasyst);
+}
+
+@layer base {
+  html {
+    color-scheme: light dark;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background: var(--page);
+    color: var(--ink);
+    font-family: var(--font-text-stack);
+    font-size: 16px;
+    line-height: 26px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      transition-duration: 0.01ms !important;
+      animation-duration: 0.01ms !important;
+    }
+  }
+}
+
+@utility container-site {
+  width: 100%;
+  /* Designs are drawn at 1440px with 80px gutters. */
+  max-width: 1440px;
+  margin-inline: auto;
+  padding-inline: 20px;
+
+  @media (width >= 64rem) {
+    padding-inline: 80px;
+  }
+}
+
+/* The logo's slanted bars. Only the home hero, About hero and 404 use them. */
+@utility slant {
+  clip-path: polygon(22% 0, 100% 0, 78% 100%, 0 100%);
+}

@@ -1,13 +1,13 @@
 {
   "name": "SHERO",
   "short_name": "SHERO",
-  "description": "SHERO tech solutions — shop, book consultations, and explore our services.",
+  "description": "Software, refurbished laptops and IT support from Tamale, Ghana.",
   "id": "/",
   "start_url": "/",
   "display": "standalone",
   "orientation": "portrait-primary",
-  "theme_color": "#10b981",
-  "background_color": "#0f172a",
+  "theme_color": "#043284",
+  "background_color": "#FFFFFF",
   "icons": [
     {
       "src": "/web-app-manifest-192x192.png",
