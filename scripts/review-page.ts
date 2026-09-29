@@ -24,11 +24,10 @@ const notes: Record<string, string[]> = {
     "Payment facts include store pickup.",
   ],
   menu: [
-    "Rows with an icon each; the current page is highlighted.",
-    "Products lists Merchander and Pharmasyst, each labelled In development.",
-    "A contact card with the live Open now status, phone, email and a green WhatsApp button.",
-    "Escape closes it, Tab stays inside it, and focus returns to the menu button.",
-    "Theme toggle inside the menu too.",
+    "A plain list under the header, like lucide.dev: the header stays and the menu icon turns into a close mark.",
+    "Products lists Merchander and Pharmasyst, each marked In development.",
+    "Track an order is in the list; one Book a free consultation button, then phone and email.",
+    "Escape closes it and focus returns to the menu button.",
   ],
   services: [
     "Each service shows its illustration in a card with what's included; the steps are cards.",

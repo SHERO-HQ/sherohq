@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { useCallback, useRef, useState, useSyncExternalStore } from "react";
 import { ShoppingCart } from "lucide-react";
+import { MobileMenu } from "@/components/layout/MobileMenu";
 import { MenuIcon } from "@/components/ui/MenuIcon";
 import { Logo } from "@/components/ui/Logo";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
@@ -16,11 +17,6 @@ function isCurrent(pathname: string, href: string) {
   if (href.includes("#")) return false;
   return href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`);
 }
-
-// The phone menu isn't in the page's first load; it's fetched once the page is
-// idle (or when a finger touches the button), so it's ready before it's opened.
-type MobileMenuComponent = (typeof import("@/components/layout/MobileMenu"))["MobileMenu"];
-const loadMenu = () => import("@/components/layout/MobileMenu").then((m) => m.MobileMenu);
 
 const shopPaths = [routes.shop, routes.cart, routes.checkout];
 
@@ -53,20 +49,10 @@ export function SiteHeader() {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
   const menuButton = useRef<HTMLButtonElement>(null);
-  const closeMenu = useCallback(() => setMenuOpen(false), []);
-  const [Menu, setMenu] = useState<MobileMenuComponent | null>(null);
-  const fetchMenu = useCallback(() => {
-    void loadMenu().then((component) => setMenu(() => component));
+  const closeMenu = useCallback(() => {
+    setMenuOpen(false);
+    menuButton.current?.focus();
   }, []);
-
-  useEffect(() => {
-    if ("requestIdleCallback" in window) {
-      const id = window.requestIdleCallback(fetchMenu);
-      return () => window.cancelIdleCallback(id);
-    }
-    const id = setTimeout(fetchMenu, 2000);
-    return () => clearTimeout(id);
-  }, [fetchMenu]);
 
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-page">
@@ -105,22 +91,18 @@ export function SiteHeader() {
           <button
             ref={menuButton}
             type="button"
-            aria-label="Open menu"
-            onPointerDown={fetchMenu}
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
             aria-expanded={menuOpen}
             aria-controls="mobile-menu"
-            onClick={() => {
-              fetchMenu();
-              setMenuOpen(true);
-            }}
-            className="flex size-11 items-center justify-center rounded-sm text-ink-secondary lg:hidden"
+            onClick={() => (menuOpen ? closeMenu() : setMenuOpen(true))}
+            className="flex size-11 items-center justify-center rounded-sm text-ink lg:hidden"
           >
-            <MenuIcon />
+            <MenuIcon open={menuOpen} />
           </button>
         </div>
       </div>
 
-      {menuOpen && Menu && <Menu pathname={pathname} onClose={closeMenu} returnFocusTo={menuButton} />}
+      {menuOpen && <MobileMenu pathname={pathname} onClose={closeMenu} />}
     </header>
   );
 }
