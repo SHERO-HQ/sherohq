@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { themeBootScript } from "@/lib/theme";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -30,7 +31,12 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en-GH">
+    // data-theme is set by the boot script before React loads, so React
+    // shouldn't treat it as a mismatch.
+    <html lang="en-GH" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeBootScript }} />
+      </head>
       <body>{children}</body>
     </html>
   );

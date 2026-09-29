@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ArrowRight, Menu, X } from "lucide-react";
 import { Logo } from "@/components/ui/Logo";
+import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { business, mainNav, routes } from "@/lib/site";
 import { cn } from "@/lib/cn";
 
@@ -54,23 +55,26 @@ export function SiteHeader() {
           </nav>
         </div>
 
-        <Link
-          href={routes.consultation}
-          className="hidden h-10 items-center whitespace-nowrap rounded-sm border border-primary bg-primary px-[18px] text-[15px]/5 font-medium text-on-primary transition-colors duration-150 hover:border-primary-hover hover:bg-primary-hover lg:inline-flex"
-        >
-          Book a consultation
-        </Link>
+        <div className="flex items-center lg:gap-2">
+          <ThemeToggle />
+          <Link
+            href={routes.consultation}
+            className="hidden h-10 items-center whitespace-nowrap rounded-sm border border-primary bg-primary px-[18px] text-[15px]/5 font-medium text-on-primary transition-colors duration-150 hover:border-primary-hover hover:bg-primary-hover lg:inline-flex"
+          >
+            Book a consultation
+          </Link>
 
-        <button
-          type="button"
-          aria-label="Open menu"
-          aria-expanded={menuOpen}
-          aria-controls="mobile-menu"
-          onClick={() => setMenuOpen(true)}
-          className="flex size-11 items-center justify-center rounded-sm text-ink-secondary lg:hidden"
-        >
-          <Menu size={22} strokeWidth={1.5} aria-hidden="true" />
-        </button>
+          <button
+            type="button"
+            aria-label="Open menu"
+            aria-expanded={menuOpen}
+            aria-controls="mobile-menu"
+            onClick={() => setMenuOpen(true)}
+            className="flex size-11 items-center justify-center rounded-sm text-ink-secondary lg:hidden"
+          >
+            <Menu size={22} strokeWidth={1.5} aria-hidden="true" />
+          </button>
+        </div>
       </div>
 
       {menuOpen && (

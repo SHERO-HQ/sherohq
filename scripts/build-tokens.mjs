@@ -63,12 +63,18 @@ ${shadowLight.join("\n")}
 ${families.join("\n")}
 }
 
-/* The site follows the visitor's system setting. */
+/* Dark follows the system setting unless the visitor picked a theme
+   (data-theme on <html>, set by the theme toggle). */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
 ${dark.map((l) => "  " + l).join("\n")}
 ${shadowDark.map((l) => "  " + l).join("\n")}
   }
+}
+
+:root[data-theme="dark"] {
+${dark.join("\n")}
+${shadowDark.join("\n")}
 }
 
 /* Theme-dependent values: utilities read the live variables. */

@@ -25,11 +25,27 @@
   --pharmasyst: #13a56b;
 }
 
+/*
+ * Dark theme: the system setting applies unless the visitor picked a theme
+ * with the toggle (data-theme on <html>). Every dark rule below uses both
+ * selectors so the two routes stay in step.
+ */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --rule-strong: var(--navy-100);
     --band: #0e1a33;
   }
+}
+:root[data-theme="dark"] {
+  --rule-strong: var(--navy-100);
+  --band: #0e1a33;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
 }
 
 /*
@@ -49,16 +65,47 @@
   --product-stripe: var(--pharmasyst);
 }
 @media (prefers-color-scheme: dark) {
-  .theme-merchander {
+  :root:not([data-theme="light"]) .theme-merchander {
     --product-accent: #ffa35c;
     --product-action: #ff8730;
     --on-product-action: #1a0b00;
   }
-  .theme-pharmasyst {
+  :root:not([data-theme="light"]) .theme-pharmasyst {
     --product-accent: #4fd69b;
     --product-action: #8b8df0;
     --on-product-action: #0a0f1a;
   }
+}
+:root[data-theme="dark"] .theme-merchander {
+  --product-accent: #ffa35c;
+  --product-action: #ff8730;
+  --on-product-action: #1a0b00;
+}
+:root[data-theme="dark"] .theme-pharmasyst {
+  --product-accent: #4fd69b;
+  --product-action: #8b8df0;
+  --on-product-action: #0a0f1a;
+}
+
+/* Show something only in the light or only in the dark theme (e.g. the logo). */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .only-light {
+    display: none;
+  }
+}
+:root[data-theme="dark"] .only-light {
+  display: none;
+}
+.only-dark {
+  display: none;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .only-dark {
+    display: revert;
+  }
+}
+:root[data-theme="dark"] .only-dark {
+  display: revert;
 }
 
 @theme inline {
