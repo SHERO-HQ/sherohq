@@ -11,14 +11,17 @@ export function ListingPhoto({
   label = "Product photo",
   className,
   priority,
+  inCard,
 }: {
   src?: string;
   alt: string;
   label?: string;
   className?: string;
   priority?: boolean;
+  /** Fills the top of a card: no frame of its own, a rule below. */
+  inCard?: boolean;
 }) {
-  const frame = "rounded-md border border-border bg-surface";
+  const frame = inCard ? "border-b border-border bg-surface" : "rounded-md border border-border bg-surface";
   if (!src) return <Placeholder label={label} className={cn(frame, className)} />;
   return (
     // TODO(admin phase): switch to next/image once the photo storage host is known.

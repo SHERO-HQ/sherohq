@@ -3,6 +3,7 @@ import { StatusBadge } from "@/components/ui/StatusBadge";
 import { routes } from "@/lib/site";
 import { InlineArrow } from "@/components/ui/InlineArrow";
 import { ButtonLink } from "@/components/ui/Button";
+import { CardLink } from "@/components/ui/Card";
 
 const paths = [
   {
@@ -64,10 +65,10 @@ export function Hero() {
         <h2 id="paths-heading" className="font-mono text-eyebrow text-secondary">
           what do you need?
         </h2>
-        <ul className="grid overflow-hidden rounded-md border border-border sm:grid-cols-2 lg:grid-cols-4">
+        <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 lg:gap-4">
           {paths.map((path) => (
-            <li key={path.title} className="border-border not-last:border-b sm:odd:border-r lg:border-b-0 lg:not-last:border-r">
-              <Link href={path.href} className="group flex h-full flex-col gap-2 p-5 transition-colors hover:bg-surface">
+            <li key={path.title}>
+              <CardLink href={path.href} className="h-full gap-2 p-5">
                 <span className="flex flex-wrap items-center gap-2 text-body font-semibold text-heading">
                   {path.title}
                   {path.waitlist && <StatusBadge status="dev" size="sm" />}
@@ -76,7 +77,7 @@ export function Hero() {
                 <span className="mt-auto pt-2 text-label text-primary">
                   {path.action} <InlineArrow className="transition-transform group-hover:translate-x-0.5" />
                 </span>
-              </Link>
+              </CardLink>
             </li>
           ))}
         </ul>

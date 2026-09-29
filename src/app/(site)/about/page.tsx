@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Handshake, Scale, ShieldCheck, Target } from "lucide-react";
+import { Card } from "@/components/ui/Card";
+import { Section, SectionHeader } from "@/components/ui/Section";
 import { ConsultationCta } from "@/components/home/ConsultationCta";
 import { Placeholder } from "@/components/ui/Placeholder";
 import { routes } from "@/lib/site";
@@ -13,10 +16,10 @@ export const metadata: Metadata = {
 };
 
 const values = [
-  { name: "Purpose", text: "We build with intention. Everything we create should solve a real problem." },
-  { name: "Integrity", text: "We're honest about what we can do, and we stand behind what we promise." },
-  { name: "Ownership", text: "We take responsibility and see the work through." },
-  { name: "Reliability", text: "People depend on what we build, so we make it dependable." },
+  { name: "Purpose", icon: Target, text: "We build with intention. Everything we create should solve a real problem." },
+  { name: "Integrity", icon: Scale, text: "We're honest about what we can do, and we stand behind what we promise." },
+  { name: "Ownership", icon: Handshake, text: "We take responsibility and see the work through." },
+  { name: "Reliability", icon: ShieldCheck, text: "People depend on what we build, so we make it dependable." },
 ];
 
 export default function AboutPage() {
@@ -80,30 +83,18 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="border-y border-border bg-surface py-section" aria-labelledby="values-title">
-        <div className="container-site flex flex-col gap-4 lg:gap-8">
-          <h2
-            id="values-title"
-            className="font-display text-meta font-bold text-heading lg:font-mono lg:font-medium lg:text-secondary"
-          >
-            <span className="lg:hidden">What we value.</span>
-            <span className="hidden lg:inline">what we value</span>
-          </h2>
-          <dl className="border-t border-border">
-            {values.map((value) => (
-              <div
-                key={value.name}
-                className="flex flex-col gap-1.5 border-b border-border py-4.5 lg:grid lg:grid-cols-[400px_1fr] lg:items-baseline lg:gap-10 lg:py-7.5"
-              >
-                <dt className="font-display text-h3 text-heading">
-                  {value.name}
-                </dt>
-                <dd className="text-body lg:text-body-lg text-ink-secondary">{value.text}</dd>
-              </div>
-            ))}
-          </dl>
-        </div>
-      </section>
+      <Section tone="surface" aria-labelledby="values-title">
+        <SectionHeader id="values-title" title="What we value." />
+        <dl className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 lg:gap-4">
+          {values.map(({ name, text, icon: Icon }) => (
+            <Card key={name} className="gap-2 p-5 lg:p-6">
+              <Icon aria-hidden="true" size={22} strokeWidth={1.5} className="text-secondary" />
+              <dt className="pt-1 font-display text-h3 text-heading">{name}</dt>
+              <dd className="text-body text-ink-secondary">{text}</dd>
+            </Card>
+          ))}
+        </dl>
+      </Section>
 
       <section className="container-site grid gap-4 lg:grid-cols-[1fr_1.3fr] lg:gap-24 pt-section">
         <h2 className="font-display text-h2 text-heading">

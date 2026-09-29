@@ -1,33 +1,34 @@
 import Link from "next/link";
-import { Placeholder } from "@/components/ui/Placeholder";
+import { HardwareArt, IntegrationArt, ManagedItArt, SoftwareArt } from "@/components/illustrations/ServiceArt";
+import { CardBody, CardLink, CardMedia } from "@/components/ui/Card";
 import { routes } from "@/lib/site";
 import { InlineArrow } from "@/components/ui/InlineArrow";
 import { Section, SectionHeader } from "@/components/ui/Section";
 
-// TODO(owner): replace each placeholder with the real screenshot, photo or graphic.
+// Illustrations until SHERO has real photos and screenshots of this work. TODO(owner)
 const services = [
   {
     title: "Custom software",
     description: "Web apps, dashboards and internal tools built around how your business actually works.",
-    image: "Screenshot: a dashboard SHERO built",
+    Art: SoftwareArt,
     href: `${routes.services}#software`,
   },
   {
     title: "Hardware",
     description: "UK-used laptops, phones and accessories, tested and graded before they reach you.",
-    image: "Photo: laptops being tested on the bench",
+    Art: HardwareArt,
     href: `${routes.services}#hardware`,
   },
   {
     title: "Managed IT",
     description: "Office setup, networks, backups and support when something breaks.",
-    image: "Graphic: office network diagram",
+    Art: ManagedItArt,
     href: `${routes.services}#managed-it`,
   },
   {
     title: "Systems integration",
     description: "Payments, point of sale and stock, connected so nothing is typed twice.",
-    image: "Screenshot: a MoMo sale recorded in point of sale",
+    Art: IntegrationArt,
     href: `${routes.services}#integrations`,
   },
 ];
@@ -45,14 +46,21 @@ export function ServicesOverview() {
           </Link>
         }
       />
-      <ul className="grid grid-cols-2 gap-x-4 gap-y-8 lg:grid-cols-4 lg:gap-6">
-        {services.map((service) => (
-          <li key={service.title}>
-            <Link href={service.href} className="group flex flex-col gap-2 lg:gap-3">
-              <Placeholder label={service.image} className="aspect-[4/3] rounded-md border border-border bg-surface" />
-              <span className="text-h3 font-display text-heading group-hover:text-primary-hover">{service.title}</span>
-              <span className="text-body-sm text-ink-secondary">{service.description}</span>
-            </Link>
+      <ul className="grid gap-4 sm:grid-cols-2 lg:gap-6">
+        {services.map(({ title, description, href, Art }) => (
+          <li key={title}>
+            <CardLink href={href} className="h-full">
+              <CardMedia className="px-6 pt-6 pb-2 lg:px-10 lg:pt-8">
+                <Art />
+              </CardMedia>
+              <CardBody>
+                <span className="font-display text-h3 text-heading">{title}</span>
+                <span className="text-body text-ink-secondary">{description}</span>
+                <span className="mt-auto pt-2 text-label text-primary">
+                  How it works <InlineArrow className="transition-transform group-hover:translate-x-0.5" />
+                </span>
+              </CardBody>
+            </CardLink>
           </li>
         ))}
       </ul>

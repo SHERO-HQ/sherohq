@@ -12,6 +12,8 @@ const notes: Record<string, string[]> = {
   home: [
     "Hero is the motto, one sentence and two buttons; the four \"what do you need\" paths sit below it as tiles.",
     "Laptop cards reuse the shop's card instead of a separate table.",
+    "Services are four cards with illustrations (drawn in SHERO's colours) until real photos and screenshots arrive.",
+    "What do you need paths and the four device checks are cards.",
     "Client names are set as type until the real logos arrive.",
     "The empty photo band is replaced by the four device checks, under the laptop list.",
     "The desktop laptop table has a battery column; every listing shows battery health.",
@@ -22,11 +24,13 @@ const notes: Record<string, string[]> = {
   ],
   menu: [],
   services: [
+    "Each service shows its illustration in a card with what's included; the steps are cards.",
     "Hardware links straight to laptops in stock, as well as to a consultation.",
     "Each Talk to us link preselects that service on the consultation form.",
     "Mobile shows all four offers per service; the mobile design trimmed them to three.",
   ],
-  about: ["What we value has a heading on desktop too, for page structure.", "The work placeholder links to the Work page."],
+  about: [
+    "Values are four cards with an icon each.","What we value has a heading on desktop too, for page structure.", "The work placeholder links to the Work page."],
   careers: ["The CV email link fills in the subject line."],
   work: ["Visit links stay hidden until each project's live link is supplied."],
   "case-study": [
