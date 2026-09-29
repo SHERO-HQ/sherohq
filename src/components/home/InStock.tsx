@@ -1,37 +1,11 @@
 import Link from "next/link";
-import { BatteryFull, ClipboardCheck, RotateCcw, ShieldCheck, Truck, Wallet } from "lucide-react";
-import { Card } from "@/components/ui/Card";
+import { ShieldCheck, Truck, Wallet } from "lucide-react";
 import { ListingCard } from "@/components/shop/ListingCard";
 import { DispatchCountdown } from "@/components/ui/LiveStatus";
 import { InlineArrow } from "@/components/ui/InlineArrow";
 import { Section, SectionHeader } from "@/components/ui/Section";
 import type { ShopListing } from "@/lib/shop";
 import { routes, whatsappLink } from "@/lib/site";
-
-// What every listed device has been through. Matches the admin's device check
-// (docs/admin-scope.md, Listings) and the shop rules in CLAUDE.md.
-const checks = [
-  {
-    icon: ClipboardCheck,
-    title: "Every part tested",
-    detail: "Screen, keyboard, trackpad, ports, speakers, camera, Wi-Fi and charging.",
-  },
-  {
-    icon: BatteryFull,
-    title: "Battery at 90% or more",
-    detail: "Usually replaced with an original battery at 100%. Each listing shows its figure.",
-  },
-  {
-    icon: RotateCcw,
-    title: "Cleaned and reset",
-    detail: "Cleaned and reset to factory settings, ready to set up as your own.",
-  },
-  {
-    icon: ShieldCheck,
-    title: "One-week warranty",
-    detail: "Covered for the first week after delivery, and support stays free after that.",
-  },
-];
 
 const buying = [
   { icon: Truck, title: "Free delivery over GHS 2,000", detail: "Same day in Tamale, by bus elsewhere, or collect free." },
@@ -103,20 +77,6 @@ export function InStock({ listings }: { listings: ShopListing[] }) {
         />
       </div>
 
-      <div className="mt-12 flex flex-col gap-4">
-        <h3 className="font-mono text-eyebrow text-secondary">every device, before it&rsquo;s listed</h3>
-        <ol className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          {checks.map(({ icon: Icon, title, detail }) => (
-            <li key={title}>
-              <Card className="h-full gap-2 p-5">
-                <Icon aria-hidden="true" size={22} strokeWidth={1.5} className="text-secondary" />
-                <span className="pt-1 text-body font-semibold text-ink">{title}</span>
-                <span className="text-body-sm text-ink-secondary">{detail}</span>
-              </Card>
-            </li>
-          ))}
-        </ol>
-      </div>
     </Section>
   );
 }

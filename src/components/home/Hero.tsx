@@ -1,43 +1,6 @@
-import Link from "next/link";
-import { StatusBadge } from "@/components/ui/StatusBadge";
-import { routes } from "@/lib/site";
-import { InlineArrow } from "@/components/ui/InlineArrow";
+import { HeroArt } from "@/components/illustrations/ServiceArt";
 import { ButtonLink } from "@/components/ui/Button";
-import { CardBody, CardLink, CardMedia } from "@/components/ui/Card";
-import { HeroArt, LaptopSpot, PharmacySpot, SocialSpot, SoftwareSpot } from "@/components/illustrations/ServiceArt";
-
-const paths = [
-  {
-    title: "I need a laptop",
-    Spot: LaptopSpot,
-    description: "Strong enough for your work, with a battery you can trust.",
-    action: "Shop laptops",
-    href: routes.shop,
-  },
-  {
-    title: "I need software built",
-    Spot: SoftwareSpot,
-    description: "Your own system, built around how your business works.",
-    action: "Custom software",
-    href: `${routes.services}#software`,
-  },
-  {
-    title: "I sell on social media",
-    Spot: SocialSpot,
-    description: "Orders, payments and stock in one place.",
-    action: "Join the waitlist",
-    href: `${routes.merchander}#waitlist`,
-    waitlist: true,
-  },
-  {
-    title: "I run a pharmacy",
-    Spot: PharmacySpot,
-    description: "Sales, stock and NHIS claims across your branches.",
-    action: "Join the waitlist",
-    href: `${routes.pharmasyst}#waitlist`,
-    waitlist: true,
-  },
-];
+import { routes } from "@/lib/site";
 
 export function Hero() {
   return (
@@ -45,7 +8,7 @@ export function Hero() {
       {/* The illustrations' dot grid, fading out from the top: depth without a picture. */}
       <div aria-hidden="true" className="bg-dots mask-fade-down absolute inset-x-0 top-0 -z-10 h-160" />
 
-      <div className="container-site grid items-center gap-12 pt-section lg:grid-cols-[1fr_1.1fr] lg:gap-16">
+      <div className="container-site grid items-center gap-12 pt-section pb-16 lg:grid-cols-[1fr_1.1fr] lg:gap-16">
         <div className="flex flex-col items-start gap-6">
           {/* The logo's slanted bars, in the fixed brand inks. */}
           <div aria-hidden="true" className="flex gap-2">
@@ -70,37 +33,6 @@ export function Hero() {
         <HeroArt className="mx-auto h-auto w-full max-w-md lg:max-w-none" />
       </div>
 
-      <div className="container-site pt-16 pb-16 lg:pt-20">
-        <nav aria-labelledby="paths-heading" className="flex flex-col gap-4">
-        <h2 id="paths-heading" className="font-mono text-eyebrow text-secondary">
-          what do you need?
-        </h2>
-        <ul className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          {paths.map((path) => (
-            <li key={path.title}>
-              <CardLink href={path.href} className="h-full">
-                <CardMedia className="flex justify-center px-6 py-3">
-                  <path.Spot className="h-20 w-auto" />
-                </CardMedia>
-                <CardBody>
-                  <span className="flex flex-wrap items-center gap-2 text-body font-semibold text-heading">
-                    {path.title}
-                    {path.waitlist && <StatusBadge status="dev" size="sm" />}
-                  </span>
-                  <span className="text-body-sm text-ink-secondary">{path.description}</span>
-                  <span className="mt-auto pt-2 text-label text-primary">
-                    {path.action} <InlineArrow className="transition-transform group-hover:translate-x-0.5" />
-                  </span>
-                </CardBody>
-              </CardLink>
-            </li>
-          ))}
-        </ul>
-        <Link href={routes.consultation} className="self-start text-label text-primary hover:underline">
-          Something else? Book a free consultation <InlineArrow />
-        </Link>
-      </nav>
-      </div>
     </section>
   );
 }

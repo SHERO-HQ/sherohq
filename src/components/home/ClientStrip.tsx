@@ -7,7 +7,7 @@ const clients = ["Samakose", "TrustCircle", "Tastea", "Dajrim"];
 /** Clients, Clerk style: a small centred label over a slow scrolling row. */
 export function ClientStrip() {
   return (
-    <section aria-labelledby="clients-heading" className="container-site flex flex-col items-center gap-5 pb-section">
+    <section aria-labelledby="clients-heading" className="container-site flex flex-col items-center gap-5 pb-4">
       <h2 id="clients-heading" className="font-mono text-eyebrow text-ink-muted">
         we&rsquo;ve worked with
       </h2>

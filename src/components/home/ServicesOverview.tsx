@@ -5,29 +5,34 @@ import { routes } from "@/lib/site";
 import { InlineArrow } from "@/components/ui/InlineArrow";
 import { Section, SectionHeader } from "@/components/ui/Section";
 
-// Illustrations until SHERO has real photos and screenshots of this work. TODO(owner)
+// One card per kind of need, in the visitor's words. Illustrations until SHERO
+// has real photos and screenshots of this work. TODO(owner)
 const services = [
   {
-    title: "Custom software",
-    description: "Web apps, dashboards and internal tools built around how your business actually works.",
+    title: "I need a laptop",
+    description: "UK-used laptops, tested before they reach you, with the battery health on every listing.",
+    action: "Shop laptops",
+    Art: HardwareArt,
+    href: routes.shop,
+  },
+  {
+    title: "I need software built",
+    description: "Web apps, dashboards and internal tools built around how your business works.",
+    action: "Custom software",
     Art: SoftwareArt,
     href: `${routes.services}#software`,
   },
   {
-    title: "Hardware",
-    description: "UK-used laptops, phones and accessories, tested and graded before they reach you.",
-    Art: HardwareArt,
-    href: `${routes.services}#hardware`,
-  },
-  {
-    title: "Managed IT",
+    title: "I need IT support",
     description: "Office setup, networks, backups and support when something breaks.",
+    action: "Managed IT",
     Art: ManagedItArt,
     href: `${routes.services}#managed-it`,
   },
   {
-    title: "Systems integration",
+    title: "I need my systems connected",
     description: "Payments, point of sale and stock, connected so nothing is typed twice.",
+    action: "Systems integration",
     Art: IntegrationArt,
     href: `${routes.services}#integrations`,
   },
@@ -39,7 +44,8 @@ export function ServicesOverview() {
       <SectionHeader
         id="services-heading"
         eyebrow="what we do"
-        title="Everything your business runs on, handled in one place."
+        title="What do you need?"
+        intro="Everything your business runs on, handled in one place."
         action={
           <Link href={routes.services} className="text-label text-primary hover:underline">
             All services <InlineArrow />
@@ -47,7 +53,7 @@ export function ServicesOverview() {
         }
       />
       <ul className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        {services.map(({ title, description, href, Art }) => (
+        {services.map(({ title, description, action, href, Art }) => (
           <li key={title}>
             <CardLink href={href} className="h-full">
               <CardMedia className="px-6 pt-5 pb-1">
@@ -57,7 +63,7 @@ export function ServicesOverview() {
                 <span className="font-display text-h3 text-heading">{title}</span>
                 <span className="text-body-sm text-ink-secondary">{description}</span>
                 <span className="mt-auto pt-2 text-label text-primary">
-                  How it works <InlineArrow className="transition-transform group-hover:translate-x-0.5" />
+                  {action} <InlineArrow className="transition-transform group-hover:translate-x-0.5" />
                 </span>
               </CardBody>
             </CardLink>

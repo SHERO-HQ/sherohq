@@ -270,39 +270,9 @@ export function IntegrationArt({ className }: ArtProps) {
   );
 }
 
-// ── "What do you need?" spots ──────────────────────────────────────────────
+// ── Product spots (Our own products) ──────────────────────────────────────────────
 
 const spotBox = "0 0 160 88";
-
-/** A laptop with a full battery. */
-export function LaptopSpot({ className }: ArtProps) {
-  return (
-    <Frame label="" viewBox={spotBox} className={className}>
-      <rect x="41" y="14" width="78" height="52" rx="5" className="fill-surface-raised stroke-border-strong" />
-      <rect x="47" y="20" width="66" height="40" rx="2" className="fill-surface" />
-      <rect x="60" y="32" width="36" height="16" rx="3" className="fill-page stroke-secondary" strokeWidth={1.5} />
-      <rect x="97" y="37" width="3" height="6" rx="1" className="fill-secondary" />
-      <rect x="63" y="35" width="30" height="10" rx="1.5" className="fill-secondary" />
-      <path d="M32 66 H128 L134 74 Q134 76 131 76 H29 Q26 76 26 74 Z" className="fill-surface-raised stroke-border-strong" />
-      <Tick x={128} y={22} r={8} />
-    </Frame>
-  );
-}
-
-/** A software window with code brackets. */
-export function SoftwareSpot({ className }: ArtProps) {
-  return (
-    <Frame label="" viewBox={spotBox} className={className}>
-      <rect x="30" y="12" width="100" height="64" rx="5" className="fill-surface-raised stroke-border-strong" />
-      <path d="M30.5 24 H129.5" className="stroke-border" />
-      {[38, 45, 52].map((x) => (
-        <circle key={x} cx={x} cy="18" r="2" className="fill-border" />
-      ))}
-      <path d="M56 38 L46 48 L56 58 M104 38 L114 48 L104 58" className="stroke-primary" strokeWidth={2.5} />
-      <path d="M86 34 L74 62" className="stroke-secondary" strokeWidth={2.5} />
-    </Frame>
-  );
-}
 
 /** A phone with chat messages and the order they became. */
 export function SocialSpot({ className }: ArtProps) {
