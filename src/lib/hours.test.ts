@@ -46,13 +46,17 @@ describe("dispatchStatus", () => {
     );
   });
 
-  it("moves to the next open day after the cut-off", () => {
+  it("moves to tomorrow after the cut-off", () => {
     expect(dispatchStatus(at("2026-09-28T17:00:00"))).toEqual({
       sameDay: false,
       label: "Orders placed now go to the bus station tomorrow",
     });
-    expect(dispatchStatus(at("2026-10-02T17:30:00")).label).toBe(
-      "Orders placed now go to the bus station Monday",
+  });
+
+  it("dispatches every day, including weekends", () => {
+    expect(dispatchStatus(at("2026-10-03T10:00:00")).sameDay).toBe(true);
+    expect(dispatchStatus(at("2026-10-04T16:00:00")).label).toBe(
+      "Order within 1h for same-day dispatch to the bus station",
     );
   });
 });

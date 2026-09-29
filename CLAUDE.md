@@ -19,6 +19,8 @@ Everything was planned and designed before this repo existed. Read this file fir
 
 When the docs and the designs disagree on wording, **the designs win**; they were updated last.
 
+**No AI slop.** Every word, element and feature earns its place. No filler copy, decorative noise, generic "modern" flourishes, or features added for their own sake. If it doesn't help a visitor decide or act, cut it.
+
 **The designs are a strong guide, not a fixed spec** (owner, 29 Sep 2026). Improve on them where it makes SHERO better for visitors — clearer, faster, more useful, more trustworthy — and say what changed and why. Everything under "Rules that must survive into code" still holds; improvements never bend those.
 
 ## Reading the design files
@@ -104,7 +106,7 @@ Decisions made while building, on top of the handoff.
 
 **Improvements on the designs** (approved 29 Sep 2026):
 - Home: client names set as type until logos arrive; the empty photo band is replaced by the four device checks; desktop stock table gains a battery column; a WhatsApp "tell us what it's for" prompt under the list.
-- Live, Ghana-time "Open now" status in the footer and a same-day dispatch countdown on shop sections (`src/lib/hours.ts`). Assumes dispatch runs Mon–Fri; public holidays aren't modelled until admin Settings exists.
+- Live, Ghana-time "Open now" status in the footer and a same-day dispatch countdown on shop sections (`src/lib/hours.ts`). The office is open on public holidays; dispatch runs every day, including days the office is closed.
 - `src/lib/claims.test.ts` fails the build if banned claims (24/7, uptime, "authorised", team/founder copy, ratings) appear in code.
 
 **Open for the owner.** The footer's "Feedback" link has no page in the designs; it points to Support for now.

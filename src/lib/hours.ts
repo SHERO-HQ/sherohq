@@ -1,7 +1,6 @@
 // Opening hours and same-day dispatch, in Ghana time (GMT, no daylight saving).
-// Source: docs/prd.md — Mon–Fri 8:00–18:00; orders before 5:00 PM go to the
-// bus station the same day. Assumes dispatch runs on opening days only.
-// Public holidays aren't modelled yet; they'll come from admin Settings.
+// Office: Mon–Fri 8:00–18:00, public holidays included. Dispatch: every day,
+// orders before 5:00 PM go to the bus station the same day (owner, 29 Sep 2026).
 
 export const schedule = {
   openDays: [1, 2, 3, 4, 5], // Monday to Friday (0 = Sunday)
@@ -69,10 +68,10 @@ function formatDuration(totalMinutes: number) {
 }
 
 export function dispatchStatus(now: Date): DispatchStatus {
-  const { day, minutes } = ghanaClock(now);
+  const { minutes } = ghanaClock(now);
   const cutoff = schedule.dispatchCutoffHour * 60;
 
-  if (isOpenDay(day) && minutes < cutoff) {
+  if (minutes < cutoff) {
     const minutesLeft = cutoff - minutes;
     return {
       sameDay: true,
@@ -81,6 +80,5 @@ export function dispatchStatus(now: Date): DispatchStatus {
     };
   }
 
-  const offset = daysUntilOpenDay(day, false);
-  return { sameDay: false, label: `Orders placed now go to the bus station ${dayLabel(offset, day)}` };
+  return { sameDay: false, label: "Orders placed now go to the bus station tomorrow" };
 }
