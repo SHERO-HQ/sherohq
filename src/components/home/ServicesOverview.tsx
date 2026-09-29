@@ -46,16 +46,16 @@ export function ServicesOverview() {
           </Link>
         }
       />
-      <ul className="grid gap-4 sm:grid-cols-2 lg:gap-6">
+      <ul className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {services.map(({ title, description, href, Art }) => (
           <li key={title}>
             <CardLink href={href} className="h-full">
-              <CardMedia className="px-6 pt-6 pb-2 lg:px-10 lg:pt-8">
+              <CardMedia className="px-6 pt-5 pb-1">
                 <Art />
               </CardMedia>
               <CardBody>
                 <span className="font-display text-h3 text-heading">{title}</span>
-                <span className="text-body text-ink-secondary">{description}</span>
+                <span className="text-body-sm text-ink-secondary">{description}</span>
                 <span className="mt-auto pt-2 text-label text-primary">
                   How it works <InlineArrow className="transition-transform group-hover:translate-x-0.5" />
                 </span>

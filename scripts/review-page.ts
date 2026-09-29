@@ -12,7 +12,7 @@ const notes: Record<string, string[]> = {
   home: [
     "Hero is the motto, one sentence and two buttons; the four \"what do you need\" paths sit below it as tiles.",
     "Laptop cards reuse the shop's card instead of a separate table.",
-    "Services are four cards with illustrations (drawn in SHERO's colours) until real photos and screenshots arrive.",
+    "Services are four cards with illustrations (drawn in SHERO's colours) until real photos and screenshots arrive: four across on large screens, two on tablets, one on phones.",
     "What do you need paths and the four device checks are cards; each path has a small illustration.",
     "Client names are set as type until the real logos arrive.",
     "The empty photo band is replaced by the four device checks, under the laptop list.",

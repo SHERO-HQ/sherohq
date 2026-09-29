@@ -86,7 +86,7 @@ export function InStock({ listings }: { listings: ShopListing[] }) {
 
       <div className="mt-12 flex flex-col gap-4">
         <h3 className="font-mono text-eyebrow text-secondary">every device, before it&rsquo;s listed</h3>
-        <ol className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 lg:gap-4">
+        <ol className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           {checks.map(({ icon: Icon, title, detail }) => (
             <li key={title}>
               <Card className="h-full gap-2 p-5">

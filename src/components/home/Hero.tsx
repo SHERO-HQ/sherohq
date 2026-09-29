@@ -70,7 +70,7 @@ export function Hero() {
         <h2 id="paths-heading" className="font-mono text-eyebrow text-secondary">
           what do you need?
         </h2>
-        <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 lg:gap-4">
+        <ul className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           {paths.map((path) => (
             <li key={path.title}>
               <CardLink href={path.href} className="h-full">

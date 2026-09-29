@@ -85,7 +85,7 @@ export default function AboutPage() {
 
       <Section tone="surface" aria-labelledby="values-title">
         <SectionHeader id="values-title" title="What we value." />
-        <dl className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 lg:gap-4">
+        <dl className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           {values.map(({ name, text, icon: Icon }) => (
             <Card key={name} className="gap-2 p-5 lg:p-6">
               <Icon aria-hidden="true" size={22} strokeWidth={1.5} className="text-secondary" />
