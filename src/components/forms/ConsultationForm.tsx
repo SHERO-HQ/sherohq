@@ -67,6 +67,8 @@ export function ConsultationForm({ initialNeed = "software" }: { initialNeed?: s
     <form
       noValidate
       onSubmit={onSubmit}
+      // Keep personal details out of Microsoft Clarity recordings (see the Cookies page).
+      data-clarity-mask="True"
       className="flex flex-col gap-5 rounded-md border border-border bg-surface p-5 lg:p-9"
     >
       <div className="grid gap-5 sm:grid-cols-2 sm:gap-4">

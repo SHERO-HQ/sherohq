@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { ArrowRight, Minus, Plus } from "lucide-react";
+import { Minus, Plus } from "lucide-react";
 import { InlineArrow } from "@/components/ui/InlineArrow";
+import { LinkRows, type LinkRow } from "@/components/ui/LinkRows";
 import { OpenNow } from "@/components/ui/LiveStatus";
 import { faq } from "@/content/faq";
 import { business, routes, whatsappLink } from "@/lib/site";
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   alternates: { canonical: routes.support },
 };
 
-const paths = [
+const paths: LinkRow[] = [
   {
     title: "Talk about a project",
     text: "Book a free consultation. Tell us what you need and we'll suggest a practical next step.",
@@ -63,40 +63,7 @@ export default function SupportPage() {
         <h1 className="font-display text-[40px]/[42px] font-bold tracking-[-0.03em] text-heading lg:text-[72px]/[74px] lg:tracking-[-0.035em]">
           How can we help?
         </h1>
-        <ul className="border-t border-rule-strong">
-          {paths.map((path) => {
-            const inner = (
-              <>
-                <span className="col-start-1 font-display text-[19px]/6 font-semibold text-heading lg:text-h3">{path.title}</span>
-                <span className="col-start-1 text-[15px]/[22px] text-ink-secondary lg:col-start-2 lg:row-start-1 lg:text-[15px]/[23px]">
-                  <span className="lg:hidden">{path.textMobile}</span>
-                  <span className="hidden lg:inline">{path.text}</span>
-                </span>
-                <ArrowRight
-                  aria-hidden="true"
-                  size={20}
-                  strokeWidth={1.5}
-                  className="col-start-2 row-span-2 row-start-1 self-center justify-self-end text-primary transition-transform duration-150 group-hover:translate-x-1 lg:col-start-3 lg:row-span-1"
-                />
-              </>
-            );
-            const className =
-              "group grid grid-cols-[1fr_24px] gap-x-3 gap-y-1 border-b border-border py-4 lg:grid-cols-[1fr_1.4fr_24px] lg:items-center lg:gap-8 lg:py-[22px]";
-            return (
-              <li key={path.title}>
-                {path.external ? (
-                  <a href={path.href} target="_blank" rel="noopener noreferrer" className={className}>
-                    {inner}
-                  </a>
-                ) : (
-                  <Link href={path.href} className={className}>
-                    {inner}
-                  </Link>
-                )}
-              </li>
-            );
-          })}
-        </ul>
+        <LinkRows rows={paths} />
       </section>
 
       <section className="container-site grid gap-10 py-10 lg:grid-cols-[1fr_340px] lg:gap-20 lg:pt-20 lg:pb-[104px]">
