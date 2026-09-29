@@ -1,5 +1,7 @@
 "use server";
 
+import { db } from "@/db";
+import { consultations } from "@/db/schema";
 import { parseConsultation, type FieldErrors } from "@/lib/forms/consultation";
 import { business } from "@/lib/site";
 
@@ -9,10 +11,15 @@ export async function requestConsultation(form: FormData): Promise<ConsultationR
   const parsed = parseConsultation(form);
   if (!parsed.ok) return { ok: false, errors: parsed.errors };
 
-  // TODO(db phase): save parsed.data as a New consultation request for the admin.
-  // Until then, say so plainly rather than pretend the request was received.
-  return {
-    ok: false,
-    message: `Online booking isn't connected yet. Please call or WhatsApp us on ${business.phoneDisplay}.`,
-  };
+  const { contact, ...request } = parsed.data;
+  try {
+    await db.insert(consultations).values({ ...request, contactMethod: contact });
+    return { ok: true };
+  } catch (error) {
+    console.error("Saving consultation request failed", error);
+    return {
+      ok: false,
+      message: `We couldn't save your request just now. Please call or WhatsApp us on ${business.phoneDisplay}.`,
+    };
+  }
 }

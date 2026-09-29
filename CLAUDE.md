@@ -73,7 +73,7 @@ The `.dc.html` files are design mockups in a canvas format, not runnable pages. 
 - The admin is not a second Merchander: no bookkeeping, expenses, staff roles or multi-user features.
 - Product subdomains (`merchander.sherohq.com`, `pharmasyst.sherohq.com`) redirect to their pages on sherohq.com. Old URLs (`/consultation`, `/contact-us`, `/products`, `/partners`, `/careers`) redirect to their new homes.
 - SEO: Tamale first, then Ghana-wide (SHERO delivers nationwide). Never target Accra as home (owner, 29 Sep 2026).
-- The 33 existing products in the old admin are real stock and need migrating; each needs a device check before it's listed. The GHS15.00 order from 31 August was a test and should be cleared.
+- Nothing carries over from the old site's database, not even the 33 old products (owner, 29 Sep 2026). Stock is listed fresh in the new admin, each with its device check.
 
 ## Still open (ask the owner, don't guess)
 
@@ -89,7 +89,11 @@ Decisions made while building, on top of the handoff.
 
 **Design tokens.** `design/system/tokens.json` is the source of truth. `yarn tokens` generates `src/styles/tokens.css` (CSS variables plus Tailwind theme: `bg-page`, `text-ink`, `text-heading`, `border-border`, `font-display`, `text-h2`, `rounded-sm` and so on). Never edit the generated file; CI fails if it's stale. The few extra colours the page designs use are in `src/app/globals.css`, with notes.
 
-**Database.** New tables in the existing Supabase project, alongside the old ones, so the old site keeps working until launch. The 33 real products are imported as drafts by a one-off script; each still needs its device check.
+**Database** (owner, 29 Sep 2026). A fresh start; nothing is migrated.
+- Postgres with Drizzle. Schema in `src/db/schema.ts`, migrations in `src/db/migrations` (`yarn db:generate`, `yarn db:migrate`). Money is integer pesewas; phones are E.164.
+- Local first: `docker compose up -d` runs Postgres 16 (Supabase's version); `yarn db:reset` wipes and re-migrates it and refuses non-local hosts.
+- Later, a new Supabase project (free plan) for the rebuild, separate from the old site's project. `rebuild` deploys as a Vercel preview with its own `DATABASE_URL`; previews send `X-Robots-Tag: noindex`. `main` and the live site keep the old database until launch, when `rebuild` is merged.
+- Business rules live in code with tests: `src/lib/listings.ts` (In stock needs a complete, passing device check and battery ≥ Settings minimum), `src/lib/orders.ts` (order numbers, status wording per delivery method, warranty). The database also refuses a published testimonial without recorded consent.
 
 **Routes.** Chosen for the old-URL redirects in `next.config.ts`; change them there and in `src/lib/site.ts` together.
 

@@ -62,10 +62,17 @@ const nextConfig: NextConfig = {
   },
 
   async headers() {
+    // Keep Vercel previews (e.g. the rebuild branch) out of search results.
+    const previewHeaders =
+      process.env.VERCEL_ENV && process.env.VERCEL_ENV !== "production"
+        ? [{ key: "X-Robots-Tag", value: "noindex, nofollow" }]
+        : [];
+
     return [
       {
         source: "/:path*",
         headers: [
+          ...previewHeaders,
           { key: "Content-Security-Policy", value: contentSecurityPolicy },
           { key: "X-Content-Type-Options", value: "nosniff" },
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
