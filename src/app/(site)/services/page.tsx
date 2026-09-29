@@ -158,6 +158,7 @@ export default function ServicesPage() {
         >
           <span
             aria-hidden="true"
+            data-decorative
             className="font-mono text-[13px]/[17px] text-ink-muted lg:font-display lg:text-[64px]/[64px] lg:font-bold lg:tracking-[-0.04em] lg:text-border"
           >
             {pad(i + 1)}
