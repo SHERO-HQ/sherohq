@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState, useSyncExternalStore } from "react";
-import { ArrowRight, Menu, ShoppingCart, X } from "lucide-react";
+import { ArrowRight, ShoppingCart, X } from "lucide-react";
+import { MenuIcon } from "@/components/ui/MenuIcon";
 import { Logo } from "@/components/ui/Logo";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { ButtonLink, buttonClass } from "@/components/ui/Button";
@@ -99,7 +100,7 @@ export function SiteHeader() {
             onClick={() => setMenuOpen(true)}
             className="flex size-11 items-center justify-center rounded-sm text-ink-secondary lg:hidden"
           >
-            <Menu size={22} strokeWidth={1.5} aria-hidden="true" />
+            <MenuIcon />
           </button>
         </div>
       </div>

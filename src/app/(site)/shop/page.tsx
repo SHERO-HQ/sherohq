@@ -140,7 +140,7 @@ export default async function ShopPage({ searchParams }: { searchParams: Promise
               <Link
                 href={`${routes.shop}?${moreParams}`}
                 scroll={false}
-                className="inline-flex h-12 items-center rounded-sm border border-border-strong px-6 text-body font-medium text-ink hover:border-ink"
+                className={buttonClass({ variant: "outline", size: "lg" })}
               >
                 Show more
               </Link>

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { buttonClass } from "@/components/ui/Button";
 import { cookies } from "next/headers";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -54,7 +55,7 @@ export default async function OrderPlacedPage() {
         <div className="flex flex-wrap gap-3 pt-2">
           <Link
             href={`${routes.track}?n=${order.number}`}
-            className="inline-flex h-13 items-center rounded-sm bg-primary px-7 text-body font-medium text-on-primary hover:bg-primary-hover"
+            className={buttonClass({ size: "lg" })}
           >
             Track this order
           </Link>
@@ -62,7 +63,7 @@ export default async function OrderPlacedPage() {
             href={whatsappLink(`Hi SHERO, about my order ${order.number}: `)}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex h-13 items-center rounded-sm border border-border-strong px-5.5 text-body font-medium text-ink hover:border-ink"
+            className={buttonClass({ variant: "secondary", size: "lg" })}
           >
             Message us on WhatsApp
           </a>

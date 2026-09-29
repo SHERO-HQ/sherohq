@@ -3,23 +3,27 @@ import { StatusBadge } from "@/components/ui/StatusBadge";
 import { routes } from "@/lib/site";
 import { InlineArrow } from "@/components/ui/InlineArrow";
 import { ButtonLink } from "@/components/ui/Button";
-import { CardLink } from "@/components/ui/Card";
+import { CardBody, CardLink, CardMedia } from "@/components/ui/Card";
+import { LaptopSpot, PharmacySpot, SocialSpot, SoftwareSpot } from "@/components/illustrations/ServiceArt";
 
 const paths = [
   {
     title: "I need a laptop",
+    Spot: LaptopSpot,
     description: "Strong enough for your work, with a battery you can trust.",
     action: "Shop laptops",
     href: routes.shop,
   },
   {
     title: "I need software built",
+    Spot: SoftwareSpot,
     description: "Your own system, built around how your business works.",
     action: "Custom software",
     href: `${routes.services}#software`,
   },
   {
     title: "I sell on social media",
+    Spot: SocialSpot,
     description: "Orders, payments and stock in one place.",
     action: "Join the waitlist",
     href: `${routes.merchander}#waitlist`,
@@ -27,6 +31,7 @@ const paths = [
   },
   {
     title: "I run a pharmacy",
+    Spot: PharmacySpot,
     description: "Sales, stock and NHIS claims across your branches.",
     action: "Join the waitlist",
     href: `${routes.pharmasyst}#waitlist`,
@@ -68,15 +73,20 @@ export function Hero() {
         <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 lg:gap-4">
           {paths.map((path) => (
             <li key={path.title}>
-              <CardLink href={path.href} className="h-full gap-2 p-5">
-                <span className="flex flex-wrap items-center gap-2 text-body font-semibold text-heading">
-                  {path.title}
-                  {path.waitlist && <StatusBadge status="dev" size="sm" />}
-                </span>
-                <span className="text-body-sm text-ink-secondary">{path.description}</span>
-                <span className="mt-auto pt-2 text-label text-primary">
-                  {path.action} <InlineArrow className="transition-transform group-hover:translate-x-0.5" />
-                </span>
+              <CardLink href={path.href} className="h-full">
+                <CardMedia className="flex justify-center px-6 py-3">
+                  <path.Spot className="h-20 w-auto" />
+                </CardMedia>
+                <CardBody>
+                  <span className="flex flex-wrap items-center gap-2 text-body font-semibold text-heading">
+                    {path.title}
+                    {path.waitlist && <StatusBadge status="dev" size="sm" />}
+                  </span>
+                  <span className="text-body-sm text-ink-secondary">{path.description}</span>
+                  <span className="mt-auto pt-2 text-label text-primary">
+                    {path.action} <InlineArrow className="transition-transform group-hover:translate-x-0.5" />
+                  </span>
+                </CardBody>
               </CardLink>
             </li>
           ))}

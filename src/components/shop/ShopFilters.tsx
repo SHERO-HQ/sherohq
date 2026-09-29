@@ -1,6 +1,7 @@
 "use client";
 
 import Form from "next/form";
+import { buttonClass } from "@/components/ui/Button";
 import { useState } from "react";
 import { SlidersHorizontal, X } from "lucide-react";
 import { routes } from "@/lib/site";
@@ -60,7 +61,7 @@ export function ShopFilters({
         aria-expanded={open}
         aria-controls={FORM_ID}
         onClick={() => setOpen(!open)}
-        className="flex h-11 items-center gap-2 rounded-sm border border-border-strong px-4 text-body font-medium text-ink lg:hidden"
+        className={buttonClass({ variant: "outline", className: "lg:hidden" })}
       >
         {open ? (
           <X aria-hidden="true" size={18} strokeWidth={1.5} />
@@ -133,12 +134,12 @@ export function ShopFilters({
           {/* Needed without JavaScript; with it, filters apply on change. */}
           <button
             type="submit"
-            className="h-11 rounded-sm bg-primary px-5 text-body font-medium text-on-primary lg:sr-only lg:focus:not-sr-only"
+            className={buttonClass({ className: "lg:sr-only lg:focus:not-sr-only" })}
           >
             Show results
           </button>
           {active > 0 && (
-            <a href={routes.shop} className="flex h-11 items-center text-body font-medium text-primary underline underline-offset-3">
+            <a href={routes.shop} className="flex h-9 items-center text-body font-medium text-primary underline underline-offset-3">
               Clear filters
             </a>
           )}
@@ -157,7 +158,7 @@ export function SortSelect({ value }: { value: string }) {
         form={FORM_ID}
         defaultValue={value}
         onChange={submit}
-        className="h-11 rounded-sm border border-border-strong bg-surface-raised px-2.5 text-body-sm text-ink lg:h-9"
+        className="h-9 rounded-sm border border-border-strong bg-surface-raised px-2.5 text-body-sm text-ink"
       >
         {sortOptions.map((option) => (
           <option key={option.value} value={option.value}>

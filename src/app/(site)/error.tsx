@@ -1,6 +1,7 @@
 "use client";
 
 import { LinkRows } from "@/components/ui/LinkRows";
+import { buttonClass } from "@/components/ui/Button";
 import { business, routes, whatsappLink } from "@/lib/site";
 
 export default function ErrorPage({ reset }: { error: Error; reset: () => void }) {
@@ -16,7 +17,7 @@ export default function ErrorPage({ reset }: { error: Error; reset: () => void }
       <button
         type="button"
         onClick={reset}
-        className="h-11 self-start rounded-sm bg-primary px-6 text-label text-on-primary hover:bg-primary-hover"
+        className={buttonClass({ className: "self-start" })}
       >
         Try again
       </button>

@@ -258,7 +258,7 @@ export default async function ListingPage({ params }: Props) {
           <span className="font-mono text-meta text-ink-muted">total</span>
           <span className="font-mono text-price font-medium text-ink">{formatCedis(listing.pricePesewas)}</span>
         </span>
-        <AddToCart listingId={listing.id} available={available} className="h-12 px-6" />
+        <AddToCart listingId={listing.id} available={available} />
       </div>
     </>
   );

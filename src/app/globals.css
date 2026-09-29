@@ -136,6 +136,13 @@
   padding-inline: var(--gutter);
 }
 
+/* A faint dot grid behind illustrations. */
+@utility bg-dots {
+  background-image: radial-gradient(var(--border) 1px, transparent 1.25px);
+  background-size: 16px 16px;
+  background-position: center;
+}
+
 /* The logo's slanted bars. Only the home hero, About hero and 404 use them. */
 @utility slant {
   clip-path: polygon(22% 0, 100% 0, 78% 100%, 0 100%);

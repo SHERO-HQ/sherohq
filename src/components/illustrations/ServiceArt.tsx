@@ -1,17 +1,22 @@
-// Illustrations for the four services, drawn in SHERO's tokens so they follow
-// the light and dark themes. They show the kind of work, not a real client's
-// system: no names, figures or logos. Replace with real photos and screenshots
-// when SHERO has them. TODO(owner)
+// SHERO's illustrations, drawn in design tokens so they follow the light and
+// dark themes. They show the kind of work, not a real client's system: no
+// names, figures or logos. Swap in real photos and screenshots when SHERO has
+// them. TODO(owner)
 import { cn } from "@/lib/cn";
 
 type ArtProps = { className?: string };
 
-function Frame({ label, className, children }: ArtProps & { label: string; children: React.ReactNode }) {
+function Frame({
+  label,
+  viewBox = "0 0 400 225",
+  className,
+  children,
+}: ArtProps & { label: string; viewBox?: string; children: React.ReactNode }) {
   return (
     <svg
-      viewBox="0 0 400 225"
-      role="img"
-      aria-label={label}
+      viewBox={viewBox}
+      // An empty label means pure decoration beside a text label that says the same.
+      {...(label ? { role: "img", "aria-label": label } : { "aria-hidden": true })}
       className={cn("h-auto w-full", className)}
       fill="none"
       strokeLinecap="round"
@@ -22,7 +27,30 @@ function Frame({ label, className, children }: ArtProps & { label: string; child
   );
 }
 
-/** A small check mark in a filled circle. */
+/** A raised panel with a soft shadow, the building block of every scene. */
+function Panel({ x, y, w, h, r = 6, tone = "raised" }: { x: number; y: number; w: number; h: number; r?: number; tone?: "raised" | "page" }) {
+  return (
+    <>
+      <rect x={x + 1} y={y + 4} width={w} height={h} rx={r} className="fill-ink" opacity={0.06} />
+      <rect
+        x={x}
+        y={y}
+        width={w}
+        height={h}
+        rx={r}
+        className={cn(tone === "raised" ? "fill-surface-raised" : "fill-page", "stroke-border")}
+      />
+    </>
+  );
+}
+
+/** A line of placeholder text. */
+function Line({ x, y, w, h = 5, tone = "muted" }: { x: number; y: number; w: number; h?: number; tone?: "muted" | "strong" | "brand" | "good" }) {
+  const fill = { muted: "fill-border", strong: "fill-heading", brand: "fill-primary", good: "fill-secondary" }[tone];
+  return <rect x={x} y={y} width={w} height={h} rx={h / 2} className={fill} />;
+}
+
+/** A check mark in a filled circle. */
 function Tick({ x, y, r = 5 }: { x: number; y: number; r?: number }) {
   return (
     <>
@@ -30,138 +58,155 @@ function Tick({ x, y, r = 5 }: { x: number; y: number; r?: number }) {
       <path
         d={`M${x - r * 0.45} ${y} l${r * 0.3} ${r * 0.35} l${r * 0.6} -${r * 0.7}`}
         className="stroke-on-secondary"
-        strokeWidth={1.5}
+        strokeWidth={Math.max(1.25, r * 0.28)}
       />
     </>
   );
 }
 
-/** Custom software: a business dashboard. */
+// ── Services ────────────────────────────────────────────────────────────────
+
+/** Custom software: a business dashboard with a new order arriving. */
 export function SoftwareArt({ className }: ArtProps) {
-  const bars = [30, 44, 38, 56, 48, 64];
+  const bars = [26, 40, 34, 52, 44, 62];
   return (
     <Frame label="Illustration: a business dashboard" className={className}>
-      <rect x="40" y="16" width="320" height="193" rx="6" className="fill-surface-raised" />
-      <rect x="40" y="36" width="64" height="173" className="fill-surface" />
-      {[52, 68, 84, 100].map((y) => (
-        <rect key={y} x="52" y={y} width="40" height="6" rx="3" className={y === 68 ? "fill-primary" : "fill-border"} />
+      <Panel x={36} y={18} w={300} h={186} />
+      <rect x="36.5" y="38" width="62" height="165.5" className="fill-surface" />
+      <path d="M36.5 38 H335.5" className="stroke-border" />
+      {[48, 58, 68].map((x) => (
+        <circle key={x} cx={x} cy="28" r="3" className="fill-border" />
       ))}
-      <path d="M40 36 H360" className="stroke-border" />
-      {[54, 64, 74].map((x) => (
-        <circle key={x} cx={x} cy="26" r="3" className="fill-border" />
+      <rect x="46" y="50" width="42" height="12" rx="3" className="fill-primary" opacity={0.12} />
+      <Line x={52} y={53.5} w={30} tone="brand" />
+      {[72, 88, 104, 120].map((y) => (
+        <Line key={y} x={52} y={y} w={y === 104 ? 22 : 30} />
       ))}
-      {[116, 196, 276].map((x) => (
+
+      <Line x={112} y={50} w={60} h={7} tone="strong" />
+      {[112, 186, 260].map((x, i) => (
         <g key={x}>
-          <rect x={x} y="48" width="72" height="40" rx="4" className="fill-page stroke-border" />
-          <rect x={x + 10} y="58" width="28" height="5" rx="2.5" className="fill-border" />
-          <rect x={x + 10} y="70" width="40" height="8" rx="2" className="fill-heading" />
+          <rect x={x} y="66" width="64" height="40" rx="5" className="fill-page stroke-border" />
+          <Line x={x + 10} y={75} w={26} />
+          <Line x={x + 10} y={87} w={i === 1 ? 30 : 38} h={8} tone="strong" />
         </g>
       ))}
-      <rect x="116" y="100" width="152" height="97" rx="4" className="fill-page stroke-border" />
+      <rect x="112" y="116" width="138" height="78" rx="5" className="fill-page stroke-border" />
+      <path d="M122 176 H240" className="stroke-border" />
       {bars.map((h, i) => (
         <rect
           key={i}
-          x={130 + i * 21}
-          y={185 - h}
-          width="12"
-          height={h}
+          x={126 + i * 19}
+          y={176 - h * 0.85}
+          width="11"
+          height={h * 0.85}
           rx="2"
           className={i === bars.length - 1 ? "fill-secondary" : "fill-primary"}
+          opacity={i === bars.length - 1 ? 1 : 0.35 + i * 0.12}
         />
       ))}
-      <rect x="276" y="100" width="72" height="97" rx="4" className="fill-page stroke-border" />
-      {[116, 134, 152, 170].map((y) => (
+      <rect x="258" y="116" width="66" height="78" rx="5" className="fill-page stroke-border" />
+      {[130, 146, 162, 178].map((y) => (
         <g key={y}>
-          <circle cx="288" cy={y} r="4" className="fill-secondary-subtle" />
-          <rect x="298" y={y - 2.5} width="38" height="5" rx="2.5" className="fill-border" />
+          <circle cx="269" cy={y} r="3.5" className="fill-secondary" opacity={0.35} />
+          <Line x={277} y={y - 2.5} w={36} />
         </g>
       ))}
-      <rect x="40" y="16" width="320" height="193" rx="6" className="stroke-border" />
+
+      <Panel x={276} y={140} w={96} h={42} />
+      <Tick x={292} y={161} r={8} />
+      <Line x={306} y={152} w={48} h={6} tone="strong" />
+      <Line x={306} y={164} w={34} />
     </Frame>
   );
 }
 
-/** Hardware: a tested laptop with its battery at full health. */
+/** Hardware: a tested laptop, its check passed and its battery full. */
 export function HardwareArt({ className }: ArtProps) {
   return (
     <Frame label="Illustration: a tested laptop with a full battery" className={className}>
-      <rect x="110" y="20" width="180" height="120" rx="8" className="fill-surface-raised stroke-border-strong" />
-      <rect x="120" y="30" width="160" height="100" rx="3" className="fill-surface" />
-      <rect x="152" y="52" width="90" height="34" rx="5" className="fill-page stroke-secondary" strokeWidth={2} />
-      <rect x="243" y="62" width="5" height="14" rx="2" className="fill-secondary" />
-      <rect x="157" y="57" width="80" height="24" rx="3" className="fill-secondary" />
-      {[100, 114].map((y) => (
+      <rect x="111" y="24" width="180" height="118" rx="8" className="fill-ink" opacity={0.06} />
+      <rect x="110" y="20" width="180" height="118" rx="8" className="fill-surface-raised stroke-border-strong" />
+      <rect x="120" y="30" width="160" height="98" rx="3" className="fill-surface" />
+      <rect x="152" y="50" width="92" height="34" rx="6" className="fill-page stroke-secondary" strokeWidth={2} />
+      <rect x="245" y="60" width="5" height="14" rx="2" className="fill-secondary" />
+      <rect x="157" y="55" width="82" height="24" rx="3" className="fill-secondary" />
+      {[98, 112].map((y) => (
         <g key={y}>
           <Tick x={160} y={y} r={4.5} />
-          <rect x="170" y={y - 2.5} width="64" height="5" rx="2.5" className="fill-border" />
+          <Line x={170} y={y - 2.5} w={y === 98 ? 62 : 48} />
         </g>
       ))}
-      <path d="M92 140 H308 L318 154 Q318 158 314 158 H86 Q82 158 82 154 Z" className="fill-border" />
+      <path d="M92 138 H308 L320 154 Q321 158 316 158 H84 Q79 158 80 154 Z" className="fill-surface-raised stroke-border-strong" />
+      {[143, 148].map((y) => (
+        <path key={y} d={`M${y === 143 ? 120 : 116} ${y} H${y === 143 ? 280 : 284}`} className="stroke-border" strokeDasharray="6 3" />
+      ))}
+      <rect x="178" y="152" width="44" height="3" rx="1.5" className="fill-border" />
 
-      <rect x="28" y="104" width="100" height="84" rx="5" className="fill-surface-raised stroke-border" />
-      {[122, 142, 162].map((y) => (
+      <Panel x={26} y={100} w={104} h={86} />
+      <Line x={40} y={112} w={44} h={6} tone="strong" />
+      {[134, 152, 170].map((y) => (
         <g key={y}>
           <Tick x={44} y={y} />
-          <rect x="56" y={y - 3} width="56" height="6" rx="3" className="fill-border" />
+          <Line x={56} y={y - 2.5} w={y === 152 ? 44 : 56} />
         </g>
       ))}
 
-      <rect x="272" y="118" width="100" height="68" rx="5" className="fill-surface-raised stroke-border" />
-      <rect x="286" y="132" width="52" height="6" rx="3" className="fill-border" />
-      <rect x="286" y="148" width="70" height="10" rx="2" className="fill-heading" />
-      <rect x="286" y="166" width="44" height="9" rx="4.5" className="fill-secondary-subtle" />
+      <Panel x={274} y={112} w={100} h={74} />
+      <circle cx="360" cy="126" r="4" className="fill-page stroke-border" />
+      <Line x={288} y={124} w={50} />
+      <Line x={288} y={140} w={70} h={10} tone="strong" />
+      <rect x="288" y="160" width="46" height="12" rx="6" className="fill-secondary" opacity={0.18} />
+      <Line x={296} y={164} w={30} h={4} tone="good" />
     </Frame>
   );
 }
 
 /** Managed IT: an office network, every device connected and backed up. */
 export function ManagedItArt({ className }: ArtProps) {
-  const links = [
-    "M172 106 L136 60",
-    "M228 106 L264 60",
-    "M172 122 L136 166",
-    "M228 122 L264 166",
-  ];
+  const links = ["M172 104 L138 64", "M228 104 L262 64", "M172 124 L138 164", "M228 124 L262 164"];
   const dots = [
-    [154, 83],
-    [246, 83],
-    [154, 144],
-    [246, 144],
+    [155, 84],
+    [245, 84],
+    [155, 144],
+    [245, 144],
   ];
   return (
     <Frame label="Illustration: an office network with backups" className={className}>
       {links.map((d) => (
-        <path key={d} d={d} className="stroke-border-strong" strokeWidth={1.5} strokeDasharray="4 4" />
+        <path key={d} d={d} className="stroke-border-strong" strokeWidth={1.5} strokeDasharray="3 4" />
       ))}
       {dots.map(([x, y]) => (
-        <circle key={`${x}-${y}`} cx={x} cy={y} r="4" className="fill-secondary" />
+        <circle key={`${x}-${y}`} cx={x} cy={y} r="4.5" className="fill-secondary stroke-page" strokeWidth={2} />
       ))}
 
-      <path d="M184 98 V84 M216 98 V84" className="stroke-primary" strokeWidth={2} />
-      <rect x="172" y="98" width="56" height="32" rx="5" className="fill-primary" />
-      {[188, 200, 212].map((x) => (
-        <circle key={x} cx={x} cy="114" r="2.5" className="fill-secondary-subtle" />
+      <path d="M186 96 V80 M214 96 V80" className="stroke-primary" strokeWidth={2.5} />
+      <rect x="171" y="100" width="58" height="32" rx="7" className="fill-ink" opacity={0.08} />
+      <rect x="170" y="96" width="60" height="32" rx="7" className="fill-primary" />
+      {[186, 198, 210].map((x, i) => (
+        <circle key={x} cx={x} cy="112" r="2.5" className={i === 0 ? "fill-secondary" : "fill-on-primary"} opacity={i === 0 ? 1 : 0.7} />
       ))}
 
-      <rect x="40" y="20" width="96" height="68" rx="5" className="fill-surface-raised stroke-border" />
-      <rect x="66" y="34" width="44" height="28" rx="3" className="fill-surface stroke-ink-muted" />
-      <path d="M58 70 H118" className="stroke-ink-muted" strokeWidth={2} />
+      <Panel x={40} y={20} w={98} h={68} />
+      <rect x="66" y="34" width="46" height="28" rx="3" className="fill-surface stroke-ink-muted" />
+      <path d="M58 70 H120" className="stroke-ink-muted" strokeWidth={2.5} />
 
-      <rect x="264" y="20" width="96" height="68" rx="5" className="fill-surface-raised stroke-border" />
-      <rect x="290" y="32" width="44" height="30" rx="3" className="fill-surface stroke-ink-muted" />
-      <path d="M312 62 V72 M300 72 H324" className="stroke-ink-muted" strokeWidth={2} />
+      <Panel x={262} y={20} w={98} h={68} />
+      <rect x="288" y="31" width="46" height="30" rx="3" className="fill-surface stroke-ink-muted" />
+      <path d="M311 61 V71 M299 72 H323" className="stroke-ink-muted" strokeWidth={2} />
 
-      <rect x="40" y="138" width="96" height="68" rx="5" className="fill-surface-raised stroke-border" />
-      <rect x="72" y="152" width="32" height="12" rx="1" className="fill-page stroke-ink-muted" />
-      <rect x="62" y="162" width="52" height="24" rx="3" className="fill-surface stroke-ink-muted" />
-      <circle cx="104" cy="170" r="2" className="fill-secondary" />
+      <Panel x={40} y={138} w={98} h={68} />
+      <rect x="72" y="151" width="34" height="13" rx="1" className="fill-page stroke-ink-muted" />
+      <rect x="62" y="161" width="54" height="24" rx="4" className="fill-surface stroke-ink-muted" />
+      <Line x={70} y={176} w={20} h={3} />
+      <circle cx="106" cy="170" r="2.5" className="fill-secondary" />
 
-      <rect x="264" y="138" width="96" height="68" rx="5" className="fill-surface-raised stroke-border" />
+      <Panel x={262} y={138} w={98} h={68} />
       <path
-        d="M292 186 H330 A12 12 0 0 0 328 162 A16 16 0 0 0 298 166 A10 10 0 0 0 292 186 Z"
+        d="M290 188 H330 A12 12 0 0 0 328 164 A16 16 0 0 0 297 167 A11 11 0 0 0 290 188 Z"
         className="fill-surface stroke-ink-muted"
       />
-      <path d="M312 182 V170 M306 175 L312 169 L318 175" className="stroke-secondary" strokeWidth={2} />
+      <path d="M311 183 V171 M305 176 L311 170 L317 176" className="stroke-secondary" strokeWidth={2} />
     </Frame>
   );
 }
@@ -170,40 +215,122 @@ export function ManagedItArt({ className }: ArtProps) {
 export function IntegrationArt({ className }: ArtProps) {
   return (
     <Frame label="Illustration: a mobile money payment updating sales and stock" className={className}>
-      <rect x="32" y="28" width="80" height="160" rx="12" className="fill-surface-raised stroke-border-strong" />
-      <rect x="40" y="44" width="64" height="128" rx="4" className="fill-surface" />
-      <rect x="50" y="62" width="44" height="10" rx="2" className="fill-heading" />
-      <rect x="50" y="80" width="30" height="5" rx="2.5" className="fill-border" />
-      <Tick x={72} y={128} r={14} />
+      <rect x="33" y="30" width="80" height="162" rx="14" className="fill-ink" opacity={0.06} />
+      <rect x="32" y="26" width="80" height="162" rx="14" className="fill-surface-raised stroke-border-strong" />
+      <rect x="40" y="40" width="64" height="134" rx="6" className="fill-surface" />
+      <rect x="62" y="31" width="20" height="3" rx="1.5" className="fill-border" />
+      <Line x={50} y={56} w={24} />
+      <Line x={50} y={66} w={44} h={10} tone="strong" />
+      <Tick x={72} y={118} r={15} />
+      <Line x={52} y={146} w={40} />
+      <Line x={58} y={156} w={28} />
 
-      <path d="M120 108 H154 M148 102 L154 108 L148 114" className="stroke-primary" strokeWidth={2} />
+      <path d="M120 107 H152 M146 101 L152 107 L146 113" className="stroke-primary" strokeWidth={2} />
 
-      <rect x="162" y="58" width="100" height="100" rx="5" className="fill-surface-raised stroke-border" />
-      <path d="M162 63 A5 5 0 0 1 167 58 H257 A5 5 0 0 1 262 63 V78 H162 Z" className="fill-primary" />
-      {[92, 106, 120].map((y) => (
+      <Panel x={160} y={58} w={102} h={100} />
+      <path d="M160 64 A6 6 0 0 1 166 58 H256 A6 6 0 0 1 262 64 V78 H160 Z" className="fill-primary" />
+      <Line x={170} y={66} w={28} h={4} tone="muted" />
+      {[92, 106, 120].map((y, i) => (
         <g key={y}>
-          <rect x="174" y={y - 2.5} width="46" height="5" rx="2.5" className="fill-border" />
-          <rect x="232" y={y - 2.5} width="18" height="5" rx="2.5" className="fill-border" />
+          <Line x={172} y={y - 2.5} w={[46, 38, 42][i]} />
+          <Line x={234} y={y - 2.5} w={18} />
         </g>
       ))}
-      <path d="M174 134 H250" className="stroke-border" />
-      <rect x="206" y="140" width="44" height="8" rx="2" className="fill-heading" />
+      <path d="M172 134 H252" className="stroke-border" />
+      <Line x={172} y={141} w={20} />
+      <Line x={208} y={140} w={44} h={8} tone="strong" />
 
-      <path d="M270 96 C284 96 282 64 296 64 M290 58 L296 64 L290 70" className="stroke-primary" strokeWidth={2} />
-      <path d="M270 120 C284 120 282 152 296 152 M290 146 L296 152 L290 158" className="stroke-primary" strokeWidth={2} />
+      <path d="M268 96 C282 96 280 66 294 66 M288 60 L294 66 L288 72" className="stroke-primary" strokeWidth={2} />
+      <path d="M268 120 C282 120 280 152 294 152 M288 146 L294 152 L288 158" className="stroke-primary" strokeWidth={2} />
 
-      <rect x="302" y="32" width="72" height="64" rx="5" className="fill-surface-raised stroke-border" />
-      <rect x="318" y="58" width="16" height="14" rx="1" className="fill-border" />
-      <rect x="336" y="58" width="16" height="14" rx="1" className="fill-border" />
-      <rect x="327" y="44" width="16" height="14" rx="1" className="fill-secondary" />
-      <rect x="318" y="80" width="40" height="5" rx="2.5" className="fill-border" />
+      <Panel x={300} y={32} w={74} h={66} />
+      <rect x="317" y="60" width="17" height="15" rx="1.5" className="fill-border" />
+      <rect x="336" y="60" width="17" height="15" rx="1.5" className="fill-border" />
+      <rect x="326" y="44" width="17" height="15" rx="1.5" className="fill-secondary" />
+      <Line x={316} y={84} w={42} />
 
-      <rect x="302" y="120" width="72" height="72" rx="5" className="fill-surface-raised stroke-border" />
+      <Panel x={300} y={118} w={74} h={74} />
       <path
-        d="M322 132 H354 V176 L349 172 L344 176 L339 172 L334 176 L329 172 L322 176 Z"
+        d="M320 130 H354 V176 L348.5 172 L343 176 L337.5 172 L332 176 L326.5 172 L320 176 Z"
         className="fill-page stroke-ink-muted"
       />
-      <path d="M329 144 H347 M329 152 H347 M329 160 H340" className="stroke-border-strong" strokeWidth={1.5} />
+      <path d="M327 142 H347 M327 150 H347 M327 158 H339" className="stroke-border-strong" strokeWidth={1.5} />
+    </Frame>
+  );
+}
+
+// ── "What do you need?" spots ──────────────────────────────────────────────
+
+const spotBox = "0 0 160 88";
+
+/** A laptop with a full battery. */
+export function LaptopSpot({ className }: ArtProps) {
+  return (
+    <Frame label="" viewBox={spotBox} className={className}>
+      <rect x="41" y="14" width="78" height="52" rx="5" className="fill-surface-raised stroke-border-strong" />
+      <rect x="47" y="20" width="66" height="40" rx="2" className="fill-surface" />
+      <rect x="60" y="32" width="36" height="16" rx="3" className="fill-page stroke-secondary" strokeWidth={1.5} />
+      <rect x="97" y="37" width="3" height="6" rx="1" className="fill-secondary" />
+      <rect x="63" y="35" width="30" height="10" rx="1.5" className="fill-secondary" />
+      <path d="M32 66 H128 L134 74 Q134 76 131 76 H29 Q26 76 26 74 Z" className="fill-surface-raised stroke-border-strong" />
+      <Tick x={128} y={22} r={8} />
+    </Frame>
+  );
+}
+
+/** A software window with code brackets. */
+export function SoftwareSpot({ className }: ArtProps) {
+  return (
+    <Frame label="" viewBox={spotBox} className={className}>
+      <rect x="30" y="12" width="100" height="64" rx="5" className="fill-surface-raised stroke-border-strong" />
+      <path d="M30.5 24 H129.5" className="stroke-border" />
+      {[38, 45, 52].map((x) => (
+        <circle key={x} cx={x} cy="18" r="2" className="fill-border" />
+      ))}
+      <path d="M56 38 L46 48 L56 58 M104 38 L114 48 L104 58" className="stroke-primary" strokeWidth={2.5} />
+      <path d="M86 34 L74 62" className="stroke-secondary" strokeWidth={2.5} />
+    </Frame>
+  );
+}
+
+/** A phone with chat messages and the order they became. */
+export function SocialSpot({ className }: ArtProps) {
+  return (
+    <Frame label="" viewBox={spotBox} className={className}>
+      <rect x="54" y="6" width="52" height="78" rx="9" className="fill-surface-raised stroke-border-strong" />
+      <rect x="59" y="14" width="42" height="62" rx="4" className="fill-surface" />
+      <rect x="64" y="20" width="26" height="10" rx="5" className="fill-border" />
+      <rect x="70" y="34" width="26" height="10" rx="5" className="fill-merchander" />
+      <rect x="64" y="48" width="20" height="10" rx="5" className="fill-border" />
+      <rect x="92" y="46" width="42" height="30" rx="5" className="fill-surface-raised stroke-border" />
+      {/* A parcel: the order that came in through the chat. */}
+      <path d="M99 56 L109 52 L119 56 V68 L109 72 L99 68 Z" className="fill-merchander" opacity={0.2} />
+      <path d="M99 56 L109 60 L119 56 M109 60 V72 M99 56 L109 52 L119 56 V68 L109 72 L99 68 Z" className="stroke-merchander" strokeWidth={1.5} />
+      <Line x={121} y={58} w={8} h={4} />
+      <Line x={121} y={65} w={6} h={4} />
+    </Frame>
+  );
+}
+
+/** A medicine bottle, a pill and a claim form. */
+export function PharmacySpot({ className }: ArtProps) {
+  return (
+    <Frame label="" viewBox={spotBox} className={className}>
+      <rect x="86" y="14" width="44" height="60" rx="4" className="fill-surface-raised stroke-border" />
+      <Line x={94} y={24} w={24} h={4} tone="strong" />
+      <Line x={94} y={34} w={28} h={3} />
+      <Line x={94} y={42} w={22} h={3} />
+      <Line x={94} y={50} w={26} h={3} />
+      <rect x="94" y="58" width="20" height="8" rx="4" className="fill-pharmasyst" opacity={0.25} />
+      <rect x="36" y="18" width="32" height="10" rx="2" className="fill-border" />
+      <rect x="34" y="28" width="36" height="48" rx="6" className="fill-surface-raised stroke-border-strong" />
+      <rect x="40" y="40" width="24" height="22" rx="2" className="fill-surface" />
+      <path d="M52 45 V57 M46 51 H58" className="stroke-pharmasyst" strokeWidth={2.5} />
+      <g transform="rotate(-35 76 74)">
+        <rect x="66" y="69" width="22" height="10" rx="5" className="fill-surface-raised stroke-border-strong" />
+        <path d="M77 69 V79" className="stroke-border-strong" />
+        <path d="M67 74 A5 5 0 0 1 72 69 H77 V79 H72 A5 5 0 0 1 67 74 Z" className="fill-pharmasyst" />
+      </g>
     </Frame>
   );
 }

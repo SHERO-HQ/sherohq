@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { buttonClass } from "@/components/ui/Button";
 import { placeOrder } from "@/app/(site)/checkout/actions";
 import { SelectField, TextField } from "@/components/forms/fields";
 import { SummaryRow, SummaryTotal } from "@/components/shop/OrderSummary";
@@ -14,7 +15,6 @@ import {
 import { regions, TAMALE_LOCAL } from "@/lib/ghana";
 import { deliveryFeePesewas, formatCedis, type DeliveryMethod } from "@/lib/orders";
 import { routes } from "@/lib/site";
-import { cn } from "@/lib/cn";
 
 type Item = { id: string; model: string; pricePesewas: number };
 
@@ -275,9 +275,7 @@ export function CheckoutForm({
         <button
           type="submit"
           disabled={pending}
-          className={cn(
-            "h-13 w-full rounded-sm bg-primary text-body font-medium text-on-primary transition-colors duration-150 hover:bg-primary-hover disabled:opacity-60",
-          )}
+          className={buttonClass({ size: "lg", full: true })}
         >
           {pending ? "Placing your order…" : "Place order"}
         </button>

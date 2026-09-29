@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { buttonClass } from "@/components/ui/Button";
 import { cookies } from "next/headers";
 import Link from "next/link";
 import { listingHref } from "@/components/shop/ListingCard";
@@ -39,7 +40,7 @@ export default async function CartPage() {
           <p className="text-body-lg text-ink-secondary">Your cart is empty.</p>
           <Link
             href={routes.shop}
-            className="inline-flex h-12 items-center rounded-sm bg-primary px-6 text-body font-medium text-on-primary hover:bg-primary-hover"
+            className={buttonClass({ size: "lg" })}
           >
             Browse laptops in stock
           </Link>
@@ -117,7 +118,7 @@ export default async function CartPage() {
             {available.length > 0 ? (
               <Link
                 href={routes.checkout}
-                className="mt-3 flex h-13 items-center justify-center rounded-sm bg-primary text-body font-medium text-on-primary hover:bg-primary-hover"
+                className={buttonClass({ size: "lg", full: true, className: "mt-3" })}
               >
                 Continue to checkout
               </Link>

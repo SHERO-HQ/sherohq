@@ -21,7 +21,7 @@ export function ConsultationCta({
         </div>
         <Link
           href={routes.consultation}
-          className="inline-flex h-12 shrink-0 items-center justify-center gap-2 self-start rounded-sm bg-ink-inverse px-6 text-label whitespace-nowrap text-navy-700 transition-colors duration-150 hover:bg-navy-50 focus-visible:outline-ink-inverse lg:self-auto"
+          className="inline-flex h-10 shrink-0 items-center justify-center gap-2 self-start rounded-sm bg-ink-inverse px-5 text-label whitespace-nowrap text-navy-700 transition-colors duration-150 hover:bg-navy-50 focus-visible:outline-ink-inverse lg:self-auto"
         >
           Book a free consultation <InlineArrow />
         </Link>

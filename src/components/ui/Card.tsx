@@ -20,7 +20,7 @@ export function CardLink({ href, className, children }: { href: string; classNam
 
 /** Artwork or a photo across the top of a card, on the surface tone. */
 export function CardMedia({ className, children }: { className?: string; children: React.ReactNode }) {
-  return <div className={cn("border-b border-border bg-surface", className)}>{children}</div>;
+  return <div className={cn("border-b border-border bg-surface bg-dots", className)}>{children}</div>;
 }
 
 export function CardBody({ className, children }: { className?: string; children: React.ReactNode }) {

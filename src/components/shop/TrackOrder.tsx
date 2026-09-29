@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { buttonClass } from "@/components/ui/Button";
 import { trackOrder, type TrackResult } from "@/app/(site)/track/actions";
 import { TextField } from "@/components/forms/fields";
 import { formatGhanaDateTime } from "@/lib/dates";
@@ -167,7 +168,7 @@ export function TrackOrder({ initialNumber }: { initialNumber?: string }) {
         <button
           type="submit"
           disabled={pending}
-          className="h-13 rounded-sm bg-primary px-7 text-body font-medium text-on-primary hover:bg-primary-hover disabled:opacity-60 sm:col-span-2 lg:col-span-1 lg:mt-6.5"
+          className={buttonClass({ size: "lg", className: "sm:col-span-2 lg:col-span-1 lg:mt-6.5" })}
         >
           {pending ? "Looking it up" : "Track order"}
         </button>

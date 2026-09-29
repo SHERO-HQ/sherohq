@@ -87,7 +87,7 @@ export function WaitlistForm({ product }: { product: ProductPageContent }) {
             <button
               type="submit"
               disabled={pending}
-              className="h-12 rounded-sm bg-product-action text-body font-medium text-on-product-action transition-opacity duration-150 hover:opacity-90 disabled:opacity-60"
+              className="h-10 rounded-sm bg-product-action text-body font-medium text-on-product-action transition-opacity duration-150 hover:opacity-90 disabled:opacity-60"
             >
               {pending ? "Joining…" : "Join the waitlist"}
             </button>

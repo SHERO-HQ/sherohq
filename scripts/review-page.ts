@@ -13,7 +13,7 @@ const notes: Record<string, string[]> = {
     "Hero is the motto, one sentence and two buttons; the four \"what do you need\" paths sit below it as tiles.",
     "Laptop cards reuse the shop's card instead of a separate table.",
     "Services are four cards with illustrations (drawn in SHERO's colours) until real photos and screenshots arrive.",
-    "What do you need paths and the four device checks are cards.",
+    "What do you need paths and the four device checks are cards; each path has a small illustration.",
     "Client names are set as type until the real logos arrive.",
     "The empty photo band is replaced by the four device checks, under the laptop list.",
     "The desktop laptop table has a battery column; every listing shows battery health.",
@@ -86,6 +86,8 @@ const notes: Record<string, string[]> = {
 };
 
 const everywhere = [
+  "Shorter buttons: 36px, and 40px for main actions; form fields 40px.",
+  "The menu icon is the old site's staggered three-line mark.",
   "Sizes follow the design system's own scale (56/40/30/22px headings, 1200px container, one section spacing), not the mockups' one-off pixel sizes, so pages are calmer and shorter.",
   "Navy is the primary colour; green is secondary: status, short labels and WhatsApp buttons.",
   "No dark \"illustration\" readout cards or big faded numbers; the laptop page keeps its real device check as a plain table.",

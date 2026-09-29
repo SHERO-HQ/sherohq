@@ -1,4 +1,5 @@
 import { cn } from "@/lib/cn";
+import { buttonClass } from "@/components/ui/Button";
 
 const control =
   "w-full rounded-sm border border-border-strong bg-surface-raised px-3.5 text-body text-ink placeholder:text-ink-muted aria-invalid:border-danger";
@@ -51,7 +52,7 @@ export function TextField({
         name={id}
         aria-invalid={error ? true : undefined}
         aria-describedby={describedBy(id, hint, error)}
-        className={cn(control, "h-12")}
+        className={cn(control, "h-10")}
         {...input}
       />
     </Field>
@@ -100,7 +101,7 @@ export function SelectField({
         name={id}
         aria-invalid={error ? true : undefined}
         aria-describedby={describedBy(id, hint, error)}
-        className={cn(control, "h-12")}
+        className={cn(control, "h-10")}
         {...select}
       >
         {options.map((option) => (
@@ -154,7 +155,7 @@ export function SubmitButton({ children, pending }: { children: React.ReactNode;
     <button
       type="submit"
       disabled={pending}
-      className="h-13 w-full rounded-sm bg-primary text-body font-medium text-on-primary transition-colors duration-150 hover:bg-primary-hover disabled:opacity-60"
+      className={buttonClass({ size: "lg", full: true })}
     >
       {children}
     </button>
