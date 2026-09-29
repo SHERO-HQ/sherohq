@@ -41,12 +41,8 @@ export function OwnProducts() {
                 <span className="font-display text-[26px]/[30px] font-bold text-heading lg:text-4xl/10 lg:tracking-[-0.02em]">
                   {product.name}
                 </span>
-                <span className="flex lg:hidden">
-                  <StatusBadge status="dev" label="waitlist" size="sm" />
-                </span>
-                <span className="hidden lg:flex">
-                  <StatusBadge status="dev" />
-                </span>
+                {/* Always "In development" (CLAUDE.md), though the mobile design says "waitlist". */}
+                <StatusBadge status="dev" />
               </span>
               <span className="text-[15px]/[23px] text-ink-secondary lg:text-[17px]/[27px]">
                 <span className="lg:hidden">{product.descriptionMobile}</span>
