@@ -6,7 +6,7 @@ import { apiResponse, validateCsrf } from "@/lib/api-utils";
 import { getUserFromSession, getAdminFromSession } from "@/lib/auth";
 import { verifyOrderAccessToken } from "@/lib/orderUtils";
 import { toReadableOrderId } from "@/utils/orderId";
-import { rateLimit } from "@/lib/rate-limit";
+import { rateLimit, getClientIp } from "@/lib/rate-limit";
 
 export async function POST(request: NextRequest) {
   
@@ -29,8 +29,7 @@ let orderId: string = "";
     }
 
     // Rate limit: 5 initialize calls per minute per order
-    const ip =
-      request.headers.get("x-forwarded-for")?.split(",")[0].trim() || "unknown";
+    const ip = getClientIp(request);
     const rateLimitResult = await rateLimit(
       `payment-init:${orderId ?? ip}`,
       5,

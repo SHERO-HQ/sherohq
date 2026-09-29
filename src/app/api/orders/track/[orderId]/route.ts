@@ -63,6 +63,8 @@ export async function GET(
 
     const isAuthorized = Boolean(admin) || (user && order.userId === user.id) || hasValidToken;
 
+    // Orders can be looked up by an 8-character ID prefix, so the anonymous view
+    // is limited to progress info: no amounts or payment-provider messages.
     if (!isAuthorized) {
       return apiResponse.success({
         id: order.id,
@@ -70,8 +72,6 @@ export async function GET(
         createdAt: order.createdAt,
         paymentMethod: order.paymentMethod,
         paymentStatus: order.paymentStatus,
-        paymentMessage: order.paymentMessage,
-        total: Number(order.total),
         activityLogs: activityLogsRows.map(l => ({ action: l.action, createdAt: l.createdAt })),
       });
     }

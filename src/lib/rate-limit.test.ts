@@ -131,3 +131,37 @@ describe("rateLimit", () => {
     });
   });
 });
+
+describe("isRateLimited", () => {
+  it("reports the limit without recording a hit", async () => {
+    delete process.env.UPSTASH_REDIS_REST_URL;
+    delete process.env.UPSTASH_REDIS_REST_TOKEN;
+    vi.resetModules();
+    const { rateLimit: limit, isRateLimited } = await import("./rate-limit");
+    const id = `peek_${Math.random()}`;
+
+    expect(await isRateLimited(id, 2, 60_000)).toBe(false);
+    expect(await isRateLimited(id, 2, 60_000)).toBe(false);
+
+    await limit(id, 2, 60_000);
+    await limit(id, 2, 60_000);
+    expect(await isRateLimited(id, 2, 60_000)).toBe(true);
+  });
+});
+
+describe("getClientIp", () => {
+  const req = (headers: Record<string, string>) =>
+    new Request("https://example.com", { headers });
+
+  it("prefers platform-set headers", async () => {
+    const { getClientIp } = await import("./rate-limit");
+    expect(getClientIp(req({ "x-real-ip": "1.1.1.1", "x-forwarded-for": "9.9.9.9" }))).toBe("1.1.1.1");
+    expect(getClientIp(req({ "x-nf-client-connection-ip": "2.2.2.2" }))).toBe("2.2.2.2");
+  });
+
+  it("uses the proxy-appended (last) X-Forwarded-For entry, not a client-supplied one", async () => {
+    const { getClientIp } = await import("./rate-limit");
+    expect(getClientIp(req({ "x-forwarded-for": "6.6.6.6, 3.3.3.3" }))).toBe("3.3.3.3");
+    expect(getClientIp(req({}))).toBe("unknown");
+  });
+});

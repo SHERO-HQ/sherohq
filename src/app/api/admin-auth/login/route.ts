@@ -10,7 +10,7 @@ import { logActivity } from "@/lib/activity";
 import { apiResponse, validateCsrf } from "@/lib/api-utils";
 import { ADMIN_SESSION_COOKIE, getAuthCookieOptions } from "@/lib/auth";
 
-import { rateLimit } from "@/lib/rate-limit";
+import { rateLimit, isRateLimited, getClientIp } from "@/lib/rate-limit";
 
 export async function POST(request: NextRequest) {
   try {
@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
     if (csrfError) return csrfError;
 
     // 1. Rate Limiting (5 attempts per 1 minute)
-    const ip = request.headers.get("x-forwarded-for") || "anonymous";
+    const ip = getClientIp(request);
     const limiter = await rateLimit(`login_${ip}`, 5, 60 * 1000);
     
     if (!limiter.success) {
@@ -32,13 +32,15 @@ export async function POST(request: NextRequest) {
 
     const { username, password } = body;
     
-    if (!username || !password) {
+    if (typeof username !== "string" || typeof password !== "string" || !username || !password) {
       return apiResponse.error("Username and password are required", 400);
     }
 
     // Per-account rate limiting
-    const accountLimiter = await rateLimit(`account_login_${username.toLowerCase()}`, 5, 15 * 60_000);
-    if (!accountLimiter.success) {
+    // Only failed attempts count toward the lockout (recorded below), so a
+    // user's own successful logins can't lock them out.
+    const accountKey = `account_login_${username.toLowerCase()}`;
+    if (await isRateLimited(accountKey, 5, 15 * 60_000)) {
       return apiResponse.error("This account is temporarily locked due to too many failed attempts. Please try again in 15 minutes.", 429);
     }
 
@@ -51,6 +53,7 @@ export async function POST(request: NextRequest) {
     const isValid = await bcrypt.compare(password, admin?.passwordHash || fakeHash);
 
     if (!admin || !isValid) {
+      await rateLimit(accountKey, 5, 15 * 60_000);
       return apiResponse.unauthorized("Invalid username or password");
     }
 
@@ -101,7 +104,6 @@ export async function POST(request: NextRequest) {
     await logActivity(admin.id, "admin_login", "success", `Admin logged in: ${admin.username}`);
 
     return apiResponse.success({
-      token,
       mustReset,
       admin: {
         id: admin.id,

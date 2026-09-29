@@ -3,12 +3,12 @@ import { db } from "@/lib/db";
 import { testimonials } from "@/lib/drizzle/schema";
 import { v4 as uuidv4 } from "uuid";
 import { apiResponse } from "@/lib/api-utils";
-import { rateLimit } from "@/lib/rate-limit";
+import { rateLimit, getClientIp } from "@/lib/rate-limit";
 
 export async function POST(request: NextRequest) {
   try {
     // Basic rate limiting to prevent spam
-    const ip = request.headers.get("x-forwarded-for") || "127.0.0.1";
+    const ip = getClientIp(request);
     const rl = await rateLimit(`testimonial_${ip}`, 3, 60000); // 3 per minute
     if (!rl.success) {
       return apiResponse.error("Too many requests. Please wait a moment.", 429);

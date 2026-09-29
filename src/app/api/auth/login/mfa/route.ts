@@ -89,7 +89,6 @@ export async function POST(request: NextRequest) {
 
     return apiResponse.success({
       success: true,
-      token,
       user: {
         id: user.id,
         email: user.email,

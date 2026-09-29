@@ -22,11 +22,11 @@ import { getSystemPrompt, callLLMStreaming, buildGeminiContents, summarizeChatHi
 import { db } from "@/lib/db";
 import { aiChatSessions } from "@/lib/drizzle/schema";
 import { eq, sql } from "drizzle-orm";
-import { rateLimit } from "@/lib/rate-limit";
+import { rateLimit, getClientIp } from "@/lib/rate-limit";
 
 export async function POST(request: Request) {
   try {
-    const ip = request.headers.get("x-forwarded-for") || "127.0.0.1";
+    const ip = getClientIp(request);
     const rl = await rateLimit(`chat_${ip}`, 10, 60000); // 10 requests per minute
     if (!rl.success) {
       return NextResponse.json({ error: "Too many requests. Please wait a moment." }, { status: 429 });

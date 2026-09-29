@@ -91,7 +91,6 @@ export async function POST(request: NextRequest) {
     await logActivity(admin.id, "admin_login_mfa", "success", `Admin logged in with MFA: ${admin.username}`);
 
     return apiResponse.success({
-      token,
       admin: {
         id: admin.id,
         username: admin.username,

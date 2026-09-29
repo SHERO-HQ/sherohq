@@ -53,7 +53,7 @@ export async function rateLimit(
       const results = await redisClient
         .pipeline()
         .zremrangebyscore(key, 0, windowStart)
-        .zadd(key, { score: now, member: now.toString() })
+        .zadd(key, { score: now, member: `${now}-${Math.random().toString(36).slice(2)}` })
         .zcard(key)
         .expire(key, Math.ceil(windowMs / 1000))
         .exec();
@@ -88,4 +88,52 @@ export async function rateLimit(
     remaining: Math.max(0, limit - requestTimestamps.length),
     reset: windowStart + windowMs,
   };
+}
+
+/**
+ * Reports whether an identifier is already over its limit without recording a
+ * new hit. Use with rateLimit() when only some outcomes should count, e.g. an
+ * account lockout that should only count failed logins.
+ */
+export async function isRateLimited(
+  identifier: string,
+  limit: number,
+  windowMs: number
+): Promise<boolean> {
+  const windowStart = Date.now() - windowMs;
+
+  const redisClient = getRedis();
+  if (redisClient) {
+    try {
+      const count = await redisClient.zcount(`ratelimit:${identifier}`, windowStart + 1, "+inf");
+      return count >= limit;
+    } catch (error) {
+      console.error("Redis rate limit check error, falling back to memory:", error);
+    }
+  }
+
+  const requestTimestamps = (memoryStore.get(identifier) || []).filter(
+    (timestamp) => timestamp > windowStart
+  );
+  return requestTimestamps.length >= limit;
+}
+
+/**
+ * Best-effort client IP for rate-limit keys. Prefers headers the hosting
+ * platform sets itself; for X-Forwarded-For it takes the last entry (the one
+ * appended by the nearest proxy), since earlier entries are client-controlled.
+ */
+export function getClientIp(request: Request): string {
+  const platformIp =
+    request.headers.get("x-nf-client-connection-ip") ||
+    request.headers.get("x-real-ip");
+  if (platformIp) return platformIp.trim();
+
+  const forwarded = request.headers.get("x-forwarded-for");
+  if (forwarded) {
+    const hops = forwarded.split(",").map((ip) => ip.trim()).filter(Boolean);
+    if (hops.length > 0) return hops[hops.length - 1];
+  }
+
+  return "unknown";
 }

@@ -7,7 +7,7 @@ import { toReadableOrderId } from "@/utils/orderId";
 import { getAdminFromSession, getUserFromSession } from "@/lib/auth";
 import { hashOrderAccessToken } from "@/lib/orderUtils";
 import { randomUUID } from "node:crypto";
-import { rateLimit } from "@/lib/rate-limit";
+import { rateLimit, getClientIp } from "@/lib/rate-limit";
 
 function getPaymentStatusFromOrderStatus(status: string) {
   const normalized = status.toLowerCase();
@@ -40,8 +40,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Rate limit: 15 verify calls per minute per order
-    const ip =
-      request.headers.get("x-forwarded-for")?.split(",")[0].trim() || "unknown";
+    const ip = getClientIp(request);
     const rateLimitResult = await rateLimit(
       `payment-verify:${orderId}`,
       15,
