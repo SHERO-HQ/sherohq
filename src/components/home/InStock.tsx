@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { DispatchCountdown } from "@/components/ui/LiveStatus";
 import { routes, whatsappLink } from "@/lib/site";
+import { InlineArrow } from "@/components/ui/InlineArrow";
 
 export type StockRow = {
   id: string;
@@ -143,7 +144,7 @@ export function InStock({ rows = placeholderRows }: { rows?: StockRow[] }) {
           href={routes.shop}
           className="self-start whitespace-nowrap text-[15px]/[22px] font-medium text-primary hover:underline lg:text-sm/5"
         >
-          Full shop →
+          Full shop <InlineArrow />
         </Link>
       </div>
 

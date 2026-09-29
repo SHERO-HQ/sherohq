@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { routes } from "@/lib/site";
+import { InlineArrow } from "@/components/ui/InlineArrow";
 
 export function ConsultationCta() {
   return (
@@ -18,7 +19,10 @@ export function ConsultationCta() {
           href={routes.consultation}
           className="mt-2 flex h-[52px] shrink-0 items-center justify-center whitespace-nowrap rounded-sm bg-white px-6 text-base/5 font-medium text-navy-700 transition-colors duration-150 hover:bg-navy-50 focus-visible:outline-white lg:mt-0 lg:text-[15px]/5"
         >
-          Book a free consultation<span aria-hidden="true" className="hidden lg:inline">&nbsp;→</span>
+          Book a free consultation
+          <span className="hidden lg:inline">
+            <InlineArrow className="ml-1.5" />
+          </span>
         </Link>
       </section>
     </div>

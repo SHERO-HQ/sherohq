@@ -1,6 +1,6 @@
 import { cn } from "@/lib/cn";
 
-export type ReadoutRow = { label: string; value: string; tone?: "done" | "pending" | "neutral" };
+export type ReadoutRow = { label: string; value: React.ReactNode; tone?: "done" | "pending" | "neutral" };
 
 const tones = {
   done: "text-emerald-300",

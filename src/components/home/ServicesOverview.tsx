@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Placeholder } from "@/components/ui/Placeholder";
 import { routes } from "@/lib/site";
+import { InlineArrow } from "@/components/ui/InlineArrow";
 
 // TODO(owner): replace each placeholder with the real screenshot, photo or graphic.
 const services = [
@@ -40,7 +41,7 @@ function AllServicesLink({ className }: { className: string }) {
       href={routes.services}
       className={`whitespace-nowrap font-medium text-primary hover:underline hover:underline-offset-3 ${className}`}
     >
-      All services →
+      All services <InlineArrow />
     </Link>
   );
 }

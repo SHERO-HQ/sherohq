@@ -21,6 +21,8 @@ When the docs and the designs disagree on wording, **the designs win**; they wer
 
 **No AI slop.** Every word, element and feature earns its place. No filler copy, decorative noise, generic "modern" flourishes, or features added for their own sake. If it doesn't help a visitor decide or act, cut it.
 
+**Icons are Lucide only** (owner, 29 Sep 2026): 1.5 stroke, `currentColor`. No Unicode arrows, checkmarks, stars, bullets or emoji, even where a design uses a text "→"; `src/lib/icons.test.ts` enforces it. Use `InlineArrow` for arrows inside link text.
+
 **The designs are a strong guide, not a fixed spec** (owner, 29 Sep 2026). Improve on them where it makes SHERO better for visitors — clearer, faster, more useful, more trustworthy — and say what changed and why. Everything under "Rules that must survive into code" still holds; improvements never bend those.
 
 ## Reading the design files

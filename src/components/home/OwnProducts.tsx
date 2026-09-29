@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { StatusBadge } from "@/components/ui/StatusBadge";
 import { routes } from "@/lib/site";
+import { InlineArrow } from "@/components/ui/InlineArrow";
 
 const products = [
   {
@@ -52,7 +53,7 @@ export function OwnProducts() {
                 <span className="hidden lg:inline">{product.description}</span>
               </span>
               <span className="text-[15px]/[22px] font-medium text-primary group-hover:underline lg:text-sm/5">
-                Join the waitlist →
+                Join the waitlist <InlineArrow />
               </span>
             </Link>
           </li>

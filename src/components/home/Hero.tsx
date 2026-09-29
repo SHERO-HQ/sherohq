@@ -1,6 +1,8 @@
 import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 import { StatusBadge } from "@/components/ui/StatusBadge";
 import { routes } from "@/lib/site";
+import { InlineArrow } from "@/components/ui/InlineArrow";
 
 const paths = [
   {
@@ -75,12 +77,11 @@ export function Hero() {
                   <span className="text-[15px]/[22px] text-ink-secondary lg:text-base/6">{path.description}</span>
                   <span className="hidden font-mono text-xs/4 font-medium text-accent lg:block">{path.tag}</span>
                 </span>
-                <span
+                <ArrowRight
                   aria-hidden="true"
-                  className="justify-self-end text-xl/6 font-medium text-primary transition-transform duration-150 group-hover:translate-x-1 lg:text-2xl/7"
-                >
-                  →
-                </span>
+                  strokeWidth={1.5}
+                  className="size-5 justify-self-end text-primary transition-transform duration-150 group-hover:translate-x-1 lg:size-6"
+                />
               </Link>
             </li>
           ))}
@@ -89,7 +90,7 @@ export function Hero() {
           href={routes.consultation}
           className="mt-[18px] self-start text-[15px]/[22px] font-medium text-primary hover:underline hover:underline-offset-3 lg:mt-6 lg:text-sm/5"
         >
-          Something else? Book a free consultation →
+          Something else? Book a free consultation <InlineArrow />
         </Link>
       </div>
     </section>

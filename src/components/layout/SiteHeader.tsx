@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Menu, X } from "lucide-react";
+import { ArrowRight, Menu, X } from "lucide-react";
 import { Logo } from "@/components/ui/Logo";
 import { business, mainNav, routes } from "@/lib/site";
 import { cn } from "@/lib/cn";
@@ -108,9 +108,7 @@ export function SiteHeader() {
                 <span className="font-display text-[30px]/[34px] font-bold tracking-[-0.02em] text-heading">
                   {item.label}
                 </span>
-                <span aria-hidden="true" className="text-xl/6 font-medium text-primary">
-                  →
-                </span>
+                <ArrowRight aria-hidden="true" size={20} strokeWidth={1.5} className="text-primary" />
               </Link>
             ))}
           </nav>

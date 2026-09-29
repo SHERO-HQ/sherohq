@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 import { ConsultationCta } from "@/components/home/ConsultationCta";
 import { Readout, type ReadoutRow } from "@/components/ui/Readout";
 import { business, routes } from "@/lib/site";
+import { InlineArrow } from "@/components/ui/InlineArrow";
 
 export const metadata: Metadata = {
   title: "Services: custom software, laptops, managed IT and integration",
@@ -99,7 +101,7 @@ const services: Service[] = [
     readout: {
       title: "flow / sale recorded",
       rows: [
-        { label: "customer pays by momo", value: "→" },
+        { label: "customer pays by momo", value: <InlineArrow /> },
         { label: "point of sale", value: "updated", tone: "done" },
         { label: "stock count", value: "updated", tone: "done" },
         { label: "receipt", value: "sent", tone: "done" },
@@ -141,9 +143,7 @@ export default function ServicesPage() {
             >
               <span className="font-mono text-xs/4 text-ink-muted">{pad(i + 1)}</span>
               <span className="text-[17px]/6 font-medium text-ink">{service.title}</span>
-              <span aria-hidden="true" className="text-primary">
-                ↓
-              </span>
+              <InlineArrow direction="down" className="text-primary" />
             </a>
           ))}
         </nav>
@@ -173,9 +173,7 @@ export default function ServicesPage() {
             <ul className="lg:mt-2">
               {service.offers.map((offer) => (
                 <li key={offer} className="flex gap-3 border-t border-border py-2.5 lg:gap-3.5 lg:py-3">
-                  <span aria-hidden="true" className="font-mono text-[13px]/[17px] font-medium text-accent lg:text-sm/[18px]">
-                    →
-                  </span>
+                  <ArrowRight aria-hidden="true" size={16} strokeWidth={1.5} className="mt-[3px] shrink-0 text-accent lg:mt-1" />
                   <span className="text-[15px]/[22px] text-ink lg:text-base/6">{offer}</span>
                 </li>
               ))}
@@ -188,7 +186,7 @@ export default function ServicesPage() {
                   href={link.href}
                   className="self-start text-[15px]/[22px] font-medium text-primary hover:underline hover:underline-offset-3 lg:text-sm/5"
                 >
-                  {link.label} →
+                  {link.label} <InlineArrow />
                 </Link>
               ))}
             </div>

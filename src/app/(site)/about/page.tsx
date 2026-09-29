@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ConsultationCta } from "@/components/home/ConsultationCta";
 import { Placeholder } from "@/components/ui/Placeholder";
 import { routes } from "@/lib/site";
+import { InlineArrow } from "@/components/ui/InlineArrow";
 
 export const metadata: Metadata = {
   title: "About SHERO",
@@ -57,7 +58,7 @@ export default function AboutPage() {
           <figcaption className="flex items-center justify-between gap-4 font-mono text-xs/4 text-ink-muted">
             fig. 01 — systems we&rsquo;ve built
             <Link href={routes.work} className="font-text text-sm/5 font-medium text-primary hover:underline">
-              See the work →
+              See the work <InlineArrow />
             </Link>
           </figcaption>
         </figure>
