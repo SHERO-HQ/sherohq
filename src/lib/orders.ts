@@ -1,4 +1,3 @@
-import { randomInt } from "node:crypto";
 import type { deliveryMethod, orderStatus } from "@/db/schema";
 
 export type OrderStatus = (typeof orderStatus.enumValues)[number];
@@ -9,9 +8,9 @@ const ORDER_ALPHABET = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ";
 
 /** A new customer-facing order number, e.g. "SH-7K2QX". */
 export function newOrderNumber(): string {
-  let code = "";
-  for (let i = 0; i < 5; i++) code += ORDER_ALPHABET[randomInt(ORDER_ALPHABET.length)];
-  return `SH-${code}`;
+  // 32 letters divide 256 evenly, so byte % 32 is unbiased.
+  const bytes = crypto.getRandomValues(new Uint8Array(5));
+  return `SH-${Array.from(bytes, (byte) => ORDER_ALPHABET[byte % ORDER_ALPHABET.length]).join("")}`;
 }
 
 /** Accepts "sh-7k2qx", "7K2QX" or "SH 7K2QX" and returns "SH-7K2QX", or null. */

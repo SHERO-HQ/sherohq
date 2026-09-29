@@ -1,8 +1,12 @@
 @import "tailwindcss";
-@import "@fontsource-variable/red-hat-display";
-@import "@fontsource-variable/red-hat-text";
-@import "@fontsource-variable/red-hat-mono";
 @import "../styles/tokens.css";
+
+/* The fonts come from next/font (src/app/fonts.ts); point the token stacks at them. */
+:root {
+  --font-display-stack: var(--font-red-hat-display), system-ui, sans-serif;
+  --font-text-stack: var(--font-red-hat-text), system-ui, sans-serif;
+  --font-mono-stack: var(--font-red-hat-mono), ui-monospace, monospace;
+}
 
 /*
  * Colours the page designs use that aren't design-system tokens. Keep this list

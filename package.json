@@ -20,7 +20,8 @@
     "test:speed": "lhci autorun --config=lighthouserc.cjs",
     "review:shots": "tsx scripts/review-shots.ts",
     "review:page": "tsx scripts/review-page.ts",
-    "review": "yarn review:shots && yarn review:page"
+    "review": "yarn review:shots && yarn review:page",
+    "db:seed": "tsx scripts/db-seed.ts"
   },
   "dependencies": {
     "@fontsource-variable/red-hat-display": "^5.3.0",

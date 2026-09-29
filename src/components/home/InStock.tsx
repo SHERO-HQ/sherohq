@@ -2,6 +2,7 @@ import Link from "next/link";
 import { DispatchCountdown } from "@/components/ui/LiveStatus";
 import { routes, whatsappLink } from "@/lib/site";
 import { InlineArrow } from "@/components/ui/InlineArrow";
+import { ListingPhoto } from "@/components/shop/ListingPhoto";
 
 export type StockRow = {
   id: string;
@@ -11,19 +12,8 @@ export type StockRow = {
   batteryHealth: string;
   price: string;
   href: string;
+  photo?: string;
 };
-
-// TODO(shop phase): replace with the four newest In stock laptops from the
-// listings table. Until then the rows mirror the design's placeholders.
-const placeholderRows: StockRow[] = Array.from({ length: 4 }, (_, i) => ({
-  id: `placeholder-${i}`,
-  model: "[Laptop model]",
-  spec: "[processor · ram · storage]",
-  grade: "A++",
-  batteryHealth: "[100]",
-  price: "GHS [price]",
-  href: routes.shop,
-}));
 
 const categories = ["Laptops", "Phones", "Desktops", "Audio", "Accessories"];
 
@@ -50,7 +40,7 @@ const checks = [
 
 const recommendMessage = "Hi SHERO, I'm looking for a laptop. I'll mainly use it for: ";
 
-export function InStock({ rows = placeholderRows }: { rows?: StockRow[] }) {
+export function InStock({ rows }: { rows: StockRow[] }) {
   return (
     <section className="container-site flex flex-col gap-4 pt-16 lg:gap-0 lg:pt-[104px]">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between lg:gap-10 lg:pb-6">
@@ -77,8 +67,14 @@ export function InStock({ rows = placeholderRows }: { rows?: StockRow[] }) {
         </nav>
       </div>
 
+      {rows.length === 0 && (
+        <p className="border-t border-rule-strong pt-6 text-base/[25px] text-ink-secondary lg:text-[17px]/[27px]">
+          New stock is being checked. Every device is tested before it&rsquo;s listed, so laptops arrive in batches.
+        </p>
+      )}
+
       {/* Desktop: a spec table. Mobile: compact rows. */}
-      <table className="hidden w-full border-collapse text-left lg:table">
+      <table className={rows.length === 0 ? "hidden" : "hidden w-full border-collapse text-left lg:table"}>
         <thead>
           <tr className="border-b border-rule-strong font-mono text-xs/4 text-ink-muted">
             <th className="w-16 py-3 font-normal">
@@ -98,7 +94,7 @@ export function InStock({ rows = placeholderRows }: { rows?: StockRow[] }) {
           {rows.map((row) => (
             <tr key={row.id} className="border-b border-border">
               <td className="py-3.5">
-                <div className="h-12 w-16 rounded-sm bg-surface" />
+                {row.photo ? <ListingPhoto src={row.photo} alt="" className="h-12 w-16" /> : <div className="h-12 w-16 rounded-sm bg-surface" />}
               </td>
               <td className="py-3.5 pl-6 text-base/6 font-medium text-ink">{row.model}</td>
               <td className="py-3.5 pl-6 font-mono text-[13px]/[17px] text-ink-secondary">{row.spec}</td>
@@ -115,14 +111,14 @@ export function InStock({ rows = placeholderRows }: { rows?: StockRow[] }) {
         </tbody>
       </table>
 
-      <ul className="border-t border-rule-strong lg:hidden">
+      <ul className={rows.length === 0 ? "hidden" : "border-t border-rule-strong lg:hidden"}>
         {rows.map((row) => (
           <li key={row.id}>
             <Link
               href={row.href}
               className="grid grid-cols-[72px_1fr_auto] items-center gap-3.5 border-b border-border py-3.5"
             >
-              <div className="h-[54px] w-[72px] rounded-sm bg-surface" />
+              {row.photo ? <ListingPhoto src={row.photo} alt="" className="h-[54px] w-[72px]" /> : <div className="h-[54px] w-[72px] rounded-sm bg-surface" />}
               <span className="flex flex-col gap-1">
                 <span className="text-base/[22px] font-medium text-ink">{row.model}</span>
                 <span className="font-mono text-[11px]/[15px] font-medium text-accent">

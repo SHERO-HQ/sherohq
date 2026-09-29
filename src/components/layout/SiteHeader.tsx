@@ -2,10 +2,11 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
-import { ArrowRight, Menu, X } from "lucide-react";
+import { useEffect, useState, useSyncExternalStore } from "react";
+import { ArrowRight, Menu, ShoppingCart, X } from "lucide-react";
 import { Logo } from "@/components/ui/Logo";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
+import { cartSnapshot, serverCartSnapshot, subscribeCart } from "@/lib/cart";
 import { business, mainNav, routes } from "@/lib/site";
 import { cn } from "@/lib/cn";
 
@@ -14,6 +15,33 @@ const menuNav = [...mainNav, { label: "Support", href: routes.support }];
 function isCurrent(pathname: string, href: string) {
   if (href.includes("#")) return false;
   return href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`);
+}
+
+const shopPaths = [routes.shop, routes.cart, routes.checkout];
+
+/** Shown on shop pages, or anywhere once something is in the cart (CLAUDE.md). */
+function CartLink({ pathname }: { pathname: string }) {
+  const count = useSyncExternalStore(subscribeCart, cartSnapshot, serverCartSnapshot).length;
+  const onShop = shopPaths.some((path) => pathname === path || pathname.startsWith(`${path}/`));
+  if (!onShop && count === 0) return null;
+  return (
+    <Link
+      href={routes.cart}
+      aria-label={count === 0 ? "Cart, empty" : `Cart, ${count} ${count === 1 ? "item" : "items"}`}
+      aria-current={pathname === routes.cart ? "page" : undefined}
+      className="relative flex size-11 items-center justify-center rounded-sm text-ink-secondary hover:text-primary"
+    >
+      <ShoppingCart aria-hidden="true" size={20} strokeWidth={1.5} />
+      {count > 0 && (
+        <span
+          aria-hidden="true"
+          className="absolute top-1 right-0 h-[18px] min-w-[18px] rounded-full bg-accent px-[5px] text-center font-mono text-[11px]/[18px] font-medium text-page"
+        >
+          {count}
+        </span>
+      )}
+    </Link>
+  );
 }
 
 export function SiteHeader() {
@@ -56,6 +84,7 @@ export function SiteHeader() {
         </div>
 
         <div className="flex items-center lg:gap-2">
+          <CartLink pathname={pathname} />
           <ThemeToggle />
           <Link
             href={routes.consultation}

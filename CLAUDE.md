@@ -85,7 +85,7 @@ The `.dc.html` files are design mockups in a canvas format, not runnable pages. 
 
 Decisions made while building, on top of the handoff.
 
-**Stack.** Next.js (App Router) + TypeScript + Tailwind CSS v4, Yarn 4. Fonts are self-hosted from `@fontsource-variable` packages rather than loaded from Google Fonts. The old app lives in `main`'s history; the `rebuild` branch started clean.
+**Stack.** Next.js (App Router) + TypeScript + Tailwind CSS v4, Yarn 4. Fonts are self-hosted from `@fontsource-variable` packages through `next/font/local` (`src/app/fonts.ts`), which preloads them and matches fallback metrics so pages don't shift. The old app lives in `main`'s history; the `rebuild` branch started clean.
 
 **Design tokens.** `design/system/tokens.json` is the source of truth. `yarn tokens` generates `src/styles/tokens.css` (CSS variables plus Tailwind theme: `bg-page`, `text-ink`, `text-heading`, `border-border`, `font-display`, `text-h2`, `rounded-sm` and so on). Never edit the generated file; CI fails if it's stale. The few extra colours the page designs use are in `src/app/globals.css`, with notes.
 
@@ -94,6 +94,7 @@ Decisions made while building, on top of the handoff.
 - Local first: `docker compose up -d` runs Postgres 16 (Supabase's version); `yarn db:reset` wipes and re-migrates it and refuses non-local hosts.
 - Later, a new Supabase project (free plan) for the rebuild, separate from the old site's project. `rebuild` deploys as a Vercel preview with its own `DATABASE_URL`; previews send `X-Robots-Tag: noindex`. `main` and the live site keep the old database until launch, when `rebuild` is merged.
 - Business rules live in code with tests: `src/lib/listings.ts` (In stock needs a complete, passing device check and battery ≥ Settings minimum), `src/lib/orders.ts` (order numbers, status wording per delivery method, warranty). The database also refuses a published testimonial without recorded consent.
+- `yarn db:seed` fills the **local** database with sample listings (model names end in "(sample)"); it refuses non-local hosts. CI's browser job runs Postgres, migrates and seeds before the accessibility and speed checks.
 
 **Routes.** Chosen for the old-URL redirects in `next.config.ts`; change them there and in `src/lib/site.ts` together.
 
@@ -120,6 +121,14 @@ Decisions made while building, on top of the handoff.
 - `yarn test:a11y` (after `yarn build`): axe WCAG 2.1 AA on every live page, light and dark, desktop and mobile. Pure decoration may be excluded with `aria-hidden` plus `data-decorative`. Add each new page to `livePages` in `src/lib/site.ts` so it's checked.
 - `yarn test:speed`: Lighthouse mobile on throttled 4G. Budgets in `lighthouserc.cjs` (performance 90+, accessibility and SEO 100, LCP 3 s or less). CI runs both.
 - `yarn review` rebuilds the owner's review page (every page beside its mockup): `scripts/review-shots.ts` then `scripts/review-page.ts`, output in `review/` (not committed). Add each new page and its "changed on purpose" notes there, then republish the artifact at https://claude.ai/artifact/W5t9GA29D4x7YxWGt9q15m and pick up the owner's comments on it.
+
+**Shop** (built 29 Sep 2026).
+- Queries in `src/lib/shop.ts`; checkout rules in `src/lib/forms/checkout.ts`; placing an order in `src/app/(site)/checkout/actions.ts` (locks the devices, re-checks stock, recomputes the fee, reserves the devices, records the referral).
+- The cart is a first-party cookie of listing ids (`src/lib/cart.ts`), so cart and checkout render with live prices and status. Each listing is one device: no quantities.
+- Online payments stay hidden until Hubtel (MoMo) and Paystack (cards) are wired in: `onlinePayments()` in `src/lib/shop.ts`. Cash on delivery and pay at store pickup work now.
+- A region without a delivery rate places the order with `delivery_fee_pending`, and the fee is agreed on WhatsApp before dispatch.
+- Track Order looks orders up with a server action, so the phone number never appears in a URL (analytics would see it).
+- Not built yet: search and wishlist (the header icons are left out until they exist).
 
 **Open for the owner.** The footer's "Feedback" link has no page in the designs; it points to Support for now.
 

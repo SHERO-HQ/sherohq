@@ -82,6 +82,8 @@ export type ListingSpecs = {
   storage?: string;
   screen?: string;
   graphics?: string;
+  /** Operating system, e.g. "Windows 11". */
+  system?: string;
   other?: string;
 };
 
@@ -180,6 +182,8 @@ export const orders = pgTable(
     status: orderStatus("status").notNull().default("placed"),
     subtotalPesewas: integer("subtotal_pesewas").notNull(),
     deliveryFeePesewas: integer("delivery_fee_pesewas").notNull().default(0),
+    /** The region had no rate yet; the fee is agreed with the customer before dispatch. */
+    deliveryFeePending: boolean("delivery_fee_pending").notNull().default(false),
     totalPesewas: integer("total_pesewas").notNull(),
     /** Kept after the referrer's number is erased, so the count survives. */
     hadReferral: boolean("had_referral").notNull().default(false),

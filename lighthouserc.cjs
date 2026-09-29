@@ -11,6 +11,8 @@ module.exports = {
         "http://localhost:3100/services",
         "http://localhost:3100/support/consultation",
         "http://localhost:3100/merchander",
+        "http://localhost:3100/shop",
+        "http://localhost:3100/shop/sample-dell-latitude-7490",
       ],
       numberOfRuns: 1,
       settings: {

@@ -22,7 +22,12 @@ type Entry = {
   design: { desktop: string | null; mobile: string | null };
   /** For the mobile menu: open it before the screenshot. */
   openMenu?: boolean;
+  /** Put this listing in the cart first (cart and checkout). */
+  withCart?: string;
 };
+
+// A sample from `yarn db:seed`; the shop pages need the local database.
+const sample = "/shop/sample-dell-latitude-7490";
 
 const entries: Entry[] = [
   { slug: "home", title: "Home", route: "/", design: { desktop: "Home", mobile: "Home" } },
@@ -39,6 +44,17 @@ const entries: Entry[] = [
   },
   { slug: "merchander", title: "Merchander", route: "/merchander", design: { desktop: "Merchander", mobile: "Merchander" } },
   { slug: "pharmasyst", title: "Pharmasyst", route: "/pharmasyst", design: { desktop: "Pharmasyst", mobile: "Pharmasyst" } },
+  { slug: "shop", title: "Shop", route: "/shop", design: { desktop: "Shop", mobile: "Shop" } },
+  { slug: "laptop", title: "Laptop", route: sample, design: { desktop: "Laptop", mobile: "Laptop" } },
+  { slug: "cart", title: "Cart", route: "/cart", design: { desktop: "Cart", mobile: "Cart" }, withCart: sample },
+  {
+    slug: "checkout",
+    title: "Checkout",
+    route: "/checkout",
+    design: { desktop: "Checkout", mobile: "Checkout" },
+    withCart: sample,
+  },
+  { slug: "track", title: "Track order", route: "/track", design: { desktop: "Track", mobile: "Track" } },
   { slug: "support", title: "Support", route: "/support", design: { desktop: "Support", mobile: "Support" } },
   {
     slug: "consultation",
@@ -83,6 +99,10 @@ async function shoot(page: Page, file: string) {
 async function captureBuilt(browser: Browser, entry: Entry, viewport: Viewport, theme: (typeof themes)[number]) {
   const context = await browser.newContext({ ...viewports[viewport], colorScheme: theme, isMobile: viewport === "mobile" });
   const page = await context.newPage();
+  if (entry.withCart) {
+    await page.goto(`${base}${entry.withCart}`, { waitUntil: "load" });
+    await page.locator("button:visible", { hasText: "Add to cart" }).first().click();
+  }
   await page.goto(`${base}${entry.route}`, { waitUntil: "load" });
   if (entry.openMenu) {
     await page.click("button[aria-label='Open menu']");
