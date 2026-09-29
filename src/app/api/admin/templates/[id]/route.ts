@@ -1,4 +1,5 @@
 import { apiResponse } from "@/lib/api-utils";
+import { getAdminFromSession } from "@/lib/auth";
 import { NextRequest } from "next/server";
 import { db } from "@/lib/db";
 import { campaignTemplates } from "@/lib/drizzle/schema";
@@ -6,6 +7,11 @@ import { eq } from "drizzle-orm";
 
 export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const admin = await getAdminFromSession();
+    if (!admin) {
+      return apiResponse.unauthorized();
+    }
+
     const { id } = await params;
     const body = await req.json();
     const { name, description, content, whatsappTemplateLanguage, expectedParams, category } = body;
@@ -33,6 +39,11 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
 
 export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const admin = await getAdminFromSession();
+    if (!admin) {
+      return apiResponse.unauthorized();
+    }
+
     const { id } = await params;
     
     const deleted = await db.delete(campaignTemplates).where(eq(campaignTemplates.id, id)).returning();

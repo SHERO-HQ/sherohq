@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
     const hashedCodes = recoveryCodes.map(hashRecoveryCode);
 
     await db.update(users)
-      .set({ mfaEnabled: true, mfaRecoveryCodes: JSON.stringify(hashedCodes) })
+      .set({ mfaEnabled: true, mfaRecoveryCodes: hashedCodes })
       .where(eq(users.id, user.id));
 
     return apiResponse.success({ 

@@ -16,6 +16,16 @@ export interface UploadResult {
   storageType: "supabase" | "local";
 }
 
+const EXTENSION_BY_MIME_TYPE: Record<string, string> = {
+  "image/jpeg": "jpg",
+  "image/png": "png",
+  "image/webp": "webp",
+  "image/gif": "gif",
+  "application/pdf": "pdf",
+  "application/msword": "doc",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document": "docx",
+};
+
 /**
  * Uploads a single file to Supabase storage with automatic local filesystem fallback.
  */
@@ -26,8 +36,9 @@ export async function uploadFileToStorage(
   const bucket = options.bucket || "products";
   const folder = options.folder || "";
   
-  const safeOriginalName = file.name ? file.name.replace(/[^a-zA-Z0-9._-]/g, "_") : "file";
-  const fileExt = safeOriginalName.split(".").pop() || "bin";
+  // Derive the extension from the MIME type rather than the client-supplied name,
+  // so an "image/png" upload named "x.html" can't be served back as HTML.
+  const fileExt = EXTENSION_BY_MIME_TYPE[file.type] || "bin";
   const fileName = options.customFilename || `${uuidv4()}.${fileExt}`;
   
   let buffer: Buffer = Buffer.from("");

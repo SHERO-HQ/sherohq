@@ -117,7 +117,8 @@ export async function POST(request: NextRequest) {
       //   channel: nested?.PaymentDetails?.Channel ?? "N/A",
       //   topLevelResponseCode: data.ResponseCode ?? "N/A"});
 
-      // Server-side verification: confirm with Hubtel's API before trusting the webhook
+      // Server-side verification: Hubtel callbacks are unsigned, so a "Success"
+      // claim is only trusted once Hubtel's status API confirms it.
       if (status === "Success") {
         const checkoutId = nested?.CheckoutId;
         const {
@@ -128,15 +129,7 @@ export async function POST(request: NextRequest) {
 
         verifiedAmount = confirmedAmount;
 
-        const hasValidHubtelTokens = Boolean(
-          nested?.CheckoutId || nested?.SalesInvoiceId,
-        );
-
-        if (
-          !verified &&
-          !hasValidHubtelTokens &&
-          process.env.NODE_ENV === "production"
-        ) {
+        if (!verified) {
           console.warn("[payment:webhook]", {
             provider: "hubtel",
             orderId,

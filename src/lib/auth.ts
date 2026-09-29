@@ -99,7 +99,18 @@ export async function getAdminFromSession() {
        WHERE s.token = ${token} AND s."expiresAt" > NOW()
     `);
 
-    return (sessionRes.rows[0] as any) || null;
+    const row = sessionRes.rows[0] as any;
+    if (!row) return null;
+
+    // Never let credentials or MFA material leave this function; routes such as
+    // /api/admin-auth/me return the admin object to the browser as-is.
+    const {
+      passwordHash: _passwordHash,
+      mfaSecret: _mfaSecret,
+      mfaRecoveryCodes: _mfaRecoveryCodes,
+      ...admin
+    } = row;
+    return admin;
   } catch (error) {
     console.error("Auth validation error:", error);
     return null;

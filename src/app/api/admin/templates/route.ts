@@ -1,4 +1,5 @@
 import { apiResponse } from "@/lib/api-utils";
+import { getAdminFromSession } from "@/lib/auth";
 import { NextRequest } from "next/server";
 import { db } from "@/lib/db";
 import { campaignTemplates } from "@/lib/drizzle/schema";
@@ -6,6 +7,11 @@ import { eq, and } from "drizzle-orm";
 
 export async function GET(req: NextRequest) {
   try {
+    const admin = await getAdminFromSession();
+    if (!admin) {
+      return apiResponse.unauthorized();
+    }
+
     const url = new URL(req.url);
     const sync = url.searchParams.get("sync") === "true";
     let syncResult: { success: boolean; count?: number; error?: string } | null = null;
@@ -25,6 +31,11 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
+    const admin = await getAdminFromSession();
+    if (!admin) {
+      return apiResponse.unauthorized();
+    }
+
     const body = await req.json();
     const { name, description, channel, content, whatsappTemplateLanguage, expectedParams, category } = body;
 

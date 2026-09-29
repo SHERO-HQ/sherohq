@@ -1,4 +1,5 @@
 import { apiResponse } from "@/lib/api-utils";
+import { getAdminFromSession } from "@/lib/auth";
 import { NextRequest } from "next/server";
 import { db } from "@/lib/db";
 import { sql } from "drizzle-orm";
@@ -21,6 +22,11 @@ interface ConversationSummary {
  */
 export async function GET(request: NextRequest) {
   try {
+    const admin = await getAdminFromSession();
+    if (!admin) {
+      return apiResponse.unauthorized();
+    }
+
     const result = await db.execute(sql`
       WITH LatestMessages AS (
         SELECT DISTINCT ON (sender_wa_id)

@@ -9,13 +9,14 @@ import { logActivity } from "@/lib/activity";
 import { apiResponse } from "@/lib/api-utils";
 import { ADMIN_SESSION_COOKIE, getAuthCookieOptions } from "@/lib/auth";
 import speakeasy from "speakeasy";
-import { verifyRecoveryCode, verifyMfaChallengeToken } from "@/lib/mfa-utils";
+import { verifyRecoveryCode, verifyMfaChallengeToken, parseRecoveryCodes } from "@/lib/mfa-utils";
+import { rateLimit } from "@/lib/rate-limit";
 
 export async function POST(request: NextRequest) {
   try {
     const { mfaToken, code } = await request.json();
     
-    if (!mfaToken || !code) {
+    if (typeof mfaToken !== "string" || typeof code !== "string" || !code) {
       return apiResponse.error("MFA token and code are required", 400);
     }
 
@@ -23,6 +24,13 @@ export async function POST(request: NextRequest) {
     const adminId = verifyMfaChallengeToken(mfaToken, "admin");
     if (!adminId) {
       return apiResponse.error("Invalid or expired MFA session token", 401);
+    }
+
+    // A 6-digit TOTP is brute-forceable without a cap, and challenge tokens are
+    // reusable until they expire, so limit attempts per account.
+    const limiter = await rateLimit(`mfa_login_admin_${adminId}`, 5, 15 * 60_000);
+    if (!limiter.success) {
+      return apiResponse.error("Too many verification attempts. Please try again in 15 minutes.", 429);
     }
 
     // Fetch admin
@@ -39,7 +47,7 @@ export async function POST(request: NextRequest) {
 
     if (code.length === 10) {
       // Check recovery codes
-      const hashedRecoveryCodes: string[] = (admin.mfaRecoveryCodes as string[]) || [];
+      const hashedRecoveryCodes = parseRecoveryCodes(admin.mfaRecoveryCodes);
       const codeIndex = hashedRecoveryCodes.findIndex(hashed => verifyRecoveryCode(code.toUpperCase(), hashed));
       
       if (codeIndex !== -1) {
@@ -47,7 +55,7 @@ export async function POST(request: NextRequest) {
         // Remove the used recovery code
         hashedRecoveryCodes.splice(codeIndex, 1);
         await db.update(adminUsers)
-          .set({ mfaRecoveryCodes: JSON.stringify(hashedRecoveryCodes) })
+          .set({ mfaRecoveryCodes: hashedRecoveryCodes })
           .where(eq(adminUsers.id, admin.id));
         await logActivity(admin.id, "admin_mfa_recovery_used", "info", `Admin used a recovery code to log in: ${admin.username}`);
       }

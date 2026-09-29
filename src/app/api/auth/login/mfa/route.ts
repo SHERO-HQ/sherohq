@@ -7,14 +7,15 @@ import { v4 as uuidv4 } from "uuid";
 import { randomBytes } from "node:crypto";
 import { cookies } from "next/headers";
 import speakeasy from "speakeasy";
-import { verifyRecoveryCode, verifyMfaChallengeToken } from "@/lib/mfa-utils";
+import { verifyRecoveryCode, verifyMfaChallengeToken, parseRecoveryCodes } from "@/lib/mfa-utils";
+import { rateLimit } from "@/lib/rate-limit";
 import { USER_SESSION_COOKIE, getAuthCookieOptions } from "@/lib/auth";
 
 export async function POST(request: NextRequest) {
   try {
     const { mfaToken, code } = await request.json();
     
-    if (!mfaToken || !code) {
+    if (typeof mfaToken !== "string" || typeof code !== "string" || !code) {
       return apiResponse.error("MFA token and code are required", 400);
     }
 
@@ -22,6 +23,13 @@ export async function POST(request: NextRequest) {
     const userId = verifyMfaChallengeToken(mfaToken, "user");
     if (!userId) {
       return apiResponse.error("Invalid or expired MFA session token", 401);
+    }
+
+    // A 6-digit TOTP is brute-forceable without a cap, and challenge tokens are
+    // reusable until they expire, so limit attempts per account.
+    const limiter = await rateLimit(`mfa_login_user_${userId}`, 5, 15 * 60_000);
+    if (!limiter.success) {
+      return apiResponse.error("Too many verification attempts. Please try again in 15 minutes.", 429);
     }
 
     // Fetch user and their MFA secret
@@ -38,7 +46,7 @@ export async function POST(request: NextRequest) {
 
     if (code.length === 10) {
       // Check recovery codes
-      const hashedRecoveryCodes: string[] = (user.mfaRecoveryCodes as string[]) || [];
+      const hashedRecoveryCodes = parseRecoveryCodes(user.mfaRecoveryCodes);
       const codeIndex = hashedRecoveryCodes.findIndex(hashed => verifyRecoveryCode(code.toUpperCase(), hashed));
       
       if (codeIndex !== -1) {
@@ -46,7 +54,7 @@ export async function POST(request: NextRequest) {
         // Remove the used recovery code
         hashedRecoveryCodes.splice(codeIndex, 1);
         await db.update(users)
-          .set({ mfaRecoveryCodes: JSON.stringify(hashedRecoveryCodes) })
+          .set({ mfaRecoveryCodes: hashedRecoveryCodes })
           .where(eq(users.id, user.id));
       }
     } else {
