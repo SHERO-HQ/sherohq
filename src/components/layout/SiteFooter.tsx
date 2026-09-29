@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Logo } from "@/components/ui/Logo";
+import { OpenNow } from "@/components/ui/LiveStatus";
 import { business, routes } from "@/lib/site";
 
 const columns = [
@@ -52,6 +53,8 @@ export function SiteFooter() {
               </a>
               <br />
               {business.city} · {business.hours}
+              <br />
+              <OpenNow fallback="" dotClassName="bg-emerald-400" className="text-ink-inverse" />
             </p>
           </div>
 

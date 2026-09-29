@@ -363,6 +363,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@fontsource/red-hat-display@npm:^5.3.0":
+  version: 5.3.0
+  resolution: "@fontsource/red-hat-display@npm:5.3.0"
+  checksum: 10c0/f79f605e34f4524659409cf6fc5514c0cf3e472ed2926d643fa7fae70b5a5b878da710e0734a55ea1afb5eaceeefda5d50100590b6f62448e6bd01c46e198ac7
+  languageName: node
+  linkType: hard
+
+"@fontsource/red-hat-text@npm:^5.3.0":
+  version: 5.3.0
+  resolution: "@fontsource/red-hat-text@npm:5.3.0"
+  checksum: 10c0/aeb27dd7bcf0368bfd2e2620c9bdef8aaffc0deea827b1292eb54a3879912501f6e6d8ad05b624bc8be7e24b5cc6c0107cf08a647acfe49138b179f006614c9e
+  languageName: node
+  linkType: hard
+
 "@humanfs/core@npm:^0.19.2":
   version: 0.19.2
   resolution: "@humanfs/core@npm:0.19.2"
@@ -4512,6 +4526,8 @@ __metadata:
     "@fontsource-variable/red-hat-display": "npm:^5.3.0"
     "@fontsource-variable/red-hat-mono": "npm:^5.3.0"
     "@fontsource-variable/red-hat-text": "npm:^5.3.0"
+    "@fontsource/red-hat-display": "npm:^5.3.0"
+    "@fontsource/red-hat-text": "npm:^5.3.0"
     "@tailwindcss/postcss": "npm:^4.3.3"
     "@types/node": "npm:^26.6.3"
     "@types/react": "npm:^19.3.0"

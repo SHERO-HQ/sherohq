@@ -8,6 +8,9 @@ export const business = {
   phoneE164: "+233548711582",
   whatsappNumber: "233548711582",
   city: "Tamale, Ghana",
+  locality: "Tamale",
+  region: "Northern Region",
+  country: "GH",
   hours: "Mon–Fri, 8:00 AM – 6:00 PM",
   hoursShort: "mon–fri, 8:00 – 18:00",
   // Required word for word by Meta verification. Never reword.
@@ -32,6 +35,11 @@ export const routes = {
   privacy: "/legal/privacy",
   cookies: "/legal/cookies",
 } as const;
+
+export const siteUrl = "https://sherohq.com";
+
+/** Pages that exist today. The sitemap lists these; add each page as it ships. */
+export const livePages: string[] = [routes.home];
 
 export const mainNav = [
   { label: "Services", href: routes.services },

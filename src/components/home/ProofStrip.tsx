@@ -1,13 +1,16 @@
-import { Placeholder } from "@/components/ui/Placeholder";
 import { business } from "@/lib/site";
 
 // Clients whose work SHERO may show (permissions granted, per the PRD).
-// TODO(owner): supply the four client logos.
+// Set as plain type until the real logos arrive; swap in logos then.
 const clients = ["Samakose", "TrustCircle", "Tastea", "Dajrim"];
 
 const facts = [
   { label: "delivery", value: "Free nationwide over GHS 2,000" },
-  { label: "payment", value: "MoMo · card · cash on delivery", valueMobile: "MoMo, card or cash on delivery" },
+  {
+    label: "payment",
+    value: "MoMo · card · cash on delivery or pickup",
+    valueMobile: "MoMo, card, cash on delivery or at pickup",
+  },
   {
     label: "warranty",
     value: "One week on every device, plus free support",
@@ -26,11 +29,11 @@ export function ProofStrip() {
         <h2 className="shrink-0 font-mono text-xs/4 font-normal text-ink-muted">we&rsquo;ve worked with</h2>
         <ul className="grid flex-1 grid-cols-2 gap-2.5 lg:grid-cols-4 lg:gap-8">
           {clients.map((client) => (
-            <li key={client}>
-              <Placeholder
-                label={`${client} logo`}
-                className="h-[52px] border border-dashed border-border text-[11px] lg:h-12 lg:text-xs"
-              />
+            <li
+              key={client}
+              className="flex h-[52px] items-center justify-center rounded-sm border border-border font-display text-lg/6 font-semibold tracking-[-0.01em] text-ink-secondary lg:h-12 lg:text-xl/6"
+            >
+              {client}
             </li>
           ))}
         </ul>

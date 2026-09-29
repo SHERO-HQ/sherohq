@@ -68,7 +68,7 @@ The `.dc.html` files are design mockups in a canvas format, not runnable pages. 
 - This project is **not** part of the "shero" monorepo (Merchander and Pharmasyst). Keep it separate.
 - The admin is not a second Merchander: no bookkeeping, expenses, staff roles or multi-user features.
 - Product subdomains (`merchander.sherohq.com`, `pharmasyst.sherohq.com`) redirect to their pages on sherohq.com. Old URLs (`/consultation`, `/contact-us`, `/products`, `/partners`, `/careers`) redirect to their new homes.
-- SEO targets Tamale, not Accra.
+- SEO: Tamale first, then Ghana-wide (SHERO delivers nationwide). Never target Accra as home (owner, 29 Sep 2026).
 - The 33 existing products in the old admin are real stock and need migrating; each needs a device check before it's listed. The GHS15.00 order from 31 August was a test and should be cleared.
 
 ## Still open (ask the owner, don't guess)
@@ -101,6 +101,11 @@ Decisions made while building, on top of the handoff.
 | Legal | `/legal/terms`, `/legal/privacy`, `/legal/cookies` |
 
 **Placeholders.** Missing content (logos, photos, screenshots, prices) is rendered with the `Placeholder` component, showing the same `[bracketed]` text as the designs. Search for `<Placeholder` and `TODO(owner)` to list what SHERO still needs to supply.
+
+**Improvements on the designs** (approved 29 Sep 2026):
+- Home: client names set as type until logos arrive; the empty photo band is replaced by the four device checks; desktop stock table gains a battery column; a WhatsApp "tell us what it's for" prompt under the list.
+- Live, Ghana-time "Open now" status in the footer and a same-day dispatch countdown on shop sections (`src/lib/hours.ts`). Assumes dispatch runs Mon–Fri; public holidays aren't modelled until admin Settings exists.
+- `src/lib/claims.test.ts` fails the build if banned claims (24/7, uptime, "authorised", team/founder copy, ratings) appear in code.
 
 **Open for the owner.** The footer's "Feedback" link has no page in the designs; it points to Support for now.
 

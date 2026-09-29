@@ -4,11 +4,11 @@ import "./globals.css";
 export const metadata: Metadata = {
   metadataBase: new URL("https://sherohq.com"),
   title: {
-    default: "SHERO · Software, refurbished laptops and IT support in Tamale",
+    default: "SHERO · Refurbished laptops, software and IT support in Tamale, Ghana",
     template: "%s · SHERO",
   },
   description:
-    "SHERO builds software, supplies tested refurbished laptops and supports the technology businesses run on. From Tamale, Ghana.",
+    "Tested refurbished laptops, custom software and IT support from SHERO in Tamale. Free delivery across Ghana on orders over GHS 2,000.",
   applicationName: "SHERO",
   openGraph: { siteName: "SHERO", locale: "en_GH", type: "website" },
   icons: {

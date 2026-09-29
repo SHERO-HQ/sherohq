@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { routes } from "@/lib/site";
+import { DispatchCountdown } from "@/components/ui/LiveStatus";
+import { routes, whatsappLink } from "@/lib/site";
 
 export type StockRow = {
   id: string;
@@ -24,6 +25,29 @@ const placeholderRows: StockRow[] = Array.from({ length: 4 }, (_, i) => ({
 }));
 
 const categories = ["Laptops", "Phones", "Desktops", "Audio", "Accessories"];
+
+// What every listed device has been through. Matches the admin's device check
+// (docs/admin-scope.md, Listings) and the shop rules in CLAUDE.md.
+const checks = [
+  {
+    title: "Every part tested",
+    detail: "Screen, keyboard, trackpad, ports, speakers, camera, Wi-Fi and charging.",
+  },
+  {
+    title: "Battery at 90% or more",
+    detail: "Usually replaced with an original battery at 100%. Each listing shows its figure.",
+  },
+  {
+    title: "Cleaned and reset",
+    detail: "Cleaned and reset to factory settings, ready to set up as your own.",
+  },
+  {
+    title: "One-week warranty",
+    detail: "Covered for the first week after delivery, and support stays free after that.",
+  },
+];
+
+const recommendMessage = "Hi SHERO, I'm looking for a laptop. I'll mainly use it for: ";
 
 export function InStock({ rows = placeholderRows }: { rows?: StockRow[] }) {
   return (
@@ -61,9 +85,10 @@ export function InStock({ rows = placeholderRows }: { rows?: StockRow[] }) {
             </th>
             <th className="py-3 pl-6 font-normal">model</th>
             <th className="py-3 pl-6 font-normal">spec</th>
-            <th className="w-[114px] py-3 pl-6 font-normal">grade</th>
+            <th className="w-[90px] py-3 pl-6 font-normal">grade</th>
+            <th className="w-[110px] py-3 pl-6 font-normal">battery</th>
             <th className="w-[174px] py-3 pl-6 font-normal">price</th>
-            <th className="w-[114px] py-3 pl-6">
+            <th className="w-[90px] py-3 pl-6">
               <span className="sr-only">Link</span>
             </th>
           </tr>
@@ -77,6 +102,7 @@ export function InStock({ rows = placeholderRows }: { rows?: StockRow[] }) {
               <td className="py-3.5 pl-6 text-base/6 font-medium text-ink">{row.model}</td>
               <td className="py-3.5 pl-6 font-mono text-[13px]/[17px] text-ink-secondary">{row.spec}</td>
               <td className="py-3.5 pl-6 font-mono text-[13px]/[17px] font-medium text-accent">{row.grade}</td>
+              <td className="py-3.5 pl-6 font-mono text-[13px]/[17px] text-ink-secondary">{row.batteryHealth}%</td>
               <td className="py-3.5 pl-6 font-mono text-price text-ink">{row.price}</td>
               <td className="py-3.5 pl-6 text-right">
                 <Link href={row.href} className="text-sm/5 font-medium text-primary hover:underline">
@@ -108,16 +134,47 @@ export function InStock({ rows = placeholderRows }: { rows?: StockRow[] }) {
         ))}
       </ul>
 
-      <div className="flex items-center justify-between lg:pt-[18px]">
-        <p className="hidden font-mono text-xs/4 text-ink-muted lg:block">
-          uk-used · grade a++ · tested and cleaned · one-week warranty
-        </p>
+      <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between lg:pt-[18px]">
+        <DispatchCountdown
+          fallback="Order before 5:00 PM for same-day dispatch to the bus station"
+          className="font-mono text-xs/4 text-ink-muted"
+        />
         <Link
           href={routes.shop}
-          className="whitespace-nowrap text-[15px]/[22px] font-medium text-primary hover:underline lg:text-sm/5"
+          className="self-start whitespace-nowrap text-[15px]/[22px] font-medium text-primary hover:underline lg:text-sm/5"
         >
           Full shop →
         </Link>
+      </div>
+
+      {/* The recommendation prompt replaces fixed "Good for" categories (PRD). */}
+      <p className="mt-6 text-base/[25px] text-ink-secondary lg:mt-8 lg:text-[17px]/[27px]">
+        Not sure which one?{" "}
+        <a
+          href={whatsappLink(recommendMessage)}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="font-medium text-primary underline underline-offset-3 hover:text-primary-hover"
+        >
+          Tell us what it&rsquo;s for on WhatsApp
+        </a>{" "}
+        and we&rsquo;ll recommend one.
+      </p>
+
+      <div className="mt-10 flex flex-col gap-5 lg:mt-14 lg:gap-6">
+        <h3 className="font-mono text-xs/4 font-medium text-accent">every device, before it&rsquo;s listed</h3>
+        <ol className="grid border-t border-rule-strong sm:grid-cols-2 lg:grid-cols-4">
+          {checks.map((check, i) => (
+            <li
+              key={check.title}
+              className="flex flex-col gap-2 border-b border-border py-5 sm:odd:pr-6 sm:even:border-l sm:even:pl-6 lg:border-b-0 lg:py-6 lg:not-first:border-l lg:not-first:pl-6 lg:odd:pr-6 lg:even:pr-6"
+            >
+              <span className="font-mono text-xs/4 text-ink-muted">{String(i + 1).padStart(2, "0")}</span>
+              <span className="font-display text-h3 text-heading">{check.title}</span>
+              <span className="text-body-sm text-ink-secondary">{check.detail}</span>
+            </li>
+          ))}
+        </ol>
       </div>
     </section>
   );

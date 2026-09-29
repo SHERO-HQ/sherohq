@@ -4,19 +4,17 @@ import { InStock } from "@/components/home/InStock";
 import { OwnProducts } from "@/components/home/OwnProducts";
 import { ProofStrip } from "@/components/home/ProofStrip";
 import { ServicesOverview } from "@/components/home/ServicesOverview";
-import { SupportBand } from "@/components/home/SupportBand";
+import { BusinessJsonLd } from "@/components/seo/BusinessJsonLd";
 
 export default function HomePage() {
   return (
     <>
+      <BusinessJsonLd />
       <Hero />
       <ProofStrip />
       <ServicesOverview />
-      {/* The band sits after services on mobile and after products on desktop. */}
-      <SupportBand className="lg:hidden" />
       <InStock />
       <OwnProducts />
-      <SupportBand className="hidden lg:block" />
       <ConsultationCta />
     </>
   );
