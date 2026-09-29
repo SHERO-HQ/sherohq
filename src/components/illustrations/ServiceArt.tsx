@@ -225,7 +225,10 @@ export function IntegrationArt({ className }: ArtProps) {
       <Line x={52} y={146} w={40} />
       <Line x={58} y={156} w={28} />
 
-      <path d="M120 107 H152 M146 101 L152 107 L146 113" className="stroke-primary" strokeWidth={2} />
+      {/* Payment to point of sale: starts on the phone's edge, ends on the till's. */}
+      <circle cx="112" cy="107" r="3" className="fill-primary" />
+      <path d="M112 107 H152" className="stroke-primary" strokeWidth={2} />
+      <path d="M152 101.5 L160 107 L152 112.5 Z" className="fill-primary" />
 
       <Panel x={160} y={58} w={102} h={100} />
       <path d="M160 64 A6 6 0 0 1 166 58 H256 A6 6 0 0 1 262 64 V78 H160 Z" className="fill-primary" />
@@ -240,8 +243,15 @@ export function IntegrationArt({ className }: ArtProps) {
       <Line x={172} y={141} w={20} />
       <Line x={208} y={140} w={44} h={8} tone="strong" />
 
-      <path d="M268 96 C282 96 280 66 294 66 M288 60 L294 66 L288 72" className="stroke-primary" strokeWidth={2} />
-      <path d="M268 120 C282 120 280 152 294 152 M288 146 L294 152 L288 158" className="stroke-primary" strokeWidth={2} />
+      {/* Point of sale to stock and receipt: one trunk that splits, rounded elbows. */}
+      <circle cx="262" cy="108" r="3" className="fill-primary" />
+      <path
+        d="M262 108 H276 Q282 108 282 102 V71 Q282 65 288 65 H293 M276 108 Q282 108 282 114 V149 Q282 155 288 155 H293"
+        className="stroke-primary"
+        strokeWidth={2}
+      />
+      <path d="M292 59.5 L300 65 L292 70.5 Z" className="fill-primary" />
+      <path d="M292 149.5 L300 155 L292 160.5 Z" className="fill-primary" />
 
       <Panel x={300} y={32} w={74} h={66} />
       <rect x="317" y="60" width="17" height="15" rx="1.5" className="fill-border" />
