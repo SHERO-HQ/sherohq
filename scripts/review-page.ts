@@ -21,7 +21,7 @@ const notes: Record<string, string[]> = {
     "A WhatsApp prompt under the list: tell us what it's for and we'll recommend one.",
     "A live countdown to the 5:00 PM same-day dispatch cut-off.",
     "Merchander and Pharmasyst say In development on mobile too (the mobile design said waitlist).",
-    "Payment facts include store pickup.",
+    "Delivery, payment and warranty sit under the laptops they apply to, with an icon each; hours are left to the footer's Open now.",
   ],
   menu: [
     "A plain list under the header, like lucide.dev: the header stays and the menu icon turns into a close mark.",
