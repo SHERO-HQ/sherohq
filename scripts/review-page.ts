@@ -25,7 +25,7 @@ const notes: Record<string, string[]> = {
   ],
   menu: [
     "A plain list under the header, like lucide.dev: the header stays and the menu icon turns into a close mark.",
-    "Products lists Merchander and Pharmasyst, each marked In development.",
+    "Products opens and closes (closed by default, open on a product page) so the menu stays short as products are added; each unreleased one is marked In development.",
     "Track an order is in the list; one Book a free consultation button, then phone and email.",
     "Escape closes it and focus returns to the menu button.",
   ],

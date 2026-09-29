@@ -1,12 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { ChevronDown } from "lucide-react";
 import { buttonClass } from "@/components/ui/Button";
 import { business, routes } from "@/lib/site";
 import { cn } from "@/lib/cn";
 
-type Item = { label: string; href: string; children?: Array<{ label: string; href: string }> };
+/** `inDevelopment`: unreleased products are always labelled (CLAUDE.md). */
+type Child = { label: string; href: string; inDevelopment?: boolean };
+type Item = { label: string; href: string; children?: Child[] };
 
 const items: Item[] = [
   { label: "Services", href: routes.services },
@@ -15,8 +18,8 @@ const items: Item[] = [
     label: "Products",
     href: routes.products,
     children: [
-      { label: "Merchander", href: routes.merchander },
-      { label: "Pharmasyst", href: routes.pharmasyst },
+      { label: "Merchander", href: routes.merchander, inDevelopment: true },
+      { label: "Pharmasyst", href: routes.pharmasyst, inDevelopment: true },
     ],
   },
   { label: "Work", href: routes.work },
@@ -28,6 +31,65 @@ const items: Item[] = [
 function isCurrent(pathname: string, href: string) {
   if (href.includes("#")) return false;
   return href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`);
+}
+
+/**
+ * A section that opens and closes (Products), so the menu stays short as it
+ * grows. Starts open when the visitor is already on one of its pages.
+ */
+function Group({
+  item,
+  pathname,
+  onClose,
+  linkClass,
+}: {
+  item: Item;
+  pathname: string;
+  onClose: () => void;
+  linkClass: (href: string) => string;
+}) {
+  const children = item.children ?? [];
+  const [open, setOpen] = useState(() => children.some((child) => isCurrent(pathname, child.href)));
+  const id = `menu-${item.label.toLowerCase()}`;
+  return (
+    <>
+      <button
+        type="button"
+        aria-expanded={open}
+        aria-controls={id}
+        onClick={() => setOpen(!open)}
+        className={cn(linkClass(item.href), "flex w-full items-center justify-between text-left")}
+      >
+        {item.label}
+        <ChevronDown
+          aria-hidden="true"
+          size={18}
+          strokeWidth={1.5}
+          className={cn("text-ink-muted transition-transform duration-200", open && "rotate-180")}
+        />
+      </button>
+      {open && (
+        <ul id={id} className="-mt-1 pb-2 pl-4">
+          {[{ label: `All ${item.label.toLowerCase()}`, href: item.href } as Child, ...children].map((child) => (
+            <li key={child.href}>
+              <Link
+                href={child.href}
+                onClick={onClose}
+                aria-current={isCurrent(pathname, child.href) ? "page" : undefined}
+                className={cn(
+                  "flex items-baseline gap-2 py-1.5 text-body-sm",
+                  isCurrent(pathname, child.href) ? "text-primary" : "text-ink-secondary hover:text-primary",
+                )}
+              >
+                {child.label}
+                {child.inDevelopment && <span className="text-meta text-ink-muted">In development</span>}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      )}
+    </>
+  );
 }
 
 /**
@@ -58,34 +120,17 @@ export function MobileMenu({ pathname, onClose }: { pathname: string; onClose: (
         <ul>
           {items.map((item) => (
             <li key={item.href} className="border-b border-border">
-              <Link
-                href={item.href}
-                onClick={onClose}
-                aria-current={isCurrent(pathname, item.href) ? "page" : undefined}
-                className={link(item.href)}
-              >
-                {item.label}
-              </Link>
-              {item.children && (
-                <ul className="-mt-1 pb-2 pl-4">
-                  {item.children.map((child) => (
-                    <li key={child.href}>
-                      <Link
-                        href={child.href}
-                        onClick={onClose}
-                        aria-current={isCurrent(pathname, child.href) ? "page" : undefined}
-                        className={cn(
-                          "flex items-baseline gap-2 py-1.5 text-body-sm",
-                          isCurrent(pathname, child.href) ? "text-primary" : "text-ink-secondary hover:text-primary",
-                        )}
-                      >
-                        {child.label}
-                        {/* Unreleased products are always labelled (CLAUDE.md). */}
-                        <span className="text-meta text-ink-muted">In development</span>
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
+              {item.children ? (
+                <Group item={item} pathname={pathname} onClose={onClose} linkClass={link} />
+              ) : (
+                <Link
+                  href={item.href}
+                  onClick={onClose}
+                  aria-current={isCurrent(pathname, item.href) ? "page" : undefined}
+                  className={link(item.href)}
+                >
+                  {item.label}
+                </Link>
               )}
             </li>
           ))}
