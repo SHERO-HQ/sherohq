@@ -114,7 +114,7 @@ Decisions made while building, on top of the handoff.
 **Placeholders.** Missing content (logos, photos, screenshots, prices) is rendered with the `Placeholder` component, showing the same `[bracketed]` text as the designs. Search for `<Placeholder` and `TODO(owner)` to list what SHERO still needs to supply.
 
 **Improvements on the designs** (approved 29 Sep 2026):
-- Home: client names set as type until logos arrive, in a slow CSS-only scrolling strip (`Marquee`, paused on hover, still with reduced motion, capped to ~3 names wide until there are 6–8 clients); the empty photo band is replaced by the four device checks; desktop stock table gains a battery column; a WhatsApp "tell us what it's for" prompt under the list.
+- Home: client names set as type until logos arrive, in a slow CSS-only scrolling strip (`Marquee`, paused on hover, still with reduced motion, capped to ~3 names wide until there are 6–8 clients), under a centred label Clerk-style; the empty photo band is replaced by the four device checks; desktop stock table gains a battery column; a WhatsApp "tell us what it's for" prompt under the list.
 - Live, Ghana-time "Open now" status in the footer and a same-day dispatch countdown on shop sections (`src/lib/hours.ts`). The office is open on public holidays; dispatch runs every day, including days the office is closed.
 - Every form that takes personal details carries `data-clarity-mask="True"`, and `trackEvent` never gets names, phones or emails: the Cookies page promises analytics never sees them.
 - `src/lib/claims.test.ts` fails the build if banned claims (24/7, uptime, "authorised", team/founder copy, ratings) appear in code.

@@ -187,6 +187,11 @@
   }
 }
 
+/* Fades an element out towards its bottom (the hero's dot grid). */
+@utility mask-fade-down {
+  mask-image: linear-gradient(to bottom, black, transparent);
+}
+
 /* The logo's slanted bars. Only the home hero, About hero and 404 use them. */
 @utility slant {
   clip-path: polygon(22% 0, 100% 0, 78% 100%, 0 100%);

@@ -17,7 +17,8 @@ function Frame({
       viewBox={viewBox}
       // An empty label means pure decoration beside a text label that says the same.
       {...(label ? { role: "img", "aria-label": label } : { "aria-hidden": true })}
-      className={cn("h-auto w-full", className)}
+      // Full width by default; a caller that sizes the art replaces this.
+      className={className ?? "h-auto w-full"}
       fill="none"
       strokeLinecap="round"
       strokeLinejoin="round"

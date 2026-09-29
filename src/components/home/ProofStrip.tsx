@@ -20,34 +20,41 @@ const facts = [
   { label: "hours", value: business.hours },
 ];
 
-export function ProofStrip() {
+/** Clients, Clerk style: a small centred label over a slow scrolling row. */
+export function ClientStrip() {
   return (
-    <section aria-label="Clients and how buying works" className="border-y border-border bg-surface">
-      <div className="container-site flex flex-col gap-6 py-8 lg:gap-8">
-        <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:gap-8">
-          <h2 className="shrink-0 font-mono text-eyebrow text-ink-muted">we&rsquo;ve worked with</h2>
-          {/* Narrow while there are few clients, so no name shows twice at once.
-              TODO(owner): with 6–8 logos, drop the max width and let it run full width. */}
-          <Marquee items={clients} className="min-w-0 flex-1 lg:max-w-xl" />
-        </div>
-        <dl className="grid grid-cols-2 gap-x-6 gap-y-5 border-t border-border pt-6 lg:grid-cols-4">
-          {facts.map((fact) => (
-            <div key={fact.label} className="flex flex-col gap-1">
-              <dt className="font-mono text-meta text-ink-muted">{fact.label}</dt>
-              <dd className="text-body-sm font-medium text-ink">
-                {fact.valueMobile ? (
-                  <>
-                    <span className="lg:hidden">{fact.valueMobile}</span>
-                    <span className="hidden lg:inline">{fact.value}</span>
-                  </>
-                ) : (
-                  fact.value
-                )}
-              </dd>
-            </div>
-          ))}
-        </dl>
-      </div>
+    <section aria-labelledby="clients-heading" className="container-site flex flex-col items-center gap-5 pb-section">
+      <h2 id="clients-heading" className="font-mono text-eyebrow text-ink-muted">
+        we&rsquo;ve worked with
+      </h2>
+      {/* Narrow while there are few clients, so no name shows twice at once.
+          TODO(owner): with 6–8 logos, widen it (or drop the max width). */}
+      <Marquee items={clients} className="w-full max-w-xl" />
+    </section>
+  );
+}
+
+/** How buying from SHERO works: delivery, payment, warranty and hours. */
+export function BuyingFacts() {
+  return (
+    <section aria-label="How buying from SHERO works" className="border-y border-border bg-surface">
+      <dl className="container-site grid grid-cols-2 gap-x-6 gap-y-5 py-8 lg:grid-cols-4">
+        {facts.map((fact) => (
+          <div key={fact.label} className="flex flex-col gap-1">
+            <dt className="font-mono text-meta text-ink-muted">{fact.label}</dt>
+            <dd className="text-body-sm font-medium text-ink">
+              {fact.valueMobile ? (
+                <>
+                  <span className="lg:hidden">{fact.valueMobile}</span>
+                  <span className="hidden lg:inline">{fact.value}</span>
+                </>
+              ) : (
+                fact.value
+              )}
+            </dd>
+          </div>
+        ))}
+      </dl>
     </section>
   );
 }

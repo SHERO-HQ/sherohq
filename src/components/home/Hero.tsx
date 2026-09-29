@@ -41,32 +41,34 @@ const paths = [
 
 export function Hero() {
   return (
-    <section className="container-site flex flex-col gap-12 lg:gap-16 py-section">
-      <div className="flex flex-col gap-6">
+    <section className="relative isolate overflow-hidden">
+      {/* The illustrations' dot grid, fading out from the top: depth without a picture. */}
+      <div aria-hidden="true" className="bg-dots mask-fade-down absolute inset-x-0 top-0 -z-10 h-160" />
+
+      <div className="container-site flex flex-col items-center gap-6 pt-section text-center">
         {/* The logo's slanted bars, in the fixed brand inks. */}
         <div aria-hidden="true" className="flex gap-2">
           <span className="slant h-4 w-14 bg-navy-700" />
           <span className="slant h-4 w-8 bg-emerald-700" />
         </div>
-        <div className="flex max-w-measure flex-col gap-5">
-          {/* The motto appears only here, on About and in the footer. */}
-          <h1 className="text-display">Redefine Possible.</h1>
-          <p className="text-body-lg text-ink-secondary">
-            SHERO builds software, supplies tested laptops and supports the technology businesses run on. From
-            Tamale, delivering across Ghana.
-          </p>
-          <div className="flex flex-wrap gap-3 pt-2">
-            <ButtonLink href={routes.shop} size="lg">
-              Shop laptops
-            </ButtonLink>
-            <ButtonLink href={routes.consultation} variant="outline" size="lg">
-              Book a free consultation
-            </ButtonLink>
-          </div>
+        {/* The motto appears only here, on About and in the footer. */}
+        <h1 className="text-display">Redefine Possible.</h1>
+        <p className="max-w-measure text-body-lg text-ink-secondary">
+          SHERO builds software, supplies tested laptops and supports the technology businesses run on. From Tamale,
+          delivering across Ghana.
+        </p>
+        <div className="flex flex-wrap justify-center gap-3 pt-2">
+          <ButtonLink href={routes.shop} size="lg">
+            Shop laptops
+          </ButtonLink>
+          <ButtonLink href={routes.consultation} variant="outline" size="lg">
+            Book a free consultation
+          </ButtonLink>
         </div>
       </div>
 
-      <nav aria-labelledby="paths-heading" className="flex flex-col gap-4">
+      <div className="container-site pt-16 pb-16 lg:pt-20">
+        <nav aria-labelledby="paths-heading" className="flex flex-col gap-4">
         <h2 id="paths-heading" className="font-mono text-eyebrow text-secondary">
           what do you need?
         </h2>
@@ -95,6 +97,7 @@ export function Hero() {
           Something else? Book a free consultation <InlineArrow />
         </Link>
       </nav>
+      </div>
     </section>
   );
 }
