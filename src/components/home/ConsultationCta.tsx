@@ -2,18 +2,24 @@ import Link from "next/link";
 import { routes } from "@/lib/site";
 import { InlineArrow } from "@/components/ui/InlineArrow";
 
-export function ConsultationCta() {
+type ConsultationCtaProps = {
+  title?: string;
+  body?: string;
+};
+
+export function ConsultationCta({
+  title = "Not sure where to start?",
+  body = "Tell us what’s slowing your business down. We’ll suggest a practical next step, free.",
+}: ConsultationCtaProps) {
   return (
     <div className="container-site my-16 lg:my-[104px]">
       {/* Stays logo navy in both themes. */}
       <section className="flex flex-col gap-3.5 rounded-md bg-navy-700 px-6 py-9 lg:flex-row lg:items-center lg:justify-between lg:gap-12 lg:px-16 lg:py-[72px]">
         <div className="flex max-w-[640px] flex-col gap-3.5">
           <h2 className="font-display text-[30px]/[34px] font-bold text-white lg:text-[44px]/[48px] lg:tracking-[-0.025em]">
-            Not sure where to start?
+            {title}
           </h2>
-          <p className="text-base/[25px] text-on-navy-muted lg:text-lg/7">
-            Tell us what&rsquo;s slowing your business down. We&rsquo;ll suggest a practical next step, free.
-          </p>
+          <p className="text-base/[25px] text-on-navy-muted lg:text-lg/7">{body}</p>
         </div>
         <Link
           href={routes.consultation}
