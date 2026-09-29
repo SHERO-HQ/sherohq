@@ -1,3 +1,4 @@
+import { Marquee } from "@/components/ui/Marquee";
 import { business } from "@/lib/site";
 
 // Clients whose work SHERO may show (permissions granted, per the PRD).
@@ -23,15 +24,11 @@ export function ProofStrip() {
   return (
     <section aria-label="Clients and how buying works" className="border-y border-border bg-surface">
       <div className="container-site flex flex-col gap-6 py-8 lg:gap-8">
-        <div className="flex flex-col gap-3 lg:flex-row lg:items-baseline lg:gap-8">
+        <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:gap-8">
           <h2 className="shrink-0 font-mono text-eyebrow text-ink-muted">we&rsquo;ve worked with</h2>
-          <ul className="flex flex-wrap gap-x-8 gap-y-2">
-            {clients.map((client) => (
-              <li key={client} className="font-display text-h3 text-ink-secondary">
-                {client}
-              </li>
-            ))}
-          </ul>
+          {/* Narrow while there are few clients, so no name shows twice at once.
+              TODO(owner): with 6–8 logos, drop the max width and let it run full width. */}
+          <Marquee items={clients} className="min-w-0 flex-1 lg:max-w-xl" />
         </div>
         <dl className="grid grid-cols-2 gap-x-6 gap-y-5 border-t border-border pt-6 lg:grid-cols-4">
           {facts.map((fact) => (
