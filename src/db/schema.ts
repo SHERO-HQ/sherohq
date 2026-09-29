@@ -58,6 +58,21 @@ export const settings = pgTable(
   (t) => [check("settings_single_row", sql`${t.id} = 1`)],
 );
 
+/**
+ * Delivery fee per region for orders under the free-delivery threshold, set by
+ * the owner in Settings. One row per region plus "Tamale (local delivery)".
+ * A null fee means "not set yet": checkout then says the fee will be confirmed.
+ */
+export const deliveryRates = pgTable(
+  "delivery_rates",
+  {
+    region: text("region").primaryKey(),
+    feePesewas: integer("fee_pesewas"),
+    updatedAt: updatedAt(),
+  },
+  (t) => [check("delivery_rates_fee_not_negative", sql`${t.feePesewas} >= 0`)],
+);
+
 // ── Listings (section 3) ─────────────────────────────────────────────────────
 export const listingStatus = pgEnum("listing_status", ["draft", "in_stock", "reserved", "sold"]);
 

@@ -48,9 +48,20 @@ export function warrantyEndsOn(arrivedAt: Date): string {
   return end.toISOString().slice(0, 10);
 }
 
-/** Delivery is free at or over the threshold in Settings; otherwise the quoted fee. */
-export function deliveryFeePesewas(subtotalPesewas: number, thresholdPesewas: number, feePesewas: number): number {
-  return subtotalPesewas >= thresholdPesewas ? 0 : feePesewas;
+/**
+ * Delivery fee in pesewas. Free for store pickup and at or over the threshold
+ * in Settings; otherwise the region's rate. Null means the region's rate isn't
+ * set yet, so checkout says the fee will be confirmed before dispatch.
+ */
+export function deliveryFeePesewas(input: {
+  method: DeliveryMethod;
+  subtotalPesewas: number;
+  thresholdPesewas: number;
+  regionRatePesewas: number | null;
+}): number | null {
+  if (input.method === "pickup") return 0;
+  if (input.subtotalPesewas >= input.thresholdPesewas) return 0;
+  return input.regionRatePesewas;
 }
 
 /** "GHS 4,200" or "GHS 4,200.50". */

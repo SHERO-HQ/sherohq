@@ -67,7 +67,9 @@ export default function TermsPage() {
             <p>
               We deliver nationwide. Delivery is free on orders over GHS 2,000. Orders placed before 5:00 PM go to the
               bus station the same day, and delivery usually takes 12–72 hours from dispatch.{" "}
-              <Fill value={missing("Delivery fee below GHS 2,000, and who is responsible once the parcel is at the station")} scale={1} />
+              Below GHS 2,000, the delivery fee depends on your region and is shown at checkout before you pay.
+              Store pickup is free.{" "}
+              <Fill value={missing("Who is responsible once the parcel is at the station")} scale={1} />
             </p>
           ),
         },

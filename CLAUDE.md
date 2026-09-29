@@ -54,7 +54,7 @@ The `.dc.html` files are design mockups in a canvas format, not runnable pages. 
 - Orders are tracked with the order number plus the phone number.
 - The cart icon shows only on shop and product pages, or once something is in the cart.
 - Payments: MoMo (MTN MoMo or Telecel Cash) via Hubtel, cards via Paystack, cash on delivery, or pay at store pickup. Confirmed with the owner on 29 Sep 2026; store pickup was added then (it existed on the old site).
-- Free nationwide delivery on orders over GHS 2,000. Orders placed before 5:00 PM go to the bus station the same day.
+- Free nationwide delivery on orders over GHS 2,000. Below that, the fee depends on the region (owner, 29 Sep 2026): the owner sets each region's rate in Settings (`delivery_rates`), and a region without a rate yet shows "fee confirmed before dispatch". Store pickup is free. Orders placed before 5:00 PM go to the bus station the same day.
 - A listing can't be set "In stock" until its device check is complete and battery health is at least 90%. Batteries are usually replaced with original batteries at 100%, and listings say so.
 - No fixed "Good for" categories. Listings have an optional free-text note, and the shop prompts buyers to ask on WhatsApp for a recommendation.
 - Optional referral field at checkout (the referrer's phone number). Promise "a thank-you", never a specific reward.

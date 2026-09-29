@@ -45,9 +45,16 @@ describe("warranty and delivery", () => {
     expect(warrantyEndsOn(new Date("2026-10-01T15:00:00Z"))).toBe("2026-10-08");
   });
 
-  it("makes delivery free at or over the threshold", () => {
-    expect(deliveryFeePesewas(200_000, 200_000, 5_000)).toBe(0);
-    expect(deliveryFeePesewas(199_999, 200_000, 5_000)).toBe(5_000);
+  it("charges the region's rate under the threshold and nothing at or over it", () => {
+    const base = { method: "bus" as const, thresholdPesewas: 200_000, regionRatePesewas: 5_000 };
+    expect(deliveryFeePesewas({ ...base, subtotalPesewas: 200_000 })).toBe(0);
+    expect(deliveryFeePesewas({ ...base, subtotalPesewas: 199_999 })).toBe(5_000);
+  });
+
+  it("is free for store pickup, and unknown when the region has no rate yet", () => {
+    const base = { subtotalPesewas: 50_000, thresholdPesewas: 200_000 };
+    expect(deliveryFeePesewas({ ...base, method: "pickup", regionRatePesewas: null })).toBe(0);
+    expect(deliveryFeePesewas({ ...base, method: "bus", regionRatePesewas: null })).toBeNull();
   });
 
   it("formats cedis", () => {
