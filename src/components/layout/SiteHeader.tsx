@@ -2,22 +2,25 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState, useSyncExternalStore } from "react";
-import { ArrowRight, ShoppingCart, X } from "lucide-react";
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { ShoppingCart } from "lucide-react";
 import { MenuIcon } from "@/components/ui/MenuIcon";
 import { Logo } from "@/components/ui/Logo";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
-import { ButtonLink, buttonClass } from "@/components/ui/Button";
+import { ButtonLink } from "@/components/ui/Button";
 import { cartSnapshot, serverCartSnapshot, subscribeCart } from "@/lib/cart";
-import { business, mainNav, routes } from "@/lib/site";
+import { mainNav, routes } from "@/lib/site";
 import { cn } from "@/lib/cn";
-
-const menuNav = [...mainNav, { label: "Support", href: routes.support }];
 
 function isCurrent(pathname: string, href: string) {
   if (href.includes("#")) return false;
   return href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`);
 }
+
+// The phone menu isn't in the page's first load; it's fetched once the page is
+// idle (or when a finger touches the button), so it's ready before it's opened.
+type MobileMenuComponent = (typeof import("@/components/layout/MobileMenu"))["MobileMenu"];
+const loadMenu = () => import("@/components/layout/MobileMenu").then((m) => m.MobileMenu);
 
 const shopPaths = [routes.shop, routes.cart, routes.checkout];
 
@@ -49,14 +52,21 @@ function CartLink({ pathname }: { pathname: string }) {
 export function SiteHeader() {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
+  const menuButton = useRef<HTMLButtonElement>(null);
+  const closeMenu = useCallback(() => setMenuOpen(false), []);
+  const [Menu, setMenu] = useState<MobileMenuComponent | null>(null);
+  const fetchMenu = useCallback(() => {
+    void loadMenu().then((component) => setMenu(() => component));
+  }, []);
 
-  // Stop the page scrolling behind the open menu. Menu links close it on click.
   useEffect(() => {
-    document.body.style.overflow = menuOpen ? "hidden" : "";
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [menuOpen]);
+    if ("requestIdleCallback" in window) {
+      const id = window.requestIdleCallback(fetchMenu);
+      return () => window.cancelIdleCallback(id);
+    }
+    const id = setTimeout(fetchMenu, 2000);
+    return () => clearTimeout(id);
+  }, [fetchMenu]);
 
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-page">
@@ -93,11 +103,16 @@ export function SiteHeader() {
           </span>
 
           <button
+            ref={menuButton}
             type="button"
             aria-label="Open menu"
+            onPointerDown={fetchMenu}
             aria-expanded={menuOpen}
             aria-controls="mobile-menu"
-            onClick={() => setMenuOpen(true)}
+            onClick={() => {
+              fetchMenu();
+              setMenuOpen(true);
+            }}
             className="flex size-11 items-center justify-center rounded-sm text-ink-secondary lg:hidden"
           >
             <MenuIcon />
@@ -105,74 +120,7 @@ export function SiteHeader() {
         </div>
       </div>
 
-      {menuOpen && (
-        <div
-          id="mobile-menu"
-          role="dialog"
-          aria-modal="true"
-          aria-label="Menu"
-          className="fixed inset-0 z-50 flex flex-col overflow-y-auto bg-page shadow-float lg:hidden"
-        >
-          <div className="container-site flex h-16 shrink-0 items-center justify-between border-b border-border">
-            <Link href={routes.home} aria-label="SHERO home" className="rounded-sm">
-              <Logo className="h-6 w-auto" />
-            </Link>
-            <button
-              type="button"
-              aria-label="Close menu"
-              onClick={() => setMenuOpen(false)}
-              autoFocus
-              className="-mr-3 flex size-11 items-center justify-center rounded-sm text-ink"
-            >
-              <X size={22} strokeWidth={1.5} aria-hidden="true" />
-            </button>
-          </div>
-
-          <nav aria-label="Main" className="container-site flex flex-col pt-3">
-            {menuNav.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={() => setMenuOpen(false)}
-                aria-current={isCurrent(pathname, item.href) ? "page" : undefined}
-                className="flex items-center justify-between border-b border-border py-4"
-              >
-                <span className="font-display text-h2 text-heading">
-                  {item.label}
-                </span>
-                <ArrowRight aria-hidden="true" size={20} strokeWidth={1.5} className="text-primary" />
-              </Link>
-            ))}
-          </nav>
-
-          <div className="container-site flex flex-col gap-3 py-8">
-            <Link
-              href={routes.consultation}
-              onClick={() => setMenuOpen(false)}
-              className={buttonClass({ size: "lg", full: true })}
-            >
-              Book a free consultation
-            </Link>
-            <Link
-              href={routes.track}
-              onClick={() => setMenuOpen(false)}
-              className={buttonClass({ variant: "outline", size: "lg", full: true })}
-            >
-              Track an order
-            </Link>
-          </div>
-
-          <div className="container-site mt-auto flex flex-col gap-1 border-t border-border pt-6 pb-8 font-mono text-meta">
-            <a href={`mailto:${business.email}`} className="text-ink-secondary">
-              {business.email}
-            </a>
-            <a href={`tel:${business.phoneE164}`} className="text-ink-secondary">
-              {business.phoneDisplay}
-            </a>
-            <span className="text-ink-muted">{business.hoursShort}</span>
-          </div>
-        </div>
-      )}
+      {menuOpen && Menu && <Menu pathname={pathname} onClose={closeMenu} returnFocusTo={menuButton} />}
     </header>
   );
 }

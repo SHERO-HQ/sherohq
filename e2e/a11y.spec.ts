@@ -18,6 +18,17 @@ for (const theme of ["light", "dark"] as const) {
       });
     }
 
+    // The phone menu is a dialog over the page; check it open.
+    test("the open phone menu has no accessibility violations", async ({ page }) => {
+      await page.goto("/");
+      const open = page.getByRole("button", { name: "Open menu" });
+      test.skip(!(await open.isVisible()), "The menu button only shows on small screens.");
+      await open.click();
+      await page.waitForSelector("#mobile-menu");
+      await page.waitForTimeout(300);
+      await expectNoViolations(page);
+    });
+
     // The cart with something in it, and checkout, need a device in the cart.
     test("filled cart and checkout have no accessibility violations", async ({ page }) => {
       await page.goto(sampleListing);

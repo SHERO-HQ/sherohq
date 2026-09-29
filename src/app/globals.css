@@ -136,6 +136,17 @@
   padding-inline: var(--gutter);
 }
 
+/* The phone menu fades and drops in. */
+@theme {
+  --animate-menu-in: menu-in 180ms ease-out;
+}
+@keyframes menu-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+
 /* A faint dot grid behind illustrations. */
 @utility bg-dots {
   background-image: radial-gradient(var(--border) 1px, transparent 1.25px);

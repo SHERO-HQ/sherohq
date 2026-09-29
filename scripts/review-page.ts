@@ -23,7 +23,13 @@ const notes: Record<string, string[]> = {
     "Merchander and Pharmasyst say In development on mobile too (the mobile design said waitlist).",
     "Payment facts include store pickup.",
   ],
-  menu: [],
+  menu: [
+    "Rows with an icon each; the current page is highlighted.",
+    "Products lists Merchander and Pharmasyst, each labelled In development.",
+    "A contact card with the live Open now status, phone, email and a green WhatsApp button.",
+    "Escape closes it, Tab stays inside it, and focus returns to the menu button.",
+    "Theme toggle inside the menu too.",
+  ],
   services: [
     "Each service shows its illustration in a card with what's included; the steps are cards.",
     "Hardware links straight to laptops in stock, as well as to a consultation.",
