@@ -1,5 +1,5 @@
 {
   "framework": "nextjs",
-  "installCommand": "corepack enable && yarn install",
-  "buildCommand": "yarn build"
+  "installCommand": "corepack enable && corepack yarn install --immutable",
+  "buildCommand": "corepack yarn build"
 }
