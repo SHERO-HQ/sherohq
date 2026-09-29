@@ -17,6 +17,9 @@
   --on-navy-muted: #c9d4ee;
   /* Divider inside the footer. */
   --inverse-border: #1e2c4a;
+  /* Readout panels (the mono "illustration" cards on Services). */
+  --readout-label: #8a94a6;
+  --readout-pending: #f3c06b;
   /* Product identity colours (product pages theme with these). */
   --merchander: #ff6a00;
   --pharmasyst: #13a56b;
@@ -34,6 +37,8 @@
   --color-band: var(--band);
   --color-on-navy-muted: var(--on-navy-muted);
   --color-inverse-border: var(--inverse-border);
+  --color-readout-label: var(--readout-label);
+  --color-readout-pending: var(--readout-pending);
   --color-merchander: var(--merchander);
   --color-pharmasyst: var(--pharmasyst);
 }

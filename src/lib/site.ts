@@ -39,7 +39,7 @@ export const routes = {
 export const siteUrl = "https://sherohq.com";
 
 /** Pages that exist today. The sitemap lists these; add each page as it ships. */
-export const livePages: string[] = [routes.home];
+export const livePages: string[] = [routes.home, routes.services, routes.about];
 
 export const mainNav = [
   { label: "Services", href: routes.services },
