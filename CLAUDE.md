@@ -116,6 +116,11 @@ Decisions made while building, on top of the handoff.
 - Every form that takes personal details carries `data-clarity-mask="True"`, and `trackEvent` never gets names, phones or emails: the Cookies page promises analytics never sees them.
 - `src/lib/claims.test.ts` fails the build if banned claims (24/7, uptime, "authorised", team/founder copy, ratings) appear in code.
 
+**Quality checks** (owner, 29 Sep 2026). Run before showing any page:
+- `yarn test:a11y` (after `yarn build`): axe WCAG 2.1 AA on every live page, light and dark, desktop and mobile. Pure decoration may be excluded with `aria-hidden` plus `data-decorative`. Add each new page to `livePages` in `src/lib/site.ts` so it's checked.
+- `yarn test:speed`: Lighthouse mobile on throttled 4G. Budgets in `lighthouserc.cjs` (performance 90+, accessibility and SEO 100, LCP 3 s or less). CI runs both.
+- `yarn review` rebuilds the owner's review page (every page beside its mockup): `scripts/review-shots.ts` then `scripts/review-page.ts`, output in `review/` (not committed). Add each new page and its "changed on purpose" notes there, then republish the artifact at https://claude.ai/artifact/W5t9GA29D4x7YxWGt9q15m and pick up the owner's comments on it.
+
 **Open for the owner.** The footer's "Feedback" link has no page in the designs; it points to Support for now.
 
 
