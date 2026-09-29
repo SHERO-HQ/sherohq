@@ -47,6 +47,22 @@ describe("styles", () => {
     expect(findAll(defaultType)).toEqual([]);
   });
 
+  // Tailwind silently drops a class it doesn't know, so a custom utility that
+  // goes missing from globals.css fails quietly. Every one in use must exist.
+  it("only uses custom utilities that globals.css defines", () => {
+    const css = readFileSync(join(root, "app/globals.css"), "utf8");
+    const defined = new Set([
+      ...[...css.matchAll(/@utility ([\w-]+)/g)].map((m) => m[1]),
+      ...[...css.matchAll(/--animate-([\w-]+):/g)].map((m) => `animate-${m[1]}`),
+    ]);
+    const custom = /(?<![\w-])(?:[\w-]+:)*((?:bg-dots|mask-fade|animate)(?:-[\w-]+)?|slant|container-site)(?![\w-])/g;
+    const missing = findAll(custom).filter((hit) => {
+      const name = hit.split("  ")[1].split(":").pop()!;
+      return !defined.has(name);
+    });
+    expect(missing).toEqual([]);
+  });
+
   it("uses colour tokens instead of hex values", () => {
     expect(findAll(hex, (name) => hexAllowed.has(name))).toEqual([]);
   });

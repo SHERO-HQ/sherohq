@@ -1,5 +1,7 @@
 import Link from "next/link";
-import { ShieldCheck, Truck, Wallet } from "lucide-react";
+import { Clock, ShieldCheck, Truck, Wallet } from "lucide-react";
+import { ButtonLink } from "@/components/ui/Button";
+import { Card } from "@/components/ui/Card";
 import { ListingCard } from "@/components/shop/ListingCard";
 import { DispatchCountdown } from "@/components/ui/LiveStatus";
 import { InlineArrow } from "@/components/ui/InlineArrow";
@@ -44,39 +46,37 @@ export function InStock({ listings }: { listings: ShopListing[] }) {
         </p>
       )}
 
-      {/* How buying works, next to the laptops it applies to. */}
-      <ul aria-label="How buying from SHERO works" className="mt-8 grid gap-5 border-t border-border pt-6 md:grid-cols-3 md:gap-8">
-        {buying.map(({ icon: Icon, title, detail }) => (
-          <li key={title} className="flex gap-3">
-            <Icon aria-hidden="true" size={20} strokeWidth={1.5} className="mt-0.5 shrink-0 text-secondary" />
-            <span className="flex flex-col">
-              <span className="text-body-sm font-semibold text-ink">{title}</span>
-              <span className="text-body-sm text-ink-secondary">{detail}</span>
+      {/* How buying works, next to the laptops it applies to, and help choosing. */}
+      <Card className="mt-8">
+        <ul aria-label="How buying from SHERO works" className="grid gap-5 p-5 md:grid-cols-3 md:gap-8 lg:p-6">
+          {buying.map(({ icon: Icon, title, detail }) => (
+            <li key={title} className="flex gap-3">
+              <span className="flex size-9 shrink-0 items-center justify-center rounded-md bg-secondary-subtle text-secondary">
+                <Icon aria-hidden="true" size={18} strokeWidth={1.5} />
+              </span>
+              <span className="flex flex-col">
+                <span className="text-body-sm font-semibold text-ink">{title}</span>
+                <span className="text-body-sm text-ink-secondary">{detail}</span>
+              </span>
+            </li>
+          ))}
+        </ul>
+        <div className="flex flex-col gap-4 border-t border-border bg-surface p-5 lg:flex-row lg:items-center lg:justify-between lg:px-6 lg:py-4">
+          {/* The recommendation prompt replaces fixed "Good for" categories (PRD). */}
+          <p className="text-body text-ink">
+            Not sure which one? Tell us what it&rsquo;s for and we&rsquo;ll recommend one.
+          </p>
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-5">
+            <span className="flex items-center gap-2 text-body-sm text-ink-secondary">
+              <Clock aria-hidden="true" size={16} strokeWidth={1.5} className="shrink-0 text-secondary" />
+              <DispatchCountdown fallback="Order before 5:00 PM for same-day dispatch to the bus station" />
             </span>
-          </li>
-        ))}
-      </ul>
-
-      <div className="mt-6 flex flex-col gap-2 border-t border-border pt-6 lg:flex-row lg:items-center lg:justify-between">
-        {/* The recommendation prompt replaces fixed "Good for" categories (PRD). */}
-        <p className="text-body text-ink-secondary">
-          Not sure which one?{" "}
-          <a
-            href={whatsappLink(recommendMessage)}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="font-medium text-primary underline underline-offset-4 hover:text-primary-hover"
-          >
-            Tell us what it&rsquo;s for on WhatsApp
-          </a>{" "}
-          and we&rsquo;ll recommend one.
-        </p>
-        <DispatchCountdown
-          fallback="Order before 5:00 PM for same-day dispatch to the bus station"
-          className="font-mono text-meta text-ink-muted"
-        />
-      </div>
-
+            <ButtonLink href={whatsappLink(recommendMessage)} variant="secondary" external>
+              Ask on WhatsApp
+            </ButtonLink>
+          </div>
+        </div>
+      </Card>
     </Section>
   );
 }

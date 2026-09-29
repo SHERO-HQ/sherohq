@@ -155,6 +155,23 @@
   }
 }
 
+/* Fades an element out towards its bottom (the hero's dot grid). */
+@utility mask-fade-down {
+  mask-image: linear-gradient(to bottom, black, transparent);
+}
+
+/* Fades an element in from its left edge (the call-to-action's dot grid). */
+@utility mask-fade-left {
+  mask-image: linear-gradient(to right, transparent, black);
+}
+
+/* The dot grid on the navy call-to-action panel (a fixed brand ink). */
+@utility bg-dots-inverse {
+  background-image: radial-gradient(var(--navy-500) 1px, transparent 1.25px);
+  background-size: 16px 16px;
+  background-position: center;
+}
+
 /* A faint dot grid behind illustrations. */
 @utility bg-dots {
   background-image: radial-gradient(var(--border) 1px, transparent 1.25px);
