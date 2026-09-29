@@ -19,6 +19,8 @@ Everything was planned and designed before this repo existed. Read this file fir
 
 When the docs and the designs disagree on wording, **the designs win**; they were updated last.
 
+**The designs are a strong guide, not a fixed spec** (owner, 29 Sep 2026). Improve on them where it makes SHERO better for visitors — clearer, faster, more useful, more trustworthy — and say what changed and why. Everything under "Rules that must survive into code" still holds; improvements never bend those.
+
 ## Reading the design files
 
 The `.dc.html` files are design mockups in a canvas format, not runnable pages. Read them as specs:
