@@ -126,7 +126,7 @@ export default async function CaseStudyPage({ params }: Props) {
         </section>
       )}
 
-      <section className="container-site flex items-center justify-between gap-8 pt-section">
+      <section className="container-site flex items-center justify-between gap-8 py-section">
         <span className="font-mono text-meta text-ink-muted">next project</span>
         <Link
           href={`${routes.work}/${next.slug}`}

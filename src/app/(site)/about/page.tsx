@@ -96,7 +96,7 @@ export default function AboutPage() {
         </dl>
       </Section>
 
-      <section className="container-site grid gap-4 lg:grid-cols-[1fr_1.3fr] lg:gap-24 pt-section">
+      <section className="container-site grid gap-4 lg:grid-cols-[1fr_1.3fr] lg:gap-24 py-section">
         <h2 className="font-display text-h2 text-heading">
           Where we&rsquo;re going.
         </h2>
