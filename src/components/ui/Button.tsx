@@ -4,8 +4,8 @@ import { cn } from "@/lib/cn";
 // One set of buttons for the whole site. Primary is navy (one per view),
 // secondary is green (WhatsApp and other second actions), outline is neutral.
 const variants = {
-  primary: "bg-primary text-on-primary shadow-xs hover:bg-primary-hover hover:shadow active-press",
-  secondary: "bg-secondary text-on-secondary shadow-xs hover:bg-secondary-hover hover:shadow active-press",
+  primary: "bg-primary-fill text-on-primary-fill shadow-xs hover:bg-primary-fill-hover hover:shadow active-press",
+  secondary: "bg-secondary-fill text-on-secondary-fill shadow-xs hover:bg-secondary-fill-hover hover:shadow active-press",
   outline: "border border-border-strong bg-surface-raised text-ink shadow-xs hover:border-ink hover:bg-surface active-press",
   /** Destructive actions in the admin, such as deleting a draft. */
   danger: "border border-border-strong bg-surface-raised text-danger shadow-xs hover:border-danger hover:bg-danger-subtle active-press",

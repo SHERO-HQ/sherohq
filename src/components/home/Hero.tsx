@@ -6,8 +6,7 @@ import { routes } from "@/lib/site";
 export function Hero() {
   return (
     <section className="relative isolate overflow-hidden lg:flex lg:flex-1 lg:items-center">
-      {/* Vercel & Clerk style ambient spotlight glow and dot grid for depth */}
-      <div aria-hidden="true" className="spotlight absolute inset-0 -z-10" />
+      {/* A faint dot grid, fading downwards: texture without a glow. */}
       <div aria-hidden="true" className="bg-dots mask-fade-down absolute inset-x-0 top-0 -z-10 h-160" />
 
       <div className="container-site grid items-center gap-12 pt-section pb-16 lg:grid-cols-[1fr_1.1fr] lg:gap-16 lg:py-12">

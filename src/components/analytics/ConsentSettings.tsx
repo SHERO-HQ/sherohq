@@ -45,7 +45,7 @@ export function ConsentSettings() {
           <button
             type="button"
             onClick={() => saveConsent("granted")}
-            className="h-9 rounded-sm bg-primary px-4 text-label text-on-primary hover:bg-primary-hover"
+            className="h-9 rounded-sm bg-primary-fill px-4 text-label text-on-primary-fill hover:bg-primary-fill-hover"
           >
             Allow analytics
           </button>

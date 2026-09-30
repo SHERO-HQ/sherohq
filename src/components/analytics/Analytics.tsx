@@ -73,7 +73,7 @@ function CookieNotice() {
         <button
           type="button"
           onClick={() => saveConsent("granted")}
-          className="h-9 flex-1 rounded-sm bg-primary px-4 text-label text-on-primary transition-colors duration-150 hover:bg-primary-hover sm:flex-none"
+          className="h-9 flex-1 rounded-sm bg-primary-fill px-4 text-label text-on-primary-fill transition-colors duration-150 hover:bg-primary-fill-hover sm:flex-none"
         >
           Allow analytics
         </button>

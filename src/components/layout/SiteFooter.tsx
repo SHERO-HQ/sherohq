@@ -51,7 +51,7 @@ export function SiteFooter({ products }: { products: Product[] }) {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="bg-surface-inverse text-ink-inverse">
+    <footer className="border-t border-border-inverse bg-surface-inverse text-ink-inverse">
       <div className="container-site flex flex-col gap-12 pt-section pb-8">
         <div className="grid grid-cols-2 gap-x-4 gap-y-10 md:grid-cols-4 lg:grid-cols-[1.6fr_1fr_1fr_1fr_1.3fr] lg:gap-x-8">
           <div className="col-span-2 flex flex-col items-start gap-5 md:col-span-4 lg:col-span-1">

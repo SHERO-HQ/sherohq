@@ -37,8 +37,9 @@ function TestRow({ name, label, initial }: { name: string; label: string; initia
             className={cn(
               "cursor-pointer px-2.5 py-1 text-meta text-ink-secondary not-first:border-l not-first:border-border-strong",
               "has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-focus",
-              value === "pass" && "has-checked:bg-secondary has-checked:text-on-secondary",
-              value === "fail" && "has-checked:bg-danger has-checked:text-on-primary",
+              value === "pass" && "has-checked:bg-secondary-fill has-checked:text-on-secondary-fill",
+              // Danger is dark red in light and light red in dark, so the page colour reads on it in both.
+              value === "fail" && "has-checked:bg-danger has-checked:text-page",
               value === "untested" && "has-checked:bg-surface has-checked:text-ink",
             )}
           >

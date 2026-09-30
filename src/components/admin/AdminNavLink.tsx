@@ -23,7 +23,7 @@ export function AdminNavLink({ item, touch }: { item: NavItem; touch?: boolean }
     >
       {item.label}
       {item.count !== undefined && item.count > 0 && (
-        <span className="rounded-full bg-primary px-1.5 font-mono text-meta text-on-primary">{item.count}</span>
+        <span className="rounded-full bg-primary-fill px-1.5 font-mono text-meta text-on-primary-fill">{item.count}</span>
       )}
     </Link>
   );

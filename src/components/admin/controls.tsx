@@ -103,7 +103,7 @@ export function StepPicker({
             onClick={() => !current && onPick(step.value)}
             className={cn(
               "h-9 rounded-sm border px-3 text-body-sm",
-              current ? "border-primary bg-primary text-on-primary" : "border-border-strong text-ink hover:border-primary",
+              current ? "border-primary-fill bg-primary-fill text-on-primary-fill" : "border-border-strong text-ink hover:border-primary",
             )}
           >
             {step.label}

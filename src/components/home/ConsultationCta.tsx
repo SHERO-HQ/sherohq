@@ -21,7 +21,6 @@ export function ConsultationCta({
 }: ConsultationCtaProps) {
   return (
     <section aria-labelledby="cta-heading" className="relative isolate overflow-hidden border-t border-border-subtle">
-      <div aria-hidden="true" className="spotlight absolute inset-0 -z-10" />
       <div aria-hidden="true" className="bg-dots mask-fade-up absolute inset-0 -z-10" />
       <div className="container-site grid items-center gap-12 py-section lg:grid-cols-[1.1fr_1fr] lg:gap-16">
         <div className="flex flex-col items-start gap-5">

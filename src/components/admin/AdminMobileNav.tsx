@@ -59,7 +59,7 @@ export function AdminMobileNav({
           className="relative -mr-2.5 flex size-11 items-center justify-center rounded-sm text-ink"
         >
           <MenuIcon open={open} />
-          {!open && waiting > 0 && <span aria-hidden="true" className="absolute top-2 right-2 size-2 rounded-full bg-primary" />}
+          {!open && waiting > 0 && <span aria-hidden="true" className="absolute top-2 right-2 size-2 rounded-full bg-primary-fill" />}
         </button>
       </div>
       {open && (

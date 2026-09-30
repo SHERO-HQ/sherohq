@@ -35,7 +35,7 @@ function CartLink({ pathname }: { pathname: string }) {
       {count > 0 && (
         <span
           aria-hidden="true"
-          className="absolute top-1 right-0 flex h-4 min-w-4 items-center justify-center rounded-full bg-secondary px-1 font-mono text-meta text-on-secondary"
+          className="absolute top-1 right-0 flex h-4 min-w-4 items-center justify-center rounded-full bg-secondary-fill px-1 font-mono text-meta text-on-secondary-fill"
         >
           {count}
         </span>

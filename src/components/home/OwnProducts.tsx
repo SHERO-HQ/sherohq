@@ -25,7 +25,7 @@ export function OwnProducts({ products }: { products: Product[] }) {
             <li key={product.id} className={themeClass(product.theme)}>
               <CardLink
                 href={inDevelopment ? `${productPath(product.slug)}#waitlist` : productPath(product.slug)}
-                className="h-full border-t-4 border-t-product-stripe"
+                className="h-full border-t-2 border-t-product-stripe"
               >
                 <CardMedia className="flex h-32 justify-center px-6 py-4">
                   {Spot ? (
