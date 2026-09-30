@@ -164,6 +164,8 @@ export function ListingEditor({
           </fieldset>
         </section>
 
+        {/* Right column: the check, then status (which depends on it). */}
+        <div className="flex flex-col gap-6">
         <section aria-labelledby="check-title" className={card}>
           <h2 id="check-title" className={cardTitle}>
             Device check
@@ -239,11 +241,9 @@ export function ListingEditor({
             Cleaned and reset to factory settings
           </label>
         </section>
-      </div>
 
-      <div className="grid gap-6 xl:grid-cols-2">
       {/* The status field labels this card; a "Status" heading above "Status" would only repeat it. */}
-      <section aria-label="Status and save" className={cn(card, "xl:col-start-2")}>
+      <section aria-label="Status and save" className={card}>
         <SelectField
           id="status"
           label="Status"
@@ -280,6 +280,7 @@ export function ListingEditor({
           )}
         </div>
       </section>
+        </div>
       </div>
     </form>
   );
