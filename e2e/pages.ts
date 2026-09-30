@@ -14,6 +14,8 @@ export const pages: string[] = [
   "/pharmasyst",
   routes.cart,
   "/this-page-does-not-exist",
+  // A 404 from inside the site layout (the product route catches /login).
+  "/login",
 ];
 
 /** The admin session admin.setup.ts saves for the admin checks. */
