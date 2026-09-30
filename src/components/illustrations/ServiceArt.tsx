@@ -316,6 +316,26 @@ export function PharmacySpot({ className }: ArtProps) {
   );
 }
 
+/** A plain app window in the product's own colour, for products without a drawn spot. */
+export function ProductSpot({ className }: ArtProps) {
+  return (
+    <Frame label="" viewBox={spotBox} className={className}>
+      <rect x="30" y="10" width="100" height="68" rx="6" className="fill-surface-raised stroke-border-strong" />
+      <path d="M30 24 H130" className="stroke-border" />
+      <circle cx="39" cy="17" r="2" className="fill-border" />
+      <circle cx="46" cy="17" r="2" className="fill-border" />
+      <rect x="38" y="32" width="26" height="38" rx="3" className="fill-surface" />
+      <Line x={42} y={37} w={16} h={4} tone="strong" />
+      <Line x={42} y={46} w={18} h={3} />
+      <Line x={42} y={53} w={14} h={3} />
+      <rect x="72" y="32" width="50" height="16" rx="3" className="fill-product-accent" opacity={0.18} />
+      <Line x={78} y={38} w={24} h={4} />
+      <rect x="72" y="54" width="50" height="16" rx="3" className="fill-surface stroke-border" />
+      <rect x="78" y="60" width="22" height="4" rx="2" className="fill-product-accent" />
+    </Frame>
+  );
+}
+
 // ── Home hero ──────────────────────────────────────────────────────────────
 
 /** What SHERO does, in one scene: a business dashboard, a tested laptop and a MoMo payment. */

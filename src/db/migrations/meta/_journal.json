@@ -36,6 +36,20 @@
       "when": 1790768326512,
       "tag": "0004_admin_login",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1790771978960,
+      "tag": "0005_products",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1790772000434,
+      "tag": "0006_waitlist_product_id",
+      "breakpoints": true
     }
   ]
 }

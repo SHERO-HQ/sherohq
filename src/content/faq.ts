@@ -5,7 +5,7 @@ import { paymentSummary } from "@/lib/payments";
 
 export type FaqGroup = { topic: string; items: Array<{ q: string; a: string }> };
 
-export const faq: FaqGroup[] = [
+const baseFaq: FaqGroup[] = [
   {
     topic: "buying",
     items: [
@@ -43,10 +43,34 @@ export const faq: FaqGroup[] = [
         q: "How much does custom software cost?",
         a: "It depends on what you need. After a free consultation, we give you a clear quote before any work starts.",
       },
-      {
-        q: "Can I use Merchander or Pharmasyst now?",
-        a: "Not yet. Both are in development. Join the waitlist on their pages to hear first.",
-      },
     ],
   },
 ];
+
+const list = (names: string[]) =>
+  names.length <= 1 ? (names[0] ?? "") : `${names.slice(0, -1).join(", ")} and ${names.at(-1)}`;
+
+/** "Can I use your products yet?", answered from the products the admin publishes. */
+export function productsAnswer(products: Array<{ name: string; status: string }>): string | null {
+  if (products.length === 0) return null;
+  const live = products.filter((p) => p.status === "live").map((p) => p.name);
+  const building = products.filter((p) => p.status !== "live").map((p) => p.name);
+  const parts: string[] = [];
+  if (live.length > 0) parts.push(`${list(live)} ${live.length === 1 ? "is" : "are"} live: open ${live.length === 1 ? "its" : "each"} page to start.`);
+  if (building.length > 0)
+    parts.push(
+      `${list(building)} ${building.length === 1 ? "is" : "are"} in development. Join the waitlist on ${building.length === 1 ? "its page" : "their pages"} to hear first.`,
+    );
+  return (live.length === 0 ? "Not yet. " : "") + parts.join(" ");
+}
+
+/** The FAQ, with the products question kept true as products are added or launched. */
+export function buildFaq(products: Array<{ name: string; status: string }>): FaqGroup[] {
+  const answer = productsAnswer(products);
+  if (!answer) return baseFaq;
+  return baseFaq.map((group) =>
+    group.topic === "services and products"
+      ? { ...group, items: [...group.items, { q: "Can I use your own products yet?", a: answer }] }
+      : group,
+  );
+}

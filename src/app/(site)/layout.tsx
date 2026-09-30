@@ -1,9 +1,11 @@
 import { Analytics } from "@/components/analytics/Analytics";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
+import { getPublishedProducts, productMenuLinks } from "@/lib/products";
 
 /** Public website chrome. The admin gets its own layout. */
-export default function SiteLayout({ children }: { children: React.ReactNode }) {
+export default async function SiteLayout({ children }: { children: React.ReactNode }) {
+  const products = await getPublishedProducts();
   return (
     <>
       <a
@@ -12,9 +14,9 @@ export default function SiteLayout({ children }: { children: React.ReactNode }) 
       >
         Skip to content
       </a>
-      <SiteHeader />
+      <SiteHeader products={productMenuLinks(products)} />
       <main id="main">{children}</main>
-      <SiteFooter />
+      <SiteFooter products={products} />
       <Analytics />
     </>
   );

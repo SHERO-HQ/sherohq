@@ -4,30 +4,7 @@ import { useRef, useState, useTransition } from "react";
 import { ArrowLeft, ArrowRight, ImagePlus, X } from "lucide-react";
 import { addPhoto, movePhoto, removePhoto } from "@/app/admin/(app)/listings/actions";
 import { cn } from "@/lib/cn";
-
-const MAX_EDGE = 2000;
-
-/**
- * Shrinks a phone photo in the browser before upload (hosting caps a request
- * at about 4.5 MB). Drawing it also drops the file's metadata; the server
- * re-encodes it again either way.
- */
-async function shrink(file: File): Promise<Blob> {
-  try {
-    const bitmap = await createImageBitmap(file, { imageOrientation: "from-image" });
-    const scale = Math.min(1, MAX_EDGE / Math.max(bitmap.width, bitmap.height));
-    const canvas = document.createElement("canvas");
-    canvas.width = Math.round(bitmap.width * scale);
-    canvas.height = Math.round(bitmap.height * scale);
-    canvas.getContext("2d")!.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
-    bitmap.close();
-    return await new Promise<Blob>((resolve, reject) =>
-      canvas.toBlob((blob) => (blob ? resolve(blob) : reject(new Error("encode"))), "image/jpeg", 0.88),
-    );
-  } catch {
-    return file; // The server says if it can't read it.
-  }
-}
+import { shrinkImage } from "@/lib/admin/shrink-image";
 
 export function PhotoManager({ listingId, photos, max }: { listingId: string; photos: string[]; max: number }) {
   const [pending, startTransition] = useTransition();
@@ -41,7 +18,7 @@ export function PhotoManager({ listingId, photos, max }: { listingId: string; ph
     for (const [i, file] of list.entries()) {
       setProgress(`Adding photo ${i + 1} of ${list.length}…`);
       const data = new FormData();
-      data.set("photo", await shrink(file), "photo.jpg");
+      data.set("photo", await shrinkImage(file), "photo.jpg");
       const result = await addPhoto(listingId, data);
       if (!result.ok) {
         setMessage(result.message);

@@ -25,6 +25,13 @@
  * Product pages keep SHERO's layout and swap in the product's own colours
  * (design/system/README.md, "Product pages and theming").
  */
+/* The default for new products: SHERO's own navy, from the tokens. */
+.theme-shero {
+  --product-accent: var(--primary);
+  --product-action: var(--primary);
+  --on-product-action: var(--on-primary);
+  --product-stripe: var(--primary);
+}
 .theme-merchander {
   --product-accent: #ad4700;
   --product-action: #ad4700;

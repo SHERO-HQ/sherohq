@@ -6,6 +6,7 @@ import { ClientStrip } from "@/components/home/ClientStrip";
 import { ServicesOverview } from "@/components/home/ServicesOverview";
 import { BusinessJsonLd } from "@/components/seo/BusinessJsonLd";
 import { getNewestInStock } from "@/lib/shop";
+import { getPublishedProducts } from "@/lib/products";
 
 // Static and fast, refreshed every few minutes so new stock shows up.
 export const revalidate = 300;
@@ -31,7 +32,7 @@ export default async function HomePage() {
       </div>
       <ServicesOverview />
       <InStock listings={await newestStock()} />
-      <OwnProducts />
+      <OwnProducts products={await getPublishedProducts()} />
       <ConsultationCta />
     </>
   );

@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { Logo } from "@/components/ui/Logo";
 import { OpenNow } from "@/components/ui/LiveStatus";
+import { productPath, type Product } from "@/lib/products";
 import { business, routes } from "@/lib/site";
 
-const columns = [
+const baseColumns = [
   {
     heading: "company",
     links: [
@@ -17,8 +18,6 @@ const columns = [
     links: [
       { label: "Services", href: routes.services },
       { label: "Shop", href: routes.shop },
-      { label: "Merchander", href: routes.merchander },
-      { label: "Pharmasyst", href: routes.pharmasyst },
     ],
   },
   {
@@ -41,7 +40,13 @@ const headingClass = "mb-1 font-mono text-eyebrow text-ink-inverse";
  * Brand on the left (logo, motto, live status), then four short columns
  * ending in how to reach us; a quiet bottom line with the legal wording.
  */
-export function SiteFooter() {
+export function SiteFooter({ products }: { products: Product[] }) {
+  // SHERO's own products (from the admin) join the "offer" column.
+  const columns = baseColumns.map((column) =>
+    column.heading === "offer"
+      ? { ...column, links: [...column.links, ...products.map((p) => ({ label: p.name, href: productPath(p.slug) }))] }
+      : column,
+  );
   const year = new Date().getFullYear();
 
   return (

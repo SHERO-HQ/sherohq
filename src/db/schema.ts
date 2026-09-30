@@ -300,25 +300,72 @@ export const consultations = pgTable(
   (t) => [index("consultations_status_idx").on(t.status)],
 );
 
+// ── Products (SHERO's own, e.g. Merchander and Pharmasyst) ──────────────────
+// Added to the admin on the owner's request (30 Sep 2026) so new products can
+// be published without a code change. Each has a page at /<slug>.
+export const productStatus = pgEnum("product_status", ["in_development", "live"]);
+
+export type ProductCompareRow = { today: string; with: string };
+
+export const products = pgTable(
+  "products",
+  {
+    id: id(),
+    /** The page address, sherohq.com/<slug>. Set once; links keep working. */
+    slug: text("slug").notNull().unique(),
+    name: text("name").notNull(),
+    status: productStatus("status").notNull().default("in_development"),
+    /** A colour theme from src/lib/product-themes.ts (contrast-checked). */
+    theme: text("theme").notNull().default("shero"),
+    /** The page headline. */
+    title: text("title").notNull(),
+    /** One line for the Home card. */
+    summary: text("summary").notNull(),
+    problem: text("problem").notNull(),
+    audience: text("audience").notNull(),
+    compare: jsonb("compare").$type<ProductCompareRow[]>().notNull().default([]),
+    /** A dashboard preview image; always shown with "Preview · in development" while in development. */
+    previewUrl: text("preview_url"),
+    /** Where the product lives once it launches. */
+    liveUrl: text("live_url"),
+    // The waitlist form's product-specific fields.
+    namePlaceholder: text("name_placeholder").notNull().default("Ama Mensah"),
+    businessLabel: text("business_label").notNull().default("Business name"),
+    businessPlaceholder: text("business_placeholder").notNull().default(""),
+    detailLabel: text("detail_label").notNull(),
+    detailPlaceholder: text("detail_placeholder").notNull().default(""),
+    detailNumeric: boolean("detail_numeric").notNull().default(false),
+    published: boolean("published").notNull().default(false),
+    displayOrder: smallint("display_order").notNull().default(0),
+    createdAt: createdAt(),
+    updatedAt: updatedAt(),
+  },
+  (t) => [
+    check("products_slug_format", sql`${t.slug} ~ '^[a-z0-9]+(-[a-z0-9]+)*$'`),
+    check("products_live_has_url", sql`${t.status} <> 'live' or ${t.liveUrl} is not null`),
+  ],
+);
+
 // ── Waitlists (section 5) ────────────────────────────────────────────────────
-export const waitlistProduct = pgEnum("waitlist_product", ["merchander", "pharmasyst"]);
 export const waitlistStatus = pgEnum("waitlist_status", ["new", "contacted", "invited", "piloting"]);
 
 export const waitlistSignups = pgTable(
   "waitlist_signups",
   {
     id: id(),
-    product: waitlistProduct("product").notNull(),
+    productId: uuid("product_id")
+      .notNull()
+      .references(() => products.id, { onDelete: "restrict" }),
     name: text("name").notNull(),
     phone: text("phone").notNull(),
     business: text("business").notNull(),
-    /** Merchander: what they sell. Pharmasyst: number of branches. */
+    /** The product's own question, e.g. what they sell, or number of branches. */
     detail: text("detail").notNull(),
     status: waitlistStatus("status").notNull().default("new"),
     createdAt: createdAt(),
     updatedAt: updatedAt(),
   },
-  (t) => [uniqueIndex("waitlist_product_phone_unique").on(t.product, t.phone)],
+  (t) => [uniqueIndex("waitlist_product_phone_unique").on(t.productId, t.phone)],
 );
 
 // ── Work (section 8) ─────────────────────────────────────────────────────────

@@ -8,25 +8,23 @@ import { business, routes } from "@/lib/site";
 import { cn } from "@/lib/cn";
 
 /** `inDevelopment`: unreleased products are always labelled (CLAUDE.md). */
-type Child = { label: string; href: string; inDevelopment?: boolean };
+export type Child = { label: string; href: string; inDevelopment?: boolean };
 type Item = { label: string; href: string; children?: Child[] };
 
-const items: Item[] = [
-  { label: "Services", href: routes.services },
-  { label: "Shop", href: routes.shop },
-  {
-    label: "Products",
-    href: routes.products,
-    children: [
-      { label: "Merchander", href: routes.merchander, inDevelopment: true },
-      { label: "Pharmasyst", href: routes.pharmasyst, inDevelopment: true },
-    ],
-  },
-  { label: "Work", href: routes.work },
-  { label: "About", href: routes.about },
-  { label: "Support", href: routes.support },
-  { label: "Track an order", href: routes.track },
-];
+/** The menu, with SHERO's products (from the admin) under Products. */
+function menuItems(products: Child[]): Item[] {
+  return [
+    { label: "Services", href: routes.services },
+    { label: "Shop", href: routes.shop },
+    products.length > 0
+      ? { label: "Products", href: routes.products, children: products }
+      : { label: "Products", href: routes.products },
+    { label: "Work", href: routes.work },
+    { label: "About", href: routes.about },
+    { label: "Support", href: routes.support },
+    { label: "Track an order", href: routes.track },
+  ];
+}
 
 function isCurrent(pathname: string, href: string) {
   if (href.includes("#")) return false;
@@ -96,7 +94,16 @@ function Group({
  * The phone menu: a plain list of links under the header, which stays in
  * place with its menu button turned into a close button. Escape closes it.
  */
-export function MobileMenu({ pathname, onClose }: { pathname: string; onClose: () => void }) {
+export function MobileMenu({
+  pathname,
+  onClose,
+  products,
+}: {
+  pathname: string;
+  onClose: () => void;
+  products: Child[];
+}) {
+  const items = menuItems(products);
   useEffect(() => {
     document.body.style.overflow = "hidden";
     const onKey = (event: KeyboardEvent) => event.key === "Escape" && onClose();

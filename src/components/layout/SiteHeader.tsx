@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCallback, useRef, useState, useSyncExternalStore } from "react";
 import { ShoppingCart } from "lucide-react";
-import { MobileMenu } from "@/components/layout/MobileMenu";
+import { MobileMenu, type Child } from "@/components/layout/MobileMenu";
 import { MenuIcon } from "@/components/ui/MenuIcon";
 import { Logo } from "@/components/ui/Logo";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
@@ -45,7 +45,7 @@ function CartLink({ pathname }: { pathname: string }) {
   );
 }
 
-export function SiteHeader() {
+export function SiteHeader({ products }: { products: Child[] }) {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
   const menuButton = useRef<HTMLButtonElement>(null);
@@ -102,7 +102,7 @@ export function SiteHeader() {
         </div>
       </div>
 
-      {menuOpen && <MobileMenu pathname={pathname} onClose={closeMenu} />}
+      {menuOpen && <MobileMenu pathname={pathname} onClose={closeMenu} products={products} />}
     </header>
   );
 }

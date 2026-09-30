@@ -9,7 +9,12 @@ export default async function AdminAppLayout({ children }: { children: React.Rea
   const settings = await getShopSettings();
   const toCheck = await listingsNeedingCheck(settings.minBatteryHealth);
   return (
-    <AdminShell nav={[{ label: "shop", items: [{ label: "Listings", href: "/admin/listings", count: toCheck }] }]}>
+    <AdminShell
+      nav={[
+        { label: "shop", items: [{ label: "Listings", href: "/admin/listings", count: toCheck }] },
+        { label: "site", items: [{ label: "Products", href: "/admin/products" }] },
+      ]}
+    >
       {children}
     </AdminShell>
   );

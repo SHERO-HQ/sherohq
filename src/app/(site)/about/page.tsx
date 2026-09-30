@@ -91,8 +91,11 @@ export default function AboutPage() {
             offices run on, delivering across Ghana.
           </p>
           <p className="text-body lg:text-body-lg text-ink-secondary">
-            We&rsquo;re also building two products of our own, both in development: Merchander, for businesses that
-            sell on social media, and Pharmasyst, for pharmacies with labs.
+            We&rsquo;re also building{" "}
+            <Link href={routes.products} className="font-medium text-primary underline underline-offset-3">
+              products of our own
+            </Link>
+            .
           </p>
         </div>
       </section>

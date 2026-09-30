@@ -9,6 +9,9 @@ export const pages: string[] = [
   ...livePages,
   `${routes.work}/${projects[0].slug}`,
   sampleListing,
+  // Product pages come from the database (seeded by the products migration).
+  "/merchander",
+  "/pharmasyst",
   routes.cart,
   "/this-page-does-not-exist",
 ];

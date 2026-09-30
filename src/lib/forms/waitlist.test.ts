@@ -7,30 +7,34 @@ const form = (fields: Record<string, string>) => {
   return data;
 };
 
+const sells = { businessLabel: "Business name", detailLabel: "What do you sell?", detailNumeric: false };
+const branches = { businessLabel: "Pharmacy name", detailLabel: "Number of branches", detailNumeric: true };
+
 describe("parseWaitlist", () => {
-  it("accepts a Merchander signup", () => {
-    const result = parseWaitlist(
-      "merchander",
-      form({ name: "Ama", phone: "0244123456", business: "Ama's Imports", detail: "Bags and shoes" }),
-    );
+  it("accepts a signup with a free-text question", () => {
+    const result = parseWaitlist(sells, form({ name: "Ama", phone: "0244123456", business: "Ama's Imports", detail: "Bags and shoes" }));
     expect(result).toEqual({
       ok: true,
-      data: { product: "merchander", name: "Ama", phone: "+233244123456", business: "Ama's Imports", detail: "Bags and shoes" },
+      data: { name: "Ama", phone: "+233244123456", business: "Ama's Imports", detail: "Bags and shoes" },
     });
   });
 
-  it("needs a whole number of branches for Pharmasyst", () => {
+  it("needs a whole number when the question is numeric", () => {
     const base = { name: "Kwame", phone: "0244123456", business: "Kwame Pharmacy" };
-    expect(parseWaitlist("pharmasyst", form({ ...base, detail: "3" })).ok).toBe(true);
+    expect(parseWaitlist(branches, form({ ...base, detail: "3" })).ok).toBe(true);
     for (const detail of ["", "0", "2.5", "many"]) {
-      const result = parseWaitlist("pharmasyst", form({ ...base, detail }));
+      const result = parseWaitlist(branches, form({ ...base, detail }));
       expect(result.ok).toBe(false);
+      if (!result.ok) expect(result.errors.detail).toBe("Enter a number, like 3.");
     }
   });
 
-  it("reports missing fields", () => {
-    const result = parseWaitlist("merchander", form({}));
+  it("reports missing fields in the product's own words", () => {
+    const result = parseWaitlist(branches, form({}));
     expect(result.ok).toBe(false);
-    if (!result.ok) expect(Object.keys(result.errors).sort()).toEqual(["business", "detail", "name", "phone"]);
+    if (!result.ok) {
+      expect(Object.keys(result.errors).sort()).toEqual(["business", "detail", "name", "phone"]);
+      expect(result.errors.business).toBe("Tell us the pharmacy name.");
+    }
   });
 });

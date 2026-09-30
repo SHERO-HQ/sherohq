@@ -3,6 +3,7 @@ import { Analytics } from "@/components/analytics/Analytics";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { LinkRows } from "@/components/ui/LinkRows";
+import { getPublishedProducts, productMenuLinks } from "@/lib/products";
 import { routes } from "@/lib/site";
 
 export const metadata: Metadata = { title: "Page not found" };
@@ -15,10 +16,11 @@ const destinations = [
 ];
 
 // Unmatched URLs render outside the (site) route group, so the chrome is added here.
-export default function NotFound() {
+export default async function NotFound() {
+  const products = await getPublishedProducts();
   return (
     <>
-      <SiteHeader />
+      <SiteHeader products={productMenuLinks(products)} />
       <main id="main" className="container-site relative flex flex-col gap-5 lg:gap-7 py-section py-section">
         {/* The logo's slanted bars: only the home hero, About hero and this page use them. */}
         <div aria-hidden="true" className="absolute top-30 right-20 hidden flex-col items-end gap-4 lg:flex">
@@ -39,7 +41,7 @@ export default function NotFound() {
         </div>
         <LinkRows rows={destinations} className="relative mt-4 max-w-4xl lg:mt-6" />
       </main>
-      <SiteFooter />
+      <SiteFooter products={products} />
       <Analytics />
     </>
   );

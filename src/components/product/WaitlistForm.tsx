@@ -4,11 +4,10 @@ import { useState, useTransition } from "react";
 import { CircleCheck } from "lucide-react";
 import { joinWaitlist } from "@/app/(site)/waitlist-actions";
 import { TextField } from "@/components/forms/fields";
-import type { ProductPageContent } from "@/content/products";
 import { trackEvent } from "@/lib/analytics";
-import { parseWaitlist, type WaitlistErrors } from "@/lib/forms/waitlist";
+import { parseWaitlist, type WaitlistConfig, type WaitlistErrors } from "@/lib/forms/waitlist";
 
-export function WaitlistForm({ product }: { product: ProductPageContent }) {
+export function WaitlistForm({ product }: { product: WaitlistConfig }) {
   const [errors, setErrors] = useState<WaitlistErrors>({});
   const [message, setMessage] = useState<string | null>(null);
   const [joined, setJoined] = useState(false);
@@ -17,7 +16,7 @@ export function WaitlistForm({ product }: { product: ProductPageContent }) {
   function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
-    const local = parseWaitlist(product.slug, form);
+    const local = parseWaitlist(product, form);
     setMessage(null);
     if (!local.ok) {
       setErrors(local.errors);
@@ -57,13 +56,13 @@ export function WaitlistForm({ product }: { product: ProductPageContent }) {
           </p>
           <form noValidate onSubmit={onSubmit} data-clarity-mask="True" className="flex flex-col gap-4">
             {/* Field names match parseWaitlist; ids are unique per product. */}
-            <TextField id={id("name")} name="name" label="Your name" autoComplete="name" placeholder={product.form.namePlaceholder} error={errors.name} />
+            <TextField id={id("name")} name="name" label="Your name" autoComplete="name" placeholder={product.namePlaceholder} error={errors.name} />
             <TextField
               id={id("business")}
               name="business"
-              label={product.form.business.label}
+              label={product.businessLabel}
               autoComplete="organization"
-              placeholder={product.form.business.placeholder}
+              placeholder={product.businessPlaceholder}
               error={errors.business}
             />
             <TextField
@@ -79,9 +78,9 @@ export function WaitlistForm({ product }: { product: ProductPageContent }) {
             <TextField
               id={id("detail")}
               name="detail"
-              label={product.form.detail.label}
-              inputMode={product.form.detail.inputMode}
-              placeholder={product.form.detail.placeholder}
+              label={product.detailLabel}
+              inputMode={product.detailNumeric ? "numeric" : undefined}
+              placeholder={product.detailPlaceholder}
               error={errors.detail}
             />
             <button

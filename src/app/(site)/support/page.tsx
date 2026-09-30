@@ -3,7 +3,8 @@ import { Minus, Plus } from "lucide-react";
 import { ButtonLink } from "@/components/ui/Button";
 import { LinkRows, type LinkRow } from "@/components/ui/LinkRows";
 import { OpenNow } from "@/components/ui/LiveStatus";
-import { faq } from "@/content/faq";
+import { buildFaq, type FaqGroup } from "@/content/faq";
+import { getPublishedProducts } from "@/lib/products";
 import { business, routes, whatsappLink } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -35,7 +36,7 @@ const paths: LinkRow[] = [
   },
 ];
 
-function FaqJsonLd() {
+function FaqJsonLd({ faq }: { faq: FaqGroup[] }) {
   const data = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
@@ -55,10 +56,11 @@ function FaqJsonLd() {
   );
 }
 
-export default function SupportPage() {
+export default async function SupportPage() {
+  const faq = buildFaq(await getPublishedProducts());
   return (
     <>
-      <FaqJsonLd />
+      <FaqJsonLd faq={faq} />
       <section className="container-site flex flex-col gap-8 border-b border-border lg:gap-10 py-section">
         <div className="flex max-w-measure flex-col gap-5">
           <h1 className="text-h1">How can we help?</h1>
