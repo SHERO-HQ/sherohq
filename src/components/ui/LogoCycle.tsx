@@ -43,7 +43,15 @@ function Slots({ items, slots, className }: { items: string[]; slots: number; cl
   return (
     <ul aria-hidden="true" className={className}>
       {shown.map((item, i) => (
-        <li key={`${i}-${item}`} className="flex h-12 items-center justify-center">
+        <li
+          key={`${i}-${item}`}
+          className={cn(
+            "flex h-16 items-center justify-center border-border px-4 lg:h-24",
+            // A line between neighbours, and above every row after the first.
+            i % slots !== 0 && "border-l",
+            i >= slots && "border-t",
+          )}
+        >
           {/* Only a name that has just swapped in animates; the first names are simply there. */}
           <span
             className={cn(
@@ -68,8 +76,8 @@ export function LogoCycle({ items }: { items: string[] }) {
           <li key={item}>{item}</li>
         ))}
       </ul>
-      <Slots items={items} slots={2} className="grid grid-cols-2 gap-x-4 gap-y-2 lg:hidden" />
-      <Slots items={items} slots={4} className="hidden grid-cols-4 gap-x-6 lg:grid" />
+      <Slots items={items} slots={2} className="grid grid-cols-2 lg:hidden" />
+      <Slots items={items} slots={4} className="hidden grid-cols-4 lg:grid" />
     </div>
   );
 }

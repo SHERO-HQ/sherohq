@@ -12,7 +12,7 @@ const notes: Record<string, string[]> = {
   home: [
     "Each thing said once: hero, clients, one What do you need? row, laptops, our own products, closing panel. 18 cards down to 10.",
     "Hero: bold 64px headline on the left, an illustration of SHERO's work on the right, over a faint dot grid.",
-    "We've worked with, Clerk style: the text beside one row of names on large screens, above a two-column grid on phones. Spots swap names one at a time when there are more clients than spots (phones now; large screens from the fifth client). Still if motion is off.",
+    "We've worked with, Clerk style: lines run the full width of the screen and a line separates the text and every name. The text sits beside one row of names on large screens, above a two-column grid on phones. Spots swap names one at a time when there are more clients than spots (phones now; large screens from the fifth client). Still if motion is off.",
     "What do you need? merges the old paths and services rows: four illustrated cards titled in the visitor's words.",
     "Laptop cards reuse the shop's card. Under them, one card: delivery, payment and warranty with icons, then Not sure which one? with a green Ask on WhatsApp button and the dispatch countdown.",
     "Closing panel: a faint dot grid on the navy, and Chat on WhatsApp beside Book a free consultation.",
