@@ -27,6 +27,7 @@ export default async function AdminAppLayout({ children }: { children: React.Rea
           ],
         },
       ]}
+      footer={[{ label: "Settings", href: "/admin/settings" }]}
     >
       {children}
     </AdminShell>

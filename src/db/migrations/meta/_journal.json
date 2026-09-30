@@ -57,6 +57,13 @@
       "when": 1790772528248,
       "tag": "0007_work_projects",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1790780804639,
+      "tag": "0008_admin_account",
+      "breakpoints": true
     }
   ]
 }

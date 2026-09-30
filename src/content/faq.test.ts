@@ -21,7 +21,7 @@ describe("the products FAQ answer", () => {
   });
 
   it("leaves the question out when there are no products", () => {
-    const questions = buildFaq([]).flatMap((g) => g.items.map((i) => i.q));
+    const questions = buildFaq([], "GHS 2,000").flatMap((g) => g.items.map((i) => i.q));
     expect(questions).not.toContain("Can I use your own products yet?");
   });
 });

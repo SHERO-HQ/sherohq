@@ -124,6 +124,13 @@ const notes: Record<string, string[]> = {
     "Each product sets its own waitlist question (e.g. what do you sell, number of branches). A product with signups can be hidden, not deleted.",
     "The page address is fixed after creation and can't take an existing page's name (shop, work…).",
   ],
+  "admin-settings": [
+    "One Save per card instead of one for the page, so a refused change (a battery minimum above a device in the shop, a category still in use) doesn't lose the others.",
+    "Delivery fees per region, which the mockup didn't have: Tamale doorstep plus the 16 regions. An empty region tells the buyer the fee is confirmed before dispatch.",
+    "Payments shows what checkout takes today rather than a text field: MoMo and cards read Not connected until Hubtel and Paystack are wired in.",
+    "Business details are shown, not edited: they sit in the site's code (every page, search results, the legal line). Say if you want them editable here.",
+    "Account: moving two-factor to a new phone (QR code, confirmed with a code before the old phone stops working), password, new recovery codes, signing out other devices, and the login history in full rather than behind View.",
+  ],
   "admin-work": [
     "Client projects move from code to the admin: the Work page, case studies and Home's \"We've worked with\" row follow it.",
     "The list shows how much of each case study is still to write; empty fields stay [bracketed] on the site, never invented.",

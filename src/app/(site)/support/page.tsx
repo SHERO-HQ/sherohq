@@ -5,6 +5,8 @@ import { LinkRows, type LinkRow } from "@/components/ui/LinkRows";
 import { OpenNow } from "@/components/ui/LiveStatus";
 import { buildFaq, type FaqGroup } from "@/content/faq";
 import { getPublishedProducts } from "@/lib/products";
+import { formatCedis } from "@/lib/orders";
+import { shopSettingsForCopy } from "@/lib/shop";
 import { business, routes, whatsappLink } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -57,7 +59,8 @@ function FaqJsonLd({ faq }: { faq: FaqGroup[] }) {
 }
 
 export default async function SupportPage() {
-  const faq = buildFaq(await getPublishedProducts());
+  const [products, shop] = await Promise.all([getPublishedProducts(), shopSettingsForCopy()]);
+  const faq = buildFaq(products, formatCedis(shop.freeDeliveryThresholdPesewas));
   return (
     <>
       <FaqJsonLd faq={faq} />

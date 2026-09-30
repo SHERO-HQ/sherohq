@@ -5,7 +5,7 @@ import { OwnProducts } from "@/components/home/OwnProducts";
 import { ClientStrip } from "@/components/home/ClientStrip";
 import { ServicesOverview } from "@/components/home/ServicesOverview";
 import { BusinessJsonLd } from "@/components/seo/BusinessJsonLd";
-import { getNewestInStock } from "@/lib/shop";
+import { getNewestInStock, shopSettingsForCopy } from "@/lib/shop";
 import { getPublishedProducts } from "@/lib/products";
 
 // Static and fast, refreshed every few minutes so new stock shows up.
@@ -31,7 +31,7 @@ export default async function HomePage() {
         <ClientStrip />
       </div>
       <ServicesOverview />
-      <InStock listings={await newestStock()} />
+      <InStock listings={await newestStock()} thresholdPesewas={(await shopSettingsForCopy()).freeDeliveryThresholdPesewas} />
       <OwnProducts products={await getPublishedProducts()} />
       <ConsultationCta />
     </>

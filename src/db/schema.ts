@@ -439,6 +439,9 @@ export const admins = pgTable("admins", {
   totpLastStep: integer("totp_last_step"),
   /** Hashes of one-time recovery codes. */
   recoveryCodes: jsonb("recovery_codes").$type<string[]>().notNull().default([]),
+  /** A new two-factor key being set up; it replaces totpSecret once a code from it is confirmed. */
+  pendingTotpSecret: text("pending_totp_secret"),
+  passwordChangedAt: timestamp("password_changed_at", { withTimezone: true }),
   createdAt: createdAt(),
   updatedAt: updatedAt(),
 });

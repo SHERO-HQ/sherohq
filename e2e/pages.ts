@@ -24,6 +24,7 @@ export const adminPages: string[] = [
   "/admin/orders",
   "/admin/orders?status=placed",
   "/admin/listings",
+  "/admin/settings",
   "/admin/listings?status=draft",
   "/admin/listings/new",
   "/admin/products",

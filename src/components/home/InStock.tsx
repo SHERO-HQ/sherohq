@@ -7,18 +7,19 @@ import { DispatchCountdown } from "@/components/ui/LiveStatus";
 import { InlineArrow } from "@/components/ui/InlineArrow";
 import { Section, SectionHeader } from "@/components/ui/Section";
 import type { ShopListing } from "@/lib/shop";
+import { formatCedis } from "@/lib/orders";
 import { paymentSummary } from "@/lib/payments";
 import { routes, whatsappLink } from "@/lib/site";
 
-const buying = [
-  { icon: Truck, title: "Free delivery over GHS 2,000", detail: "Same day in Tamale, by bus elsewhere, or collect free." },
+const buying = (thresholdPesewas: number) => [
+  { icon: Truck, title: `Free delivery over ${formatCedis(thresholdPesewas)}`, detail: "Same day in Tamale, by bus elsewhere, or collect free." },
   { icon: Wallet, title: "Pay how you prefer", detail: paymentSummary() },
   { icon: ShieldCheck, title: "One-week warranty", detail: "We repair or replace anything we tested." },
 ];
 
 const recommendMessage = "Hi SHERO, I'm looking for a laptop. I'll mainly use it for: ";
 
-export function InStock({ listings }: { listings: ShopListing[] }) {
+export function InStock({ listings, thresholdPesewas }: { listings: ShopListing[]; thresholdPesewas: number }) {
   return (
     <Section divider aria-labelledby="stock-heading">
       <SectionHeader
@@ -48,7 +49,7 @@ export function InStock({ listings }: { listings: ShopListing[] }) {
       {/* How buying works, next to the devices it applies to, and help choosing. */}
       <Card className="mt-8">
         <ul aria-label="How buying from SHERO works" className="grid gap-5 p-5 md:grid-cols-3 md:gap-8 lg:p-6">
-          {buying.map(({ icon: Icon, title, detail }) => (
+          {buying(thresholdPesewas).map(({ icon: Icon, title, detail }) => (
             <li key={title} className="flex gap-3">
               <span className="flex size-9 shrink-0 items-center justify-center rounded-md bg-secondary-subtle text-secondary">
                 <Icon aria-hidden="true" size={18} strokeWidth={1.5} />

@@ -12,7 +12,7 @@ export type NavGroup = { label?: string; items: NavItem[] };
  * The admin frame: a sidebar on large screens, a top bar with the sections in
  * a row on phones. Only built sections are listed; the rest join as they land.
  */
-export function AdminShell({ nav, children }: { nav: NavGroup[]; children: React.ReactNode }) {
+export function AdminShell({ nav, footer = [], children }: { nav: NavGroup[]; footer?: NavItem[]; children: React.ReactNode }) {
   const brand = (
     <Link href="/admin" className="flex items-center gap-2.5 rounded-sm">
       <Logo className="h-5 w-auto" />
@@ -21,7 +21,7 @@ export function AdminShell({ nav, children }: { nav: NavGroup[]; children: React
   );
   const logoutButton = (
     <form action={logout}>
-      <button type="submit" className="rounded-sm px-2.5 py-2 text-body-sm text-ink-secondary hover:text-ink">
+      <button type="submit" className="w-full rounded-sm px-2.5 py-2 text-left text-body-sm text-ink-secondary hover:text-ink">
         Log out
       </button>
     </form>
@@ -42,7 +42,12 @@ export function AdminShell({ nav, children }: { nav: NavGroup[]; children: React
             </div>
           ))}
         </nav>
-        <div className="border-t border-border p-3">{logoutButton}</div>
+        <div className="flex flex-col gap-0.5 border-t border-border p-3">
+          {footer.map((item) => (
+            <AdminNavLink key={item.href} item={item} />
+          ))}
+          {logoutButton}
+        </div>
       </aside>
 
       {/* Phones and tablets: a top bar, then the sections in one row. */}
@@ -57,7 +62,7 @@ export function AdminShell({ nav, children }: { nav: NavGroup[]; children: React
           </div>
         </div>
         <nav aria-label="Admin sections" className="flex gap-1 overflow-x-auto px-gutter pb-2">
-          {nav.flatMap((group) => group.items).map((item) => (
+          {[...nav.flatMap((group) => group.items), ...footer].map((item) => (
             <AdminNavLink key={item.href} item={item} compact />
           ))}
         </nav>

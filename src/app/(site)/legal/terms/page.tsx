@@ -4,6 +4,8 @@ import { LegalPage } from "@/components/legal/LegalPage";
 import { Fill } from "@/components/ui/Fill";
 import { missing } from "@/lib/content";
 import { business, routes } from "@/lib/site";
+import { formatCedis } from "@/lib/orders";
+import { shopSettingsForCopy } from "@/lib/shop";
 
 export const metadata: Metadata = {
   title: "Terms",
@@ -13,7 +15,8 @@ export const metadata: Metadata = {
 
 // Only facts already agreed in docs/prd.md and CLAUDE.md; anything else is
 // missing() for the owner and a lawyer to supply. Never invent legal terms.
-export default function TermsPage() {
+export default async function TermsPage() {
+  const freeOver = formatCedis((await shopSettingsForCopy()).freeDeliveryThresholdPesewas);
   const link = "font-medium text-primary underline underline-offset-3";
   return (
     <LegalPage
@@ -67,9 +70,9 @@ export default function TermsPage() {
           body: (
             <p>
               Orders placed on this website are delivered within Ghana. Bulk orders for delivery outside Ghana are
-              arranged and quoted separately. Delivery is free on orders over GHS 2,000. Orders placed before 5:00 PM go to the
+              arranged and quoted separately. Delivery is free on orders over {freeOver}. Orders placed before 5:00 PM go to the
               bus station the same day, and delivery usually takes 12–72 hours from dispatch.{" "}
-              Below GHS 2,000, the delivery fee depends on your region and is shown at checkout before you pay.
+              Below {freeOver}, the delivery fee depends on your region and is shown at checkout before you pay.
               Store pickup is free.{" "}
               <Fill value={missing("Who is responsible once the parcel is at the station")} scale={1} />
             </p>

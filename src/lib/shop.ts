@@ -145,6 +145,19 @@ export async function getShopSettings() {
   };
 }
 
+/**
+ * Shop settings for copy on otherwise static pages (Home, FAQ, Terms): the
+ * defaults when the database isn't there, e.g. a build without DATABASE_URL.
+ */
+export const shopSettingsForCopy = cache(async () => {
+  try {
+    return await getShopSettings();
+  } catch (error) {
+    console.error("Loading shop settings failed", error);
+    return { freeDeliveryThresholdPesewas: 200_000, minBatteryHealth: 90, categories: [] as string[] };
+  }
+});
+
 export async function getDeliveryRates(): Promise<Record<string, number | null>> {
   const rows = await db.select({ region: deliveryRates.region, feePesewas: deliveryRates.feePesewas }).from(deliveryRates);
   return Object.fromEntries(rows.map((row) => [row.region, row.feePesewas]));

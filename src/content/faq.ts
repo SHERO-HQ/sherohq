@@ -32,7 +32,7 @@ const baseFaq: FaqGroup[] = [
       },
       {
         q: "Do you deliver outside Tamale?",
-        a: "Yes, nationwide. Orders placed before 5:00 PM leave the same day, and delivery usually takes 12–72 hours from dispatch. Free over GHS 2,000.",
+        a: "Yes, nationwide. Orders placed before 5:00 PM leave the same day, and delivery usually takes 12–72 hours from dispatch. Free over {threshold}.",
       },
       {
         q: "How do I track my order?",
@@ -73,10 +73,12 @@ export function productsAnswer(products: Array<{ name: string; status: string }>
 }
 
 /** The FAQ, with the products question kept true as products are added or launched. */
-export function buildFaq(products: Array<{ name: string; status: string }>): FaqGroup[] {
+export function buildFaq(products: Array<{ name: string; status: string }>, freeOver: string): FaqGroup[] {
+  // The free-delivery threshold is set in the admin's Settings.
+  const faq = baseFaq.map((group) => ({ ...group, items: group.items.map((i) => ({ ...i, a: i.a.replace("{threshold}", freeOver) })) }));
   const answer = productsAnswer(products);
-  if (!answer) return baseFaq;
-  return baseFaq.map((group) =>
+  if (!answer) return faq;
+  return faq.map((group) =>
     group.topic === "services and products"
       ? { ...group, items: [...group.items, { q: "Can I use your own products yet?", a: answer }] }
       : group,

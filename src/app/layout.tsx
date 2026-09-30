@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     template: "%s · SHERO",
   },
   description:
-    "Custom software and IT support from SHERO in Tamale, for clients in Ghana and abroad. Tested refurbished laptops, with free delivery across Ghana on orders over GHS 2,000.",
+    "Custom software and IT support from SHERO in Tamale, for clients in Ghana and abroad. Tested refurbished laptops, delivered across Ghana.",
   applicationName: "SHERO",
   openGraph: { siteName: "SHERO", locale: "en_GH", type: "website" },
   icons: {

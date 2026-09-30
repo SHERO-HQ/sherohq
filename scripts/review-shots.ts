@@ -106,6 +106,7 @@ const entries: Entry[] = [
     admin: true,
     openLink: "Merchander",
   },
+  { slug: "admin-settings", title: "Admin: Settings", route: "/admin/settings", design: { desktop: "Settings", mobile: null }, admin: true },
   { slug: "admin-work", title: "Admin: Work", route: "/admin/work", design: { desktop: "Work", mobile: null }, admin: true },
   {
     slug: "admin-project",

@@ -22,3 +22,6 @@ export type Region = (typeof regions)[number];
 
 /** Delivery-rate key for doorstep delivery inside Tamale (not by bus). */
 export const TAMALE_LOCAL = "Tamale (local delivery)";
+
+/** The places a delivery rate is set for, in the order Settings shows them. */
+export const deliveryRateRegions: readonly string[] = [TAMALE_LOCAL, ...regions];
