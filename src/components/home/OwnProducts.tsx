@@ -29,12 +29,12 @@ export function OwnProducts({ products }: { products: Product[] }) {
               >
                 <CardMedia className="flex h-32 justify-center px-6 py-4">
                   {Spot ? (
-                    <Spot className="h-24 w-auto" />
+                    <Spot className="h-24 w-auto transition-transform duration-200 group-hover:scale-105" />
                   ) : product.previewUrl ? (
                     // eslint-disable-next-line @next/next/no-img-element
-                    <img src={product.previewUrl} alt="" className="h-24 w-auto rounded-sm border border-border object-cover" />
+                    <img src={product.previewUrl} alt="" className="h-24 w-auto rounded-md border border-border object-cover transition-transform duration-200 group-hover:scale-105" />
                   ) : (
-                    <ProductSpot className="h-24 w-auto" />
+                    <ProductSpot className="h-24 w-auto transition-transform duration-200 group-hover:scale-105" />
                   )}
                 </CardMedia>
                 <CardBody className="gap-3">
@@ -45,7 +45,7 @@ export function OwnProducts({ products }: { products: Product[] }) {
                   </span>
                   <span className="text-body text-ink-secondary">{product.summary}</span>
                   <span className="mt-auto pt-2 text-label text-primary group-hover:underline">
-                    {inDevelopment ? "Join the waitlist" : `See ${product.name}`} <InlineArrow />
+                    {inDevelopment ? "Join the waitlist" : `See ${product.name}`} <InlineArrow className="transition-transform duration-150 group-hover:translate-x-0.5" />
                   </span>
                 </CardBody>
               </CardLink>

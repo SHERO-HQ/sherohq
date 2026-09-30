@@ -46,7 +46,7 @@ function Slots({ items, slots, className }: { items: string[]; slots: number; cl
         <li
           key={`${i}-${item}`}
           className={cn(
-            "flex h-16 items-center justify-center border-border-subtle px-4 lg:h-20",
+            "flex h-16 items-center justify-center border-border-subtle px-4 transition-colors duration-150 hover:bg-surface/40 lg:h-20",
             // A line between neighbours, and above every row after the first.
             i % slots !== 0 && "border-l",
             // The last spot closes the row; there is no line before the first.
@@ -57,7 +57,7 @@ function Slots({ items, slots, className }: { items: string[]; slots: number; cl
           {/* Only a name that has just swapped in animates; the first names are simply there. */}
           <span
             className={cn(
-              "font-display text-h3 whitespace-nowrap text-ink-secondary",
+              "font-display text-h3 whitespace-nowrap text-ink-secondary transition-colors duration-200 hover:text-ink",
               cycles && turns[i] > 0 && "animate-logo-in",
             )}
           >

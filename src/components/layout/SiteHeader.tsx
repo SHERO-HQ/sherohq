@@ -57,11 +57,11 @@ export function SiteHeader({ products }: { products: Child[] }) {
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-page">
       <div className="container-site flex h-16 items-center justify-between">
-        <div className="flex items-center gap-10">
-          <Link href={routes.home} aria-label="SHERO home" className="rounded-sm">
+        <div className="flex items-center gap-8">
+          <Link href={routes.home} aria-label="SHERO home" className="rounded-sm transition-opacity hover:opacity-90 active-press">
             <Logo className="h-6 w-auto" />
           </Link>
-          <nav aria-label="Main" className="hidden gap-6 lg:flex">
+          <nav aria-label="Main" className="hidden gap-1 lg:flex">
             {mainNav.map((item) => {
               const current = isCurrent(pathname, item.href);
               return (
@@ -70,8 +70,8 @@ export function SiteHeader({ products }: { products: Child[] }) {
                   href={item.href}
                   aria-current={current ? "page" : undefined}
                   className={cn(
-                    "rounded-sm text-label transition-colors duration-150 hover:text-primary",
-                    current ? "text-primary" : "text-ink-secondary",
+                    "rounded-md px-3 py-1.5 text-label transition-all duration-150",
+                    current ? "bg-surface font-semibold text-primary" : "text-ink-secondary hover:bg-surface hover:text-primary",
                   )}
                 >
                   {item.label}
@@ -81,7 +81,7 @@ export function SiteHeader({ products }: { products: Child[] }) {
           </nav>
         </div>
 
-        <div className="-mr-3 flex items-center lg:mr-0 lg:gap-1">
+        <div className="-mr-3 flex items-center lg:mr-0 lg:gap-1.5">
           <CartLink pathname={pathname} />
           <ThemeToggle />
           <span className="ml-2 hidden lg:contents">
@@ -95,7 +95,7 @@ export function SiteHeader({ products }: { products: Child[] }) {
             aria-expanded={menuOpen}
             aria-controls="mobile-menu"
             onClick={() => (menuOpen ? closeMenu() : setMenuOpen(true))}
-            className="flex size-11 items-center justify-center rounded-sm text-ink lg:hidden"
+            className="flex size-11 items-center justify-center rounded-md text-ink transition-colors duration-150 hover:bg-surface active-press lg:hidden"
           >
             <MenuIcon open={menuOpen} />
           </button>

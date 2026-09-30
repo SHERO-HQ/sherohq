@@ -30,7 +30,7 @@ function componentFiles(dir: string): string[] {
 
 function findAll(pattern: RegExp, skip: (file: string) => boolean = () => false) {
   return componentFiles(root).flatMap((file) => {
-    const name = relative(root, file);
+    const name = relative(root, file).replaceAll("\\", "/");
     if (skip(name)) return [];
     return readFileSync(file, "utf8")
       .split("\n")

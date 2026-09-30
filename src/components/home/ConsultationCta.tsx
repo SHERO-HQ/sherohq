@@ -1,5 +1,6 @@
 import { ConsultArt } from "@/components/illustrations/ServiceArt";
 import { ButtonLink } from "@/components/ui/Button";
+import { InlineArrow } from "@/components/ui/InlineArrow";
 import { routes, whatsappLink } from "@/lib/site";
 
 const whatsappMessage = "Hi SHERO, I'd like to talk about my business: ";
@@ -20,6 +21,7 @@ export function ConsultationCta({
 }: ConsultationCtaProps) {
   return (
     <section aria-labelledby="cta-heading" className="relative isolate overflow-hidden border-t border-border-subtle">
+      <div aria-hidden="true" className="spotlight absolute inset-0 -z-10" />
       <div aria-hidden="true" className="bg-dots mask-fade-up absolute inset-0 -z-10" />
       <div className="container-site grid items-center gap-12 py-section lg:grid-cols-[1.1fr_1fr] lg:gap-16">
         <div className="flex flex-col items-start gap-5">
@@ -28,8 +30,8 @@ export function ConsultationCta({
           </h2>
           <p className="max-w-measure text-body-lg text-ink-secondary">{body}</p>
           <div className="flex flex-wrap gap-3 pt-2">
-            <ButtonLink href={routes.consultation} size="lg">
-              Book a free consultation
+            <ButtonLink href={routes.consultation} size="lg" className="group">
+              Book a free consultation <InlineArrow className="transition-transform duration-150 group-hover:translate-x-0.5" />
             </ButtonLink>
             <ButtonLink href={whatsappLink(whatsappMessage)} variant="secondary" size="lg" external>
               Chat on WhatsApp

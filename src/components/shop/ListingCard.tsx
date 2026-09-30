@@ -20,8 +20,12 @@ export function ListingCard({ listing, compact }: { listing: ShopListing; compac
     <CardLink href={listingHref(listing.slug)} className="h-full">
       <ListingPhoto src={listing.photos[0]} alt={listing.model} inCard className="aspect-[4/3] w-full" />
       <span className="flex flex-1 flex-col gap-3 p-4">
-        <span className="flex flex-col gap-1">
-          {reserved && <span className="font-mono text-meta text-warning">reserved</span>}
+        <span className="flex flex-col gap-1.5">
+          {reserved && (
+            <span className="inline-flex self-start items-center rounded-full border border-warning/25 bg-warning-subtle px-2 py-0.5 font-mono text-meta text-warning">
+              reserved
+            </span>
+          )}
           <span className="text-body font-semibold text-heading group-hover:underline">{listing.model}</span>
           {!compact && spec && <span className="hidden text-body-sm text-ink-muted sm:block">{spec}</span>}
         </span>
@@ -29,7 +33,7 @@ export function ListingCard({ listing, compact }: { listing: ShopListing; compac
           <span className="font-mono text-price text-ink">{formatCedis(listing.pricePesewas)}</span>
           {/* Devices without a battery (desktops, bags) show no reading. */}
           {listing.hasBattery !== false && (
-            <span className="font-mono text-meta text-secondary">
+            <span className="inline-flex items-center rounded-full border border-secondary/25 bg-secondary-subtle px-2 py-0.5 font-mono text-meta text-secondary">
               <BatteryLabel health={listing.batteryHealth} />
             </span>
           )}

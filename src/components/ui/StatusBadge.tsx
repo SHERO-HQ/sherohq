@@ -25,15 +25,15 @@ export function StatusBadge({ status, label, size = "md", className }: StatusBad
   return (
     <span
       className={cn(
-        "inline-flex shrink-0 items-center rounded-sm font-mono",
-        size === "sm" ? "h-5.5 gap-1.5 px-2 text-meta" : "h-6 gap-1.5 px-2 ",
+        "inline-flex shrink-0 items-center rounded-full font-mono border border-current/20",
+        size === "sm" ? "h-5.5 gap-1.5 px-2.5 text-meta" : "h-6 gap-2 px-3 text-meta",
         styles[status],
         className,
       )}
     >
       <span
         aria-hidden="true"
-        className={cn("rounded-full bg-current", size === "sm" ? "size-1" : "size-1.5")}
+        className={cn("rounded-full bg-current", size === "sm" ? "size-1.5" : "size-2")}
       />
       {label ?? labels[status]}
     </span>

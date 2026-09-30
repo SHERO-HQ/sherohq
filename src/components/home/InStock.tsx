@@ -26,8 +26,8 @@ export function InStock({ listings, thresholdPesewas }: { listings: ShopListing[
         id="stock-heading"
         title="In stock now."
         action={
-          <Link href={routes.shop} className="text-label text-primary hover:underline">
-            Full shop <InlineArrow />
+          <Link href={routes.shop} className="group inline-flex items-center gap-1 text-label text-primary hover:underline">
+            Full shop <InlineArrow className="transition-transform duration-150 group-hover:translate-x-0.5" />
           </Link>
         }
       />
@@ -51,7 +51,7 @@ export function InStock({ listings, thresholdPesewas }: { listings: ShopListing[
         <ul aria-label="How buying from SHERO works" className="grid gap-5 p-5 md:grid-cols-3 md:gap-8 lg:p-6">
           {buying(thresholdPesewas).map(({ icon: Icon, title, detail }) => (
             <li key={title} className="flex gap-3">
-              <span className="flex size-9 shrink-0 items-center justify-center rounded-md bg-secondary-subtle text-secondary">
+              <span className="flex size-9 shrink-0 items-center justify-center rounded-lg border border-secondary/25 bg-secondary-subtle text-secondary shadow-xs">
                 <Icon aria-hidden="true" size={18} strokeWidth={1.5} />
               </span>
               <span className="flex flex-col">

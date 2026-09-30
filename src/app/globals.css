@@ -189,3 +189,22 @@
 @utility slant {
   clip-path: polygon(22% 0, 100% 0, 78% 100%, 0 100%);
 }
+
+
+/* Vercel & Clerk card hover elevation transition */
+@utility card-hover {
+  transition: border-color 150ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 150ms cubic-bezier(0.16, 1, 0.3, 1), transform 150ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Tactile micro-interaction on button/card clicks */
+@utility active-press {
+  &:active {
+    transform: scale(0.985);
+  }
+}
+
+/* Vercel-style ambient radial spotlight behind sections */
+@utility spotlight {
+  background-image: radial-gradient(ellipse 60% 50% at 50% 0%, var(--border-subtle) 0%, transparent 100%);
+}
+

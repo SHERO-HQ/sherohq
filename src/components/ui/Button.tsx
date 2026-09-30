@@ -4,11 +4,11 @@ import { cn } from "@/lib/cn";
 // One set of buttons for the whole site. Primary is navy (one per view),
 // secondary is green (WhatsApp and other second actions), outline is neutral.
 const variants = {
-  primary: "bg-primary text-on-primary hover:bg-primary-hover",
-  secondary: "bg-secondary text-on-secondary hover:bg-secondary-hover",
-  outline: "border border-border-strong text-ink hover:border-ink",
+  primary: "bg-primary text-on-primary shadow-xs hover:bg-primary-hover hover:shadow active-press",
+  secondary: "bg-secondary text-on-secondary shadow-xs hover:bg-secondary-hover hover:shadow active-press",
+  outline: "border border-border-strong bg-surface-raised text-ink shadow-xs hover:border-ink hover:bg-surface active-press",
   /** Destructive actions in the admin, such as deleting a draft. */
-  danger: "border border-border-strong text-danger hover:border-danger",
+  danger: "border border-border-strong bg-surface-raised text-danger shadow-xs hover:border-danger hover:bg-danger-subtle active-press",
 } as const;
 
 const sizes = {
@@ -26,7 +26,7 @@ export function buttonClass({
   className,
 }: { variant?: ButtonVariant; size?: ButtonSize; full?: boolean; className?: string } = {}) {
   return cn(
-    "inline-flex shrink-0 items-center justify-center gap-2 rounded-sm text-label whitespace-nowrap transition-colors duration-150 disabled:opacity-60",
+    "inline-flex shrink-0 items-center justify-center gap-2 rounded-md text-label whitespace-nowrap transition-all duration-150 disabled:opacity-60",
     variants[variant],
     sizes[size],
     full && "w-full",

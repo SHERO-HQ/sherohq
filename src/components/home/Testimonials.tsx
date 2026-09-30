@@ -10,7 +10,7 @@ export function Testimonials({ items }: { items: PublicTestimonial[] }) {
       <ul className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 lg:gap-6">
         {items.slice(0, 3).map((t) => (
           <li key={t.id}>
-            <figure className="flex h-full flex-col justify-between gap-6 rounded-md border border-border bg-surface-raised p-6">
+            <figure className="flex h-full flex-col justify-between gap-6 rounded-md border border-border bg-surface-raised p-6 shadow-xs card-hover hover:border-border-strong hover:shadow-float">
               <blockquote className="text-body-lg text-ink">&ldquo;{t.quote}&rdquo;</blockquote>
               <figcaption className="text-body-sm text-ink-secondary">
                 <span className="font-medium text-ink">{t.attribution}</span>

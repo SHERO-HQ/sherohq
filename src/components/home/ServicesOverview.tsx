@@ -45,8 +45,8 @@ export function ServicesOverview() {
         id="services-heading"
         title="What do you need?"
         action={
-          <Link href={routes.services} className="text-label text-primary hover:underline">
-            All services <InlineArrow />
+          <Link href={routes.services} className="group inline-flex items-center gap-1 text-label text-primary hover:underline">
+            All services <InlineArrow className="transition-transform duration-150 group-hover:translate-x-0.5" />
           </Link>
         }
       />
@@ -63,15 +63,15 @@ export function ServicesOverview() {
           >
             <Link
               href={href}
-              className="group grid h-full grid-cols-[6rem_1fr] content-start gap-x-4 gap-y-1.5 rounded-sm md:flex md:flex-col md:gap-2 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-focus md:px-6"
+              className="group grid h-full grid-cols-[6rem_1fr] content-start gap-x-4 gap-y-1.5 rounded-md p-2 transition-all duration-150 hover:bg-surface/60 active-press md:flex md:flex-col md:gap-2 md:p-6 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-focus"
             >
-              <span className="row-span-3 block md:mb-4">
+              <span className="row-span-3 block transition-transform duration-200 md:mb-4">
                 <Art />
               </span>
               <span className="font-display text-h3 text-heading">{title}</span>
               <span className="text-body-sm text-ink-secondary">{description}</span>
               <span className="pt-1 text-label md:mt-auto md:pt-2 text-primary group-hover:underline">
-                {action} <InlineArrow className="transition-transform group-hover:translate-x-0.5" />
+                {action} <InlineArrow className="transition-transform duration-150 group-hover:translate-x-1" />
               </span>
             </Link>
           </li>

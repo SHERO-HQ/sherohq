@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { cn } from "@/lib/cn";
 
-const base = "flex flex-col overflow-hidden rounded-md border border-border bg-surface-raised";
-const interactive = "transition-colors duration-150 hover:border-border-strong";
+const base = "flex flex-col overflow-hidden rounded-md border border-border bg-surface-raised shadow-xs card-hover";
+const interactive = "hover:border-border-strong hover:shadow-float active-press";
 
 /** The one card style: a bordered panel on the raised surface. */
 export function Card({ className, children }: { className?: string; children: React.ReactNode }) {
