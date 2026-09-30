@@ -30,19 +30,20 @@ export function normalisePhone(input: string): string | null {
   return compact;
 }
 
-/**
- * Joins the country code the visitor typed (e.g. "+44", "44") and the number
- * into E.164. Any country works: codes are 1 to 3 digits. A number typed with
- * its own + or 00 code wins; a leading 0 (trunk prefix) is dropped, as it's
- * never dialled from abroad.
- */
-export function phoneFromParts(codeInput: string, number: string): string | null {
-  const typed = number.trim();
-  if (/^(\+|00)/.test(typed.replace(/[\s\-().]/g, ""))) return normalisePhone(typed);
-  const code = codeInput.trim().replace(/^(\+|00)/, "");
-  if (code === "233" || code === "") return normaliseGhanaPhone(typed);
-  if (!/^[1-9]\d{0,2}$/.test(code)) return null;
-  const national = typed.replace(/[\s\-().]/g, "").replace(/^0/, "");
-  if (!/^\d{4,14}$/.test(national)) return null;
-  return normalisePhone(`+${code}${national}`);
+/** A number typed with its own + or 00 country code (at least a few digits of it). */
+export function looksInternational(value: string): boolean {
+  return /^(\+|00)\d{6,}/.test(value.replace(/[\s\-().]/g, ""));
 }
+
+/** A country for the phone field: ISO code, English name, dialling code. */
+export type CountryOption = { iso: string; name: string; code: string };
+
+/** Reads the phone field's two parts into a checked number, or null. */
+export type PhoneReader = (country: string, number: string) => string | null;
+
+/**
+ * The browser's first check before sending: just that a number was entered.
+ * The server checks it fully (phoneFromParts in phone-intl.ts), so the phone
+ * library never has to load for this.
+ */
+export const phoneEntered: PhoneReader = (_country, number) => (number.trim() ? number.trim() : null);

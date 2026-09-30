@@ -4,6 +4,7 @@ import { StatusBadge } from "@/components/ui/StatusBadge";
 import type { Product } from "@/lib/products";
 import { waitlistConfig } from "@/lib/products";
 import { themeClass } from "@/lib/product-themes";
+import { countryOptions } from "@/lib/phone-intl";
 import { WaitlistForm } from "./WaitlistForm";
 
 /** One layout for every SHERO product; content, colours and status come from the admin. */
@@ -31,7 +32,7 @@ export function ProductPage({ product }: { product: Product }) {
             </div>
           </div>
           {inDevelopment ? (
-            <WaitlistForm product={waitlistConfig(product)} />
+            <WaitlistForm product={waitlistConfig(product)} countries={countryOptions()} />
           ) : (
             product.liveUrl && (
               <div className="flex flex-col items-start gap-4 self-start rounded-md border border-t-4 border-border border-t-product-stripe bg-surface p-5 lg:p-8">

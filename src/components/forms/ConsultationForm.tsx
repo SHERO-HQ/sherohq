@@ -4,8 +4,10 @@ import { useSearchParams } from "next/navigation";
 import { useState, useTransition } from "react";
 import { CircleCheck } from "lucide-react";
 import { requestConsultation } from "@/app/(site)/support/consultation/actions";
-import { RadioCards, SelectField, SubmitButton, TextArea, PhoneField, TextField } from "@/components/forms/fields";
+import { RadioCards, SelectField, SubmitButton, TextArea, TextField } from "@/components/forms/fields";
+import { PhoneField } from "@/components/forms/PhoneField";
 import { trackEvent } from "@/lib/analytics";
+import { phoneEntered, type CountryOption } from "@/lib/phone";
 import {
   contactOptions,
   needOptions,
@@ -15,13 +17,13 @@ import {
 } from "@/lib/forms/consultation";
 
 /** Reads ?service= (set by the links on /services) to preselect the need. */
-export function ConsultationFormWithPreset() {
+export function ConsultationFormWithPreset({ countries }: { countries: CountryOption[] }) {
   const preset = useSearchParams().get("service");
   const initialNeed = needOptions.some((o) => o.value === preset) ? preset! : "software";
-  return <ConsultationForm initialNeed={initialNeed} />;
+  return <ConsultationForm initialNeed={initialNeed} countries={countries} />;
 }
 
-export function ConsultationForm({ initialNeed = "software" }: { initialNeed?: string }) {
+export function ConsultationForm({ initialNeed = "software", countries }: { initialNeed?: string; countries: CountryOption[] }) {
   const [contact, setContact] = useState<ContactMethod>("call");
   const [errors, setErrors] = useState<FieldErrors>({});
   const [message, setMessage] = useState<string | null>(null);
@@ -31,7 +33,7 @@ export function ConsultationForm({ initialNeed = "software" }: { initialNeed?: s
   function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
-    const local = parseConsultation(form);
+    const local = parseConsultation(form, phoneEntered);
     setMessage(null);
     if (!local.ok) {
       setErrors(local.errors);
@@ -72,7 +74,7 @@ export function ConsultationForm({ initialNeed = "software" }: { initialNeed?: s
       className="flex flex-col gap-5 rounded-md border border-border bg-surface p-5 lg:p-9"
     >
       <TextField id="name" label="Your name" autoComplete="name" placeholder="Ama Mensah" error={errors.name} required />
-      <PhoneField id="phone" error={errors.phone} />
+      <PhoneField id="phone" error={errors.phone} countries={countries} />
       <TextField
         id="email"
         label="Email"

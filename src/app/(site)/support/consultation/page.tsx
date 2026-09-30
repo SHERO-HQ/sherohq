@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { ConsultationForm, ConsultationFormWithPreset } from "@/components/forms/ConsultationForm";
+import { countryOptions } from "@/lib/phone-intl";
 import { business, routes, whatsappLink } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -20,6 +21,7 @@ const steps = [
 ];
 
 export default function ConsultationPage() {
+  const countries = countryOptions();
   return (
     <section className="container-site grid gap-8 lg:grid-cols-2 lg:items-start lg:gap-24 py-section">
       <div className="flex flex-col gap-5 lg:gap-7">
@@ -61,8 +63,8 @@ export default function ConsultationPage() {
       </div>
 
       {/* The fallback keeps the form in the static HTML; the preset applies once loaded. */}
-      <Suspense fallback={<ConsultationForm />}>
-        <ConsultationFormWithPreset />
+      <Suspense fallback={<ConsultationForm countries={countries} />}>
+        <ConsultationFormWithPreset countries={countries} />
       </Suspense>
     </section>
   );

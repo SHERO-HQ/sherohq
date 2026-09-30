@@ -3,6 +3,7 @@
 import { db } from "@/db";
 import { waitlistSignups } from "@/db/schema";
 import { parseWaitlist, type WaitlistErrors } from "@/lib/forms/waitlist";
+import { phoneFromParts } from "@/lib/phone-intl";
 import { getPublishedProduct } from "@/lib/products";
 import { business } from "@/lib/site";
 
@@ -17,7 +18,7 @@ export async function joinWaitlist(slug: string, form: FormData): Promise<Waitli
     // Only a published product still in development has a waitlist.
     const product = await getPublishedProduct(slug);
     if (!product || product.status !== "in_development") return unavailable;
-    const parsed = parseWaitlist(product, form);
+    const parsed = parseWaitlist(product, form, phoneFromParts);
     if (!parsed.ok) return { ok: false, errors: parsed.errors };
     // Signing up twice with the same number just keeps the first signup.
     await db

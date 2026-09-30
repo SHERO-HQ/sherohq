@@ -1,4 +1,4 @@
-import { phoneFromParts } from "@/lib/phone";
+import type { PhoneReader } from "@/lib/phone";
 
 export const needOptions = [
   { value: "software", label: "Custom software" },
@@ -33,7 +33,7 @@ const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const text = (value: FormDataEntryValue | null) => (typeof value === "string" ? value.trim() : "");
 
 /** Validates the form on both client and server; the server's word is final. */
-export function parseConsultation(form: FormData):
+export function parseConsultation(form: FormData, readPhone: PhoneReader):
   | { ok: true; data: ConsultationRequest }
   | { ok: false; errors: FieldErrors } {
   const errors: FieldErrors = {};
@@ -43,8 +43,8 @@ export function parseConsultation(form: FormData):
   else if (name.length > 100) errors.name = "Keep your name under 100 characters.";
 
   // Clients can be anywhere (software and IT): any number with its country code.
-  const phone = phoneFromParts(text(form.get("phoneCountry")), text(form.get("phone")));
-  if (!phone) errors.phone = "Check the number and its country code.";
+  const phone = readPhone(text(form.get("phoneCountry")), text(form.get("phone")));
+  if (!phone) errors.phone = "Check the number and the country.";
 
   const email = text(form.get("email"));
   if (email && !EMAIL.test(email)) errors.email = "Check the email address, or leave it empty.";

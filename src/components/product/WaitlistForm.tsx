@@ -3,11 +3,13 @@
 import { useState, useTransition } from "react";
 import { CircleCheck } from "lucide-react";
 import { joinWaitlist } from "@/app/(site)/waitlist-actions";
-import { PhoneField, TextField } from "@/components/forms/fields";
+import { TextField } from "@/components/forms/fields";
+import { PhoneField } from "@/components/forms/PhoneField";
 import { trackEvent } from "@/lib/analytics";
+import { phoneEntered, type CountryOption } from "@/lib/phone";
 import { parseWaitlist, type WaitlistConfig, type WaitlistErrors } from "@/lib/forms/waitlist";
 
-export function WaitlistForm({ product }: { product: WaitlistConfig }) {
+export function WaitlistForm({ product, countries }: { product: WaitlistConfig; countries: CountryOption[] }) {
   const [errors, setErrors] = useState<WaitlistErrors>({});
   const [message, setMessage] = useState<string | null>(null);
   const [joined, setJoined] = useState(false);
@@ -16,7 +18,7 @@ export function WaitlistForm({ product }: { product: WaitlistConfig }) {
   function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
-    const local = parseWaitlist(product, form);
+    const local = parseWaitlist(product, form, phoneEntered);
     setMessage(null);
     if (!local.ok) {
       setErrors(local.errors);
@@ -65,7 +67,7 @@ export function WaitlistForm({ product }: { product: WaitlistConfig }) {
               placeholder={product.businessPlaceholder}
               error={errors.business}
             />
-            <PhoneField id={id("phone")} error={errors.phone} />
+            <PhoneField id={id("phone")} error={errors.phone} countries={countries} />
             <TextField
               id={id("detail")}
               name="detail"

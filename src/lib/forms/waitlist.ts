@@ -1,4 +1,4 @@
-import { phoneFromParts } from "@/lib/phone";
+import type { PhoneReader } from "@/lib/phone";
 
 /** The product-specific parts of a waitlist form (set per product in the admin). */
 export type WaitlistConfig = {
@@ -29,6 +29,7 @@ const lower = (label: string) => label.charAt(0).toLowerCase() + label.slice(1).
 export function parseWaitlist(
   product: Pick<WaitlistConfig, "businessLabel" | "detailLabel" | "detailNumeric">,
   form: FormData,
+  readPhone: PhoneReader,
 ): { ok: true; data: WaitlistSignup } | { ok: false; errors: WaitlistErrors } {
   const errors: WaitlistErrors = {};
 
@@ -36,8 +37,8 @@ export function parseWaitlist(
   if (!name) errors.name = "Tell us your name.";
   else if (name.length > 100) errors.name = "Keep your name under 100 characters.";
 
-  const phone = phoneFromParts(text(form.get("phoneCountry")), text(form.get("phone")));
-  if (!phone) errors.phone = "Check the number and its country code.";
+  const phone = readPhone(text(form.get("phoneCountry")), text(form.get("phone")));
+  if (!phone) errors.phone = "Check the number and the country.";
 
   const business = text(form.get("business"));
   if (!business) errors.business = `Tell us the ${lower(product.businessLabel)}.`;
