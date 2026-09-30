@@ -173,5 +173,11 @@ try {
     JSON.stringify({ capturedAt: new Date().toISOString(), commit, pages: manifest }, null, 2),
   );
 } finally {
-  if (server.pid) process.kill(-server.pid);
+  if (server.pid) {
+    try {
+      process.kill(-server.pid);
+    } catch {
+      // Already exited.
+    }
+  }
 }
