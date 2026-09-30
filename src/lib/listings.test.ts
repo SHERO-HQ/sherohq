@@ -11,6 +11,7 @@ const passing: DeviceCheck = {
   camera: true,
   wifi: true,
   charging: true,
+  hasBattery: true,
   batteryHealth: 100,
   batteryReplaced: true,
   batteryType: "Original",
@@ -35,6 +36,15 @@ describe("inStockBlockers", () => {
     expect(inStockBlockers({ ...passing, batteryHealth: 89 }, 90)).toEqual([
       "Battery health is 89%; the minimum is 90%.",
     ]);
+  });
+
+  it("skips the battery check for a device without a battery", () => {
+    const noBattery = { ...passing, hasBattery: false, batteryHealth: null, batteryReplaced: null, batteryType: null };
+    expect(inStockBlockers(noBattery, 90)).toEqual([]);
+  });
+
+  it("still needs a battery reading when the device has one", () => {
+    expect(inStockBlockers({ ...passing, batteryHealth: null }, 90)).toEqual(["Battery health isn't recorded."]);
   });
 
   it("blocks untested and failed parts", () => {

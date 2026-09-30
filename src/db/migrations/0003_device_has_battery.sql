@@ -1,0 +1,2 @@
+ALTER TABLE "device_checks" ADD COLUMN "has_battery" boolean DEFAULT true NOT NULL;--> statement-breakpoint
+ALTER TABLE "device_checks" ADD CONSTRAINT "device_checks_no_battery" CHECK ("device_checks"."has_battery" or ("device_checks"."battery_health" is null and "device_checks"."battery_replaced" is null and "device_checks"."battery_type" is null));

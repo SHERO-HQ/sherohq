@@ -17,6 +17,7 @@ export const deviceTests = [
  * Why a listing can't go In stock yet, or an empty list if it can.
  * Rule (CLAUDE.md, admin scope): the device check is complete, every test
  * passed, and battery health meets the Grade A++ minimum from Settings.
+ * Devices without a battery skip the battery part (owner, 30 Sep 2026).
  */
 export function inStockBlockers(check: DeviceCheck | null | undefined, minBatteryHealth: number): string[] {
   if (!check) return ["The device check hasn't been started."];
@@ -28,10 +29,12 @@ export function inStockBlockers(check: DeviceCheck | null | undefined, minBatter
     else if (result === false) problems.push(`${test.label} failed its test.`);
   }
 
-  if (check.batteryHealth === null) problems.push("Battery health isn't recorded.");
-  else if (check.batteryHealth < minBatteryHealth)
-    problems.push(`Battery health is ${check.batteryHealth}%; the minimum is ${minBatteryHealth}%.`);
-  if (check.batteryReplaced === null) problems.push("Record whether the battery was replaced.");
+  if (check.hasBattery) {
+    if (check.batteryHealth === null) problems.push("Battery health isn't recorded.");
+    else if (check.batteryHealth < minBatteryHealth)
+      problems.push(`Battery health is ${check.batteryHealth}%; the minimum is ${minBatteryHealth}%.`);
+    if (check.batteryReplaced === null) problems.push("Record whether the battery was replaced.");
+  }
   if (check.cosmeticCondition === null) problems.push("Cosmetic condition isn't recorded.");
   if (check.cleanedAndReset !== true) problems.push("The device hasn't been cleaned and reset.");
   if (!check.serialLast4) problems.push("The last four characters of the serial number are missing.");

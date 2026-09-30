@@ -67,7 +67,7 @@ export default async function CartPage() {
                       <span className="font-mono text-meta text-ink-muted">
                         {item.category.toLowerCase() === "accessories"
                           ? "accessory"
-                          : `UK-used · ${item.grade} · battery ${item.batteryHealth}%`}
+                          : `UK-used · ${item.grade}${item.hasBattery === false ? "" : ` · battery ${item.batteryHealth}%`}`}
                       </span>
                       {sold && (
                         <span className="text-body-sm font-medium text-warning">

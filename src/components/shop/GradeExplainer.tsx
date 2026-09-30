@@ -18,7 +18,7 @@ export function GradeExplainer({ minBattery, thresholdPesewas }: { minBattery: n
     "Screen, keyboard and trackpad",
     "Ports, speakers and camera",
     "Wi-Fi and charging",
-    `Battery health ${minBattery}% or more`,
+    `Battery health ${minBattery}% or more, if it has a battery`,
     "Cosmetic condition 90% or better",
     "Cleaned and reset to factory settings",
   ];

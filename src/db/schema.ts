@@ -116,7 +116,8 @@ export const listings = pgTable(
  * The device check behind every listing. Test results are null until tested,
  * then true (pass) or false (fail). A listing can't go In stock until this is
  * complete and battery health meets settings.min_battery_health
- * (enforced in src/lib/listings.ts).
+ * (enforced in src/lib/listings.ts). Devices without a battery (desktops,
+ * bags) set has_battery false and skip the battery check (owner, 30 Sep 2026).
  */
 export const deviceChecks = pgTable(
   "device_checks",
@@ -132,6 +133,7 @@ export const deviceChecks = pgTable(
     camera: boolean("camera"),
     wifi: boolean("wifi"),
     charging: boolean("charging"),
+    hasBattery: boolean("has_battery").notNull().default(true),
     batteryHealth: smallint("battery_health"),
     batteryReplaced: boolean("battery_replaced"),
     /** e.g. "Original" when replaced. */
@@ -144,6 +146,11 @@ export const deviceChecks = pgTable(
   },
   (t) => [
     check("device_checks_battery_range", sql`${t.batteryHealth} between 0 and 100`),
+    // No battery, no battery readings.
+    check(
+      "device_checks_no_battery",
+      sql`${t.hasBattery} or (${t.batteryHealth} is null and ${t.batteryReplaced} is null and ${t.batteryType} is null)`,
+    ),
     check("device_checks_cosmetic_range", sql`${t.cosmeticCondition} between 0 and 100`),
     check("device_checks_serial_last4", sql`${t.serialLast4} ~ '^[A-Za-z0-9]{4}$'`),
   ],

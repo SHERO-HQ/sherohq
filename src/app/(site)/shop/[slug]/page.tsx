@@ -58,7 +58,10 @@ function checkRows(check: DeviceCheck | null): ReadoutRow[] {
     ["screen · keyboard · trackpad", group(check.screen, check.keyboard, check.trackpad)],
     ["ports · speakers · camera", group(check.ports, check.speakers, check.camera)],
     ["wi-fi · charging", group(check.wifi, check.charging)],
-    ["battery health", check.batteryHealth != null ? `${check.batteryHealth}%` : "not recorded"],
+    // A device without a battery has no battery row.
+    ...(check.hasBattery
+      ? [["battery health", check.batteryHealth != null ? `${check.batteryHealth}%` : "not recorded"] as [string, string]]
+      : []),
     ["cosmetic condition", check.cosmeticCondition != null ? `${check.cosmeticCondition}%` : "not recorded"],
     ["cleaned and reset", check.cleanedAndReset ? "done" : "not yet"],
   ];

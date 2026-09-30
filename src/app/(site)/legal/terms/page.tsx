@@ -55,8 +55,9 @@ export default function TermsPage() {
           title: "Prices and payment",
           body: (
             <p>
-              Prices are in Ghana cedis (GHS). You can pay by MoMo (MTN MoMo or Telecel Cash) through Hubtel, by card
-              (Visa or Mastercard) through Paystack, in cash on delivery, or when you pick up your order.
+              Prices are in Ghana cedis (GHS). You can pay in cash on delivery or when you pick up your order. When
+              available, you can also pay by MoMo (MTN MoMo or Telecel Cash) through Hubtel or by card (Visa or
+              Mastercard) through Paystack; checkout shows which options are open.
             </p>
           ),
         },

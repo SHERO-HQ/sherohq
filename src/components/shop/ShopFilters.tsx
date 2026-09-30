@@ -108,7 +108,7 @@ export function ShopFilters({
             <input type="checkbox" name="battery" value="new" defaultChecked={current.newBattery} className={controlClass} />
             New battery (100%)
           </label>
-          <p className="text-body-sm text-ink-muted">Every listing is at {minBattery}% or more.</p>
+          <p className="text-body-sm text-ink-muted">Every device with a battery is at {minBattery}% or more.</p>
         </fieldset>
 </div>
 

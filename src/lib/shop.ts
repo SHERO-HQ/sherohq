@@ -52,6 +52,7 @@ const listingColumns = {
   grade: listings.grade,
   status: listings.status,
   photos: listings.photos,
+  hasBattery: deviceChecks.hasBattery,
   batteryHealth: deviceChecks.batteryHealth,
   batteryReplaced: deviceChecks.batteryReplaced,
   batteryType: deviceChecks.batteryType,
@@ -72,7 +73,8 @@ export async function getShopListings(filters: ShopFilters) {
     filters.sort === "price"
       ? [asc(listings.pricePesewas)]
       : filters.sort === "battery"
-        ? [desc(deviceChecks.batteryHealth), asc(listings.pricePesewas)]
+        ? // Devices without a battery (null health) go after those with one.
+          [sql`${deviceChecks.batteryHealth} desc nulls last`, asc(listings.pricePesewas)]
         : [desc(listings.createdAt)];
 
   const rows = await db
@@ -116,12 +118,13 @@ export async function getSimilarListings(listing: { id: string; category: string
 }
 
 /** The newest in-stock laptops for the Home page. */
-export async function getNewestLaptops(limit = 4) {
+/** Newest devices that can be bought now, any category (Home). */
+export async function getNewestInStock(limit = 6) {
   return db
     .select(listingColumns)
     .from(listings)
     .leftJoin(deviceChecks, eq(deviceChecks.listingId, listings.id))
-    .where(and(eq(listings.status, "in_stock"), sql`lower(${listings.category}) = 'laptops'`))
+    .where(eq(listings.status, "in_stock"))
     .orderBy(desc(listings.createdAt))
     .limit(limit);
 }

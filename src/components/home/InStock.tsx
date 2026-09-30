@@ -23,8 +23,7 @@ export function InStock({ listings }: { listings: ShopListing[] }) {
     <Section divider aria-labelledby="stock-heading">
       <SectionHeader
         id="stock-heading"
-        eyebrow="in stock"
-        title="Laptops, ready for work."
+        title="In stock now."
         action={
           <Link href={routes.shop} className="text-label text-primary hover:underline">
             Full shop <InlineArrow />
@@ -33,7 +32,7 @@ export function InStock({ listings }: { listings: ShopListing[] }) {
       />
 
       {listings.length > 0 ? (
-        <ul className="grid grid-cols-2 gap-x-4 gap-y-8 lg:grid-cols-4 lg:gap-6">
+        <ul className="grid grid-cols-2 gap-x-4 gap-y-8 md:grid-cols-3 lg:gap-6">
           {listings.map((listing) => (
             <li key={listing.id}>
               <ListingCard listing={listing} />
@@ -42,11 +41,11 @@ export function InStock({ listings }: { listings: ShopListing[] }) {
         </ul>
       ) : (
         <p className="border-t border-border pt-6 text-body text-ink-secondary">
-          New stock is being checked. Every device is tested before it&rsquo;s listed, so laptops arrive in batches.
+          New stock is being checked. Every device is tested before it&rsquo;s listed, so stock arrives in batches.
         </p>
       )}
 
-      {/* How buying works, next to the laptops it applies to, and help choosing. */}
+      {/* How buying works, next to the devices it applies to, and help choosing. */}
       <Card className="mt-8">
         <ul aria-label="How buying from SHERO works" className="grid gap-5 p-5 md:grid-cols-3 md:gap-8 lg:p-6">
           {buying.map(({ icon: Icon, title, detail }) => (

@@ -5,14 +5,14 @@ import { OwnProducts } from "@/components/home/OwnProducts";
 import { ClientStrip } from "@/components/home/ClientStrip";
 import { ServicesOverview } from "@/components/home/ServicesOverview";
 import { BusinessJsonLd } from "@/components/seo/BusinessJsonLd";
-import { getNewestLaptops } from "@/lib/shop";
+import { getNewestInStock } from "@/lib/shop";
 
 // Static and fast, refreshed every few minutes so new stock shows up.
 export const revalidate = 300;
 
-async function newestLaptops() {
+async function newestStock() {
   try {
-    return await getNewestLaptops(4);
+    return await getNewestInStock(6);
   } catch (error) {
     // Without the database (e.g. a build with no DATABASE_URL), Home still renders.
     console.error("Loading stock for Home failed", error);
@@ -27,7 +27,7 @@ export default async function HomePage() {
       <Hero />
       <ClientStrip />
       <ServicesOverview />
-      <InStock listings={await newestLaptops()} />
+      <InStock listings={await newestStock()} />
       <OwnProducts />
       <ConsultationCta />
     </>

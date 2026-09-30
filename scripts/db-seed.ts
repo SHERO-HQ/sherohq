@@ -20,7 +20,8 @@ type Sample = {
   category: string;
   specs: ListingSpecs;
   cedis: number;
-  battery: number;
+  /** null: the device has no battery (desktops, bags). */
+  battery: number | null;
   replaced: boolean;
   note?: string;
   status?: "in_stock" | "reserved" | "draft";
@@ -80,7 +81,7 @@ const samples: Sample[] = [
     category: "Desktops",
     specs: { processor: "Intel Core i5, 8th gen", ram: "8GB RAM", storage: "256GB SSD", system: "Windows 11" },
     cedis: 1900,
-    battery: 100,
+    battery: null,
     replaced: false,
   },
   {
@@ -89,7 +90,7 @@ const samples: Sample[] = [
     category: "Accessories",
     specs: {},
     cedis: 250,
-    battery: 100,
+    battery: null,
     replaced: false,
   },
   {
@@ -137,9 +138,10 @@ for (const [i, sample] of samples.entries()) {
     camera: passed,
     wifi: passed,
     charging: passed,
+    hasBattery: sample.battery !== null,
     batteryHealth: sample.battery,
-    batteryReplaced: sample.replaced,
-    batteryType: sample.replaced ? "Original" : null,
+    batteryReplaced: sample.battery === null ? null : sample.replaced,
+    batteryType: sample.battery !== null && sample.replaced ? "Original" : null,
     cosmeticCondition: 92,
     cleanedAndReset: passed,
     serialLast4: (i + 1).toString(16).padStart(4, "a"),

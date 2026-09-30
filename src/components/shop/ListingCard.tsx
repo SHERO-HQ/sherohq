@@ -27,9 +27,12 @@ export function ListingCard({ listing, compact }: { listing: ShopListing; compac
         </span>
         <span className="mt-auto flex flex-wrap items-baseline justify-between gap-x-2 gap-y-1">
           <span className="font-mono text-price text-ink">{formatCedis(listing.pricePesewas)}</span>
-          <span className="font-mono text-meta text-secondary">
-            <BatteryLabel health={listing.batteryHealth} />
-          </span>
+          {/* Devices without a battery (desktops, bags) show no reading. */}
+          {listing.hasBattery !== false && (
+            <span className="font-mono text-meta text-secondary">
+              <BatteryLabel health={listing.batteryHealth} />
+            </span>
+          )}
         </span>
       </span>
     </CardLink>
