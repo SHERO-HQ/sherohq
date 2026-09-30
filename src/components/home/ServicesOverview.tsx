@@ -43,9 +43,7 @@ export function ServicesOverview() {
     <Section aria-labelledby="services-heading">
       <SectionHeader
         id="services-heading"
-        eyebrow="what we do"
         title="What do you need?"
-        intro="Everything your business runs on, handled in one place."
         action={
           <Link href={routes.services} className="text-label text-primary hover:underline">
             All services <InlineArrow />

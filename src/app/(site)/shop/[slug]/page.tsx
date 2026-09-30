@@ -12,6 +12,7 @@ import { formatGhanaDate } from "@/lib/dates";
 import { specSummary, type DeviceCheck } from "@/lib/listings";
 import { formatCedis } from "@/lib/orders";
 import { getListing, getShopSettings, getSimilarListings } from "@/lib/shop";
+import { paymentSummary } from "@/lib/payments";
 import { routes, siteUrl, whatsappLink } from "@/lib/site";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -92,7 +93,7 @@ export default async function ListingPage({ params }: Props) {
         freeDelivery ? "Free on this order." : `Free over ${threshold}; below that, the fee for your region shows at checkout.`
       } Or collect free from our store.`,
     },
-    { label: "payment", text: "MoMo, card, cash on delivery, or pay when you collect." },
+    { label: "payment", text: paymentSummary() },
   ];
 
   const productJsonLd = {

@@ -7,12 +7,13 @@ import { DispatchCountdown } from "@/components/ui/LiveStatus";
 import { InlineArrow } from "@/components/ui/InlineArrow";
 import { Section, SectionHeader } from "@/components/ui/Section";
 import type { ShopListing } from "@/lib/shop";
+import { paymentSummary } from "@/lib/payments";
 import { routes, whatsappLink } from "@/lib/site";
 
 const buying = [
   { icon: Truck, title: "Free delivery over GHS 2,000", detail: "Same day in Tamale, by bus elsewhere, or collect free." },
-  { icon: Wallet, title: "Pay how you prefer", detail: "MoMo, card, cash on delivery, or when you collect." },
-  { icon: ShieldCheck, title: "One-week warranty", detail: "We repair or replace anything we tested; support stays free." },
+  { icon: Wallet, title: "Pay how you prefer", detail: paymentSummary() },
+  { icon: ShieldCheck, title: "One-week warranty", detail: "We repair or replace anything we tested." },
 ];
 
 const recommendMessage = "Hi SHERO, I'm looking for a laptop. I'll mainly use it for: ";
@@ -24,7 +25,6 @@ export function InStock({ listings }: { listings: ShopListing[] }) {
         id="stock-heading"
         eyebrow="in stock"
         title="Laptops, ready for work."
-        intro="UK-used and tested in Tamale, with the battery health on every listing."
         action={
           <Link href={routes.shop} className="text-label text-primary hover:underline">
             Full shop <InlineArrow />

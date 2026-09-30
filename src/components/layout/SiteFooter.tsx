@@ -89,10 +89,12 @@ export function SiteFooter() {
           </address>
         </div>
 
-        <div className="flex flex-col gap-3 border-t border-border-inverse pt-6 text-meta text-ink-inverse-muted md:flex-row md:items-center md:justify-between">
-          <p>
-            © {year} SHERO. {business.legalLine}
-          </p>
+        <div className="flex flex-col gap-3 border-t border-border-inverse pt-6 text-meta text-ink-inverse-muted md:flex-row md:items-end md:justify-between">
+          {/* The legal line stands on its own (Meta verification), apart from the copyright. */}
+          <div className="flex flex-col gap-1">
+            <p>© {year} SHERO</p>
+            <p>{business.legalLine}</p>
+          </div>
           <nav aria-label="Legal" className="flex gap-5">
             <Link href={routes.terms} className="hover:text-ink-inverse">
               Terms

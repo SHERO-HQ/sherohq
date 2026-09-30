@@ -90,16 +90,7 @@ export async function getShopListings(filters: ShopFilters) {
     .leftJoin(deviceChecks, eq(deviceChecks.listingId, listings.id))
     .where(and(...conditions));
 
-  return { listings: rows, matching, inStock: await countInStock() };
-}
-
-/** Devices available to buy right now (reserved ones don't count). */
-export async function countInStock() {
-  const [{ total }] = await db
-    .select({ total: sql<number>`count(*)::int` })
-    .from(listings)
-    .where(eq(listings.status, "in_stock"));
-  return total;
+  return { listings: rows, matching };
 }
 
 /** One visible listing with its device check; deduplicated per request. */
@@ -156,11 +147,4 @@ export async function getDeliveryRates(): Promise<Record<string, number | null>>
   return Object.fromEntries(rows.map((row) => [row.region, row.feePesewas]));
 }
 
-/**
- * Which online payments checkout can take. Off until each provider is wired in
- * (Hubtel for MoMo, Paystack for cards), so checkout never offers a payment it
- * can't collect. TODO(owner): Hubtel and Paystack business accounts and keys.
- */
-export function onlinePayments() {
-  return { momo: false, card: false };
-}
+export { onlinePayments } from "@/lib/payments";

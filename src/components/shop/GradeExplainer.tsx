@@ -1,9 +1,9 @@
 import { Check } from "lucide-react";
 import { Section, SectionHeader } from "@/components/ui/Section";
 import { formatCedis } from "@/lib/orders";
-import { whatsappLink } from "@/lib/site";
+import { paymentSummary } from "@/lib/payments";
 
-/** "What Grade A++ means": the shop's standard, with the delivery and payment facts. */
+/** "What Grade A++ means": the shop's standard, with the warranty, delivery and payment facts. */
 export function GradeExplainer({ minBattery, thresholdPesewas }: { minBattery: number; thresholdPesewas: number }) {
   const facts = [
     { label: "warranty", text: "One week. We repair or replace anything we tested." },
@@ -11,23 +11,7 @@ export function GradeExplainer({ minBattery, thresholdPesewas }: { minBattery: n
       label: "delivery",
       text: `Same day in Tamale. 12–72 hours elsewhere, by bus. Free over ${formatCedis(thresholdPesewas)}, or collect free from our store.`,
     },
-    { label: "payment", text: "MoMo, card, cash on delivery, or pay when you collect." },
-    {
-      label: "not sure?",
-      text: (
-        <>
-          Tell us your work and budget.{" "}
-          <a
-            href={whatsappLink("Hi SHERO, I'm looking for a laptop. My work and budget: ")}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="font-medium text-primary underline underline-offset-4"
-          >
-            We&rsquo;ll recommend one, free.
-          </a>
-        </>
-      ),
-    },
+    { label: "payment", text: paymentSummary() },
   ];
 
   const standard = [
@@ -45,12 +29,11 @@ export function GradeExplainer({ minBattery, thresholdPesewas }: { minBattery: n
         <div>
           <SectionHeader
             id="grade-heading"
-            eyebrow="grade a++"
             title="What Grade A++ means."
             intro="UK-used: lightly used by a previous owner in the UK, not heavily worked. Neat and clean, and checked the same way before it’s listed."
             className="lg:mb-10"
           />
-          <dl className="grid gap-x-8 gap-y-6 sm:grid-cols-2">
+          <dl className="grid gap-y-6 md:grid-cols-3 md:gap-x-8">
             {facts.map((fact) => (
               <div key={fact.label} className="flex flex-col gap-1 border-t border-border pt-4">
                 <dt className="font-mono text-eyebrow text-secondary">{fact.label}</dt>

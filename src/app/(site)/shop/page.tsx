@@ -5,7 +5,6 @@ import { GradeExplainer } from "@/components/shop/GradeExplainer";
 import { ShopFilters, SortSelect } from "@/components/shop/ShopFilters";
 import { DispatchCountdown } from "@/components/ui/LiveStatus";
 import { buttonClass } from "@/components/ui/Button";
-import { formatCedis } from "@/lib/orders";
 import { getShopListings, getShopSettings, parseShopFilters, SHOP_PAGE_SIZE } from "@/lib/shop";
 import { routes, whatsappLink } from "@/lib/site";
 
@@ -20,22 +19,9 @@ const recommendMessage = "Hi SHERO, I'm looking for a laptop. I'll mainly use it
 
 export default async function ShopPage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   const filters = parseShopFilters(await searchParams);
-  const [{ listings, matching, inStock }, settings] = await Promise.all([getShopListings(filters), getShopSettings()]);
+  const [{ listings, matching }, settings] = await Promise.all([getShopListings(filters), getShopSettings()]);
 
-  const categoryLabel =
-    filters.categories.length === 1
-      ? filters.categories[0]
-      : filters.categories.length > 1
-        ? `${filters.categories.length} categories`
-        : "all devices";
   const filtered = filters.categories.length > 0 || filters.newBattery || filters.price !== null;
-
-  const promises = [
-    "Grade A++ UK-used",
-    "Battery health on every listing",
-    "One-week warranty and free support",
-    `Free nationwide delivery over ${formatCedis(settings.freeDeliveryThresholdPesewas)}`,
-  ];
 
   // "Show more" keeps the current filters and adds a page.
   const moreParams = new URLSearchParams();
@@ -47,23 +33,10 @@ export default async function ShopPage({ searchParams }: { searchParams: Promise
 
   return (
     <>
-      <section className="container-site flex flex-col gap-4 pb-6 lg:flex-row lg:items-end lg:justify-between lg:gap-12 lg:pb-10 pt-section">
+      <section className="container-site pt-section">
         <h1 className="max-w-4xl font-display text-h1 text-heading">
           UK-used laptops, tested and ready for work.
         </h1>
-        <p className="shrink-0 font-mono text-meta text-ink-secondary">
-          {inStock === 1 ? "1 device" : `${inStock} devices`} in stock
-        </p>
-      </section>
-
-      <section aria-label="What every device comes with" className="border-y border-border lg:border-t-border">
-        <ul className="container-site flex flex-wrap gap-x-10 gap-y-1 py-3.5 font-mono text-meta lg:text-body-sm text-ink lg:py-4.5 lg:font-sans lg:font-medium">
-          {promises.map((promise, i) => (
-            <li key={promise} className={i > 2 ? "hidden sm:block" : undefined}>
-              {promise}
-            </li>
-          ))}
-        </ul>
       </section>
 
       <section className="container-site pt-6 lg:pt-8">
@@ -96,8 +69,8 @@ export default async function ShopPage({ searchParams }: { searchParams: Promise
 
         <div>
           <div className="flex items-center justify-between gap-4 pb-5">
-            <p aria-live="polite" className="font-mono text-meta text-ink-secondary">
-              showing {categoryLabel} · {listings.length} of {matching}
+            <p aria-live="polite" className="text-body-sm text-ink-secondary">
+              {listings.length < matching ? `Showing ${listings.length} of ${matching}` : `${matching} ${matching === 1 ? "device" : "devices"}`}
             </p>
             <SortSelect value={filters.sort} />
           </div>

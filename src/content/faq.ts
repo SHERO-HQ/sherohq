@@ -1,3 +1,5 @@
+import { paymentSummary } from "@/lib/payments";
+
 // Support FAQ. Every answer must stay true; the FAQ page also publishes these
 // to search engines as structured data.
 
@@ -17,7 +19,7 @@ export const faq: FaqGroup[] = [
       },
       {
         q: "How can I pay?",
-        a: "MoMo (MTN MoMo or Telecel Cash), card (Visa or Mastercard), cash on delivery, or pay when you pick up your order.",
+        a: paymentSummary(),
       },
     ],
   },

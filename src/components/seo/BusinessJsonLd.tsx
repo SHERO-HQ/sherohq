@@ -1,5 +1,6 @@
 import { business, siteUrl } from "@/lib/site";
 import { schedule } from "@/lib/hours";
+import { onlinePayments } from "@/lib/payments";
 
 const DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 const pad = (hour: number) => `${String(hour).padStart(2, "0")}:00`;
@@ -9,6 +10,7 @@ const pad = (hour: number) => `${String(hour).padStart(2, "0")}:00`;
  * of Ghana. Only facts that are true today; no ratings or reviews.
  */
 export function BusinessJsonLd() {
+  const online = onlinePayments();
   const data = {
     "@context": "https://schema.org",
     "@type": ["LocalBusiness", "ComputerStore"],
@@ -37,7 +39,8 @@ export function BusinessJsonLd() {
       opens: pad(schedule.openHour),
       closes: pad(schedule.closeHour),
     },
-    paymentAccepted: "Mobile Money, Visa, Mastercard, Cash",
+    // Only what checkout takes today (see src/lib/payments.ts).
+    paymentAccepted: [online.momo && "Mobile Money", online.card && "Visa, Mastercard", "Cash"].filter(Boolean).join(", "),
     currenciesAccepted: "GHS",
   };
 

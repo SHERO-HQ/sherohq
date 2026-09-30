@@ -53,7 +53,7 @@ export function WaitlistForm({ product }: { product: ProductPageContent }) {
       ) : (
         <>
           <p className="text-body text-ink-secondary">
-            Be among the first to use {product.name}. We&rsquo;ll contact you when it&rsquo;s ready.
+            We&rsquo;ll get in touch when {product.name} is ready to use.
           </p>
           <form noValidate onSubmit={onSubmit} data-clarity-mask="True" className="flex flex-col gap-4">
             {/* Field names match parseWaitlist; ids are unique per product. */}

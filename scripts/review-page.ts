@@ -26,14 +26,21 @@ const notes: Record<string, string[]> = {
     "Escape closes it and focus returns to the menu button.",
   ],
   services: [
-    "Each service shows its illustration in a card with what's included; the steps are cards.",
+    "Each service shows its illustration in a card with what's included. No 01–04 numbers.",
+    "Plain one-line intros instead of slogans; the duplicate \"Mobile and web apps\" and vague \"Cloud-based products\" offers are replaced with real ones.",
+    "Six generic process steps cut to three real ones: talk, a quote before any work starts, build and support.",
     "Hardware links straight to laptops in stock, as well as to a consultation.",
     "Each Talk to us link preselects that service on the consultation form.",
     "Mobile shows all four offers per service; the mobile design trimmed them to three.",
   ],
   about: [
-    "Values are four cards with an icon each.","What we value has a heading on desktop too, for page structure.", "The work placeholder links to the Work page."],
-  careers: ["The CV email link fills in the subject line."],
+    "Generic values (Purpose, Integrity, Ownership, Reliability) replaced with four promises a visitor can check: a quote before we start, every device checked, only work we may show, plain In development labels.",
+    "The story says what SHERO does, in plain words, instead of a manifesto.",
+    "The work placeholder links to the Work page."],
+  careers: [
+    "The CV email link fills in the subject line.",
+    "The repeated values section and the decorative screenshot are gone; one column, one clear action.",
+  ],
   work: ["Visit links stay hidden until each project's live link is supplied."],
   "case-study": [
     "The client quote block only appears once the client gives a quote.",
@@ -47,6 +54,8 @@ const notes: Record<string, string[]> = {
     "Price is one choice at a time (Any price plus three bands), not checkboxes.",
     "On phones, filters fold behind a Filters button instead of category chips.",
     "Reserved devices stay visible, marked Reserved, so shared links still work.",
+    "The facts strip under the heading is gone: warranty, delivery and payment are said once, in What Grade A++ means. One device count instead of two that disagreed.",
+    "Payment copy lists only what checkout takes today; MoMo and card appear once Hubtel and Paystack are switched on.",
     "Search and Wishlist icons are left out until those features exist.",
     "An honest empty state when nothing matches, with a WhatsApp prompt.",
   ],

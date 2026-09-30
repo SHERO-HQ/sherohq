@@ -1,9 +1,6 @@
-import Link from "next/link";
 import { Placeholder } from "@/components/ui/Placeholder";
-import { InlineArrow } from "@/components/ui/InlineArrow";
 import { StatusBadge } from "@/components/ui/StatusBadge";
 import type { ProductPageContent } from "@/content/products";
-import { routes } from "@/lib/site";
 import { WaitlistForm } from "./WaitlistForm";
 
 /** One layout for every SHERO product; only content and colours change. */
@@ -87,16 +84,6 @@ export function ProductPage({ product }: { product: ProductPageContent }) {
         </table>
       </section>
 
-      <section className="border-t border-border bg-surface">
-        <div className="container-site flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between lg:gap-8 py-section">
-          <p className="max-w-measure text-body lg:text-body-lg text-ink-secondary">
-            {product.name} is built by SHERO, alongside our software, hardware and IT services.
-          </p>
-          <Link href={routes.services} className="self-start text-body-sm font-medium text-primary hover:underline lg:self-auto">
-            More from SHERO <InlineArrow />
-          </Link>
-        </div>
-      </section>
     </div>
   );
 }

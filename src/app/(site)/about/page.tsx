@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Handshake, Scale, ShieldCheck, Target } from "lucide-react";
+import { BatteryFull, Construction, Handshake, ReceiptText } from "lucide-react";
 import { Card } from "@/components/ui/Card";
 import { Section, SectionHeader } from "@/components/ui/Section";
 import { ConsultationCta } from "@/components/home/ConsultationCta";
@@ -15,11 +15,28 @@ export const metadata: Metadata = {
   alternates: { canonical: routes.about },
 };
 
-const values = [
-  { name: "Purpose", icon: Target, text: "We build with intention. Everything we create should solve a real problem." },
-  { name: "Integrity", icon: Scale, text: "We're honest about what we can do, and we stand behind what we promise." },
-  { name: "Ownership", icon: Handshake, text: "We take responsibility and see the work through." },
-  { name: "Reliability", icon: ShieldCheck, text: "People depend on what we build, so we make it dependable." },
+// Promises a visitor can check, in place of generic values.
+const commitments = [
+  {
+    name: "A quote before we start",
+    icon: ReceiptText,
+    text: "You know what it costs and how long it takes before any work begins.",
+  },
+  {
+    name: "Every device checked",
+    icon: BatteryFull,
+    text: "Each laptop is tested before it's listed, and the listing shows its battery health.",
+  },
+  {
+    name: "Only work we may show",
+    icon: Handshake,
+    text: "Every project on this site is shown with the client's permission.",
+  },
+  {
+    name: "Plain labels",
+    icon: Construction,
+    text: "Products we're still building say In development until you can use them.",
+  },
 ];
 
 export default function AboutPage() {
@@ -41,8 +58,7 @@ export default function AboutPage() {
             Possible.
           </h1>
           <p className="relative max-w-measure text-body-lg text-ink-secondary">
-            It&rsquo;s our motto because it&rsquo;s how we work: start with one question, what becomes possible,
-            and build towards the answer.
+            Our motto: look at what&rsquo;s holding a business back, and build what would work better.
           </p>
           <div aria-hidden="true" className="flex gap-2.5 lg:hidden">
             <span className="slant h-6.5 w-22.5 bg-navy-700" />
@@ -58,8 +74,8 @@ export default function AboutPage() {
             label="Screenshots: TrustCircle, Tastea and Dajrim"
             className="h-60 border border-border bg-surface lg:h-130"
           />
-          <figcaption className="flex items-center justify-between gap-4 font-mono text-meta text-ink-muted">
-            fig. 01 — systems we&rsquo;ve built
+          <figcaption className="flex items-center justify-between gap-4 text-body-sm text-ink-muted">
+            Systems we&rsquo;ve built
             <Link href={routes.work} className="font-text text-body-sm font-medium text-primary hover:underline">
               See the work <InlineArrow />
             </Link>
@@ -67,26 +83,24 @@ export default function AboutPage() {
         </figure>
         <div className="flex flex-col gap-5 py-10 lg:gap-6 lg:py-0 lg:pt-10">
           <p className="text-h3 text-ink">
-            The world is shaped by the limits people accept. SHERO was started on the belief that many of those
-            limits aren&rsquo;t fixed.
+            SHERO is a technology company in Tamale. We started it because good tools shouldn&rsquo;t depend on
+            where a business is based.
           </p>
           <p className="text-body lg:text-body-lg text-ink-secondary">
-            We use technology to challenge them, not because technology is the goal, but because it&rsquo;s one of
-            the best tools for progress. It helps people solve problems, businesses grow with confidence, and
-            communities build what comes next.
+            We build software for businesses, sell tested UK-used laptops, and set up and support the IT that
+            offices run on, delivering across Ghana.
           </p>
           <p className="text-body lg:text-body-lg text-ink-secondary">
-            Today we do that from Tamale by building software, supplying hardware and supporting the systems
-            businesses depend on. We&rsquo;re also building our own products for problems we see around us every
-            day.
+            We&rsquo;re also building two products of our own, both in development: Merchander, for businesses that
+            sell on social media, and Pharmasyst, for pharmacies with labs.
           </p>
         </div>
       </section>
 
       <Section tone="surface" aria-labelledby="values-title">
-        <SectionHeader id="values-title" title="What we value." />
+        <SectionHeader id="values-title" title="What you can hold us to." />
         <dl className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          {values.map(({ name, text, icon: Icon }) => (
+          {commitments.map(({ name, text, icon: Icon }) => (
             <Card key={name} className="gap-2 p-5 lg:p-6">
               <Icon aria-hidden="true" size={22} strokeWidth={1.5} className="text-secondary" />
               <dt className="pt-1 font-display text-h3 text-heading">{name}</dt>
@@ -102,12 +116,8 @@ export default function AboutPage() {
         </h2>
         <div className="flex max-w-measure flex-col gap-4 lg:gap-5.5">
           <p className="text-body lg:text-body-lg text-ink">
-            We&rsquo;re starting focused: technology for people and businesses in Ghana. Over time, we want to take
-            the same approach to other areas where better tools can remove barriers, including health, education and
-            financial access.
-          </p>
-          <p className="text-body lg:text-body-lg text-ink-secondary">
-            We&rsquo;ll grow into those carefully, one real problem at a time.
+            For now, businesses in Ghana. Over time, we want to take the same approach to health, education and
+            financial access, where the right tools are still hard to get.
           </p>
         </div>
       </section>

@@ -26,7 +26,7 @@ const products = [
 export function OwnProducts() {
   return (
     <Section id="products" divider className="scroll-mt-16" aria-labelledby="products-heading">
-      <SectionHeader id="products-heading" eyebrow="our own products" title="Our own products." />
+      <SectionHeader id="products-heading" title="Our own products." />
       <ul className="grid gap-4 lg:grid-cols-2 lg:gap-6">
         {products.map((product) => (
           <li key={product.name}>

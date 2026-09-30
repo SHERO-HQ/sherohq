@@ -31,15 +31,15 @@ const services: Service[] = [
     id: "software",
     Art: SoftwareArt,
     title: "Custom software",
-    intro: "Software shaped around your workflow, not the other way round.",
-    offers: ["Web applications and dashboards", "Internal business tools", "Mobile and web apps", "Cloud-based products"],
+    intro: "Web and mobile apps built around how your business already works.",
+    offers: ["Web apps and dashboards", "Mobile apps", "Internal tools for your staff", "Online ordering for your customers"],
     links: [{ label: "Talk to us about custom software", href: consult("software") }],
   },
   {
     id: "hardware",
     Art: HardwareArt,
     title: "Hardware",
-    intro: "Laptops and equipment your team can rely on, tested before delivery.",
+    intro: "Laptops and office equipment, tested before they reach you.",
     offers: [
       "UK-used business laptops and desktops",
       "Phones, audio and accessories",
@@ -55,7 +55,7 @@ const services: Service[] = [
     id: "managed-it",
     Art: ManagedItArt,
     title: "Managed IT",
-    intro: "We keep your technology running so your team doesn't have to think about it.",
+    intro: "Setup, backups and a number to call when something stops working.",
     offers: [
       "Workstation setup for new staff",
       "Office network setup",
@@ -68,7 +68,7 @@ const services: Service[] = [
     id: "integrations",
     Art: IntegrationArt,
     title: "Systems integration",
-    intro: "Your tools, talking to each other.",
+    intro: "Payments, point of sale and stock connected, so nothing is typed twice.",
     offers: [
       "Payment setup with MoMo and cards",
       "Point of sale and stock syncing",
@@ -79,16 +79,13 @@ const services: Service[] = [
   },
 ];
 
+// Three steps a client actually goes through; the promise that matters is
+// the quote before any work starts.
 const steps = [
-  { title: "Talk", text: "We learn what your business does and what's getting in the way." },
-  { title: "Plan", text: "We propose a solution, what it costs and how long it takes." },
-  { title: "Build", text: "We build the software, install the hardware and configure systems." },
-  { title: "Test", text: "We check everything works together before you rely on it." },
-  { title: "Hand over", text: "We train your team so they're comfortable using it." },
-  { title: "Support", text: "We stay available for fixes, updates and questions." },
+  { title: "Talk", text: "A free consultation about what your business does and what's getting in the way." },
+  { title: "Quote", text: "What we'd build or supply, what it costs and how long it takes, before any work starts." },
+  { title: "Build and support", text: "We build, test and set it up, show you how it works, then help with fixes and questions after it goes live." },
 ];
-
-const pad = (n: number) => String(n).padStart(2, "0");
 
 export default function ServicesPage() {
   return (
@@ -123,7 +120,6 @@ export default function ServicesPage() {
           className="grid scroll-mt-16 gap-8 lg:grid-cols-2 lg:gap-16"
         >
           <div className="flex flex-col gap-4">
-            <p className="font-mono text-eyebrow text-secondary">{pad(i + 1)}</p>
             <h2 id={`${service.id}-title`} className="text-h2">
               {service.title}
             </h2>
@@ -153,12 +149,12 @@ export default function ServicesPage() {
       ))}
 
       <Section tone="surface" aria-labelledby="process-heading">
-        <SectionHeader id="process-heading" eyebrow="how we work" title="From first conversation to ongoing support." />
-        <ol className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 lg:gap-4">
+        <SectionHeader id="process-heading" title="How working with us goes." />
+        <ol className="grid gap-3 md:grid-cols-3 lg:gap-4">
           {steps.map((step, i) => (
             <li key={step.title}>
               <Card className="h-full gap-2 p-5 lg:p-6">
-                <span className="font-mono text-eyebrow text-secondary">step {pad(i + 1)}</span>
+                <span className="font-mono text-eyebrow text-secondary">{i + 1}</span>
                 <span className="font-display text-h3 text-heading">{step.title}</span>
                 <span className="text-body text-ink-secondary">{step.text}</span>
               </Card>
