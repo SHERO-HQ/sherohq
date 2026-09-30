@@ -105,8 +105,8 @@ Decisions made while building, on top of the handoff.
 | Services | `/services` (sections `#software`, `#hardware`, `#managed-it`, `#integrations`) |
 | Shop, laptop detail | `/shop`, `/shop/[slug]` |
 | Cart, checkout, track order | `/cart`, `/checkout`, `/track` |
-| Products | `/merchander`, `/pharmasyst` (waitlist form at `#waitlist`); the "Products" nav item goes to `/#products` |
-| Work, case study | `/work`, `/work/[slug]` |
+| Products | `/<slug>` from the `products` table (`src/app/(site)/[product]`), e.g. `/merchander`, `/pharmasyst`; waitlist form at `#waitlist`; the "Products" nav item goes to `/#products` |
+| Work, case study | `/work`, `/work/[slug]` from the `projects` table |
 | About, careers | `/about`, `/about/careers` |
 | Support, consultation | `/support` (FAQ at `#faq`), `/support/consultation` |
 | Legal | `/legal/terms`, `/legal/privacy`, `/legal/cookies` |
@@ -139,7 +139,10 @@ Decisions made while building, on top of the handoff.
 - Create or reset the account: `yarn admin:account you@example.com` (prompts for the password, prints the two-factor key and 8 recovery codes, signs out every session). `yarn db:seed` makes a local-only account (`scripts/local-admin.ts`) that the browser tests and `yarn review` sign in with.
 - Listings: the table (status tabs, check summary) and the editor (details, specs, photos, device check with Not tested/Pass/Fail, has-battery, status). The In stock rule is checked live in the editor and enforced by `saveListing`, for In stock and Reserved. Slugs are set once, on create, so shared links keep working. Only drafts can be deleted.
 - Photos (`src/lib/admin/photo-store.ts`): shrunk in the browser, uploaded one at a time (server actions allow 4 MB), re-encoded by sharp to WebP at most 1600px with metadata stripped, up to 8 per listing, the first is the cover. Stored in Supabase Storage when `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` are set (public bucket `listing-photos`), else in `.data/uploads` against a local database only, served by `/uploads/[name]`.
-- Not built yet: Dashboard, Orders, Consultations, Waitlists, Referrals, Testimonials, Work, Careers, Settings. Add each to the sidebar in `src/app/admin/(app)/layout.tsx` when it lands.
+- Products (owner, 30 Sep 2026: not in the original scope; products are added over time). The `products` table (Merchander and Pharmasyst moved in by migration) drives the product pages, the Home cards, the phone menu's Products, the footer, the sitemap and the FAQ's products answer (`buildFaq`). Status In development (label, waitlist, "Preview · in development" tag) or Live (needs its https address; the page links to it, no waitlist). Colours come from `src/lib/product-themes.ts` (contrast-checked; add a theme there and in `globals.css`). Slugs are fixed after creation and can't take an existing page's name (`reservedSlugs`). Waitlist signups reference the product; a product with signups can only be hidden, not deleted. Each product's waitlist question is set in the admin (`parseWaitlist` takes its labels).
+- Work: the `projects` table drives the Work page, case studies and the Home "We've worked with" row (each project's client and name). Empty text fields show as [bracketed] placeholders (`src/lib/work.ts`), and the admin lists what's still empty. Logo and screenshots (the first leads the page, the second shows under What we built) use the shared `ImageManager` and `PhotoManager`.
+- Saving a product or project revalidates the whole site (`revalidatePath("/", "layout")`), since menus and footers show them on every page. Product and case-study pages are built ahead and refreshed hourly or on save.
+- Not built yet: Dashboard, Orders, Consultations, Waitlists, Referrals, Testimonials, Careers, Settings. Add each to the sidebar in `src/app/admin/(app)/layout.tsx` when it lands.
 
 **Open for the owner.** The footer's "Feedback" link has no page in the designs; it points to Support for now.
 

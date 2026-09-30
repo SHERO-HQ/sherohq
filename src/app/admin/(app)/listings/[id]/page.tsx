@@ -6,6 +6,7 @@ import { Badge, listingStatusBadge } from "@/components/admin/Badge";
 import { ListingEditor } from "@/components/admin/ListingEditor";
 import { PhotoManager } from "@/components/admin/PhotoManager";
 import { MAX_PHOTOS } from "@/lib/admin/photo-store";
+import { addPhoto, movePhoto, removePhoto } from "../actions";
 import { InlineArrow } from "@/components/ui/InlineArrow";
 import { requireAdmin } from "@/lib/admin/auth";
 import { adminListing } from "@/lib/admin/listings";
@@ -56,7 +57,15 @@ export default async function ListingPage({ params, searchParams }: Props) {
           categories={settings.categories}
           minBattery={settings.minBatteryHealth}
           saved={saved === "1"}
-          photos={<PhotoManager listingId={listing.id} photos={listing.photos} max={MAX_PHOTOS} />}
+          photos={
+            <PhotoManager
+              listingId={listing.id}
+              photos={listing.photos}
+              max={MAX_PHOTOS}
+              hint="Photos of this exact device. The first is the cover; front, keyboard, ports and lid work well."
+              actions={{ add: addPhoto, remove: removePhoto, move: movePhoto }}
+            />
+          }
         />
       </div>
     </>

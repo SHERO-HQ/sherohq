@@ -103,6 +103,24 @@ const notes: Record<string, string[]> = {
     "Only built sections are in the sidebar; the others join as they're built. No search box until search exists.",
     "The Listings count is drafts whose device check isn't complete. A battery under the minimum shows red; devices without a battery say so.",
   ],
+  "admin-products": [
+    "New section (your request): SHERO's own products, so new ones can be added without a code change. Not in the original admin scope, so no mockup.",
+    "Merchander and Pharmasyst moved in with their copy. The phone menu, footer, Home cards, sitemap and FAQ all follow what's shown here.",
+  ],
+  "admin-product": [
+    "Status In development keeps the label, the waitlist and the \"Preview · in development\" tag; Live needs its address and links to it.",
+    "Colours come from a set of contrast-checked themes rather than a colour picker, so every product page stays readable in light and dark.",
+    "Each product sets its own waitlist question (e.g. what do you sell, number of branches). A product with signups can be hidden, not deleted.",
+    "The page address is fixed after creation and can't take an existing page's name (shop, work…).",
+  ],
+  "admin-work": [
+    "Client projects move from code to the admin: the Work page, case studies and Home's \"We've worked with\" row follow it.",
+    "The list shows how much of each case study is still to write; empty fields stay [bracketed] on the site, never invented.",
+  ],
+  "admin-project": [
+    "Logo and screenshots: the first screenshot leads the Work page and case study, the second shows under What we built.",
+    "A yellow note lists what's still empty while the project is shown.",
+  ],
   "admin-listing": [
     "Each test is Not tested, Pass or Fail (a checkbox can't record a failure).",
     "Photos of the device: add several at once, reorder (the first is the cover), remove. They're shrunk and stripped of location data before they're stored.",

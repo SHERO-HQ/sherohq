@@ -3,7 +3,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { AdminHeader } from "@/components/admin/AdminShell";
 import { Badge } from "@/components/admin/Badge";
-import { PreviewManager } from "@/components/admin/PreviewManager";
+import { ImageManager } from "@/components/admin/ImageManager";
+import { removePreview, setPreview } from "../actions";
 import { ProductEditor } from "@/components/admin/ProductEditor";
 import { InlineArrow } from "@/components/ui/InlineArrow";
 import { requireAdmin } from "@/lib/admin/auth";
@@ -44,7 +45,20 @@ export default async function ProductAdminPage({ params, searchParams }: Props) 
           product={product}
           signups={signups}
           saved={saved === "1"}
-          preview={<PreviewManager productId={product.id} url={product.previewUrl} inDevelopment={product.status === "in_development"} />}
+          preview={
+            <ImageManager
+              id={product.id}
+              url={product.previewUrl}
+              title="Dashboard preview"
+              empty="No preview yet: the page shows a marked placeholder."
+              hint={
+                product.status === "in_development"
+                  ? "A screenshot, 16:9 works best. While in development it's shown with a \"Preview · in development\" tag."
+                  : "A screenshot, 16:9 works best."
+              }
+              actions={{ set: setPreview, remove: removePreview }}
+            />
+          }
         />
       </div>
     </>

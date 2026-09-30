@@ -1,8 +1,5 @@
 import { LogoCycle } from "@/components/ui/LogoCycle";
-
-// Clients whose work SHERO may show (permissions granted, per the PRD).
-// Set as plain type until the real logos arrive; swap in logos then.
-const clients = ["Samakose", "TrustCircle", "Tastea", "Dajrim"];
+import { getClientNames } from "@/lib/work";
 
 /**
  * Clients, Clerk style: tinted lines run the full width of the screen above
@@ -11,7 +8,11 @@ const clients = ["Samakose", "TrustCircle", "Tastea", "Dajrim"];
  * swap names when there are more clients than spots (phones now; large
  * screens from the fifth).
  */
-export function ClientStrip() {
+export async function ClientStrip() {
+  // Clients and projects from the admin's Work section, shown with permission.
+  // Set as plain type until the real logos arrive.
+  const clients = await getClientNames();
+  if (clients.length === 0) return null;
   return (
     <section aria-labelledby="clients-heading" className="border-y border-border-subtle">
       {/* On phones the grid runs edge to edge, so every line crosses the whole screen. */}

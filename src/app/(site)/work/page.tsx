@@ -5,7 +5,7 @@ import { Fill } from "@/components/ui/Fill";
 import { InlineArrow } from "@/components/ui/InlineArrow";
 import { Placeholder } from "@/components/ui/Placeholder";
 import { StatusBadge } from "@/components/ui/StatusBadge";
-import { projects } from "@/content/work";
+import { getPublishedProjects } from "@/lib/work";
 import { cn } from "@/lib/cn";
 import { routes } from "@/lib/site";
 
@@ -15,7 +15,11 @@ export const metadata: Metadata = {
   alternates: { canonical: routes.work },
 };
 
-export default function WorkPage() {
+// Client work from the admin; refreshed when the admin saves a project.
+export const revalidate = 3600;
+
+export default async function WorkPage() {
+  const projects = await getPublishedProjects();
   return (
     <>
       <section className="container-site flex flex-col gap-3.5 lg:flex-row lg:items-end lg:justify-between lg:gap-16 py-section">
@@ -43,13 +47,26 @@ export default function WorkPage() {
                 imageFirst ? "lg:grid-cols-[1.3fr_1fr]" : "lg:grid-cols-[1fr_1.3fr]",
               )}
             >
-              <Placeholder
-                label={`Screenshot or photo of ${project.name} in use`}
-                className={cn(
-                  "h-60 rounded-md border border-border bg-surface lg:h-140",
-                  !imageFirst && "lg:order-2",
-                )}
-              />
+              {project.screenshots[0] ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={project.screenshots[0]}
+                  alt={`${project.name} in use`}
+                  loading={i === 0 ? "eager" : "lazy"}
+                  className={cn(
+                    "h-60 w-full rounded-md border border-border bg-surface object-cover object-top lg:h-140",
+                    !imageFirst && "lg:order-2",
+                  )}
+                />
+              ) : (
+                <Placeholder
+                  label={`Screenshot or photo of ${project.name} in use`}
+                  className={cn(
+                    "h-60 rounded-md border border-border bg-surface lg:h-140",
+                    !imageFirst && "lg:order-2",
+                  )}
+                />
+              )}
               <div className="flex flex-col justify-center gap-3.5 lg:gap-5">
                 <div className="flex items-center gap-3.5">
                   <StatusBadge status="live" />

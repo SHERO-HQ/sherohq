@@ -66,6 +66,18 @@ for (const theme of ["light", "dark"] as const) {
         });
       }
 
+      for (const [section, name] of [
+        ["products", "Merchander"],
+        ["work", "TrustCircle"],
+      ] as const) {
+        test(`the ${section} editor has no accessibility violations`, async ({ page }) => {
+          await page.goto(`/admin/${section}`);
+          await page.getByRole("link", { name }).click();
+          await page.waitForURL(new RegExp(`/admin/${section}/[0-9a-f-]{36}`));
+          await expectNoViolations(page);
+        });
+      }
+
       test("a listing's editor has no accessibility violations", async ({ page }) => {
         await page.goto("/admin/listings");
         await page.getByRole("link", { name: "Dell Latitude 7490 (sample)" }).click();

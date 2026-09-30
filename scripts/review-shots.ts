@@ -88,6 +88,24 @@ const entries: Entry[] = [
     admin: true,
     openLink: "Draft listing (sample, never shown)",
   },
+  { slug: "admin-products", title: "Admin: Products", route: "/admin/products", design: { desktop: null, mobile: null }, admin: true },
+  {
+    slug: "admin-product",
+    title: "Admin: a product",
+    route: "/admin/products",
+    design: { desktop: null, mobile: null },
+    admin: true,
+    openLink: "Merchander",
+  },
+  { slug: "admin-work", title: "Admin: Work", route: "/admin/work", design: { desktop: "Work", mobile: null }, admin: true },
+  {
+    slug: "admin-project",
+    title: "Admin: a project",
+    route: "/admin/work",
+    design: { desktop: null, mobile: null },
+    admin: true,
+    openLink: "TrustCircle",
+  },
 ];
 
 /** Signs in once with the local admin from `yarn db:seed`; admin shots reuse the session. */

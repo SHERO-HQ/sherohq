@@ -1,13 +1,34 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useId, useState, useTransition } from "react";
 import { ImagePlus } from "lucide-react";
-import { removePreview, setPreview } from "@/app/admin/(app)/products/actions";
 import { shrinkImage } from "@/lib/admin/shrink-image";
 import { cn } from "@/lib/cn";
 
-/** The product's dashboard preview: one image, replaced or removed. */
-export function PreviewManager({ productId, url, inDevelopment }: { productId: string; url: string | null; inDevelopment: boolean }) {
+type Result = { ok: true } | { ok: false; message: string };
+
+/** One image (a product preview, a client logo): added, replaced or removed. */
+export function ImageManager({
+  id: productId,
+  url,
+  title,
+  empty,
+  hint,
+  wide = true,
+  actions,
+}: {
+  id: string;
+  url: string | null;
+  title: string;
+  /** What the site shows while there's no image. */
+  empty: string;
+  hint: string;
+  /** A 16:9 screenshot; otherwise shown at its own shape (logos). */
+  wide?: boolean;
+  actions: { set: (id: string, form: FormData) => Promise<Result>; remove: (id: string) => Promise<Result> };
+}) {
+  const { set: setPreview, remove: removePreview } = actions;
+  const headingId = useId();
   const [pending, startTransition] = useTransition();
   const [message, setMessage] = useState<string | null>(null);
 
@@ -22,15 +43,22 @@ export function PreviewManager({ productId, url, inDevelopment }: { productId: s
   }
 
   return (
-    <section aria-labelledby="preview-title" className="flex flex-col gap-4 rounded-md border border-border bg-surface-raised p-5 lg:p-6">
-      <h2 id="preview-title" className="font-display text-h3 text-heading">
-        Dashboard preview
+    <section aria-labelledby={headingId} className="flex flex-col gap-4 rounded-md border border-border bg-surface-raised p-5 lg:p-6">
+      <h2 id={headingId} className="font-display text-h3 text-heading">
+        {title}
       </h2>
       {url ? (
         // eslint-disable-next-line @next/next/no-img-element
-        <img src={url} alt="The current preview" className="aspect-[16/9] w-full rounded-sm border border-border object-cover object-top" />
+        <img
+          src={url}
+          alt={`The current ${title.toLowerCase()}`}
+          className={cn(
+            "rounded-sm border border-border",
+            wide ? "aspect-[16/9] w-full object-cover object-top" : "h-16 w-auto self-start bg-surface p-2",
+          )}
+        />
       ) : (
-        <p className="text-body-sm text-ink-secondary">No preview yet: the page shows a marked placeholder.</p>
+        <p className="text-body-sm text-ink-secondary">{empty}</p>
       )}
       <div className="flex flex-wrap items-center gap-3">
         <label
@@ -54,7 +82,7 @@ export function PreviewManager({ productId, url, inDevelopment }: { productId: s
             type="button"
             disabled={pending}
             onClick={() => {
-              if (confirm("Remove the preview image?")) startTransition(async () => void (await removePreview(productId)));
+              if (confirm(`Remove the ${title.toLowerCase()}?`)) startTransition(async () => void (await removePreview(productId)));
             }}
             className={cn("text-body-sm text-ink-secondary hover:text-danger")}
           >
@@ -63,12 +91,7 @@ export function PreviewManager({ productId, url, inDevelopment }: { productId: s
         )}
       </div>
       <p aria-live="polite" className={cn("text-body-sm", message ? "text-danger" : "text-ink-muted")}>
-        {message ??
-          (pending
-            ? "Saving…"
-            : inDevelopment
-              ? "A screenshot, 16:9 works best. While in development it's shown with a \"Preview · in development\" tag."
-              : "A screenshot, 16:9 works best.")}
+        {message ?? (pending ? "Saving…" : hint)}
       </p>
     </section>
   );

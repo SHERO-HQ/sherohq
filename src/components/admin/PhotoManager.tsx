@@ -2,11 +2,37 @@
 
 import { useRef, useState, useTransition } from "react";
 import { ArrowLeft, ArrowRight, ImagePlus, X } from "lucide-react";
-import { addPhoto, movePhoto, removePhoto } from "@/app/admin/(app)/listings/actions";
 import { cn } from "@/lib/cn";
 import { shrinkImage } from "@/lib/admin/shrink-image";
 
-export function PhotoManager({ listingId, photos, max }: { listingId: string; photos: string[]; max: number }) {
+type Result = { ok: true } | { ok: false; message: string };
+
+/**
+ * Several images in order (listing photos, project screenshots): add, reorder,
+ * remove. The server actions come from the page, bound to the record.
+ */
+export function PhotoManager({
+  listingId,
+  photos,
+  max,
+  label = "Photos",
+  noun = "photo",
+  hint,
+  actions,
+}: {
+  listingId: string;
+  photos: string[];
+  max: number;
+  label?: string;
+  noun?: string;
+  hint: string;
+  actions: {
+    add: (id: string, form: FormData) => Promise<Result>;
+    remove: (id: string, url: string) => Promise<Result>;
+    move: (id: string, url: string, by: -1 | 1) => Promise<Result>;
+  };
+}) {
+  const { add: addPhoto, remove: removePhoto, move: movePhoto } = actions;
   const [pending, startTransition] = useTransition();
   const [progress, setProgress] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
@@ -16,7 +42,7 @@ export function PhotoManager({ listingId, photos, max }: { listingId: string; ph
     setMessage(null);
     const list = Array.from(files).slice(0, max - photos.length);
     for (const [i, file] of list.entries()) {
-      setProgress(`Adding photo ${i + 1} of ${list.length}…`);
+      setProgress(`Adding ${noun} ${i + 1} of ${list.length}…`);
       const data = new FormData();
       data.set("photo", await shrinkImage(file), "photo.jpg");
       const result = await addPhoto(listingId, data);
@@ -40,12 +66,12 @@ export function PhotoManager({ listingId, photos, max }: { listingId: string; ph
 
   return (
     <div className="flex flex-col gap-2">
-      <span className="text-label text-ink">Photos</span>
+      <span className="text-label text-ink">{label}</span>
       <ul className="grid grid-cols-3 gap-3 sm:grid-cols-4">
         {photos.map((url, i) => (
           <li key={url} className="relative aspect-[4/3] overflow-hidden rounded-sm border border-border bg-surface">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={url} alt={`Photo ${i + 1}`} className="size-full object-cover" />
+            <img src={url} alt={`${label} ${i + 1}`} className="size-full object-cover" />
             {i === 0 && (
               <span className="absolute top-1.5 left-1.5 rounded-sm bg-surface-raised px-1.5 font-mono text-meta text-ink">cover</span>
             )}
@@ -53,7 +79,7 @@ export function PhotoManager({ listingId, photos, max }: { listingId: string; ph
               <div className="flex gap-1">
                 <button
                   type="button"
-                  aria-label={`Move photo ${i + 1} earlier`}
+                  aria-label={`Move ${noun} ${i + 1} earlier`}
                   disabled={pending || i === 0}
                   onClick={() => run(() => movePhoto(listingId, url, -1))}
                   className={iconButton}
@@ -62,7 +88,7 @@ export function PhotoManager({ listingId, photos, max }: { listingId: string; ph
                 </button>
                 <button
                   type="button"
-                  aria-label={`Move photo ${i + 1} later`}
+                  aria-label={`Move ${noun} ${i + 1} later`}
                   disabled={pending || i === photos.length - 1}
                   onClick={() => run(() => movePhoto(listingId, url, 1))}
                   className={iconButton}
@@ -72,10 +98,10 @@ export function PhotoManager({ listingId, photos, max }: { listingId: string; ph
               </div>
               <button
                 type="button"
-                aria-label={`Remove photo ${i + 1}`}
+                aria-label={`Remove ${noun} ${i + 1}`}
                 disabled={pending}
                 onClick={() => {
-                  if (confirm("Remove this photo?")) run(() => removePhoto(listingId, url));
+                  if (confirm(`Remove this ${noun}?`)) run(() => removePhoto(listingId, url));
                 }}
                 className={cn(iconButton, "hover:text-danger")}
               >
@@ -94,7 +120,7 @@ export function PhotoManager({ listingId, photos, max }: { listingId: string; ph
               )}
             >
               <ImagePlus aria-hidden="true" size={20} strokeWidth={1.5} />
-              Add photos
+              Add {label.toLowerCase()}
               <input
                 ref={input}
                 type="file"
@@ -108,7 +134,7 @@ export function PhotoManager({ listingId, photos, max }: { listingId: string; ph
         )}
       </ul>
       <p aria-live="polite" className={cn("text-body-sm", message ? "text-danger" : "text-ink-muted")}>
-        {message ?? progress ?? "Photos of this exact device. The first is the cover; front, keyboard, ports and lid work well."}
+        {message ?? progress ?? hint}
       </p>
     </div>
   );

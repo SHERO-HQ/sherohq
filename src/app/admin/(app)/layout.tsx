@@ -12,7 +12,13 @@ export default async function AdminAppLayout({ children }: { children: React.Rea
     <AdminShell
       nav={[
         { label: "shop", items: [{ label: "Listings", href: "/admin/listings", count: toCheck }] },
-        { label: "site", items: [{ label: "Products", href: "/admin/products" }] },
+        {
+          label: "site",
+          items: [
+            { label: "Products", href: "/admin/products" },
+            { label: "Work", href: "/admin/work" },
+          ],
+        },
       ]}
     >
       {children}

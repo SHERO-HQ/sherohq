@@ -6,20 +6,22 @@ import { Fill } from "@/components/ui/Fill";
 import { InlineArrow } from "@/components/ui/InlineArrow";
 import { Placeholder } from "@/components/ui/Placeholder";
 import { StatusBadge } from "@/components/ui/StatusBadge";
-import { getProject, projects } from "@/content/work";
+import { getPublishedProject, getPublishedProjects } from "@/lib/work";
 import { isMissing } from "@/lib/content";
 import { routes } from "@/lib/site";
 
 type Props = { params: Promise<{ slug: string }> };
 
-export const dynamicParams = false;
+// Built ahead for the projects known at deploy time, refreshed when the admin
+// saves one; a project published later is built on first visit.
+export const revalidate = 3600;
 
-export function generateStaticParams() {
-  return projects.map((project) => ({ slug: project.slug }));
+export async function generateStaticParams() {
+  return (await getPublishedProjects()).map((project) => ({ slug: project.slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const project = getProject((await params).slug);
+  const project = await getPublishedProject((await params).slug);
   if (!project) return {};
   const client = isMissing(project.client) ? "" : ` for ${project.client}`;
   return {
@@ -44,11 +46,11 @@ function Chapter({ title, body, children }: { title: string; body: React.Compone
 }
 
 export default async function CaseStudyPage({ params }: Props) {
-  const project = getProject((await params).slug);
+  const [project, projects] = await Promise.all([getPublishedProject((await params).slug), getPublishedProjects()]);
   if (!project) notFound();
 
-  const index = projects.indexOf(project);
-  const next = projects[(index + 1) % projects.length];
+  const index = projects.findIndex((p) => p.id === project.id);
+  const next = projects.length > 1 ? projects[(index + 1) % projects.length] : null;
 
   const facts = [
     { label: "client", value: project.client },
@@ -68,10 +70,15 @@ export default async function CaseStudyPage({ params }: Props) {
 
       <section className="container-site flex flex-col gap-4 lg:gap-7 py-section">
         <div className="flex items-center gap-3.5">
-          <Placeholder
-            label={`${project.name} logo`}
-            className="h-9 border border-dashed border-border px-3 lg:h-10 lg:px-3.5"
-          />
+          {project.logoUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={project.logoUrl} alt={`${project.name} logo`} className="h-9 w-auto lg:h-10" />
+          ) : (
+            <Placeholder
+              label={`${project.name} logo`}
+              className="h-9 border border-dashed border-border px-3 lg:h-10 lg:px-3.5"
+            />
+          )}
           <StatusBadge status="live" />
         </div>
         <h1 className="max-w-6xl font-display text-h1 text-heading">
@@ -100,41 +107,48 @@ export default async function CaseStudyPage({ params }: Props) {
       </section>
 
       <div className="container-site pt-section">
-        <Placeholder
-          label={`Wide screenshot or photo of ${project.name} in use`}
-          className="h-60 rounded-md border border-border bg-surface lg:h-155"
-        />
+        {project.screenshots[0] ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={project.screenshots[0]}
+            alt={`${project.name} in use`}
+            fetchPriority="high"
+            className="h-60 w-full rounded-md border border-border bg-surface object-cover object-top lg:h-155"
+          />
+        ) : (
+          <Placeholder
+            label={`Wide screenshot or photo of ${project.name} in use`}
+            className="h-60 rounded-md border border-border bg-surface lg:h-155"
+          />
+        )}
       </div>
 
       <Chapter title="The problem" body={project.problem} />
       <Chapter title="What we built" body={project.solution}>
-        <Placeholder
-          label="Screenshot: the main screen"
-          className="h-55 rounded-md border border-border bg-surface lg:h-105"
-        />
+        {project.screenshots[1] ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={project.screenshots[1]}
+            alt={`The main screen of ${project.name}`}
+            loading="lazy"
+            className="h-55 w-full rounded-md border border-border bg-surface object-cover object-top lg:h-105"
+          />
+        ) : (
+          <Placeholder label="Screenshot: the main screen" className="h-55 rounded-md border border-border bg-surface lg:h-105" />
+        )}
       </Chapter>
       <Chapter title="The result" body={project.result} />
 
-      {project.quote && (
-        <section className="container-site pt-section">
-          <figure className="flex flex-col gap-5 border-y border-border py-8 lg:py-12">
-            <blockquote className="max-w-5xl font-display text-h2 text-heading">
-              {project.quote.text}
-            </blockquote>
-            <figcaption className="font-mono text-meta text-ink-muted">{project.quote.attribution}</figcaption>
-          </figure>
+      {next ? (
+        <section className="container-site flex items-center justify-between gap-8 py-section">
+          <span className="font-mono text-meta text-ink-muted">next project</span>
+          <Link href={`${routes.work}/${next.slug}`} className="font-display text-h1 text-heading hover:text-primary-hover">
+            {next.name} <InlineArrow />
+          </Link>
         </section>
+      ) : (
+        <div className="pb-section" />
       )}
-
-      <section className="container-site flex items-center justify-between gap-8 py-section">
-        <span className="font-mono text-meta text-ink-muted">next project</span>
-        <Link
-          href={`${routes.work}/${next.slug}`}
-          className="font-display text-h1 text-heading hover:text-primary-hover"
-        >
-          {next.name} <InlineArrow />
-        </Link>
-      </section>
 
       <ConsultationCta
         title="Need something built?"
