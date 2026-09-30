@@ -35,9 +35,12 @@ export function PhoneField({
   }
 
   return (
-    <fieldset className={cn("flex flex-col gap-1.5", className)}>
+    // min-w-0: a fieldset otherwise refuses to shrink below its contents and
+    // widens the page. @container: country and number sit side by side only
+    // when the field itself has room (the waitlist card is narrow even on desktop).
+    <fieldset className={cn("@container flex min-w-0 flex-col gap-1.5", className)}>
       <legend className="mb-1.5 text-label text-ink">Phone number</legend>
-      <div className="flex gap-2">
+      <div className="flex flex-col gap-2 @sm:flex-row">
         <label htmlFor={`${id}-country`} className="sr-only">
           Country
         </label>
@@ -47,7 +50,7 @@ export function PhoneField({
           value={country}
           onChange={(event) => setCountry(event.target.value)}
           autoComplete="country"
-          className={cn(controlLook, "h-10 w-44 shrink-0 px-2.5")}
+          className={cn(controlLook, "h-10 w-full min-w-0 px-2.5 @sm:w-44 @sm:shrink-0")}
         >
           {countries.map((c) => (
             <option key={c.iso} value={c.iso}>
@@ -68,7 +71,7 @@ export function PhoneField({
           onChange={(event) => void detect(event.target.value)}
           aria-invalid={error ? true : undefined}
           aria-describedby={error ? `${id}-error` : `${id}-hint`}
-          className={cn(controlLook, "h-10 min-w-0 flex-1")}
+          className={cn(controlLook, "h-10 w-full min-w-0 @sm:flex-1")}
         />
       </div>
       {error ? (

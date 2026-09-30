@@ -15,6 +15,8 @@ for (const theme of ["light", "dark"] as const) {
         await page.waitForLoadState("load");
         await page.waitForTimeout(300);
         await expectNoViolations(page);
+        // Nothing may push the page wider than the screen (a sideways scroll on phones).
+        expect(await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)).toBeLessThanOrEqual(0);
       });
     }
 
