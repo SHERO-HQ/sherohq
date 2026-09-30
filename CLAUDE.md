@@ -73,7 +73,7 @@ The `.dc.html` files are design mockups in a canvas format, not runnable pages. 
 - The admin is not a second Merchander: no bookkeeping, expenses, staff roles or multi-user features.
 - Product subdomains (`merchander.sherohq.com`, `pharmasyst.sherohq.com`) redirect to their pages on sherohq.com. Old URLs (`/consultation`, `/contact-us`, `/products`, `/partners`, `/careers`) redirect to their new homes.
 - SEO: Tamale first, then Ghana-wide (SHERO delivers nationwide). Never target Accra as home (owner, 29 Sep 2026).
-- Reach (owner, 30 Sep 2026): software and IT support serve clients anywhere, not only Ghana. Hardware: the shop delivers within Ghana; bulk orders outside Ghana are quoted on request (WhatsApp). Consultation and waitlist forms have a country-code picker, Ghana first (`PhoneField`, `phoneFromParts`; a number typed with its own + wins); checkout and order tracking stay Ghana-only (`normaliseGhanaPhone`), since delivery and MoMo are in Ghana.
+- Reach (owner, 30 Sep 2026): software and IT support serve clients anywhere, not only Ghana. Hardware: the shop delivers within Ghana; bulk orders outside Ghana are quoted on request (WhatsApp). Consultation and waitlist forms have a typed country code beside the number, +233 to start, any country (`PhoneField`, `phoneFromParts`; no fixed list; a number typed with its own + wins); checkout and order tracking stay Ghana-only (`normaliseGhanaPhone`), since delivery and MoMo are in Ghana.
 - Nothing carries over from the old site's database, not even the 33 old products (owner, 29 Sep 2026). Stock is listed fresh in the new admin, each with its device check.
 
 ## Still open (ask the owner, don't guess)

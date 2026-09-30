@@ -1,6 +1,5 @@
 import { cn } from "@/lib/cn";
 import { buttonClass } from "@/components/ui/Button";
-import { dialCodes } from "@/lib/phone";
 
 // The look of every field, without its width (a phone number's country code is narrower).
 const controlLook =
@@ -167,8 +166,9 @@ export function SubmitButton({ children, pending }: { children: React.ReactNode;
 
 /**
  * A phone number with its country code, for forms that take clients anywhere
- * (consultations, waitlists). Ghana is chosen first; a number typed with its
- * own + code wins. Submits `phoneCountry` and `phone` (see phoneFromParts).
+ * (consultations, waitlists). The code is typed, +233 to start, so any
+ * country works; a number typed with its own + code wins. Submits
+ * `phoneCountry` and `phone` (see phoneFromParts).
  */
 export function PhoneField({ id, error, className }: { id: string; error?: string; className?: string }) {
   return (
@@ -178,19 +178,17 @@ export function PhoneField({ id, error, className }: { id: string; error?: strin
         <label htmlFor={`${id}-country`} className="sr-only">
           Country code
         </label>
-        <select
+        <input
           id={`${id}-country`}
           name="phoneCountry"
-          defaultValue="233"
+          type="text"
+          inputMode="tel"
+          defaultValue="+233"
+          maxLength={5}
           autoComplete="tel-country-code"
-          className={cn(controlLook, "h-10 w-32 shrink-0 px-2.5")}
-        >
-          {dialCodes.map((d) => (
-            <option key={d.code} value={d.code}>
-              {d.label}
-            </option>
-          ))}
-        </select>
+          aria-invalid={error ? true : undefined}
+          className={cn(controlLook, "h-10 w-20 shrink-0 px-2.5 text-center")}
+        />
         <label htmlFor={id} className="sr-only">
           Number
         </label>
@@ -212,7 +210,7 @@ export function PhoneField({ id, error, className }: { id: string; error?: strin
         </span>
       ) : (
         <span id={`${id}-hint`} className="text-body-sm text-ink-muted">
-          Another country? Choose its code, or type the number with +.
+          Outside Ghana? Change +233 to your country code.
         </span>
       )}
     </fieldset>
