@@ -1,9 +1,9 @@
-import { ArrowDown, ArrowRight } from "lucide-react";
+import { ArrowDown, ArrowLeft, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/cn";
 
 /** Lucide arrow sized to the surrounding text, for links like "Full shop". */
-export function InlineArrow({ direction = "right", className }: { direction?: "right" | "down"; className?: string }) {
-  const Icon = direction === "down" ? ArrowDown : ArrowRight;
+export function InlineArrow({ direction = "right", className }: { direction?: "right" | "down" | "left"; className?: string }) {
+  const Icon = { right: ArrowRight, down: ArrowDown, left: ArrowLeft }[direction];
   return (
     <Icon
       aria-hidden="true"

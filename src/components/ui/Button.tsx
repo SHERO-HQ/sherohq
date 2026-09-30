@@ -7,6 +7,8 @@ const variants = {
   primary: "bg-primary text-on-primary hover:bg-primary-hover",
   secondary: "bg-secondary text-on-secondary hover:bg-secondary-hover",
   outline: "border border-border-strong text-ink hover:border-ink",
+  /** Destructive actions in the admin, such as deleting a draft. */
+  danger: "border border-border-strong text-danger hover:border-danger",
 } as const;
 
 const sizes = {

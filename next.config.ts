@@ -22,6 +22,9 @@ const contentSecurityPolicy = [
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  // Listing photos go up one at a time, shrunk in the browser first; this
+  // leaves room for one photo while staying under Vercel's 4.5 MB request cap.
+  experimental: { serverActions: { bodySizeLimit: "4mb" } },
   poweredByHeader: false,
 
   async redirects() {
@@ -49,6 +52,28 @@ const nextConfig: NextConfig = {
         permanent: false,
       },
 
+      // The admin lives at admin.sherohq.com/admin/…: the bare host opens it,
+      // and site pages asked for on the admin host go to the public site. The
+      // public host never serves the admin.
+      {
+        source: "/",
+        has: [{ type: "host", value: "admin.sherohq.com" }],
+        destination: "/admin",
+        permanent: false,
+      },
+      {
+        source: "/:path((?!admin|_next|assets|uploads|favicon|apple-touch-icon).+)",
+        has: [{ type: "host", value: "admin.sherohq.com" }],
+        destination: `${siteUrl}/:path`,
+        permanent: false,
+      },
+      {
+        source: "/admin/:path*",
+        has: [{ type: "host", value: "(www\\.)?sherohq\\.com" }],
+        destination: "https://admin.sherohq.com/admin/:path*",
+        permanent: false,
+      },
+
       // Old site's shop and support subdomains.
       {
         source: "/:path*",
@@ -73,6 +98,8 @@ const nextConfig: NextConfig = {
         : [];
 
     return [
+      // The admin is never indexed, wherever it's served from.
+      { source: "/admin/:path*", headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }] },
       {
         source: "/:path*",
         headers: [

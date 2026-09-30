@@ -34,3 +34,9 @@ test-results/
 /playwright-report/
 /review/
 /.lighthouseci/
+
+# Local listing photos (development only; production uses Supabase Storage)
+/.data/
+
+# Admin session saved by the browser tests
+/e2e/.auth/

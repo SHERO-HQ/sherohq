@@ -12,3 +12,9 @@ export const pages: string[] = [
   routes.cart,
   "/this-page-does-not-exist",
 ];
+
+/** The admin session admin.setup.ts saves for the admin checks. */
+export const adminState = "e2e/.auth/admin.json";
+
+/** Admin pages checked signed in (the editor is checked from the table). */
+export const adminPages: string[] = ["/admin/listings", "/admin/listings?status=draft", "/admin/listings/new"];

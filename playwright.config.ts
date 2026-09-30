@@ -14,8 +14,13 @@ export default defineConfig({
     launchOptions: { executablePath },
   },
   projects: [
-    { name: "desktop", use: { ...devices["Desktop Chrome"], viewport: { width: 1440, height: 900 } } },
-    { name: "mobile", use: { ...devices["Pixel 7"], launchOptions: { executablePath } } },
+    { name: "admin-setup", testMatch: /admin\.setup\.ts/ },
+    {
+      name: "desktop",
+      use: { ...devices["Desktop Chrome"], viewport: { width: 1440, height: 900 } },
+      dependencies: ["admin-setup"],
+    },
+    { name: "mobile", use: { ...devices["Pixel 7"], launchOptions: { executablePath } }, dependencies: ["admin-setup"] },
   ],
   webServer: {
     command: "yarn start -p 3100",

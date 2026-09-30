@@ -95,6 +95,20 @@ const notes: Record<string, string[]> = {
   terms: ["No mockup; uses the Privacy layout. States only agreed facts; the rest is marked for the owner and a lawyer."],
   cookies: ["No mockup; uses the Privacy layout. Lists the real cookies and lets visitors change their analytics choice."],
   "not-found": [],
+  "admin-login": [
+    "One account, as the admin scope says: email, password and a 6-digit code from an authenticator app, on one screen. A recovery code works in place of the code.",
+    "Five wrong tries from one address (or twenty in all) lock sign-in for 15 minutes. Every attempt is recorded for the login history.",
+  ],
+  "admin-listings": [
+    "Only built sections are in the sidebar; the others join as they're built. No search box until search exists.",
+    "The Listings count is drafts whose device check isn't complete. A battery under the minimum shows red; devices without a battery say so.",
+  ],
+  "admin-listing": [
+    "Each test is Not tested, Pass or Fail (a checkbox can't record a failure).",
+    "Photos of the device: add several at once, reorder (the first is the cover), remove. They're shrunk and stripped of location data before they're stored.",
+    "The Status card says, as you fill the check, what still stops the device going in stock; the server enforces the same rule on Save.",
+    "\"This device has a battery\" off for desktops and bags hides the battery fields.",
+  ],
 };
 
 const everywhere = [

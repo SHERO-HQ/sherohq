@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { inStockBlockers, specSummary, type DeviceCheck } from "./listings";
+import { checkSummary, inStockBlockers, specSummary, type DeviceCheck } from "./listings";
 
 const passing: DeviceCheck = {
   listingId: "00000000-0000-0000-0000-000000000000",
@@ -67,5 +67,22 @@ describe("specSummary", () => {
   it("joins the parts that exist", () => {
     expect(specSummary({ processor: "i5-8350U", ram: "8GB", storage: "256GB SSD" })).toBe("i5-8350U · 8GB · 256GB SSD");
     expect(specSummary({ ram: "16GB" })).toBe("16GB");
+  });
+});
+
+describe("checkSummary", () => {
+  const empty: DeviceCheck = {
+    ...passing,
+    screen: null, keyboard: null, trackpad: null, ports: null, speakers: null, camera: null, wifi: null, charging: null,
+    batteryHealth: null, batteryReplaced: null, batteryType: null, cosmeticCondition: null, cleanedAndReset: false, serialLast4: null,
+  };
+
+  it("says complete, not started, what's left, or that it doesn't pass", () => {
+    expect(checkSummary(passing, 90)).toEqual({ label: "complete", tone: "done" });
+    expect(checkSummary(null, 90).label).toBe("not started");
+    expect(checkSummary(empty, 90).label).toBe("not started");
+    expect(checkSummary({ ...passing, ports: null, camera: null }, 90).label).toBe("2 left");
+    expect(checkSummary({ ...passing, wifi: false }, 90).label).toBe("doesn't pass");
+    expect(checkSummary({ ...passing, batteryHealth: 80 }, 90).label).toBe("doesn't pass");
   });
 });

@@ -1,6 +1,6 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Page } from "@playwright/test";
-import { pages, sampleListing } from "./pages";
+import { adminPages, adminState, pages, sampleListing } from "./pages";
 
 // WCAG 2.1 AA on every page, in both themes. The design system promises
 // 4.5:1 text contrast in both themes; this is what holds it to that.
@@ -41,6 +41,41 @@ for (const theme of ["light", "dark"] as const) {
       // Show the validation messages too.
       await page.getByRole("button", { name: "Place order" }).click();
       await expectNoViolations(page);
+    });
+  });
+}
+
+// The admin, signed in with the session from admin.setup.ts.
+for (const theme of ["light", "dark"] as const) {
+  test.describe(`admin, ${theme} theme`, () => {
+    test.use({ colorScheme: theme });
+
+    test("the admin sign-in page has no accessibility violations", async ({ page }) => {
+      await page.goto("/admin/login");
+      await expectNoViolations(page);
+    });
+
+    test.describe("signed in", () => {
+      test.use({ storageState: adminState });
+
+      for (const path of adminPages) {
+        test(`${path} has no accessibility violations`, async ({ page }) => {
+          await page.goto(path);
+          await page.waitForLoadState("load");
+          await expectNoViolations(page);
+        });
+      }
+
+      test("a listing's editor has no accessibility violations", async ({ page }) => {
+        await page.goto("/admin/listings");
+        await page.getByRole("link", { name: "Dell Latitude 7490 (sample)" }).click();
+        await page.waitForURL(/\/admin\/listings\/[0-9a-f-]{36}/);
+        await expectNoViolations(page);
+        // With the In stock warning showing.
+        await page.getByLabel("Status", { exact: true }).selectOption("in_stock");
+        await page.getByRole("radio", { name: "Fail" }).first().check({ force: true });
+        await expectNoViolations(page);
+      });
     });
   });
 }

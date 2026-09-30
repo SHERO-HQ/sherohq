@@ -3,9 +3,12 @@
 // model name and note, and nothing here ever runs against a hosted database.
 //
 //   yarn db:seed
+import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
-import { deviceChecks, listings, type ListingSpecs } from "../src/db/schema";
+import { adminSessions, admins, deviceChecks, listings, type ListingSpecs } from "../src/db/schema";
+import { hashPassword } from "../src/lib/admin/password";
+import { localAdmin } from "./local-admin";
 
 const url = process.env.DATABASE_URL ?? "postgres://shero:shero@localhost:5432/shero";
 const host = new URL(url).hostname;
@@ -148,6 +151,20 @@ for (const [i, sample] of samples.entries()) {
     checkedAt: new Date(),
   });
 }
+
+// The local admin account (see scripts/local-admin.ts), replacing any other.
+await db.delete(admins);
+const [admin] = await db
+  .insert(admins)
+  .values({
+    email: localAdmin.email,
+    passwordHash: await hashPassword(localAdmin.password),
+    totpSecret: localAdmin.totpSecret,
+    totpEnabledAt: new Date(),
+  })
+  .returning({ id: admins.id });
+await db.delete(adminSessions).where(eq(adminSessions.adminId, admin.id));
+console.log(`Local admin: ${localAdmin.email} / "${localAdmin.password}", two-factor key ${localAdmin.totpSecret}.`);
 
 await client.end();
 console.log(`Seeded ${samples.length} sample listings (local only).`);

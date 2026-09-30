@@ -7239,7 +7239,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sharp@npm:^0.35.4":
+"sharp@npm:^0.35.4, sharp@npm:^0.35.5":
   version: 0.35.5
   resolution: "sharp@npm:0.35.5"
   dependencies:
@@ -7371,6 +7371,7 @@ __metadata:
     react: "npm:19.3.0"
     react-dom: "npm:19.3.0"
     server-only: "npm:^0.0.1"
+    sharp: "npm:^0.35.5"
     tailwindcss: "npm:^4.3.3"
     tsx: "npm:^4.23.15"
     typescript: "npm:~5.9.3"

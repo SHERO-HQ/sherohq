@@ -132,6 +132,15 @@ Decisions made while building, on top of the handoff.
 - Track Order looks orders up with a server action, so the phone number never appears in a URL (analytics would see it).
 - Not built yet: search and wishlist (the header icons are left out until they exist).
 
+**Admin** (started 30 Sep 2026: sign-in and Listings).
+- Same Next.js app under `/admin` (`src/app/admin`), its own layout: no site header, footer, cookie notice or analytics; `noindex`. On admin.sherohq.com the bare host opens `/admin`, other paths go to sherohq.com; sherohq.com never serves `/admin` (redirects in `next.config.ts`). Previews and localhost serve `/admin` directly.
+- Sign-in (`src/lib/admin/auth.ts`): one account; email, password (scrypt) and a TOTP code on one form, or a one-time recovery code. Sessions in `admin_sessions` (the cookie `__Host-shero-admin` holds a random token, the database its SHA-256), 12 hours. Every attempt goes in `login_events`; 5 failures from one address or 20 in all within 15 minutes lock sign-in. A code works once (`totp_last_step`).
+- **Every admin page and server action calls `requireAdmin()` first**; the layout's check alone isn't enough, because actions can be called directly.
+- Create or reset the account: `yarn admin:account you@example.com` (prompts for the password, prints the two-factor key and 8 recovery codes, signs out every session). `yarn db:seed` makes a local-only account (`scripts/local-admin.ts`) that the browser tests and `yarn review` sign in with.
+- Listings: the table (status tabs, check summary) and the editor (details, specs, photos, device check with Not tested/Pass/Fail, has-battery, status). The In stock rule is checked live in the editor and enforced by `saveListing`, for In stock and Reserved. Slugs are set once, on create, so shared links keep working. Only drafts can be deleted.
+- Photos (`src/lib/admin/photo-store.ts`): shrunk in the browser, uploaded one at a time (server actions allow 4 MB), re-encoded by sharp to WebP at most 1600px with metadata stripped, up to 8 per listing, the first is the cover. Stored in Supabase Storage when `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` are set (public bucket `listing-photos`), else in `.data/uploads` against a local database only, served by `/uploads/[name]`.
+- Not built yet: Dashboard, Orders, Consultations, Waitlists, Referrals, Testimonials, Work, Careers, Settings. Add each to the sidebar in `src/app/admin/(app)/layout.tsx` when it lands.
+
 **Open for the owner.** The footer's "Feedback" link has no page in the designs; it points to Support for now.
 
 

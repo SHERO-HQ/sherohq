@@ -7,7 +7,9 @@
 import { execSync, spawn } from "node:child_process";
 import { mkdirSync, writeFileSync, existsSync } from "node:fs";
 import { resolve } from "node:path";
-import { chromium, type Browser, type Page } from "@playwright/test";
+import { chromium, type Browser, type BrowserContextOptions, type Page } from "@playwright/test";
+import { codeForStep, stepAt } from "../src/lib/admin/totp";
+import { localAdmin } from "./local-admin";
 
 const root = resolve(import.meta.dirname, "..");
 const outDir = resolve(root, "review/shots");
@@ -24,6 +26,10 @@ type Entry = {
   openMenu?: boolean;
   /** Put this listing in the cart first (cart and checkout). */
   withCart?: string;
+  /** An admin page: signed in, and its mockup is in design/admin (desktop only). */
+  admin?: boolean;
+  /** Follow this link first (e.g. to open one listing). */
+  openLink?: string;
 };
 
 // A sample from `yarn db:seed`; the shop pages need the local database.
@@ -66,7 +72,38 @@ const entries: Entry[] = [
   { slug: "terms", title: "Terms", route: "/legal/terms", design: { desktop: null, mobile: null } },
   { slug: "cookies", title: "Cookies", route: "/legal/cookies", design: { desktop: null, mobile: null } },
   { slug: "not-found", title: "404", route: "/this-page-does-not-exist", design: { desktop: "404", mobile: "404" } },
+  { slug: "admin-login", title: "Admin: sign in", route: "/admin/login", design: { desktop: null, mobile: null } },
+  {
+    slug: "admin-listings",
+    title: "Admin: Listings",
+    route: "/admin/listings",
+    design: { desktop: "Listings", mobile: null },
+    admin: true,
+  },
+  {
+    slug: "admin-listing",
+    title: "Admin: a listing",
+    route: "/admin/listings",
+    design: { desktop: "Listing", mobile: null },
+    admin: true,
+    openLink: "Draft listing (sample, never shown)",
+  },
 ];
+
+/** Signs in once with the local admin from `yarn db:seed`; admin shots reuse the session. */
+let adminSession: BrowserContextOptions["storageState"];
+async function signInToAdmin(browser: Browser) {
+  const context = await browser.newContext();
+  const page = await context.newPage();
+  await page.goto(`${base}/admin/login`);
+  await page.getByLabel("Email").fill(localAdmin.email);
+  await page.getByLabel("Password").fill(localAdmin.password);
+  await page.getByLabel("Code from your authenticator app").fill(codeForStep(localAdmin.totpSecret, stepAt(Date.now())));
+  await page.getByRole("button", { name: "Sign in" }).click();
+  await page.waitForURL("**/admin/listings");
+  adminSession = await context.storageState();
+  await context.close();
+}
 
 const viewports = {
   // Desktop is captured at 0.75 scale to keep the review page light.
@@ -97,13 +134,22 @@ async function shoot(page: Page, file: string) {
 }
 
 async function captureBuilt(browser: Browser, entry: Entry, viewport: Viewport, theme: (typeof themes)[number]) {
-  const context = await browser.newContext({ ...viewports[viewport], colorScheme: theme, isMobile: viewport === "mobile" });
+  const context = await browser.newContext({
+    ...viewports[viewport],
+    colorScheme: theme,
+    isMobile: viewport === "mobile",
+    storageState: entry.admin ? adminSession : undefined,
+  });
   const page = await context.newPage();
   if (entry.withCart) {
     await page.goto(`${base}${entry.withCart}`, { waitUntil: "load" });
     await page.locator("button:visible", { hasText: "Add to cart" }).first().click();
   }
   await page.goto(`${base}${entry.route}`, { waitUntil: "load" });
+  if (entry.openLink) {
+    await page.getByRole("link", { name: entry.openLink }).click();
+    await page.waitForLoadState("load");
+  }
   if (entry.openMenu) {
     await page.click("button[aria-label='Open menu']");
     await page.waitForSelector("#mobile-menu");
@@ -114,7 +160,7 @@ async function captureBuilt(browser: Browser, entry: Entry, viewport: Viewport, 
 }
 
 async function captureDesign(browser: Browser, name: string, entry: Entry, viewport: Viewport, theme: (typeof themes)[number]) {
-  const path = resolve(root, `design/website/${viewport}/${name}-${theme}.dc.html`);
+  const path = resolve(root, entry.admin ? `design/admin/${name}-${theme}.dc.html` : `design/website/${viewport}/${name}-${theme}.dc.html`);
   if (!existsSync(path)) return null;
   const context = await browser.newContext({ ...viewports[viewport], colorScheme: theme });
   await context.route("**/_blob/*", (route) => {
@@ -150,6 +196,7 @@ const server = spawn("yarn", ["start", "-p", String(port)], { cwd: root, stdio: 
 try {
   await waitForServer();
   const browser = await chromium.launch({ executablePath: process.env.PW_CHROMIUM_PATH || undefined });
+  await signInToAdmin(browser);
   const manifest = [];
   for (const entry of entries) {
     const shots: Record<string, Record<string, { built: string | null; design: string | null }>> = {};

@@ -46,3 +46,22 @@ export function inStockBlockers(check: DeviceCheck | null | undefined, minBatter
 export function specSummary(specs: { processor?: string; ram?: string; storage?: string }): string {
   return [specs.processor, specs.ram, specs.storage].filter(Boolean).join(" · ");
 }
+
+export type CheckSummary = { label: string; tone: "done" | "todo" | "problem" | "none" };
+
+/**
+ * The device check at a glance, for the admin's Listings table: complete,
+ * how much is left, or that something didn't pass.
+ */
+export function checkSummary(check: DeviceCheck | null | undefined, minBatteryHealth: number): CheckSummary {
+  if (!check) return { label: "not started", tone: "todo" };
+  const failed =
+    deviceTests.some((test) => check[test.key] === false) ||
+    (check.hasBattery && check.batteryHealth !== null && check.batteryHealth < minBatteryHealth);
+  if (failed) return { label: "doesn't pass", tone: "problem" };
+  const left = inStockBlockers(check, minBatteryHealth).length;
+  if (left === 0) return { label: "complete", tone: "done" };
+  const started =
+    deviceTests.some((test) => check[test.key] !== null) || check.batteryHealth !== null || check.cosmeticCondition !== null;
+  return started ? { label: `${left} left`, tone: "todo" } : { label: "not started", tone: "todo" };
+}

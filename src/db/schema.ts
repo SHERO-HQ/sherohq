@@ -388,6 +388,8 @@ export const admins = pgTable("admins", {
   passwordHash: text("password_hash").notNull(),
   totpSecret: text("totp_secret"),
   totpEnabledAt: timestamp("totp_enabled_at", { withTimezone: true }),
+  /** The last 30-second step a code was accepted for, so a code can't be used twice. */
+  totpLastStep: integer("totp_last_step"),
   /** Hashes of one-time recovery codes. */
   recoveryCodes: jsonb("recovery_codes").$type<string[]>().notNull().default([]),
   createdAt: createdAt(),
@@ -409,11 +411,17 @@ export const adminSessions = pgTable(
   (t) => [index("admin_sessions_expires_idx").on(t.expiresAt)],
 );
 
-export const loginEvents = pgTable("login_events", {
-  id: id(),
-  adminId: uuid("admin_id").references(() => admins.id, { onDelete: "cascade" }),
-  outcome: text("outcome").notNull(),
-  ip: text("ip"),
-  userAgent: text("user_agent"),
-  createdAt: createdAt(),
-});
+/** Login history (Settings shows it) and the source for login rate limits. */
+export const loginEvents = pgTable(
+  "login_events",
+  {
+    id: id(),
+    adminId: uuid("admin_id").references(() => admins.id, { onDelete: "cascade" }),
+    /** "success", "failed" or "locked". */
+    outcome: text("outcome").notNull(),
+    ip: text("ip"),
+    userAgent: text("user_agent"),
+    createdAt: createdAt(),
+  },
+  (t) => [index("login_events_created_idx").on(t.createdAt)],
+);
