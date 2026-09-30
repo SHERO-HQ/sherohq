@@ -1,8 +1,11 @@
 import { cn } from "@/lib/cn";
 import { buttonClass } from "@/components/ui/Button";
+import { dialCodes } from "@/lib/phone";
 
-const control =
-  "w-full rounded-sm border border-border-strong bg-surface-raised px-3.5 text-body text-ink placeholder:text-ink-muted aria-invalid:border-danger";
+// The look of every field, without its width (a phone number's country code is narrower).
+const controlLook =
+  "rounded-sm border border-border-strong bg-surface-raised px-3.5 text-body text-ink placeholder:text-ink-muted aria-invalid:border-danger";
+const control = `w-full ${controlLook}`;
 
 type FieldProps = {
   id: string;
@@ -159,5 +162,59 @@ export function SubmitButton({ children, pending }: { children: React.ReactNode;
     >
       {children}
     </button>
+  );
+}
+
+/**
+ * A phone number with its country code, for forms that take clients anywhere
+ * (consultations, waitlists). Ghana is chosen first; a number typed with its
+ * own + code wins. Submits `phoneCountry` and `phone` (see phoneFromParts).
+ */
+export function PhoneField({ id, error, className }: { id: string; error?: string; className?: string }) {
+  return (
+    <fieldset className={cn("flex flex-col gap-1.5", className)} aria-describedby={error ? `${id}-error` : undefined}>
+      <legend className="mb-1.5 text-label text-ink">Phone number</legend>
+      <div className="flex gap-2">
+        <label htmlFor={`${id}-country`} className="sr-only">
+          Country code
+        </label>
+        <select
+          id={`${id}-country`}
+          name="phoneCountry"
+          defaultValue="233"
+          autoComplete="tel-country-code"
+          className={cn(controlLook, "h-10 w-32 shrink-0 px-2.5")}
+        >
+          {dialCodes.map((d) => (
+            <option key={d.code} value={d.code}>
+              {d.label}
+            </option>
+          ))}
+        </select>
+        <label htmlFor={id} className="sr-only">
+          Number
+        </label>
+        <input
+          id={id}
+          name="phone"
+          type="tel"
+          inputMode="tel"
+          autoComplete="tel-national"
+          placeholder="024 412 3456"
+          aria-invalid={error ? true : undefined}
+          aria-describedby={error ? `${id}-error` : `${id}-hint`}
+          className={cn(controlLook, "h-10 min-w-0 flex-1")}
+        />
+      </div>
+      {error ? (
+        <span id={`${id}-error`} className="text-body-sm text-danger">
+          {error}
+        </span>
+      ) : (
+        <span id={`${id}-hint`} className="text-body-sm text-ink-muted">
+          Another country? Choose its code, or type the number with +.
+        </span>
+      )}
+    </fieldset>
   );
 }

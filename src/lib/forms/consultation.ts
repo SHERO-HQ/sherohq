@@ -1,4 +1,4 @@
-import { normalisePhone } from "@/lib/phone";
+import { phoneFromParts } from "@/lib/phone";
 
 export const needOptions = [
   { value: "software", label: "Custom software" },
@@ -43,8 +43,8 @@ export function parseConsultation(form: FormData):
   else if (name.length > 100) errors.name = "Keep your name under 100 characters.";
 
   // Clients can be anywhere (software and IT): any number with its country code.
-  const phone = normalisePhone(text(form.get("phone")));
-  if (!phone) errors.phone = "Enter your phone number. Outside Ghana, start with + and the country code.";
+  const phone = phoneFromParts(text(form.get("phoneCountry")), text(form.get("phone")));
+  if (!phone) errors.phone = "Check the number and its country code.";
 
   const email = text(form.get("email"));
   if (email && !EMAIL.test(email)) errors.email = "Check the email address, or leave it empty.";

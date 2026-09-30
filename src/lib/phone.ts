@@ -29,3 +29,43 @@ export function normalisePhone(input: string): string | null {
   if (compact.startsWith("+233")) return null;
   return compact;
 }
+
+/**
+ * Country codes for the phone field on forms that take clients anywhere.
+ * Ghana first (most clients), then neighbours and places clients often are;
+ * anything else is typed with its own +code.
+ */
+export const dialCodes = [
+  { code: "233", label: "+233 Ghana" },
+  { code: "234", label: "+234 Nigeria" },
+  { code: "225", label: "+225 Côte d'Ivoire" },
+  { code: "228", label: "+228 Togo" },
+  { code: "226", label: "+226 Burkina Faso" },
+  { code: "229", label: "+229 Benin" },
+  { code: "221", label: "+221 Senegal" },
+  { code: "254", label: "+254 Kenya" },
+  { code: "27", label: "+27 South Africa" },
+  { code: "44", label: "+44 United Kingdom" },
+  { code: "1", label: "+1 United States or Canada" },
+  { code: "49", label: "+49 Germany" },
+  { code: "31", label: "+31 Netherlands" },
+  { code: "33", label: "+33 France" },
+  { code: "971", label: "+971 United Arab Emirates" },
+  { code: "86", label: "+86 China" },
+  { code: "91", label: "+91 India" },
+] as const;
+
+/**
+ * Joins the country code and number from the form's phone field into E.164.
+ * A number typed with its own + or 00 code wins over the chosen country; a
+ * leading 0 (trunk prefix) is dropped, as it's never dialled from abroad.
+ */
+export function phoneFromParts(code: string, number: string): string | null {
+  const typed = number.trim();
+  if (/^(\+|00)/.test(typed.replace(/[\s\-().]/g, ""))) return normalisePhone(typed);
+  if (code === "233" || code === "") return normaliseGhanaPhone(typed);
+  if (!dialCodes.some((d) => d.code === code)) return null;
+  const national = typed.replace(/[\s\-().]/g, "").replace(/^0/, "");
+  if (!/^\d{4,14}$/.test(national)) return null;
+  return normalisePhone(`+${code}${national}`);
+}

@@ -4,7 +4,7 @@ import { useSearchParams } from "next/navigation";
 import { useState, useTransition } from "react";
 import { CircleCheck } from "lucide-react";
 import { requestConsultation } from "@/app/(site)/support/consultation/actions";
-import { RadioCards, SelectField, SubmitButton, TextArea, TextField } from "@/components/forms/fields";
+import { RadioCards, SelectField, SubmitButton, TextArea, PhoneField, TextField } from "@/components/forms/fields";
 import { trackEvent } from "@/lib/analytics";
 import {
   contactOptions,
@@ -71,20 +71,8 @@ export function ConsultationForm({ initialNeed = "software" }: { initialNeed?: s
       data-clarity-mask="True"
       className="flex flex-col gap-5 rounded-md border border-border bg-surface p-5 lg:p-9"
     >
-      <div className="grid gap-5 sm:grid-cols-2 sm:gap-4">
-        <TextField id="name" label="Your name" autoComplete="name" placeholder="Ama Mensah" error={errors.name} required />
-        <TextField
-          id="phone"
-          label="Phone number"
-          type="tel"
-          inputMode="tel"
-          autoComplete="tel"
-          placeholder="0244123456"
-          hint="Outside Ghana? Start with + and your country code."
-          error={errors.phone}
-          required
-        />
-      </div>
+      <TextField id="name" label="Your name" autoComplete="name" placeholder="Ama Mensah" error={errors.name} required />
+      <PhoneField id="phone" error={errors.phone} />
       <TextField
         id="email"
         label="Email"

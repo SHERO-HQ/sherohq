@@ -3,7 +3,7 @@
 import { useState, useTransition } from "react";
 import { CircleCheck } from "lucide-react";
 import { joinWaitlist } from "@/app/(site)/waitlist-actions";
-import { TextField } from "@/components/forms/fields";
+import { PhoneField, TextField } from "@/components/forms/fields";
 import { trackEvent } from "@/lib/analytics";
 import { parseWaitlist, type WaitlistConfig, type WaitlistErrors } from "@/lib/forms/waitlist";
 
@@ -65,17 +65,7 @@ export function WaitlistForm({ product }: { product: WaitlistConfig }) {
               placeholder={product.businessPlaceholder}
               error={errors.business}
             />
-            <TextField
-              id={id("phone")}
-              name="phone"
-              label="Phone number"
-              type="tel"
-              inputMode="tel"
-              autoComplete="tel"
-              placeholder="0244123456"
-              hint="Outside Ghana? Start with + and your country code."
-              error={errors.phone}
-            />
+            <PhoneField id={id("phone")} error={errors.phone} />
             <TextField
               id={id("detail")}
               name="detail"
