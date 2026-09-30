@@ -10,10 +10,10 @@ const manifest = JSON.parse(readFileSync(resolve(root, "review/manifest.json"), 
 // What differs from the mockup on purpose. Anything else that differs is a bug.
 const notes: Record<string, string[]> = {
   home: [
-    "Each thing said once: hero, clients, one What do you need? row, laptops, our own products, closing panel. 18 cards down to 10.",
+    "Each thing said once: hero, clients, one What do you need? row, laptops, our own products, closing panel.",
     "Hero: bold 64px headline on the left, an illustration of SHERO's work on the right, over a faint dot grid.",
-    "We've worked with, Clerk style: lines run the full width of the screen and a line separates the text and every name. The text sits beside one row of names on large screens, above a two-column grid on phones. Spots swap names one at a time when there are more clients than spots (phones now; large screens from the fifth client). Still if motion is off.",
-    "What do you need? merges the old paths and services rows: four illustrated cards titled in the visitor's words.",
+    "We've worked with, Clerk style: soft navy-tinted lines run the full width of the screen (phones too), with a line between the text and each name and none before the text. The text sits beside one row of names on large screens, above a two-column grid on phones. Spots swap names one at a time when there are more clients than spots (phones now; large screens from the fifth client). Still if motion is off.",
+    "What do you need? merges the old paths and services rows: four open columns titled in the visitor's words, Linear style: no cards, tinted lines either side of each column. Phones list all four with a small illustration beside the words, no swiping.",
     "Laptop cards reuse the shop's card. Under them, one card: delivery, payment and warranty with icons, then Not sure which one? with a green Ask on WhatsApp button and the dispatch countdown.",
     "Closing panel: a faint dot grid on the navy, and Chat on WhatsApp beside Book a free consultation.",
     "Merchander and Pharmasyst appear once, in Our own products, each with its illustration and In development label.",

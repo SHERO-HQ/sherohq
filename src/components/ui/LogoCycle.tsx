@@ -46,9 +46,11 @@ function Slots({ items, slots, className }: { items: string[]; slots: number; cl
         <li
           key={`${i}-${item}`}
           className={cn(
-            "flex h-16 items-center justify-center border-border px-4 lg:h-24",
+            "flex h-16 items-center justify-center border-border-subtle px-4 lg:h-24",
             // A line between neighbours, and above every row after the first.
             i % slots !== 0 && "border-l",
+            // The last spot closes the row; there is no line before the first.
+            i % slots === slots - 1 && "lg:border-r",
             i >= slots && "border-t",
           )}
         >

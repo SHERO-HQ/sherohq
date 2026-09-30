@@ -47,6 +47,7 @@
   --danger: #B42318;
   --danger-subtle: #FEF0EE;
   --border: #DDE2EA;
+  --border-subtle: #E6ECF6;
   --border-strong: #7F8898;
   --border-inverse: #1E2C4A;
   --focus: var(--navy-500);
@@ -118,6 +119,7 @@
     --danger: #F97066;
     --danger-subtle: #2D1210;
     --border: #243044;
+    --border-subtle: #18233A;
     --border-strong: #5A6780;
     --border-inverse: #1A2233;
     --focus: var(--navy-300);
@@ -149,6 +151,7 @@
   --danger: #F97066;
   --danger-subtle: #2D1210;
   --border: #243044;
+  --border-subtle: #18233A;
   --border-strong: #5A6780;
   --border-inverse: #1A2233;
   --focus: var(--navy-300);
@@ -202,6 +205,7 @@
   --color-danger: var(--danger);
   --color-danger-subtle: var(--danger-subtle);
   --color-border: var(--border);
+  --color-border-subtle: var(--border-subtle);
   --color-border-strong: var(--border-strong);
   --color-border-inverse: var(--border-inverse);
   --color-focus: var(--focus);
