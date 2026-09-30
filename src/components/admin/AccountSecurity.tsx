@@ -277,14 +277,18 @@ function SetupDialog({
           // Rendered on the server by the qrcode package: black on white, as scanners expect.
           dangerouslySetInnerHTML={{ __html: setup.qrSvg }}
         />
-        <p className="text-body-sm text-ink-secondary">
-          Can&rsquo;t scan? Type this key instead:
-          <span className="mt-1 flex flex-wrap gap-x-2 font-mono text-ink">
-            {setup.key.split(" ").map((group, i) => (
-              <span key={i}>{group}</span>
-            ))}
-          </span>
-        </p>
+        <div className="flex flex-col gap-2">
+          <p className="text-body-sm text-ink-secondary">Can&rsquo;t scan? Add the account with this key instead:</p>
+          <div className="flex flex-wrap items-center justify-between gap-3 rounded-sm bg-surface px-3 py-2">
+            <span className="flex flex-wrap gap-x-2 font-mono text-body-sm text-ink">
+              {setup.key.split(" ").map((group, i) => (
+                <span key={i}>{group}</span>
+              ))}
+            </span>
+            {/* Copied without the spaces, which some apps refuse. */}
+            <CopyButton text={setup.key.replaceAll(" ", "")} label="Copy key" />
+          </div>
+        </div>
         <CodeField
           id="new-phone-code"
           label="The 6-digit code the new phone shows"
@@ -309,15 +313,6 @@ function SetupDialog({
 
 /** New recovery codes, shown once, with a button to copy them all. */
 function RecoveryCodes({ codes }: { codes: string[] }) {
-  const [copied, setCopied] = useState<boolean | null>(null);
-  async function copy() {
-    try {
-      await navigator.clipboard.writeText(`SHERO admin recovery codes\n${codes.join("\n")}`);
-      setCopied(true);
-    } catch {
-      setCopied(false);
-    }
-  }
   return (
     <div className="flex flex-col gap-3 rounded-sm border border-warning bg-warning-subtle p-4">
       <p className="text-body-sm text-ink">
@@ -328,15 +323,31 @@ function RecoveryCodes({ codes }: { codes: string[] }) {
           <li key={code}>{code}</li>
         ))}
       </ul>
-      <div className="flex flex-wrap items-center gap-3">
-        <button type="button" onClick={copy} className={buttonClass({ variant: "outline" })}>
-          {copied ? <Check aria-hidden="true" size={16} strokeWidth={1.5} /> : <Copy aria-hidden="true" size={16} strokeWidth={1.5} />}
-          {copied ? "Copied" : "Copy codes"}
-        </button>
-        <span role="status" className="text-body-sm text-ink-secondary">
-          {copied === false ? "Couldn't copy here; select the codes and copy them by hand." : ""}
-        </span>
-      </div>
+      <CopyButton text={`SHERO admin recovery codes\n${codes.join("\n")}`} label="Copy codes" />
     </div>
+  );
+}
+
+/** Copies text and says so; if the browser refuses, says to copy by hand. */
+function CopyButton({ text, label }: { text: string; label: string }) {
+  const [copied, setCopied] = useState<boolean | null>(null);
+  async function copy() {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+    } catch {
+      setCopied(false);
+    }
+  }
+  return (
+    <span className="flex flex-wrap items-center gap-3">
+      <button type="button" onClick={copy} className={buttonClass({ variant: "outline" })}>
+        {copied ? <Check aria-hidden="true" size={16} strokeWidth={1.5} /> : <Copy aria-hidden="true" size={16} strokeWidth={1.5} />}
+        {copied ? "Copied" : label}
+      </button>
+      <span role="status" className="text-body-sm text-ink-secondary">
+        {copied === false ? "Couldn't copy here; select it and copy by hand." : ""}
+      </span>
+    </span>
   );
 }
