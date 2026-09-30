@@ -72,6 +72,15 @@ const entries: Entry[] = [
   { slug: "terms", title: "Terms", route: "/legal/terms", design: { desktop: null, mobile: null } },
   { slug: "cookies", title: "Cookies", route: "/legal/cookies", design: { desktop: null, mobile: null } },
   { slug: "not-found", title: "404", route: "/this-page-does-not-exist", design: { desktop: "404", mobile: "404" } },
+  { slug: "admin-orders", title: "Admin: Orders", route: "/admin/orders", design: { desktop: "Orders", mobile: null }, admin: true },
+  {
+    slug: "admin-order",
+    title: "Admin: an order",
+    route: "/admin/orders",
+    design: { desktop: "Order", mobile: null },
+    admin: true,
+    openLink: "SH-SAMP1",
+  },
   { slug: "admin-login", title: "Admin: sign in", route: "/admin/login", design: { desktop: null, mobile: null } },
   {
     slug: "admin-listings",
@@ -118,7 +127,7 @@ async function signInToAdmin(browser: Browser) {
   await page.getByLabel("Password").fill(localAdmin.password);
   await page.getByLabel("Code from your authenticator app").fill(codeForStep(localAdmin.totpSecret, stepAt(Date.now())));
   await page.getByRole("button", { name: "Sign in" }).click();
-  await page.waitForURL("**/admin/listings");
+  await page.waitForURL("**/admin/orders");
   adminSession = await context.storageState();
   await context.close();
 }

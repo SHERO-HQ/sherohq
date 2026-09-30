@@ -6,7 +6,7 @@
 import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
-import { adminSessions, admins, deviceChecks, listings, type ListingSpecs } from "../src/db/schema";
+import { adminSessions, admins, deviceChecks, listings, orderEvents, orderItems, orders, type ListingSpecs } from "../src/db/schema";
 import { hashPassword } from "../src/lib/admin/password";
 import { localAdmin } from "./local-admin";
 
@@ -151,6 +151,32 @@ for (const [i, sample] of samples.entries()) {
     checkedAt: new Date(),
   });
 }
+
+// One sample order, waiting to be confirmed, so the admin's Orders pages have
+// something to show. It holds no device (no listing id), so the shop is unchanged.
+await client`delete from orders where number = 'SH-SAMP1'`;
+const [sampleOrder] = await db
+  .insert(orders)
+  .values({
+    number: "SH-SAMP1",
+    customerName: "Sample Customer",
+    phone: "+233244000001",
+    deliveryMethod: "bus",
+    region: "Ashanti",
+    town: "Kumasi",
+    pickupStation: "VIP station, Kumasi",
+    paymentMethod: "cash_on_delivery",
+    subtotalPesewas: 410_000,
+    totalPesewas: 410_000,
+  })
+  .returning({ id: orders.id });
+await db.insert(orderItems).values({
+  orderId: sampleOrder.id,
+  model: "Dell Latitude 7490 (sample)",
+  specSummary: "Intel Core i7, 8th gen · 16GB RAM · 512GB SSD",
+  pricePesewas: 410_000,
+});
+await db.insert(orderEvents).values({ orderId: sampleOrder.id, status: "placed" });
 
 // The local admin account (see scripts/local-admin.ts), replacing any other.
 await db.delete(admins);

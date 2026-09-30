@@ -95,6 +95,17 @@ const notes: Record<string, string[]> = {
   terms: ["No mockup; uses the Privacy layout. States only agreed facts; the rest is marked for the owner and a lawyer."],
   cookies: ["No mockup; uses the Privacy layout. Lists the real cookies and lets visitors change their analytics choice."],
   "not-found": [],
+  "admin-orders": [
+    "The admin opens here. Tabs by status, and a search by order number, phone (any format) or name, which is also how to find a customer's records when they ask.",
+    "The sidebar count is orders to confirm or to send. \"+ fee to agree\" marks orders for a region without a delivery rate yet.",
+  ],
+  "admin-order": [
+    "One button moves the order on, worded for its delivery method; it refuses if the order changed in another tab.",
+    "An order to a region without a rate can't leave until its fee is agreed on WhatsApp and entered here; the total updates.",
+    "Each step's WhatsApp message is written from the order (name, station, cash to have ready, warranty date), with Copy and Open WhatsApp to the customer's number.",
+    "Delivered or ready: the devices are marked sold, the warranty date is set, and a referrer becomes ready to thank. Cancelling puts the devices back in stock and erases a referrer's number.",
+    "The referrer's number is masked here; the full number lives in Referrals only as long as the privacy rules allow.",
+  ],
   "admin-login": [
     "One account, as the admin scope says: email, password and a 6-digit code from an authenticator app, on one screen. A recovery code works in place of the code.",
     "Five wrong tries from one address (or twenty in all) lock sign-in for 15 minutes. Every attempt is recorded for the login history.",

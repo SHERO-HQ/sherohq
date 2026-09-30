@@ -67,6 +67,7 @@ for (const theme of ["light", "dark"] as const) {
       }
 
       for (const [section, name] of [
+        ["orders", "SH-SAMP1"],
         ["products", "Merchander"],
         ["work", "TrustCircle"],
       ] as const) {

@@ -13,6 +13,6 @@ setup("sign in to the admin", async ({ page }) => {
   await page.getByLabel("Password").fill(localAdmin.password);
   await page.getByLabel("Code from your authenticator app").fill(codeForStep(localAdmin.totpSecret, stepAt(Date.now())));
   await page.getByRole("button", { name: "Sign in" }).click();
-  await page.waitForURL("**/admin/listings");
+  await page.waitForURL("**/admin/orders");
   await page.context().storageState({ path: adminState });
 });

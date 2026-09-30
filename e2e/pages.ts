@@ -21,6 +21,8 @@ export const adminState = "e2e/.auth/admin.json";
 
 /** Admin pages checked signed in (the editor is checked from the table). */
 export const adminPages: string[] = [
+  "/admin/orders",
+  "/admin/orders?status=placed",
   "/admin/listings",
   "/admin/listings?status=draft",
   "/admin/listings/new",

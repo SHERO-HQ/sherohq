@@ -26,3 +26,11 @@ export const listingStatusBadge = {
   reserved: { tone: "info", label: "Reserved" },
   sold: { tone: "none", label: "Sold" },
 } as const satisfies Record<string, { tone: BadgeTone; label: string }>;
+
+export const orderStatusTone = {
+  placed: "todo",
+  confirmed: "info",
+  in_transit: "info",
+  arrived: "done",
+  cancelled: "none",
+} as const satisfies Record<string, BadgeTone>;
