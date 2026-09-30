@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { themeBootScript } from "@/lib/theme";
+import { ThemeBoot } from "@/components/ThemeBoot";
 import { display, mono, text } from "./fonts";
 import "./globals.css";
 
@@ -36,7 +36,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     // shouldn't treat it as a mismatch.
     <html lang="en-GH" className={`${display.variable} ${text.variable} ${mono.variable}`} suppressHydrationWarning>
       <head>
-        <script dangerouslySetInnerHTML={{ __html: themeBootScript }} />
+        <ThemeBoot />
       </head>
       <body>{children}</body>
     </html>
