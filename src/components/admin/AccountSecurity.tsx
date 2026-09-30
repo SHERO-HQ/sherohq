@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
+import { Check, Copy, X } from "lucide-react";
 import {
   cancelTwoFactor,
   changePassword,
@@ -11,6 +12,7 @@ import {
   type AccountResult,
 } from "@/app/admin/(app)/settings/account-actions";
 import { Badge } from "@/components/admin/Badge";
+import { CodeField } from "@/components/forms/CodeField";
 import { TextField } from "@/components/forms/fields";
 import { buttonClass } from "@/components/ui/Button";
 
@@ -96,7 +98,7 @@ export function AccountSecurity({
       <p className="text-body-sm text-ink-secondary">
         Signed in as <span className="text-ink">{email}</span>.
       </p>
-      <Result result={result} />
+      {!(setup && result && !result.ok) && <Result result={result} />}
 
       {/* Two-factor login */}
       <Row
@@ -124,40 +126,17 @@ export function AccountSecurity({
         </form>
       )}
       {setup && (
-        <div className="flex flex-col gap-4 rounded-sm bg-surface p-4">
-          <p className="text-body-sm text-ink-secondary">
-            In the authenticator app on the new phone, add an account and scan this code.
-          </p>
-          <div
-            role="img"
-            aria-label="QR code for the authenticator app"
-            className="size-44 self-start rounded-sm bg-surface-raised p-1 [&_svg]:size-full"
-            // Rendered on the server by the qrcode package: black on white, as scanners expect.
-            dangerouslySetInnerHTML={{ __html: setup.qrSvg }}
-          />
-          <p className="text-body-sm text-ink-secondary">
-            Can&rsquo;t scan? Type this key: <span className="font-mono break-all text-ink">{setup.key}</span>
-          </p>
-          <form onSubmit={submit(confirmTwoFactor)} className="flex flex-col gap-4">
-            <TextField
-              id="code"
-              label="The 6-digit code the new phone shows"
-              inputMode="numeric"
-              autoComplete="one-time-code"
-              maxLength={6}
-              required
-              className="max-w-xs"
-            />
-            <div className="flex flex-wrap items-center gap-4">
-              <button type="submit" disabled={pending} className={buttonClass()}>
-                Use the new phone
-              </button>
-              <button type="button" disabled={pending} onClick={() => run(cancelTwoFactor)} className={linkButton}>
-                Cancel
-              </button>
-            </div>
-          </form>
-        </div>
+        <SetupDialog
+          setup={setup}
+          pending={pending}
+          onConfirm={(code) => {
+            const form = new FormData();
+            form.set("code", code);
+            run(() => confirmTwoFactor(form));
+          }}
+          onCancel={() => run(cancelTwoFactor)}
+          error={result && !result.ok ? result.message : null}
+        />
       )}
 
       {/* Password */}
@@ -206,18 +185,7 @@ export function AccountSecurity({
           </button>
         </form>
       )}
-      {codes && (
-        <div className="flex flex-col gap-3 rounded-sm border border-warning bg-warning-subtle p-4">
-          <p className="text-body-sm text-ink">
-            Keep these somewhere safe, away from the phone. They won&rsquo;t be shown again.
-          </p>
-          <ul className="grid grid-cols-2 gap-2 font-mono text-body-sm text-ink">
-            {codes.map((code) => (
-              <li key={code}>{code}</li>
-            ))}
-          </ul>
-        </div>
-      )}
+      {codes && <RecoveryCodes codes={codes} />}
 
       {/* Sessions */}
       <Row
@@ -230,6 +198,145 @@ export function AccountSecurity({
           </button>
         )}
       </Row>
+    </div>
+  );
+}
+
+/** The new phone's QR code, in a modal: scan, then type the code it shows. */
+function SetupDialog({
+  setup,
+  pending,
+  error,
+  onConfirm,
+  onCancel,
+}: {
+  setup: { qrSvg: string; key: string };
+  pending: boolean;
+  error: string | null;
+  onConfirm: (code: string) => void;
+  onCancel: () => void;
+}) {
+  const dialog = useRef<HTMLDialogElement>(null);
+  const [code, setCode] = useState("");
+
+  useEffect(() => {
+    const el = dialog.current;
+    if (el && !el.open) el.showModal();
+    // showModal focuses the first button; start in the code boxes instead.
+    el?.querySelector<HTMLInputElement>("#new-phone-code")?.focus();
+    return () => el?.close();
+  }, []);
+
+  // A failed code clears the boxes for the next try.
+  const [seenError, setSeenError] = useState(error);
+  if (error !== seenError) {
+    setSeenError(error);
+    if (error) setCode("");
+  }
+
+  return (
+    <dialog
+      ref={dialog}
+      aria-labelledby="setup-title"
+      // Escape cancels the setup; the current phone keeps working.
+      onCancel={(event) => {
+        event.preventDefault();
+        onCancel();
+      }}
+      className="m-auto w-full max-w-md rounded-md border border-border bg-surface-raised p-0 text-ink backdrop:bg-black/50"
+    >
+      <form
+        onSubmit={(event) => {
+          event.preventDefault();
+          onConfirm(code);
+        }}
+        className="flex flex-col gap-5 p-6"
+      >
+        <div className="flex items-start justify-between gap-4">
+          <h2 id="setup-title" className="font-display text-h3 text-heading">
+            Set up the new phone
+          </h2>
+          <button
+            type="button"
+            onClick={onCancel}
+            disabled={pending}
+            aria-label="Cancel"
+            className="-m-2 flex size-10 items-center justify-center rounded-sm text-ink-secondary hover:text-ink"
+          >
+            <X aria-hidden="true" size={20} strokeWidth={1.5} />
+          </button>
+        </div>
+        <p className="text-body-sm text-ink-secondary">
+          In the authenticator app on the new phone, add an account and scan this code. The current phone keeps working
+          until the new one gives a code that matches.
+        </p>
+        <div
+          role="img"
+          aria-label="QR code for the authenticator app"
+          className="size-48 self-center rounded-sm bg-surface-raised [&_svg]:size-full"
+          // Rendered on the server by the qrcode package: black on white, as scanners expect.
+          dangerouslySetInnerHTML={{ __html: setup.qrSvg }}
+        />
+        <p className="text-body-sm text-ink-secondary">
+          Can&rsquo;t scan? Type this key instead:
+          <span className="mt-1 flex flex-wrap gap-x-2 font-mono text-ink">
+            {setup.key.split(" ").map((group, i) => (
+              <span key={i}>{group}</span>
+            ))}
+          </span>
+        </p>
+        <CodeField
+          id="new-phone-code"
+          label="The 6-digit code the new phone shows"
+          value={code}
+          onChange={setCode}
+          onComplete={onConfirm}
+          error={error}
+          disabled={pending}
+        />
+        <div className="flex flex-wrap items-center gap-4">
+          <button type="submit" disabled={pending || code.length < 6} className={buttonClass()}>
+            {pending ? "Checking…" : "Use the new phone"}
+          </button>
+          <button type="button" disabled={pending} onClick={onCancel} className={linkButton}>
+            Cancel
+          </button>
+        </div>
+      </form>
+    </dialog>
+  );
+}
+
+/** New recovery codes, shown once, with a button to copy them all. */
+function RecoveryCodes({ codes }: { codes: string[] }) {
+  const [copied, setCopied] = useState<boolean | null>(null);
+  async function copy() {
+    try {
+      await navigator.clipboard.writeText(`SHERO admin recovery codes\n${codes.join("\n")}`);
+      setCopied(true);
+    } catch {
+      setCopied(false);
+    }
+  }
+  return (
+    <div className="flex flex-col gap-3 rounded-sm border border-warning bg-warning-subtle p-4">
+      <p className="text-body-sm text-ink">
+        Keep these somewhere safe, away from the phone, such as a password manager. They won&rsquo;t be shown again.
+      </p>
+      <ul className="grid grid-cols-2 gap-2 font-mono text-body-sm text-ink">
+        {codes.map((code) => (
+          <li key={code}>{code}</li>
+        ))}
+      </ul>
+      <div className="flex flex-wrap items-center gap-3">
+        <button type="button" onClick={copy} className={buttonClass({ variant: "outline" })}>
+          {copied ? <Check aria-hidden="true" size={16} strokeWidth={1.5} /> : <Copy aria-hidden="true" size={16} strokeWidth={1.5} />}
+          {copied ? "Copied" : "Copy codes"}
+        </button>
+        <span role="status" className="text-body-sm text-ink-secondary">
+          {copied === false ? "Couldn't copy here; select the codes and copy them by hand." : ""}
+        </span>
+      </div>
     </div>
   );
 }

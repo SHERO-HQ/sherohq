@@ -48,24 +48,59 @@ async function recentFailures(ip: string | null) {
 
 export type SignInResult = { ok: true } | { ok: false; message: string };
 
-export async function signIn(input: { email: string; password: string; code: string }): Promise<SignInResult> {
+async function attempt() {
   const { ip, userAgent } = await client();
   const record = (outcome: "success" | "failed" | "locked", adminId: string | null = null) =>
     db.insert(loginEvents).values({ adminId, outcome, ip, userAgent });
-
   const failures = await recentFailures(ip);
-  if (failures.fromIp >= MAX_FAILURES_PER_IP || failures.overall >= MAX_FAILURES_OVERALL) {
-    await record("locked");
-    return { ok: false, message: `Too many attempts. Try again in ${WINDOW_MINUTES} minutes.` };
-  }
+  const locked = failures.fromIp >= MAX_FAILURES_PER_IP || failures.overall >= MAX_FAILURES_OVERALL;
+  return { record, locked };
+}
 
-  const email = input.email.trim().toLowerCase();
+const lockedOut = { ok: false, message: `Too many attempts. Try again in ${WINDOW_MINUTES} minutes.` } as const;
+
+async function firstFactor(rawEmail: string, password: string) {
+  const email = rawEmail.trim().toLowerCase();
   const [admin] = email ? await db.select().from(admins).where(eq(admins.email, email)).limit(1) : [];
   // Always check a password, so a wrong email takes as long as a wrong password.
-  const passwordOk = await verifyPassword(input.password, admin?.passwordHash ?? (await decoyHash()));
+  const passwordOk = await verifyPassword(password, admin?.passwordHash ?? (await decoyHash()));
+  return admin && passwordOk ? admin : null;
+}
+
+/**
+ * Step one of signing in: email and password. Nothing is signed in yet; step
+ * two sends them again with the code, so no half-signed-in state is kept.
+ * A wrong password counts towards the lockout like any failed attempt.
+ */
+export async function checkPassword(input: { email: string; password: string }): Promise<SignInResult> {
+  const { record, locked } = await attempt();
+  if (locked) {
+    await record("locked");
+    return lockedOut;
+  }
+  const admin = await firstFactor(input.email, input.password);
+  if (!admin) {
+    await record("failed");
+    return { ok: false, message: "That email and password don't match." };
+  }
+  return { ok: true };
+}
+
+export async function signIn(input: { email: string; password: string; code: string }): Promise<SignInResult> {
+  const { record, locked } = await attempt();
+  if (locked) {
+    await record("locked");
+    return lockedOut;
+  }
+
+  const admin = await firstFactor(input.email, input.password);
+  if (!admin) {
+    await record("failed");
+    return { ok: false, message: "That email and password don't match." };
+  }
 
   let secondFactor: { step: number } | { recoveryLeft: string[] } | null = null;
-  if (admin && passwordOk && admin.totpSecret && admin.totpEnabledAt) {
+  if (admin.totpSecret && admin.totpEnabledAt) {
     const step = matchTotp(admin.totpSecret, input.code, Date.now(), admin.totpLastStep);
     if (step !== null) secondFactor = { step };
     else {
@@ -73,10 +108,9 @@ export async function signIn(input: { email: string; password: string; code: str
       if (left) secondFactor = { recoveryLeft: left };
     }
   }
-
-  if (!admin || !passwordOk || !secondFactor) {
-    await record("failed", admin?.id ?? null);
-    return { ok: false, message: "Those details don't match. Check your email, password and code." };
+  if (!secondFactor) {
+    await record("failed", admin.id);
+    return { ok: false, message: "That code doesn't work. Use the newest code from the app; each works once." };
   }
 
   await db

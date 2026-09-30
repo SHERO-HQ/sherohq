@@ -126,8 +126,9 @@ async function signInToAdmin(browser: Browser) {
   await page.goto(`${base}/admin/login`);
   await page.getByLabel("Email").fill(localAdmin.email);
   await page.getByLabel("Password").fill(localAdmin.password);
+  await page.getByRole("button", { name: "Continue" }).click();
+  // The code submits itself once all six digits are in.
   await page.getByLabel("Code from your authenticator app").fill(codeForStep(localAdmin.totpSecret, stepAt(Date.now())));
-  await page.getByRole("button", { name: "Sign in" }).click();
   await page.waitForURL("**/admin/orders");
   adminSession = await context.storageState();
   await context.close();

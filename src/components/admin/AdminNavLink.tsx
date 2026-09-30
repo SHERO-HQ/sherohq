@@ -5,7 +5,8 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/lib/cn";
 import type { NavItem } from "./AdminShell";
 
-export function AdminNavLink({ item, compact }: { item: NavItem; compact?: boolean }) {
+/** `touch`: taller rows for the phone menu. */
+export function AdminNavLink({ item, touch }: { item: NavItem; touch?: boolean }) {
   const pathname = usePathname();
   const current = pathname === item.href || pathname.startsWith(`${item.href}/`);
   return (
@@ -14,7 +15,7 @@ export function AdminNavLink({ item, compact }: { item: NavItem; compact?: boole
       aria-current={current ? "page" : undefined}
       className={cn(
         "flex items-center justify-between gap-3 rounded-sm text-body-sm whitespace-nowrap",
-        compact ? "h-9 px-3" : "h-9 px-2.5",
+        touch ? "h-11 px-2.5" : "h-9 px-2.5",
         current
           ? "border border-border bg-surface-raised font-medium text-heading"
           : "border border-transparent text-ink-secondary hover:text-ink",

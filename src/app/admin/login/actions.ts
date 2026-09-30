@@ -1,16 +1,16 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { adminPaths, signIn } from "@/lib/admin/auth";
+import { adminPaths, checkPassword, signIn, type SignInResult } from "@/lib/admin/auth";
 
-export type LoginState = { message: string | null };
+/** Step one: email and password. */
+export async function checkLogin(email: string, password: string): Promise<SignInResult> {
+  return checkPassword({ email, password });
+}
 
-export async function login(_state: LoginState, form: FormData): Promise<LoginState> {
-  const result = await signIn({
-    email: String(form.get("email") ?? ""),
-    password: String(form.get("password") ?? ""),
-    code: String(form.get("code") ?? ""),
-  });
-  if (!result.ok) return { message: result.message };
+/** Step two: the same email and password, with the code. Signs in and opens the admin. */
+export async function login(email: string, password: string, code: string): Promise<SignInResult> {
+  const result = await signIn({ email, password, code });
+  if (!result.ok) return result;
   redirect(adminPaths.home);
 }

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { logout } from "@/app/admin/(app)/actions";
+import { AdminMobileNav } from "@/components/admin/AdminMobileNav";
 import { AdminNavLink } from "@/components/admin/AdminNavLink";
 import { Logo } from "@/components/ui/Logo";
 import { siteUrl } from "@/lib/site";
@@ -9,8 +10,8 @@ export type NavItem = { label: string; href: string; count?: number };
 export type NavGroup = { label?: string; items: NavItem[] };
 
 /**
- * The admin frame: a sidebar on large screens, a top bar with the sections in
- * a row on phones. Only built sections are listed; the rest join as they land.
+ * The admin frame: a sidebar on large screens, a top bar with a menu on
+ * phones. Only built sections are listed; the rest join as they land.
  */
 export function AdminShell({ nav, footer = [], children }: { nav: NavGroup[]; footer?: NavItem[]; children: React.ReactNode }) {
   const brand = (
@@ -50,23 +51,20 @@ export function AdminShell({ nav, footer = [], children }: { nav: NavGroup[]; fo
         </div>
       </aside>
 
-      {/* Phones and tablets: a top bar, then the sections in one row. */}
-      <div className="border-b border-border bg-surface lg:hidden">
-        <div className="flex h-14 items-center justify-between px-gutter">
-          {brand}
-          <div className="flex items-center gap-1">
-            <a href={siteUrl} target="_blank" rel="noopener noreferrer" className="px-2.5 py-2 text-body-sm text-primary">
-              View site
+      {/* Phones and tablets: a top bar with the sections behind the menu button. */}
+      <AdminMobileNav
+        nav={nav}
+        footer={footer}
+        brand={brand}
+        actions={
+          <div className="flex items-center justify-between gap-3 border-t border-border pt-3">
+            <a href={siteUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 px-2.5 py-2 text-body-sm text-primary">
+              View site <ArrowUpRight aria-hidden="true" size={16} strokeWidth={1.5} />
             </a>
             {logoutButton}
           </div>
-        </div>
-        <nav aria-label="Admin sections" className="flex gap-1 overflow-x-auto px-gutter pb-2">
-          {[...nav.flatMap((group) => group.items), ...footer].map((item) => (
-            <AdminNavLink key={item.href} item={item} compact />
-          ))}
-        </nav>
-      </div>
+        }
+      />
 
       <div className="min-w-0">{children}</div>
     </div>
