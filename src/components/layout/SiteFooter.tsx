@@ -10,7 +10,6 @@ const columns = [
       { label: "About", href: routes.about },
       { label: "Work", href: routes.work },
       { label: "Careers", href: routes.careers },
-      { label: "Contact", href: routes.support },
     ],
   },
   {
@@ -34,64 +33,77 @@ const columns = [
   },
 ];
 
+const linkClass =
+  "self-start rounded-sm py-1 text-body-sm text-ink-inverse-muted transition-colors duration-150 hover:text-ink-inverse lg:py-0";
+const headingClass = "mb-1 font-mono text-eyebrow text-ink-inverse";
+
+/**
+ * Brand on the left (logo, motto, live status), then four short columns
+ * ending in how to reach us; a quiet bottom line with the legal wording.
+ */
 export function SiteFooter() {
   const year = new Date().getFullYear();
 
   return (
     <footer className="bg-surface-inverse text-ink-inverse">
-      <div className="container-site flex flex-col gap-10 pb-8 pt-section">
-        <div className="grid grid-cols-2 gap-x-4 gap-y-8 lg:grid-cols-[2fr_1fr_1fr_1fr] lg:gap-12">
-          <div className="col-span-2 flex flex-col gap-4 lg:col-span-1">
-            <Logo variant="light" className="h-6 w-auto self-start" />
-            {/* Email and phone get full-height tap targets on phones (24px+). */}
-            <div className="flex flex-col items-start gap-1 text-body-sm text-ink-inverse-muted">
-              <a href={`mailto:${business.email}`} className="py-1.5 hover:text-ink-inverse lg:py-0">
-                {business.email}
-              </a>
-              <a href={`tel:${business.phoneE164}`} className="py-1.5 hover:text-ink-inverse lg:py-0">
-                {business.phoneDisplay}
-              </a>
-              <span className="pt-1 lg:pt-0">
-                {business.city} · {business.hours}
-              </span>
-              <OpenNow fallback="" dotClassName="bg-emerald-400" className="text-ink-inverse" />
-            </div>
+      <div className="container-site flex flex-col gap-12 pt-section pb-8">
+        <div className="grid grid-cols-2 gap-x-4 gap-y-10 md:grid-cols-4 lg:grid-cols-[1.6fr_1fr_1fr_1fr_1.3fr] lg:gap-x-8">
+          <div className="col-span-2 flex flex-col items-start gap-5 md:col-span-4 lg:col-span-1">
+            <Logo variant="light" className="h-10 w-auto" />
+            {/* The motto appears only here, in the home hero and on About. */}
+            <p className="font-display text-h3 text-ink-inverse">Redefine Possible.</p>
+            <OpenNow
+              fallback={business.hours}
+              dotClassName="bg-emerald-400"
+              className="rounded-full border border-border-inverse px-3 py-1 text-body-sm text-ink-inverse"
+            />
           </div>
 
           {columns.map((column) => (
-            <div key={column.heading} className="flex flex-col gap-2">
-              <span className="mb-1 font-mono text-eyebrow text-ink-inverse">
-                {column.heading}
-              </span>
+            <nav key={column.heading} aria-label={column.heading} className="flex flex-col gap-2">
+              <h2 className={headingClass}>{column.heading}</h2>
               {column.links.map((link) => (
-                <Link
-                  key={link.label}
-                  href={link.href}
-                  className="self-start rounded-sm py-1 text-body-sm text-ink-inverse-muted transition-colors duration-150 hover:text-ink-inverse lg:py-0"
-                >
+                <Link key={link.label} href={link.href} className={linkClass}>
                   {link.label}
                 </Link>
               ))}
-            </div>
+            </nav>
           ))}
+
+          {/* Email and phone get full-height tap targets on phones (24px+). */}
+          <address className="flex flex-col gap-2 not-italic">
+            <h2 className={headingClass}>contact</h2>
+            <a href={`mailto:${business.email}`} className={linkClass}>
+              {business.email}
+            </a>
+            <a href={`tel:${business.phoneE164}`} className={linkClass}>
+              {business.phoneDisplay}
+            </a>
+            <span className="py-1 text-body-sm text-ink-inverse-muted lg:py-0">{business.city}</span>
+            {/* Days, then times, so neither breaks mid-phrase on phones. */}
+            {business.hours.split(", ").map((part) => (
+              <span key={part} className="py-1 text-body-sm text-ink-inverse-muted lg:py-0">
+                {part}
+              </span>
+            ))}
+          </address>
         </div>
 
-        <div className="flex flex-col gap-2 border-t border-border-inverse pt-6 font-mono text-meta text-ink-inverse-muted lg:flex-row lg:justify-between lg:gap-6">
+        <div className="flex flex-col gap-3 border-t border-border-inverse pt-6 text-meta text-ink-inverse-muted md:flex-row md:items-center md:justify-between">
           <p>
-            ©{year} SHERO. {business.legalLine} ·{" "}
+            © {year} SHERO. {business.legalLine}
+          </p>
+          <nav aria-label="Legal" className="flex gap-5">
             <Link href={routes.terms} className="hover:text-ink-inverse">
               Terms
-            </Link>{" "}
-            ·{" "}
+            </Link>
             <Link href={routes.privacy} className="hover:text-ink-inverse">
               Privacy
-            </Link>{" "}
-            ·{" "}
+            </Link>
             <Link href={routes.cookies} className="hover:text-ink-inverse">
               Cookies
             </Link>
-          </p>
-          <p>Visa · Mastercard · MTN MoMo · Telecel Cash</p>
+          </nav>
         </div>
       </div>
     </footer>

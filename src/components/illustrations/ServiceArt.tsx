@@ -404,3 +404,49 @@ export function HeroArt({ className }: ArtProps) {
     </Frame>
   );
 }
+
+/** The closing call to action: a WhatsApp-style chat and the booked consultation. */
+export function ConsultArt({ className }: ArtProps) {
+  return (
+    <Frame label="" viewBox="0 0 400 260" className={className}>
+      {/* The chat, at the back. */}
+      <Panel x={24} y={16} w={236} h={228} r={10} />
+      <rect x="24.5" y="16.5" width="235" height="40" rx="9.5" className="fill-surface" />
+      <rect x="24.5" y="46" width="235" height="10.5" className="fill-surface" />
+      <path d="M24.5 56.5 H259.5" className="stroke-border" />
+      <circle cx="46" cy="36.5" r="9" className="fill-secondary" />
+      <Line x={62} y={30} w={64} h={6} tone="strong" />
+      <Line x={62} y={40} w={40} />
+
+      {/* Their question, our reply, their thanks. */}
+      <rect x="40" y="72" width="150" height="40" rx="10" className="fill-surface stroke-border" />
+      <Line x={52} y={84} w={120} />
+      <Line x={52} y={96} w={82} />
+      <rect x="92" y="124" width="152" height="48" rx="10" className="fill-primary" />
+      <rect x="104" y="136" width="126" height="5" rx="2.5" className="fill-on-primary" opacity={0.85} />
+      <rect x="104" y="148" width="98" height="5" rx="2.5" className="fill-on-primary" opacity={0.85} />
+      <rect x="104" y="160" width="60" height="5" rx="2.5" className="fill-on-primary" opacity={0.5} />
+      <rect x="40" y="184" width="104" height="30" rx="10" className="fill-surface stroke-border" />
+      <Line x={52} y={196.5} w={72} />
+
+      {/* The consultation, booked: a calendar card over the chat's edge. */}
+      <Panel x={228} y={70} w={148} h={132} r={8} />
+      <rect x="228.5" y="70.5" width="147" height="28" rx="7.5" className="fill-primary" />
+      <rect x="228.5" y="90" width="147" height="8.5" className="fill-primary" />
+      <rect x="240" y="81" width="52" height="6" rx="3" className="fill-on-primary" />
+      {[0, 1, 2].map((row) =>
+        [0, 1, 2, 3, 4].map((col) => {
+          const booked = row === 1 && col === 3;
+          const x = 244 + col * 24;
+          const y = 114 + row * 22;
+          return booked ? (
+            <Tick key={`${row}-${col}`} x={x + 6} y={y + 6} r={8} />
+          ) : (
+            <rect key={`${row}-${col}`} x={x} y={y} width="12" height="12" rx="3" className="fill-surface stroke-border" />
+          );
+        }),
+      )}
+      <Line x={242} y={186} w={72} tone="good" />
+    </Frame>
+  );
+}
