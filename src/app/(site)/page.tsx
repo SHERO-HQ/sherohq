@@ -24,8 +24,11 @@ export default async function HomePage() {
   return (
     <>
       <BusinessJsonLd />
-      <Hero />
-      <ClientStrip />
+      {/* Desktops: hero and clients fill the first screen, clients at its bottom edge (Clerk). */}
+      <div className="lg:flex lg:min-h-first-screen lg:flex-col">
+        <Hero />
+        <ClientStrip />
+      </div>
       <ServicesOverview />
       <InStock listings={await newestStock()} />
       <OwnProducts />

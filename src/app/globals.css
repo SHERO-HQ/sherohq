@@ -165,6 +165,12 @@
   mask-image: linear-gradient(to top, black, transparent);
 }
 
+/* The first screen below the header (h-16 plus its 1px border): Home's hero
+   and client row fill it on desktops, so the row sits at the bottom edge. */
+@utility min-h-first-screen {
+  min-height: calc(100svh - 4rem - 1px);
+}
+
 /* A faint dot grid behind illustrations. */
 @utility bg-dots {
   background-image: radial-gradient(var(--border) 1px, transparent 1.25px);

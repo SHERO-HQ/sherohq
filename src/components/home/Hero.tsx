@@ -4,11 +4,11 @@ import { routes } from "@/lib/site";
 
 export function Hero() {
   return (
-    <section className="relative isolate overflow-hidden">
+    <section className="relative isolate overflow-hidden lg:flex lg:flex-1 lg:items-center">
       {/* The illustrations' dot grid, fading out from the top: depth without a picture. */}
       <div aria-hidden="true" className="bg-dots mask-fade-down absolute inset-x-0 top-0 -z-10 h-160" />
 
-      <div className="container-site grid items-center gap-12 pt-section pb-16 lg:grid-cols-[1fr_1.1fr] lg:gap-16">
+      <div className="container-site grid items-center gap-12 pt-section pb-16 lg:grid-cols-[1fr_1.1fr] lg:gap-16 lg:py-12">
         <div className="flex flex-col items-start gap-6">
           {/* The logo's slanted bars, in the fixed brand inks. */}
           <div aria-hidden="true" className="flex gap-2">
@@ -30,7 +30,7 @@ export function Hero() {
             </ButtonLink>
           </div>
         </div>
-        <HeroArt className="mx-auto h-auto w-full max-w-md lg:max-w-none" />
+        <HeroArt className="mx-auto h-auto w-full max-w-md lg:max-w-lg 2xl:max-w-xl" />
       </div>
 
     </section>

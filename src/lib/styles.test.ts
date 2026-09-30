@@ -55,7 +55,7 @@ describe("styles", () => {
       ...[...css.matchAll(/@utility ([\w-]+)/g)].map((m) => m[1]),
       ...[...css.matchAll(/--animate-([\w-]+):/g)].map((m) => `animate-${m[1]}`),
     ]);
-    const custom = /(?<![\w-])(?:[\w-]+:)*((?:bg-dots|mask-fade|animate)(?:-[\w-]+)?|slant|container-site)(?![\w-])/g;
+    const custom = /(?<![\w-])(?:[\w-]+:)*((?:bg-dots|mask-fade|animate)(?:-[\w-]+)?|slant|container-site|min-h-first-screen)(?![\w-])/g;
     const missing = findAll(custom).filter((hit) => {
       const name = hit.split("  ")[1].split(":").pop()!;
       return !defined.has(name);
