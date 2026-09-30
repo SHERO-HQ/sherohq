@@ -1,5 +1,6 @@
 // Light/dark theme. The system setting applies until the visitor picks a theme
-// with the toggle; that choice is stored and applied as data-theme on <html>.
+// with the footer switch; that choice is stored and applied as data-theme on
+// <html>. Choosing "Match my device" clears it.
 
 export type Theme = "light" | "dark";
 
@@ -14,17 +15,24 @@ export const themeBootScript = `try{var t=localStorage.getItem("${THEME_STORAGE_
 
 const systemQuery = () => window.matchMedia("(prefers-color-scheme: dark)");
 
-/** The theme currently showing: the visitor's pick, else the system setting. */
-export function currentTheme(): Theme {
+/** What the visitor chose in the footer switch: a theme, or follow the device. */
+export type ThemeChoice = Theme | "system";
+
+export function currentChoice(): ThemeChoice {
   const picked = document.documentElement.dataset.theme;
-  if (picked === "light" || picked === "dark") return picked;
-  return systemQuery().matches ? "dark" : "light";
+  return picked === "light" || picked === "dark" ? picked : "system";
 }
 
-export function setTheme(theme: Theme) {
-  document.documentElement.dataset.theme = theme;
+export function setThemeChoice(choice: ThemeChoice) {
+  const root = document.documentElement;
   try {
-    localStorage.setItem(THEME_STORAGE_KEY, theme);
+    if (choice === "system") {
+      delete root.dataset.theme;
+      localStorage.removeItem(THEME_STORAGE_KEY);
+    } else {
+      root.dataset.theme = choice;
+      localStorage.setItem(THEME_STORAGE_KEY, choice);
+    }
   } catch {
     // Storage can be blocked (private mode); the theme still applies for this visit.
   }

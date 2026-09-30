@@ -100,7 +100,7 @@ ${typeDesktop.join("\n")}
 }
 
 /* Dark follows the system setting unless the visitor picked a theme
-   (data-theme on <html>, set by the theme toggle). */
+   (data-theme on <html>, set by the theme switch in the footer). */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
 ${dark.map((l) => "  " + l).join("\n")}

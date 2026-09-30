@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Logo } from "@/components/ui/Logo";
 import { OpenNow } from "@/components/ui/LiveStatus";
+import { ThemeSwitch } from "@/components/ui/ThemeSwitch";
 import { productPath, type Product } from "@/lib/products";
 import { business, routes } from "@/lib/site";
 
@@ -94,23 +95,26 @@ export function SiteFooter({ products }: { products: Product[] }) {
           </address>
         </div>
 
-        <div className="flex flex-col gap-3 border-t border-border-inverse pt-6 text-meta text-ink-inverse-muted md:flex-row md:items-end md:justify-between">
+        <div className="flex flex-col gap-3 border-t border-border-inverse pt-6 text-meta text-ink-inverse-muted md:flex-row md:items-center md:justify-between">
           {/* The legal line stands on its own (Meta verification), apart from the copyright. */}
           <div className="flex flex-col gap-1">
             <p>© {year} SHERO</p>
             <p>{business.legalLine}</p>
           </div>
-          <nav aria-label="Legal" className="flex gap-5">
-            <Link href={routes.terms} className="hover:text-ink-inverse">
-              Terms
-            </Link>
-            <Link href={routes.privacy} className="hover:text-ink-inverse">
-              Privacy
-            </Link>
-            <Link href={routes.cookies} className="hover:text-ink-inverse">
-              Cookies
-            </Link>
-          </nav>
+          <div className="flex flex-wrap items-center justify-between gap-5 md:justify-end">
+            <nav aria-label="Legal" className="flex gap-5">
+              <Link href={routes.terms} className="hover:text-ink-inverse">
+                Terms
+              </Link>
+              <Link href={routes.privacy} className="hover:text-ink-inverse">
+                Privacy
+              </Link>
+              <Link href={routes.cookies} className="hover:text-ink-inverse">
+                Cookies
+              </Link>
+            </nav>
+            <ThemeSwitch />
+          </div>
         </div>
       </div>
     </footer>

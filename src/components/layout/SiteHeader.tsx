@@ -7,7 +7,6 @@ import { ShoppingCart } from "lucide-react";
 import { MobileMenu, type Child } from "@/components/layout/MobileMenu";
 import { MenuIcon } from "@/components/ui/MenuIcon";
 import { Logo } from "@/components/ui/Logo";
-import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { ButtonLink } from "@/components/ui/Button";
 import { cartSnapshot, serverCartSnapshot, subscribeCart } from "@/lib/cart";
 import { mainNav, routes } from "@/lib/site";
@@ -83,7 +82,6 @@ export function SiteHeader({ products }: { products: Child[] }) {
 
         <div className="-mr-3 flex items-center lg:mr-0 lg:gap-1.5">
           <CartLink pathname={pathname} />
-          <ThemeToggle />
           <span className="ml-2 hidden lg:contents">
             <ButtonLink href={routes.consultation}>Book a consultation</ButtonLink>
           </span>

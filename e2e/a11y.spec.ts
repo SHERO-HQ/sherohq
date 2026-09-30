@@ -11,7 +11,7 @@ for (const theme of ["light", "dark"] as const) {
     for (const path of pages) {
       test(`${path} has no accessibility violations`, async ({ page }) => {
         await page.goto(path);
-        // Let client components (live status, theme toggle) hydrate.
+        // Let client components (live status, theme switch) hydrate.
         await page.waitForLoadState("load");
         await page.waitForTimeout(300);
         await expectNoViolations(page);
