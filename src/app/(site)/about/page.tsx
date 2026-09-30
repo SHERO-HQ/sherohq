@@ -88,7 +88,8 @@ export default function AboutPage() {
           </p>
           <p className="text-body lg:text-body-lg text-ink-secondary">
             We build software for businesses, sell tested UK-used laptops, and set up and support the IT that
-            offices run on, delivering across Ghana.
+            offices run on. Software and IT work reaches clients anywhere; laptops go across Ghana, and bulk orders
+            beyond it on request.
           </p>
           <p className="text-body lg:text-body-lg text-ink-secondary">
             We&rsquo;re also building{" "}
@@ -119,8 +120,8 @@ export default function AboutPage() {
         </h2>
         <div className="flex max-w-measure flex-col gap-4 lg:gap-5.5">
           <p className="text-body lg:text-body-lg text-ink">
-            For now, businesses in Ghana. Over time, we want to take the same approach to health, education and
-            financial access, where the right tools are still hard to get.
+            Today, technology for businesses, in Ghana and beyond. Over time, we want to take the same approach to
+            health, education and financial access, where the right tools are still hard to get.
           </p>
         </div>
       </section>

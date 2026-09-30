@@ -1,4 +1,4 @@
-import { normaliseGhanaPhone } from "@/lib/phone";
+import { normalisePhone } from "@/lib/phone";
 
 /** The product-specific parts of a waitlist form (set per product in the admin). */
 export type WaitlistConfig = {
@@ -36,8 +36,8 @@ export function parseWaitlist(
   if (!name) errors.name = "Tell us your name.";
   else if (name.length > 100) errors.name = "Keep your name under 100 characters.";
 
-  const phone = normaliseGhanaPhone(text(form.get("phone")));
-  if (!phone) errors.phone = "Enter a Ghana mobile number, like 0244123456.";
+  const phone = normalisePhone(text(form.get("phone")));
+  if (!phone) errors.phone = "Enter your phone number. Outside Ghana, start with + and the country code.";
 
   const business = text(form.get("business"));
   if (!business) errors.business = `Tell us the ${lower(product.businessLabel)}.`;

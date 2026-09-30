@@ -27,6 +27,10 @@ const baseFaq: FaqGroup[] = [
     topic: "delivery",
     items: [
       {
+        q: "Do you deliver outside Ghana?",
+        a: "The shop delivers within Ghana. For bulk orders outside Ghana, message us on WhatsApp with what you need and where, and we'll quote delivery.",
+      },
+      {
         q: "Do you deliver outside Tamale?",
         a: "Yes, nationwide. Orders placed before 5:00 PM leave the same day, and delivery usually takes 12–72 hours from dispatch. Free over GHS 2,000.",
       },
@@ -39,6 +43,10 @@ const baseFaq: FaqGroup[] = [
   {
     topic: "services and products",
     items: [
+      {
+        q: "Do you work with clients outside Ghana?",
+        a: "Yes. We build software and provide IT support for clients anywhere. Book a free consultation and include your country code with your phone number.",
+      },
       {
         q: "How much does custom software cost?",
         a: "It depends on what you need. After a free consultation, we give you a clear quote before any work starts.",

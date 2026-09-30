@@ -66,7 +66,8 @@ export default function TermsPage() {
           title: "Delivery",
           body: (
             <p>
-              We deliver nationwide. Delivery is free on orders over GHS 2,000. Orders placed before 5:00 PM go to the
+              Orders placed on this website are delivered within Ghana. Bulk orders for delivery outside Ghana are
+              arranged and quoted separately. Delivery is free on orders over GHS 2,000. Orders placed before 5:00 PM go to the
               bus station the same day, and delivery usually takes 12–72 hours from dispatch.{" "}
               Below GHS 2,000, the delivery fee depends on your region and is shown at checkout before you pay.
               Store pickup is free.{" "}

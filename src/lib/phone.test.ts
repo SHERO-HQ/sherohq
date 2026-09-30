@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { normaliseGhanaPhone } from "./phone";
+import { normaliseGhanaPhone, normalisePhone } from "./phone";
 
 describe("normaliseGhanaPhone", () => {
   it.each([
@@ -15,5 +15,21 @@ describe("normaliseGhanaPhone", () => {
 
   it.each(["", "12345", "02441234567", "0344123456", "+44 7700 900123", "abc"])("rejects %s", (input) => {
     expect(normaliseGhanaPhone(input)).toBeNull();
+  });
+});
+
+describe("normalisePhone", () => {
+  it.each([
+    ["0244123456", "+233244123456"],
+    ["+44 7700 900123", "+447700900123"],
+    ["0044 7700 900123", "+447700900123"],
+    ["+1 (415) 555-0100", "+14155550100"],
+    ["+234 803 123 4567", "+2348031234567"],
+  ])("accepts %s", (input, expected) => {
+    expect(normalisePhone(input)).toBe(expected);
+  });
+
+  it.each(["", "12345", "7700900123", "+233 34 412 3456", "+0 123 4567", "abc"])("rejects %s", (input) => {
+    expect(normalisePhone(input)).toBeNull();
   });
 });

@@ -6,7 +6,7 @@ import { business, routes, whatsappLink } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Book a free consultation",
   description:
-    "Tell SHERO what's slowing your business down and get a practical next step, free. Software, hardware or IT support, in Tamale and across Ghana.",
+    "Tell SHERO what's slowing your business down and get a practical next step, free. Software, hardware or IT support, for businesses in Ghana and abroad.",
   alternates: { canonical: routes.consultation },
 };
 

@@ -80,6 +80,7 @@ export function ConsultationForm({ initialNeed = "software" }: { initialNeed?: s
           inputMode="tel"
           autoComplete="tel"
           placeholder="0244123456"
+          hint="Outside Ghana? Start with + and your country code."
           error={errors.phone}
           required
         />

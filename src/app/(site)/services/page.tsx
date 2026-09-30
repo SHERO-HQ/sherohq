@@ -11,7 +11,7 @@ import { InlineArrow } from "@/components/ui/InlineArrow";
 export const metadata: Metadata = {
   title: "Services: custom software, laptops, managed IT and integration",
   description:
-    "Custom software, tested laptops, managed IT and systems integration for businesses in Tamale and across Ghana, set up and supported by SHERO.",
+    "Custom software, tested laptops, managed IT and systems integration from SHERO in Tamale, for businesses across Ghana and abroad.",
   alternates: { canonical: routes.services },
 };
 
@@ -45,6 +45,7 @@ const services: Service[] = [
       "Phones, audio and accessories",
       "Office hardware sourcing and setup",
       "Advice on what to buy for your needs and budget",
+      "Bulk orders delivered outside Ghana, on request",
     ],
     links: [
       { label: "See laptops in stock", href: routes.shop },
@@ -95,6 +96,7 @@ export default function ServicesPage() {
           <h1 className="text-h1">Set up, built and supported by SHERO.</h1>
           <p className="text-body-lg text-ink-secondary">
             Start with one service or combine them. Either way, support comes from the same place that set it up.
+            Software and IT support for clients anywhere; hardware across Ghana, and in bulk beyond it.
           </p>
         </div>
         <nav aria-label="Services on this page" className="flex flex-wrap gap-2">

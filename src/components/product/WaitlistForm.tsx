@@ -73,6 +73,7 @@ export function WaitlistForm({ product }: { product: WaitlistConfig }) {
               inputMode="tel"
               autoComplete="tel"
               placeholder="0244123456"
+              hint="Outside Ghana? Start with + and your country code."
               error={errors.phone}
             />
             <TextField

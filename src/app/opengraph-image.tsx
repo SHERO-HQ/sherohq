@@ -48,7 +48,7 @@ export default async function OpenGraphImage() {
             Software, tested laptops and IT support.
           </div>
           <div style={{ fontFamily: "Red Hat Text", fontSize: 32, color: "#4B5563" }}>
-            From Tamale, delivering across Ghana. sherohq.com
+            Based in Tamale, working with clients in Ghana and beyond. sherohq.com
           </div>
         </div>
       </div>

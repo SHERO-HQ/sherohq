@@ -9,7 +9,7 @@ export function GradeExplainer({ minBattery, thresholdPesewas }: { minBattery: n
     { label: "warranty", text: "One week. We repair or replace anything we tested." },
     {
       label: "delivery",
-      text: `Same day in Tamale. 12–72 hours elsewhere, by bus. Free over ${formatCedis(thresholdPesewas)}, or collect free from our store.`,
+      text: `Same day in Tamale. 12–72 hours elsewhere in Ghana, by bus. Free over ${formatCedis(thresholdPesewas)}, or collect free from our store. Bulk orders outside Ghana: ask us for a quote.`,
     },
     { label: "payment", text: paymentSummary() },
   ];

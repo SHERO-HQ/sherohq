@@ -18,8 +18,8 @@ export function Hero() {
           {/* The motto appears only here, on About and in the footer. */}
           <h1 className="text-display">Redefine Possible.</h1>
           <p className="max-w-measure text-body-lg text-ink-secondary">
-            SHERO builds software, supplies tested laptops and supports the technology businesses run on. From Tamale,
-            delivering across Ghana.
+            SHERO builds software, supplies tested laptops and supports the technology businesses run on. Based in
+            Tamale, working with clients in Ghana and beyond.
           </p>
           <div className="flex flex-wrap gap-3 pt-2">
             <ButtonLink href={routes.shop} size="lg">

@@ -1,4 +1,4 @@
-import { normaliseGhanaPhone } from "@/lib/phone";
+import { normalisePhone } from "@/lib/phone";
 
 export const needOptions = [
   { value: "software", label: "Custom software" },
@@ -42,8 +42,9 @@ export function parseConsultation(form: FormData):
   if (!name) errors.name = "Tell us your name.";
   else if (name.length > 100) errors.name = "Keep your name under 100 characters.";
 
-  const phone = normaliseGhanaPhone(text(form.get("phone")));
-  if (!phone) errors.phone = "Enter a Ghana mobile number, like 0244123456.";
+  // Clients can be anywhere (software and IT): any number with its country code.
+  const phone = normalisePhone(text(form.get("phone")));
+  if (!phone) errors.phone = "Enter your phone number. Outside Ghana, start with + and the country code.";
 
   const email = text(form.get("email"));
   if (email && !EMAIL.test(email)) errors.email = "Check the email address, or leave it empty.";
