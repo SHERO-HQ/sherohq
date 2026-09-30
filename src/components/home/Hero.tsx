@@ -1,41 +1,70 @@
+import Link from "next/link";
+import { Building2, Laptop } from "lucide-react";
 import { HeroArt } from "@/components/illustrations/ServiceArt";
-import { ButtonLink } from "@/components/ui/Button";
 import { InlineArrow } from "@/components/ui/InlineArrow";
 import { routes } from "@/lib/site";
+
+// Two kinds of visitor land here: a business that needs software or IT, and
+// someone who needs a laptop. The headline says what SHERO does; the fork
+// sends each to their page in one click (owner, 30 Sep 2026).
+const paths = [
+  {
+    label: "For your business",
+    title: "Software and IT support",
+    detail: "Systems built around how you work, and IT that keeps running. For clients in Ghana and abroad.",
+    action: "See our services",
+    href: routes.services,
+    Icon: Building2,
+  },
+  {
+    label: "For you",
+    title: "Tested laptops",
+    detail: "Checked before they're listed, with the battery health on every one. Delivered across Ghana.",
+    action: "Shop laptops",
+    href: routes.shop,
+    Icon: Laptop,
+  },
+];
 
 export function Hero() {
   return (
     <section className="relative isolate overflow-hidden lg:flex lg:flex-1 lg:items-center">
-      {/* A faint dot grid, fading downwards: texture without a glow. */}
+      {/* A faint dot grid, fading downwards: texture without a picture. */}
       <div aria-hidden="true" className="bg-dots mask-fade-down absolute inset-x-0 top-0 -z-10 h-160" />
 
-      <div className="container-site grid items-center gap-12 pt-section pb-16 lg:grid-cols-[1fr_1.1fr] lg:gap-16 lg:py-12">
+      <div className="container-site grid items-center gap-12 pt-section pb-16 lg:grid-cols-[1.15fr_1fr] lg:gap-16 lg:py-12">
         <div className="flex flex-col items-start gap-6">
-          {/* Clerk-style announcement pill incorporating the logo's slanted bars */}
-          <div className="inline-flex items-center gap-2.5 rounded-full border border-border bg-surface px-3.5 py-1 text-meta text-ink-secondary shadow-xs">
+          {/* The motto appears only here, on About and in the footer; the logo's bars only here, on About and the 404. */}
+          <p className="flex items-center gap-3 font-mono text-meta text-ink-secondary">
             <span aria-hidden="true" className="flex gap-1.5">
-              <span className="slant h-3.5 w-7 bg-navy-700" />
-              <span className="slant h-3.5 w-3.5 bg-emerald-700" />
+              <span className="slant h-3 w-8 bg-navy-700" />
+              <span className="slant h-3 w-4 bg-emerald-700" />
             </span>
-            <span className="h-3 w-px bg-border" aria-hidden="true" />
-            <span>Technology &amp; IT · Tamale &amp; Nationwide</span>
-          </div>
-          {/* The motto appears only here, on About and in the footer. */}
-          <h1 className="text-display">Redefine Possible.</h1>
-          <p className="max-w-measure text-body-lg text-ink-secondary">
-            SHERO builds software, supplies tested laptops and supports the technology businesses run on. Based in
-            Tamale, working with clients in Ghana and beyond.
+            Redefine Possible.
           </p>
-          <div className="flex flex-wrap gap-3 pt-2">
-            <ButtonLink href={routes.shop} size="lg" className="group">
-              Shop laptops <InlineArrow className="transition-transform duration-150 group-hover:translate-x-0.5" />
-            </ButtonLink>
-            <ButtonLink href={routes.consultation} variant="outline" size="lg">
-              Book a free consultation
-            </ButtonLink>
-          </div>
+          <h1 className="max-w-2xl font-display text-h1 text-heading">Software, IT support and tested laptops, from Tamale.</h1>
+          <ul className="grid w-full gap-3 sm:grid-cols-2">
+            {paths.map(({ label, title, detail, action, href, Icon }) => (
+              <li key={href}>
+                <Link
+                  href={href}
+                  className="group flex h-full flex-col gap-2 rounded-md border border-border bg-surface-raised p-5 shadow-xs transition-all duration-150 hover:border-primary hover:shadow active-press"
+                >
+                  <span className="flex items-center gap-2 font-mono text-meta text-secondary">
+                    <Icon aria-hidden="true" size={16} strokeWidth={1.5} />
+                    {label}
+                  </span>
+                  <span className="font-display text-h3 text-heading">{title}</span>
+                  <span className="text-body-sm text-ink-secondary">{detail}</span>
+                  <span className="mt-auto inline-flex items-center gap-1 pt-2 text-label text-primary">
+                    {action} <InlineArrow className="transition-transform duration-150 group-hover:translate-x-0.5" />
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
         </div>
-        <HeroArt className="mx-auto h-auto w-full max-w-md lg:max-w-lg 2xl:max-w-xl" />
+        <HeroArt className="mx-auto hidden h-auto w-full max-w-md lg:block lg:max-w-lg" />
       </div>
     </section>
   );

@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useCallback, useRef, useState, useSyncExternalStore } from "react";
 import { ShoppingCart } from "lucide-react";
 import { MobileMenu, type Child } from "@/components/layout/MobileMenu";
+import { ProductsMenu } from "@/components/layout/ProductsMenu";
 import { MenuIcon } from "@/components/ui/MenuIcon";
 import { Logo } from "@/components/ui/Logo";
 import { ButtonLink } from "@/components/ui/Button";
@@ -18,6 +19,12 @@ function isCurrent(pathname: string, href: string) {
 }
 
 const shopPaths = [routes.shop, routes.cart, routes.checkout];
+
+const navLinkClass = (current: boolean) =>
+  cn(
+    "rounded-md px-3 py-1.5 text-label transition-all duration-150",
+    current ? "bg-surface font-semibold text-primary" : "text-ink-secondary hover:bg-surface hover:text-primary",
+  );
 
 /** Shown on shop pages, or anywhere once something is in the cart (CLAUDE.md). */
 function CartLink({ pathname }: { pathname: string }) {
@@ -57,21 +64,27 @@ export function SiteHeader({ products }: { products: Child[] }) {
     <header className="sticky top-0 z-40 border-b border-border bg-page">
       <div className="container-site flex h-16 items-center justify-between">
         <div className="flex items-center gap-8">
-          <Link href={routes.home} aria-label="SHERO home" className="rounded-sm transition-opacity hover:opacity-90 active-press">
+          <Link
+            href={routes.home}
+            aria-label="SHERO home"
+            className="rounded-sm transition-opacity hover:opacity-90 active-press"
+          >
             <Logo className="h-6 w-auto" />
           </Link>
           <nav aria-label="Main" className="hidden gap-1 lg:flex">
             {mainNav.map((item) => {
+              if (item.href === routes.products && products.length > 0) {
+                return (
+                  <ProductsMenu key={item.href} products={products} pathname={pathname} linkClass={navLinkClass} />
+                );
+              }
               const current = isCurrent(pathname, item.href);
               return (
                 <Link
                   key={item.href}
                   href={item.href}
                   aria-current={current ? "page" : undefined}
-                  className={cn(
-                    "rounded-md px-3 py-1.5 text-label transition-all duration-150",
-                    current ? "bg-surface font-semibold text-primary" : "text-ink-secondary hover:bg-surface hover:text-primary",
-                  )}
+                  className={navLinkClass(current)}
                 >
                   {item.label}
                 </Link>

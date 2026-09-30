@@ -25,4 +25,7 @@ export const mono = localFont({
   fallback: ["ui-monospace", "monospace"],
   // Arial-based fallback metrics don't suit a monospace face.
   adjustFontFallback: false,
+  // Only small labels, prices and specs use it; not preloading it leaves the
+  // bandwidth to the heading and body fonts, which the largest text waits for.
+  preload: false,
 });

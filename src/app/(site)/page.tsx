@@ -15,7 +15,7 @@ export const revalidate = 300;
 
 async function newestStock() {
   try {
-    return await getNewestInStock(6);
+    return await getNewestInStock(3);
   } catch (error) {
     // Without the database (e.g. a build with no DATABASE_URL), Home still renders.
     console.error("Loading stock for Home failed", error);
