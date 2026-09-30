@@ -128,6 +128,7 @@ const notes: Record<string, string[]> = {
     "One tab per part (your request): Shop, Delivery fees, Account, Login history, Payments, Business. Tabs are links, so each can be bookmarked and stays open after a save.",
     "Moving two-factor to a new phone opens a modal with the QR code and six code boxes; Escape or Cancel keeps the current phone. New recovery codes have a Copy button.",
     "Phones: the sections sit behind the menu button (the same staggered mark as the site), with a dot when orders or listings are waiting.",
+    "Notifications tab (your request): an email for each new order, consultation request and waitlist signup, to your sign-in email or another address, each type on or off, with a test button. Sending starts once Resend is set up; until then the tab says so.",
     "One Save per tab instead of one for the page, so a refused change (a battery minimum above a device in the shop, a category still in use) doesn't lose the others.",
     "Delivery fees per region, which the mockup didn't have: Tamale doorstep plus the 16 regions. An empty region tells the buyer the fee is confirmed before dispatch.",
     "Payments shows what checkout takes today rather than a text field: MoMo and cards read Not connected until Hubtel and Paystack are wired in.",

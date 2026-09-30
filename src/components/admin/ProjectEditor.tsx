@@ -28,7 +28,7 @@ export function ProjectEditor({
   const empty = project ? emptyProjectFields(project) : [];
 
   return (
-    <form
+    <form method="post"
       // Submitted by hand so a refused save keeps everything typed.
       onSubmit={(event) => {
         event.preventDefault();

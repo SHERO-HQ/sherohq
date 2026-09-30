@@ -20,10 +20,17 @@ export function LoginForm() {
   const [message, setMessage] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
 
+  function credentials() {
+    const form = new FormData();
+    form.set("email", email);
+    form.set("password", password);
+    return form;
+  }
+
   function checkPassword(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     startTransition(async () => {
-      const result = await checkLogin(email, password);
+      const result = await checkLogin(credentials());
       if (result.ok) {
         setMessage(null);
         setStep("code");
@@ -34,7 +41,9 @@ export function LoginForm() {
   function submitCode(value: string) {
     startTransition(async () => {
       // On success the action opens the admin; only failures come back.
-      const result = await login(email, password, value);
+      const form = credentials();
+      form.set("code", value);
+      const result = await login(form);
       if (!result.ok) {
         setMessage(result.message);
         setCode("");
@@ -44,7 +53,7 @@ export function LoginForm() {
 
   if (step === "password") {
     return (
-      <form onSubmit={checkPassword} className="flex flex-col gap-5">
+      <form method="post" onSubmit={checkPassword} className="flex flex-col gap-5">
         <TextField
           id="email"
           label="Email"
@@ -76,7 +85,7 @@ export function LoginForm() {
   }
 
   return (
-    <form
+    <form method="post"
       onSubmit={(event) => {
         event.preventDefault();
         submitCode(code);

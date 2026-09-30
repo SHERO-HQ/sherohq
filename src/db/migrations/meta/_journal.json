@@ -64,6 +64,13 @@
       "when": 1790780804639,
       "tag": "0008_admin_account",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1790784375078,
+      "tag": "0009_notifications",
+      "breakpoints": true
     }
   ]
 }

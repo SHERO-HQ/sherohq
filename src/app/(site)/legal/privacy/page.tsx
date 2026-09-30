@@ -43,7 +43,8 @@ export default function PrivacyPage() {
           body: (
             <p>
               To deliver your order, reply to your request, send your order number and tracking link, and provide
-              support under our warranty. We don&rsquo;t sell your details.
+              support under our warranty. So we can reply quickly, a copy of each order, request or waitlist signup is
+              emailed to SHERO&rsquo;s own inbox through our email provider, Resend. We don&rsquo;t sell your details.
             </p>
           ),
         },

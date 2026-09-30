@@ -38,7 +38,7 @@ export function ProductEditor({
   const e = state.errors;
 
   return (
-    <form
+    <form method="post"
       // Submitted by hand so a refused save keeps everything typed.
       onSubmit={(event) => {
         event.preventDefault();

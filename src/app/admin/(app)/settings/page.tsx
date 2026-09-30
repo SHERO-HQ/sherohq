@@ -3,13 +3,20 @@ import Link from "next/link";
 import { AccountSecurity } from "@/components/admin/AccountSecurity";
 import { Badge } from "@/components/admin/Badge";
 import { AdminHeader } from "@/components/admin/AdminShell";
-import { DeliveryRatesForm, settingsCard, settingsCardTitle, ShopSettingsForm } from "@/components/admin/SettingsForms";
+import {
+  DeliveryRatesForm,
+  NotificationsForm,
+  settingsCard,
+  settingsCardTitle,
+  ShopSettingsForm,
+} from "@/components/admin/SettingsForms";
 import { accountDetails, setupQr } from "@/lib/admin/account";
 import { requireAdmin } from "@/lib/admin/auth";
 import { deviceName } from "@/lib/admin/device-name";
 import { formatGhanaDate, formatGhanaDateTime } from "@/lib/dates";
 import { deliveryRateRegions } from "@/lib/ghana";
 import { formatCedis } from "@/lib/orders";
+import { emailConfigured, notificationSettings } from "@/lib/notify";
 import { onlinePayments } from "@/lib/payments";
 import { business } from "@/lib/site";
 import { cn } from "@/lib/cn";
@@ -43,6 +50,7 @@ function Facts({ rows }: { rows: Array<[string, React.ReactNode]> }) {
 const tabs = [
   { id: "shop", label: "Shop" },
   { id: "delivery", label: "Delivery fees" },
+  { id: "notifications", label: "Notifications" },
   { id: "account", label: "Account" },
   { id: "history", label: "Login history" },
   { id: "payments", label: "Payments" },
@@ -55,7 +63,12 @@ export default async function SettingsPage({ searchParams }: { searchParams: Pro
   const session = await requireAdmin();
   const requested = (await searchParams).tab;
   const tab: Tab = tabs.find((t) => t.id === requested)?.id ?? "shop";
-  const [shop, rates, account] = await Promise.all([getShopSettings(), getDeliveryRates(), accountDetails(session.id)]);
+  const [shop, rates, account, notify] = await Promise.all([
+    getShopSettings(),
+    getDeliveryRates(),
+    accountDetails(session.id),
+    notificationSettings(),
+  ]);
   const { admin, sessionCount, history } = account;
   const online = onlinePayments();
   const setup =
@@ -108,6 +121,14 @@ export default async function SettingsPage({ searchParams }: { searchParams: Pro
                 freeOver={formatCedis(shop.freeDeliveryThresholdPesewas)}
               />
             </>
+          )}
+          {tab === "notifications" && (
+            <NotificationsForm
+              accountEmail={admin.email}
+              notifyEmail={notify.custom}
+              on={{ orders: notify.orders, consultations: notify.consultations, waitlists: notify.waitlists }}
+              connected={emailConfigured()}
+            />
           )}
           {tab === "account" && (
             <>

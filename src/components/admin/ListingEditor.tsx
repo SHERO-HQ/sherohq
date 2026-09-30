@@ -88,7 +88,7 @@ export function ListingEditor({
   const blockers = wantsShop ? (live ?? state.blockers) : [];
 
   return (
-    <form
+    <form method="post"
       // Submitted by hand so a refused save keeps everything typed (a form
       // action would reset the fields).
       onSubmit={(event) => {

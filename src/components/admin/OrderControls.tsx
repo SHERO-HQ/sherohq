@@ -44,7 +44,7 @@ export function NextStep({
     <div className="flex flex-col gap-4">
       <p className="text-body-sm text-ink-secondary">{hint}</p>
       {feeToAgree && (
-        <form
+        <form method="post"
           onSubmit={(event) => {
             event.preventDefault();
             const data = new FormData(event.currentTarget);

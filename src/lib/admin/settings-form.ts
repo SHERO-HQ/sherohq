@@ -13,14 +13,17 @@ export type SettingsErrors = Partial<Record<string, string>>;
 
 const text = (form: FormData, key: string) => String(form.get(key) ?? "").trim();
 
-export function parseShopSettings(form: FormData): { ok: true; values: ShopSettingsValues } | { ok: false; errors: SettingsErrors } {
+export function parseShopSettings(
+  form: FormData,
+): { ok: true; values: ShopSettingsValues } | { ok: false; errors: SettingsErrors } {
   const errors: SettingsErrors = {};
 
   const threshold = parseCedis(text(form, "threshold"));
   if (threshold === null) errors.threshold = "Enter an amount in cedis, e.g. 2,000.";
 
   const battery = Number(text(form, "minBattery"));
-  if (!Number.isInteger(battery) || battery < 50 || battery > 100) errors.minBattery = "Enter a whole number from 50 to 100.";
+  if (!Number.isInteger(battery) || battery < 50 || battery > 100)
+    errors.minBattery = "Enter a whole number from 50 to 100.";
 
   // One category per line; blank lines and repeats are dropped.
   const categories = [
@@ -58,4 +61,29 @@ export function parseDeliveryRates(
   });
   if (Object.keys(errors).length > 0) return { ok: false, errors };
   return { ok: true, rates };
+}
+
+export type NotificationValues = {
+  notifyEmail: string | null;
+  notifyOrders: boolean;
+  notifyConsultations: boolean;
+  notifyWaitlists: boolean;
+};
+
+/** Where notifications go (empty: the admin account's email) and which are on. */
+export function parseNotifications(
+  form: FormData,
+): { ok: true; values: NotificationValues } | { ok: false; errors: SettingsErrors } {
+  const email = text(form, "notifyEmail").toLowerCase();
+  if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
+    return { ok: false, errors: { notifyEmail: "Enter an email address, e.g. info@sherohq.com." } };
+  return {
+    ok: true,
+    values: {
+      notifyEmail: email || null,
+      notifyOrders: form.get("notifyOrders") === "on",
+      notifyConsultations: form.get("notifyConsultations") === "on",
+      notifyWaitlists: form.get("notifyWaitlists") === "on",
+    },
+  };
 }

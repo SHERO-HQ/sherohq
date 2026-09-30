@@ -53,6 +53,11 @@ export const settings = pgTable(
       .notNull()
       .default(["Laptops", "Phones", "Desktops", "Audio", "Accessories"]),
     minBatteryHealth: smallint("min_battery_health").notNull().default(90),
+    /** Where new-order, consultation and waitlist emails go; the admin account's email when empty. */
+    notifyEmail: text("notify_email"),
+    notifyOrders: boolean("notify_orders").notNull().default(true),
+    notifyConsultations: boolean("notify_consultations").notNull().default(true),
+    notifyWaitlists: boolean("notify_waitlists").notNull().default(true),
     updatedAt: updatedAt(),
   },
   (t) => [check("settings_single_row", sql`${t.id} = 1`)],

@@ -115,7 +115,7 @@ export function AccountSecurity({
         </div>
       </Row>
       {open === "phone" && !setup && (
-        <form onSubmit={submit(startTwoFactor, false)} className="flex flex-col gap-4 rounded-sm bg-surface p-4">
+        <form method="post" onSubmit={submit(startTwoFactor, false)} className="flex flex-col gap-4 rounded-sm bg-surface p-4">
           <p className="text-body-sm text-ink-secondary">
             The current phone keeps working until the new one gives a code that matches.
           </p>
@@ -146,7 +146,7 @@ export function AccountSecurity({
         </button>
       </Row>
       {open === "password" && (
-        <form onSubmit={submit(changePassword)} className="flex flex-col gap-4 rounded-sm bg-surface p-4">
+        <form method="post" onSubmit={submit(changePassword)} className="flex flex-col gap-4 rounded-sm bg-surface p-4">
           {currentPassword("password-current")}
           <TextField
             id="newPassword"
@@ -177,7 +177,7 @@ export function AccountSecurity({
         </button>
       </Row>
       {open === "codes" && (
-        <form onSubmit={submit(renewRecoveryCodes)} className="flex flex-col gap-4 rounded-sm bg-surface p-4">
+        <form method="post" onSubmit={submit(renewRecoveryCodes)} className="flex flex-col gap-4 rounded-sm bg-surface p-4">
           <p className="text-body-sm text-ink-secondary">The old codes stop working. The new ones are shown once.</p>
           {currentPassword("codes-password")}
           <button type="submit" disabled={pending} className={buttonClass({ className: "self-start" })}>
@@ -245,7 +245,7 @@ function SetupDialog({
       }}
       className="m-auto w-full max-w-md rounded-md border border-border bg-surface-raised p-0 text-ink backdrop:bg-black/50"
     >
-      <form
+      <form method="post"
         onSubmit={(event) => {
           event.preventDefault();
           onConfirm(code);

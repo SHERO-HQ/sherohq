@@ -26,6 +26,7 @@ export const adminPages: string[] = [
   "/admin/listings",
   "/admin/settings",
   "/admin/settings?tab=delivery",
+  "/admin/settings?tab=notifications",
   "/admin/settings?tab=account",
   "/admin/settings?tab=history",
   "/admin/listings?status=draft",

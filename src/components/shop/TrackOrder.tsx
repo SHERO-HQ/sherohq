@@ -136,7 +136,7 @@ export function TrackOrder({ initialNumber }: { initialNumber?: string }) {
 
   return (
     <>
-      <form
+      <form method="post"
         noValidate
         // Personal details stay out of the URL and out of Clarity recordings.
         data-clarity-mask="True"

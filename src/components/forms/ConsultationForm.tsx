@@ -66,7 +66,7 @@ export function ConsultationForm({ initialNeed = "software", countries }: { init
   }
 
   return (
-    <form
+    <form method="post"
       noValidate
       onSubmit={onSubmit}
       // Keep personal details out of Microsoft Clarity recordings (see the Cookies page).

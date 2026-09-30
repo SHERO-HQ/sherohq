@@ -1,7 +1,13 @@
 "use client";
 
-import { startTransition, useActionState } from "react";
-import { saveDeliveryRates, saveShopSettings, type SettingsState } from "@/app/admin/(app)/settings/actions";
+import { startTransition, useActionState, useState, useTransition } from "react";
+import {
+  saveDeliveryRates,
+  saveNotifications,
+  saveShopSettings,
+  sendTestEmail,
+  type SettingsState,
+} from "@/app/admin/(app)/settings/actions";
 import { TextArea, TextField } from "@/components/forms/fields";
 import { buttonClass } from "@/components/ui/Button";
 
@@ -47,7 +53,7 @@ export function ShopSettingsForm({
   const [state, action, pending] = useActionState(saveShopSettings, initial);
   const e = state.errors;
   return (
-    <form onSubmit={submitWith(action)} noValidate aria-labelledby="shop-title" className={settingsCard}>
+    <form method="post" onSubmit={submitWith(action)} noValidate aria-labelledby="shop-title" className={settingsCard}>
       <h2 id="shop-title" className={settingsCardTitle}>
         Shop
       </h2>
@@ -88,7 +94,7 @@ export function ShopSettingsForm({
 export function DeliveryRatesForm({ regions, rates, freeOver }: { regions: string[]; rates: string[]; freeOver: string }) {
   const [state, action, pending] = useActionState(saveDeliveryRates, initial);
   return (
-    <form onSubmit={submitWith(action)} noValidate aria-labelledby="rates-title" className={settingsCard}>
+    <form method="post" onSubmit={submitWith(action)} noValidate aria-labelledby="rates-title" className={settingsCard}>
       <div className="flex flex-col gap-1.5">
         <h2 id="rates-title" className={settingsCardTitle}>
           Delivery fees
@@ -115,6 +121,83 @@ export function DeliveryRatesForm({ regions, rates, freeOver }: { regions: strin
       <button type="submit" disabled={pending} className={buttonClass({ className: "self-start" })}>
         {pending ? "Saving…" : "Save delivery fees"}
       </button>
+    </form>
+  );
+}
+
+export function NotificationsForm({
+  accountEmail,
+  notifyEmail,
+  on,
+  connected,
+}: {
+  accountEmail: string;
+  notifyEmail: string | null;
+  on: { orders: boolean; consultations: boolean; waitlists: boolean };
+  /** Whether the email service is set up (RESEND_API_KEY). */
+  connected: boolean;
+}) {
+  const [state, action, pending] = useActionState(saveNotifications, initial);
+  const [test, setTest] = useState<{ ok: boolean; message: string } | null>(null);
+  const [testing, startTest] = useTransition();
+  const switches = [
+    { id: "notifyOrders", label: "New orders", checked: on.orders },
+    { id: "notifyConsultations", label: "Consultation requests", checked: on.consultations },
+    { id: "notifyWaitlists", label: "Waitlist signups", checked: on.waitlists },
+  ];
+  return (
+    <form method="post" onSubmit={submitWith(action)} noValidate aria-labelledby="notify-title" className={settingsCard}>
+      <div className="flex flex-col gap-1.5">
+        <h2 id="notify-title" className={settingsCardTitle}>
+          Notifications
+        </h2>
+        <p className="text-body-sm text-ink-secondary">
+          An email as soon as something comes in, with what you need to reply. Orders link straight to the order here.
+        </p>
+      </div>
+      {!connected && (
+        <p className="rounded-sm bg-warning-subtle px-4 py-3 text-body-sm text-ink">
+          Email sending isn&rsquo;t connected yet, so nothing is sent. It needs a Resend account with sherohq.com
+          verified, and its key added to the hosting (RESEND_API_KEY).
+        </p>
+      )}
+      <Outcome state={state} saved="Saved." />
+      <TextField
+        id="notifyEmail"
+        label="Send to"
+        type="email"
+        defaultValue={notifyEmail ?? ""}
+        placeholder={accountEmail}
+        error={state.errors.notifyEmail}
+        hint={`Leave empty to use your sign-in email, ${accountEmail}.`}
+      />
+      <fieldset className="flex flex-col gap-2.5">
+        <legend className="mb-2.5 text-label text-ink">Email me about</legend>
+        {switches.map((item) => (
+          <label key={item.id} className="flex items-center gap-2.5 text-body-sm text-ink">
+            <input type="checkbox" name={item.id} defaultChecked={item.checked} className="size-4 accent-primary" />
+            {item.label}
+          </label>
+        ))}
+      </fieldset>
+      <div className="flex flex-wrap items-center gap-4">
+        <button type="submit" disabled={pending} className={buttonClass()}>
+          {pending ? "Saving…" : "Save notifications"}
+        </button>
+        <button
+          type="button"
+          disabled={testing || !connected}
+          onClick={() => startTest(async () => setTest(await sendTestEmail()))}
+          className={buttonClass({ variant: "outline" })}
+        >
+          {testing ? "Sending…" : "Send a test email"}
+        </button>
+      </div>
+      {test && (
+        <p role="status" className={test.ok ? "text-body-sm text-secondary" : "text-body-sm text-danger"}>
+          {test.message}
+        </p>
+      )}
     </form>
   );
 }

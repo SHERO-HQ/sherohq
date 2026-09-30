@@ -56,7 +56,7 @@ export function WaitlistForm({ product, countries }: { product: WaitlistConfig; 
           <p className="text-body text-ink-secondary">
             We&rsquo;ll get in touch when {product.name} is ready to use.
           </p>
-          <form noValidate onSubmit={onSubmit} data-clarity-mask="True" className="flex flex-col gap-4">
+          <form method="post" noValidate onSubmit={onSubmit} data-clarity-mask="True" className="flex flex-col gap-4">
             {/* Field names match parseWaitlist; ids are unique per product. */}
             <TextField id={id("name")} name="name" label="Your name" autoComplete="name" placeholder={product.namePlaceholder} error={errors.name} />
             <TextField

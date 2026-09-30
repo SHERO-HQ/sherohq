@@ -140,7 +140,7 @@ export function CheckoutForm({
     fee === undefined ? "Choose your region" : fee === null ? "Confirmed before dispatch" : fee === 0 ? "Free" : formatCedis(fee);
 
   return (
-    <form
+    <form method="post"
       noValidate
       onSubmit={onSubmit}
       // Keep personal details out of Microsoft Clarity recordings (see the Cookies page).

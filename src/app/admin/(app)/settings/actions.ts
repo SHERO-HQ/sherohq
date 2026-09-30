@@ -5,7 +5,8 @@ import { and, eq, inArray, lt, notInArray } from "drizzle-orm";
 import { db } from "@/db";
 import { deliveryRates, deviceChecks, listings, settings } from "@/db/schema";
 import { requireAdmin } from "@/lib/admin/auth";
-import { parseDeliveryRates, parseShopSettings, type SettingsErrors } from "@/lib/admin/settings-form";
+import { parseDeliveryRates, parseNotifications, parseShopSettings, type SettingsErrors } from "@/lib/admin/settings-form";
+import { notificationSettings, sendEmail } from "@/lib/notify";
 import { deliveryRateRegions } from "@/lib/ghana";
 
 export type SettingsState = { errors: SettingsErrors; message: string | null; saved: boolean };
@@ -79,4 +80,28 @@ export async function saveDeliveryRates(_state: SettingsState, form: FormData): 
   });
   refreshSite();
   return { errors: {}, message: null, saved: true };
+}
+
+export async function saveNotifications(_state: SettingsState, form: FormData): Promise<SettingsState> {
+  await requireAdmin();
+  const parsed = parseNotifications(form);
+  if (!parsed.ok) return { errors: parsed.errors, message: "Check the email address.", saved: false };
+  await db
+    .insert(settings)
+    .values({ id: 1, ...parsed.values })
+    .onConflictDoUpdate({ target: settings.id, set: parsed.values });
+  revalidatePath("/admin/settings");
+  return { errors: {}, message: null, saved: true };
+}
+
+/** Sends a sample to the saved address, to check emails arrive (and aren't in spam). */
+export async function sendTestEmail(): Promise<{ ok: boolean; message: string }> {
+  await requireAdmin();
+  const { to } = await notificationSettings();
+  if (!to) return { ok: false, message: "Add an email address first." };
+  const result = await sendEmail(to, {
+    subject: "Test from the SHERO admin",
+    text: "Notifications from sherohq.com reach this inbox. New orders, consultation requests and waitlist signups arrive like this.",
+  });
+  return result.ok ? { ok: true, message: `Sent to ${to}. If it isn't in the inbox, check spam.` } : result;
 }

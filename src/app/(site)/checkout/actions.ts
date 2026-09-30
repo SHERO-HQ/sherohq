@@ -6,9 +6,10 @@ import { redirect } from "next/navigation";
 import { db } from "@/db";
 import { listings, orderEvents, orderItems, orders, referrals } from "@/db/schema";
 import { CART_COOKIE, parseCart, PLACED_COOKIE, serialiseCart } from "@/lib/cart";
-import { parseCheckout, type CheckoutErrors } from "@/lib/forms/checkout";
+import { parseCheckout, paymentLabel, type CheckoutErrors } from "@/lib/forms/checkout";
 import { TAMALE_LOCAL } from "@/lib/ghana";
 import { specSummary } from "@/lib/listings";
+import { notifyOwner } from "@/lib/notify";
 import { deliveryFeePesewas, newOrderNumber } from "@/lib/orders";
 import { getDeliveryRates, getShopSettings, onlinePayments } from "@/lib/shop";
 import { business, routes } from "@/lib/site";
@@ -37,11 +38,11 @@ export async function placeOrder(form: FormData): Promise<PlaceOrderResult> {
   const rateKey = input.delivery === "tamale" ? TAMALE_LOCAL : input.region;
   const rate = rateKey ? (rates[rateKey] ?? null) : null;
 
-  let number: string | null = null;
+  let placed: { id: string; number: string; items: string[]; total: number; feePending: boolean } | null = null;
   try {
-    for (let attempt = 0; attempt < 5 && !number; attempt++) {
+    for (let attempt = 0; attempt < 5 && !placed; attempt++) {
       try {
-        number = await db.transaction(async (tx) => {
+        placed = await db.transaction(async (tx) => {
           // Lock the devices so two buyers can't take the same one.
           const items = await tx
             .select({
@@ -108,7 +109,13 @@ export async function placeOrder(form: FormData): Promise<PlaceOrderResult> {
             .update(listings)
             .set({ status: "reserved" })
             .where(and(inArray(listings.id, ids), eq(listings.status, "in_stock")));
-          return candidate;
+          return {
+            id: order.id,
+            number: candidate,
+            items: items.map((item) => item.model),
+            total: subtotal + (fee ?? 0),
+            feePending: fee === null,
+          };
         });
       } catch (error) {
         // An order number clash is vanishingly rare; try another number.
@@ -126,7 +133,7 @@ export async function placeOrder(form: FormData): Promise<PlaceOrderResult> {
     console.error("Placing order failed", error);
   }
 
-  if (!number) {
+  if (!placed) {
     return {
       ok: false,
       message: `We couldn't place your order just now. Please try again, or WhatsApp us on ${business.phoneDisplay}.`,
@@ -135,12 +142,25 @@ export async function placeOrder(form: FormData): Promise<PlaceOrderResult> {
 
   store.set(CART_COOKIE, serialiseCart([]), { path: "/", maxAge: 0 });
   // Lets the confirmation page show this order to the person who placed it.
-  store.set(PLACED_COOKIE, number, {
+  store.set(PLACED_COOKIE, placed.number, {
     path: routes.checkout,
     maxAge: 60 * 60 * 24,
     httpOnly: true,
     sameSite: "lax",
     secure: process.env.NODE_ENV === "production",
+  });
+  notifyOwner({
+    kind: "orders",
+    id: placed.id,
+    number: placed.number,
+    customerName: input.name,
+    items: placed.items,
+    totalPesewas: placed.total,
+    feePending: placed.feePending,
+    delivery: input.delivery,
+    region: input.region,
+    town: input.town,
+    payment: paymentLabel(input.payment),
   });
   redirect(`${routes.checkout}/placed`);
 }
