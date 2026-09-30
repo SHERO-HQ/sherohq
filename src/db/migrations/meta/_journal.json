@@ -71,6 +71,20 @@
       "when": 1790784375078,
       "tag": "0009_notifications",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1790785502138,
+      "tag": "0010_launch_and_role_dates",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1790786009202,
+      "tag": "0011_retention_runs",
+      "breakpoints": true
     }
   ]
 }

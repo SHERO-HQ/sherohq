@@ -72,6 +72,8 @@ for (const theme of ["light", "dark"] as const) {
         ["orders", "SH-SAMP1"],
         ["products", "Merchander"],
         ["work", "TrustCircle"],
+        ["testimonials", "Abena O. (sample)"],
+        ["careers", "Hardware technician (sample)"],
       ] as const) {
         test(`the ${section} editor has no accessibility violations`, async ({ page }) => {
           await page.goto(`/admin/${section}`);
@@ -80,6 +82,13 @@ for (const theme of ["light", "dark"] as const) {
           await expectNoViolations(page);
         });
       }
+
+      test("a consultation request has no accessibility violations", async ({ page }) => {
+        await page.goto("/admin/consultations");
+        await page.getByRole("link", { name: /Yaw Boateng \(sample\)/ }).click();
+        await page.waitForURL(/id=[0-9a-f-]{36}/);
+        await expectNoViolations(page);
+      });
 
       test("a listing's editor has no accessibility violations", async ({ page }) => {
         await page.goto("/admin/listings");

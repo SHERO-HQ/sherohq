@@ -6,7 +6,22 @@
 import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
-import { adminSessions, admins, deviceChecks, listings, orderEvents, orderItems, orders, type ListingSpecs } from "../src/db/schema";
+import {
+  adminSessions,
+  admins,
+  consultations,
+  deviceChecks,
+  listings,
+  orderEvents,
+  orderItems,
+  orders,
+  products,
+  referrals,
+  roles,
+  testimonials,
+  waitlistSignups,
+  type ListingSpecs,
+} from "../src/db/schema";
 import { hashPassword } from "../src/lib/admin/password";
 import { localAdmin } from "./local-admin";
 
@@ -177,6 +192,69 @@ await db.insert(orderItems).values({
   pricePesewas: 410_000,
 });
 await db.insert(orderEvents).values({ orderId: sampleOrder.id, status: "placed" });
+
+// A delivered sample order whose buyer named a referrer, for Referrals.
+await client`delete from orders where number = 'SH-SAMP2'`;
+const arrived = new Date(Date.now() - 3 * 24 * 60 * 60 * 1000);
+const [deliveredOrder] = await db
+  .insert(orders)
+  .values({
+    number: "SH-SAMP2",
+    customerName: "Sample Buyer",
+    phone: "+233244000002",
+    deliveryMethod: "pickup",
+    paymentMethod: "pay_at_pickup",
+    paymentStatus: "paid",
+    status: "arrived",
+    subtotalPesewas: 15_000,
+    totalPesewas: 15_000,
+    hadReferral: true,
+    placedAt: new Date(arrived.getTime() - 2 * 24 * 60 * 60 * 1000),
+    arrivedAt: arrived,
+    warrantyEndsOn: new Date(arrived.getTime() + 7 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10),
+  })
+  .returning({ id: orders.id });
+await db.insert(orderItems).values({ orderId: deliveredOrder.id, model: "Laptop bag, 15-inch (sample)", pricePesewas: 15_000 });
+await db.insert(referrals).values({ orderId: deliveredOrder.id, referrerPhone: "+233204000521", status: "ready_to_thank" });
+
+// Sample leads, each marked (sample): consultation requests and waitlist signups.
+await client`delete from consultations where name like '%(sample)'`;
+await db.insert(consultations).values([
+  {
+    name: "Yaw Boateng (sample)",
+    phone: "+233551234567",
+    business: "Boateng Provisions",
+    need: "software",
+    message: "We take orders on WhatsApp and keep losing track of who paid. We have two shops and about 40 orders a week.",
+    contactMethod: "whatsapp",
+  },
+  { name: "Esi Ansah (sample)", phone: "+233201112233", need: "managed-it", contactMethod: "call", status: "contacted", lastContactAt: new Date() },
+]);
+await client`delete from waitlist_signups where name like '%(sample)'`;
+const [merchander] = await db.select({ id: products.id }).from(products).where(eq(products.slug, "merchander")).limit(1);
+if (merchander) {
+  await db.insert(waitlistSignups).values([
+    { productId: merchander.id, name: "Ama Mensah (sample)", phone: "+233244123456", business: "Ama's Imports", detail: "Bags and shoes" },
+    { productId: merchander.id, name: "Kojo Addo (sample)", phone: "+233273331180", business: "KA Gadgets", detail: "Phones", status: "contacted" },
+  ]);
+}
+
+// A testimonial waiting for consent (never published) and a closed role.
+await client`delete from testimonials where attribution like '%(sample)'`;
+await db.insert(testimonials).values({
+  quote: "The laptop they recommended for design school has been perfect.",
+  attribution: "Abena O. (sample)",
+  source: "order",
+  orderId: deliveredOrder.id,
+});
+await client`delete from roles where title like '%(sample)'`;
+await db.insert(roles).values({
+  title: "Hardware technician (sample)",
+  description: "Check, repair and prepare laptops for the shop.",
+  howToApply: "Email your CV with the role in the subject.",
+  open: false,
+  closedAt: new Date(),
+});
 
 // The local admin account (see scripts/local-admin.ts), replacing any other.
 await db.delete(admins);

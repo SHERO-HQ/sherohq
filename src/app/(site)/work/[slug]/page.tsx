@@ -8,6 +8,7 @@ import { Placeholder } from "@/components/ui/Placeholder";
 import { StatusBadge } from "@/components/ui/StatusBadge";
 import { getPublishedProject, getPublishedProjects } from "@/lib/work";
 import { isMissing } from "@/lib/content";
+import { getPublicTestimonials } from "@/lib/testimonials";
 import { routes } from "@/lib/site";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -51,6 +52,8 @@ export default async function CaseStudyPage({ params }: Props) {
 
   const index = projects.findIndex((p) => p.id === project.id);
   const next = projects.length > 1 ? projects[(index + 1) % projects.length] : null;
+  // The client's own words, once three testimonials are published site-wide.
+  const quote = (await getPublicTestimonials()).find((t) => t.projectId === project.id) ?? null;
 
   const facts = [
     { label: "client", value: project.client },
@@ -138,6 +141,15 @@ export default async function CaseStudyPage({ params }: Props) {
         )}
       </Chapter>
       <Chapter title="The result" body={project.result} />
+      {quote && (
+        <figure className="container-site flex max-w-4xl flex-col gap-5 pt-section">
+          <blockquote className="font-display text-h2 text-heading">&ldquo;{quote.quote}&rdquo;</blockquote>
+          <figcaption className="text-body text-ink-secondary">
+            <span className="font-medium text-ink">{quote.attribution}</span>
+            {quote.business && <>, {quote.business}</>}
+          </figcaption>
+        </figure>
+      )}
 
       {next ? (
         <section className="container-site flex items-center justify-between gap-8 py-section">

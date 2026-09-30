@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import { db } from "@/db";
 import { products, waitlistSignups } from "@/db/schema";
 import { requireAdmin } from "@/lib/admin/auth";
@@ -36,11 +36,18 @@ export async function saveProduct(id: string | null, _state: SaveProductState, f
     // The slug is fixed after creation; everything else updates.
     const values: Partial<typeof parsed.values> = { ...parsed.values };
     delete values.slug;
-    await db.update(products).set(values).where(eq(products.id, id));
+    await db
+      .update(products)
+      // The first time it goes Live starts the waitlist's 6-month clock.
+      .set({ ...values, ...(values.status === "live" ? { launchedAt: sql`coalesce(${products.launchedAt}, now())` } : {}) })
+      .where(eq(products.id, id));
   } else {
     const [taken] = await db.select({ id: products.id }).from(products).where(eq(products.slug, parsed.values.slug));
     if (taken) return { errors: { slug: "Another product already uses this address." }, message: "Check the highlighted fields." };
-    const [row] = await db.insert(products).values(parsed.values).returning({ id: products.id });
+    const [row] = await db
+      .insert(products)
+      .values({ ...parsed.values, launchedAt: parsed.values.status === "live" ? new Date() : null })
+      .returning({ id: products.id });
     savedId = row.id;
   }
 

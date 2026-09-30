@@ -22,7 +22,7 @@ const MAX_FAILURES_OVERALL = 20;
 
 export const adminPaths = {
   login: "/admin/login",
-  home: "/admin/orders",
+  home: "/admin/dashboard",
 } as const;
 
 const hashToken = (token: string) => createHash("sha256").update(token).digest("hex");

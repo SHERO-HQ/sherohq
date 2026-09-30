@@ -21,6 +21,7 @@ export const adminState = "e2e/.auth/admin.json";
 
 /** Admin pages checked signed in (the editor is checked from the table). */
 export const adminPages: string[] = [
+  "/admin/dashboard",
   "/admin/orders",
   "/admin/orders?status=placed",
   "/admin/listings",
@@ -35,4 +36,13 @@ export const adminPages: string[] = [
   "/admin/products/new",
   "/admin/work",
   "/admin/work/new",
+  "/admin/consultations",
+  "/admin/consultations?tab=won",
+  "/admin/waitlists",
+  "/admin/referrals",
+  "/admin/testimonials",
+  "/admin/testimonials/new",
+  "/admin/careers",
+  "/admin/careers/new",
+  "/admin/settings?tab=privacy",
 ];

@@ -36,6 +36,7 @@ export async function joinWaitlist(slug: string, form: FormData): Promise<Waitli
       notifyOwner({
         kind: "waitlists",
         product: product.name,
+        productSlug: product.slug,
         name: parsed.data.name,
         phone: parsed.data.phone,
         business: parsed.data.business,

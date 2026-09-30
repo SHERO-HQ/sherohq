@@ -95,6 +95,32 @@ const notes: Record<string, string[]> = {
   terms: ["No mockup; uses the Privacy layout. States only agreed facts; the rest is marked for the owner and a lawyer."],
   cookies: ["No mockup; uses the Privacy layout. Lists the real cookies and lets visitors change their analytics choice."],
   "not-found": [],
+  "admin-dashboard": [
+    "The admin now opens here. Each to-do links straight to its record; groups show four and link to the rest.",
+    "Revenue counts orders delivered or collected this month, so it isn't inflated by orders that may still be cancelled.",
+    "Waitlists get their own group (new signups per product); the design folded them into the counts only.",
+  ],
+  "admin-consultations": [
+    "Steps as buttons in one row; moving past New records the contact date, which the 12-month deletion runs from.",
+    "A first reply ready for WhatsApp (Copy or Open WhatsApp), plus Call and Email.",
+    "Delete request, for when someone asks for their details to be removed.",
+  ],
+  "admin-waitlists": [
+    "A tab per product in development; each person's step saves as soon as it changes. Remove, for when someone asks to leave.",
+    "Export CSV opens cleanly in Excel or Sheets, with phone numbers as you'd dial them.",
+    "Once a product goes Live, the page says the date its list will be deleted (6 months later).",
+  ],
+  "admin-referrals": [
+    "The thank-you message on WhatsApp also asks to keep their number; it never names the buyer or promises a reward.",
+    "Mark thanked records what you gave (MoMo, airtime, amount). Keep or Delete after asking; numbers not kept are erased automatically 30 days after delivery.",
+  ],
+  "admin-testimonials": [
+    "Publish stays off until consent is recorded: when and how they agreed. A ready WhatsApp message asks their permission with their exact words.",
+    "The site shows none until 3 are published; then Home shows the newest three and each case study its client's own.",
+  ],
+  "admin-careers": [
+    "Roles open or closed; the Careers page lists open roles above the send-your-CV message, and its search description names them.",
+  ],
   "admin-orders": [
     "The admin opens here. Tabs by status, and a search by order number, phone (any format) or name, which is also how to find a customer's records when they ask.",
     "The sidebar count is orders to confirm or to send. \"+ fee to agree\" marks orders for a region without a delivery rate yet.",
@@ -129,6 +155,7 @@ const notes: Record<string, string[]> = {
     "Moving two-factor to a new phone opens a modal with the QR code and six code boxes; Escape or Cancel keeps the current phone. New recovery codes have a Copy button.",
     "Phones: the sections sit behind the menu button (the same staggered mark as the site), with a dot when orders or listings are waiting.",
     "Notifications tab (your request): an email for each new order, consultation request and waitlist signup, to your sign-in email or another address, each type on or off, with a test button. Sending starts once Resend is set up; until then the tab says so.",
+    "Privacy tab: what's deleted automatically and when, the last nightly run, and a tool for requests about someone's details (find by phone, export, remove).",
     "One Save per tab instead of one for the page, so a refused change (a battery minimum above a device in the shop, a category still in use) doesn't lose the others.",
     "Delivery fees per region, which the mockup didn't have: Tamale doorstep plus the 16 regions. An empty region tells the buyer the fee is confirmed before dispatch.",
     "Payments shows what checkout takes today rather than a text field: MoMo and cards read Not connected until Hubtel and Paystack are wired in.",

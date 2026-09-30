@@ -4,9 +4,11 @@ import { InStock } from "@/components/home/InStock";
 import { OwnProducts } from "@/components/home/OwnProducts";
 import { ClientStrip } from "@/components/home/ClientStrip";
 import { ServicesOverview } from "@/components/home/ServicesOverview";
+import { Testimonials } from "@/components/home/Testimonials";
 import { BusinessJsonLd } from "@/components/seo/BusinessJsonLd";
 import { getNewestInStock, shopSettingsForCopy } from "@/lib/shop";
 import { getPublishedProducts } from "@/lib/products";
+import { getPublicTestimonials } from "@/lib/testimonials";
 
 // Static and fast, refreshed every few minutes so new stock shows up.
 export const revalidate = 300;
@@ -33,6 +35,7 @@ export default async function HomePage() {
       <ServicesOverview />
       <InStock listings={await newestStock()} thresholdPesewas={(await shopSettingsForCopy()).freeDeliveryThresholdPesewas} />
       <OwnProducts products={await getPublishedProducts()} />
+      <Testimonials items={await getPublicTestimonials()} />
       <ConsultationCta />
     </>
   );

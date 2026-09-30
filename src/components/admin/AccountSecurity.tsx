@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, useTransition } from "react";
-import { Check, Copy, X } from "lucide-react";
+import { X } from "lucide-react";
 import {
   cancelTwoFactor,
   changePassword,
@@ -12,6 +12,7 @@ import {
   type AccountResult,
 } from "@/app/admin/(app)/settings/account-actions";
 import { Badge } from "@/components/admin/Badge";
+import { CopyButton } from "@/components/admin/controls";
 import { CodeField } from "@/components/forms/CodeField";
 import { TextField } from "@/components/forms/fields";
 import { buttonClass } from "@/components/ui/Button";
@@ -328,26 +329,3 @@ function RecoveryCodes({ codes }: { codes: string[] }) {
   );
 }
 
-/** Copies text and says so; if the browser refuses, says to copy by hand. */
-function CopyButton({ text, label }: { text: string; label: string }) {
-  const [copied, setCopied] = useState<boolean | null>(null);
-  async function copy() {
-    try {
-      await navigator.clipboard.writeText(text);
-      setCopied(true);
-    } catch {
-      setCopied(false);
-    }
-  }
-  return (
-    <span className="flex flex-wrap items-center gap-3">
-      <button type="button" onClick={copy} className={buttonClass({ variant: "outline" })}>
-        {copied ? <Check aria-hidden="true" size={16} strokeWidth={1.5} /> : <Copy aria-hidden="true" size={16} strokeWidth={1.5} />}
-        {copied ? "Copied" : label}
-      </button>
-      <span role="status" className="text-body-sm text-ink-secondary">
-        {copied === false ? "Couldn't copy here; select it and copy by hand." : ""}
-      </span>
-    </span>
-  );
-}

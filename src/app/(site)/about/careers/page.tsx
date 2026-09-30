@@ -1,12 +1,20 @@
 import type { Metadata } from "next";
+import { getOpenRoles } from "@/lib/careers";
 import { business, routes } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: "Careers",
-  description:
-    "No open roles right now at SHERO in Tamale, but we'd still like to hear from you. Send your CV and something you've made.",
-  alternates: { canonical: routes.careers },
-};
+// Roles come from the admin; saving one refreshes this page.
+export const revalidate = 3600;
+
+export async function generateMetadata(): Promise<Metadata> {
+  const open = await getOpenRoles();
+  return {
+    title: "Careers",
+    description: open.length
+      ? `SHERO in Tamale is hiring: ${open.map((r) => r.title).join(", ")}. Send your CV and something you've made.`
+      : "No open roles right now at SHERO in Tamale, but we'd still like to hear from you. Send your CV and something you've made.",
+    alternates: { canonical: routes.careers },
+  };
+}
 
 const include = [
   { title: "What you're good at", text: "A few lines, in your own words. Titles matter less than what you can do." },
@@ -14,18 +22,41 @@ const include = [
   { title: "How to reach you", text: "Your phone number and where you're based." },
 ];
 
-// TODO(admin phase): list open roles from the admin's Careers section above this message.
 const cvMail = `mailto:${business.email}?subject=${encodeURIComponent("Careers · ")}`;
 
-export default function CareersPage() {
+export default async function CareersPage() {
+  const open = await getOpenRoles();
   return (
     <section className="container-site py-section">
       <div className="flex max-w-2xl flex-col gap-5 lg:gap-7">
         <h1 className="font-display text-h1 text-heading">Work with SHERO.</h1>
-        <p className="max-w-measure text-body-lg text-ink-secondary">
-          There are no open roles right now. If you build software or look after hardware and want to work from
-          Tamale, we&rsquo;d still like to hear from you.
-        </p>
+        {open.length === 0 ? (
+          <p className="max-w-measure text-body-lg text-ink-secondary">
+            There are no open roles right now. If you build software or look after hardware and want to work from
+            Tamale, we&rsquo;d still like to hear from you.
+          </p>
+        ) : (
+          <>
+            <p className="max-w-measure text-body-lg text-ink-secondary">
+              {open.length === 1 ? "One role is open" : `${open.length} roles are open`} in Tamale.
+            </p>
+            <ul className="flex flex-col gap-4">
+              {open.map((role) => (
+                <li key={role.id} className="flex flex-col gap-3 rounded-md border border-border bg-surface-raised p-5 lg:p-6">
+                  <h2 className="font-display text-h3 text-heading">{role.title}</h2>
+                  <p className="text-body whitespace-pre-line text-ink-secondary">{role.description}</p>
+                  <p className="text-body-sm text-ink">
+                    <span className="font-medium">How to apply: </span>
+                    {role.howToApply}
+                  </p>
+                </li>
+              ))}
+            </ul>
+            <p className="max-w-measure text-body text-ink-secondary">
+              Not one of these, but want to work with us? We&rsquo;d still like to hear from you.
+            </p>
+          </>
+        )}
         <div className="flex flex-col gap-2 rounded-md border border-border bg-surface px-5 py-5 lg:px-6 lg:py-5.5">
           <span className="text-body-sm text-ink-secondary">Send your CV to</span>
           <a href={cvMail} className="self-start font-display text-h2 text-heading hover:underline">

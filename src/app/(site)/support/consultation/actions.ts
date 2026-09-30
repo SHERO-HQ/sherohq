@@ -15,9 +15,13 @@ export async function requestConsultation(form: FormData): Promise<ConsultationR
 
   const { contact, ...request } = parsed.data;
   try {
-    await db.insert(consultations).values({ ...request, contactMethod: contact });
+    const [saved] = await db
+      .insert(consultations)
+      .values({ ...request, contactMethod: contact })
+      .returning({ id: consultations.id });
     notifyOwner({
       kind: "consultations",
+      id: saved.id,
       name: request.name,
       phone: request.phone,
       email: request.email,

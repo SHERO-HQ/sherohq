@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { AdminHeader } from "@/components/admin/AdminShell";
+import { Facts } from "@/components/admin/parts";
 import { Badge, orderStatusTone } from "@/components/admin/Badge";
 import { CancelOrderButton, MarkPaidButton, NextStep } from "@/components/admin/OrderControls";
 import { InlineArrow } from "@/components/ui/InlineArrow";
@@ -12,6 +13,7 @@ import { paymentLabel } from "@/lib/forms/checkout";
 import { advanceLabel, blockedByFee, customerChatLink, maskPhone, nextStatus, nextStepHint, whatsappMessage } from "@/lib/order-flow";
 import { formatCedis, statusLabel, statusSteps } from "@/lib/orders";
 import { cn } from "@/lib/cn";
+import { displayPhone } from "@/lib/phone";
 
 type Props = { params: Promise<{ id: string }> };
 
@@ -24,22 +26,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 const card = "flex flex-col gap-4 rounded-md border border-border bg-surface-raised p-5 lg:p-6";
 const cardTitle = "font-display text-h3 text-heading";
 
-function Facts({ rows }: { rows: Array<[string, React.ReactNode]> }) {
-  return (
-    <dl className="flex flex-col">
-      {rows.map(([label, value]) => (
-        <div key={label} className="grid grid-cols-[7rem_1fr] gap-3 border-t border-border py-2.5">
-          <dt className="font-mono text-meta text-ink-muted">{label}</dt>
-          <dd className="text-body-sm text-ink">{value}</dd>
-        </div>
-      ))}
-    </dl>
-  );
-}
 
-/** "024 412 3456" for Ghana numbers; others as entered. */
-const showPhone = (phone: string | null) =>
-  !phone ? "–" : phone.startsWith("+233") ? `0${phone.slice(4, 6)} ${phone.slice(6, 9)} ${phone.slice(9)}` : phone;
 
 export default async function OrderPage({ params }: Props) {
   await requireAdmin();
@@ -146,7 +133,7 @@ export default async function OrderPage({ params }: Props) {
             <Facts
               rows={[
                 ["name", order.customerName ?? "–"],
-                ["phone", showPhone(order.phone)],
+                ["phone", displayPhone(order.phone)],
                 ["email", order.email ?? "–"],
                 ["delivery", delivery],
                 [

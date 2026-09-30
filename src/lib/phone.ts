@@ -47,3 +47,9 @@ export type PhoneReader = (country: string, number: string) => string | null;
  * library never has to load for this.
  */
 export const phoneEntered: PhoneReader = (_country, number) => (number.trim() ? number.trim() : null);
+
+/** "024 412 3456" for a Ghana number, the E.164 form for others, for reading and dialling. */
+export function displayPhone(phone: string | null): string {
+  if (!phone) return "–";
+  return phone.startsWith("+233") ? `0${phone.slice(4, 6)} ${phone.slice(6, 9)} ${phone.slice(9)}` : phone;
+}

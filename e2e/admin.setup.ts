@@ -14,6 +14,6 @@ setup("sign in to the admin", async ({ page }) => {
   await page.getByRole("button", { name: "Continue" }).click();
   // The code submits itself once all six digits are in.
   await page.getByLabel("Code from your authenticator app").fill(codeForStep(localAdmin.totpSecret, stepAt(Date.now())));
-  await page.waitForURL("**/admin/orders");
+  await page.waitForURL("**/admin/dashboard");
   await page.context().storageState({ path: adminState });
 });

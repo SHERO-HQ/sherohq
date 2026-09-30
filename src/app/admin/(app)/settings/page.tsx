@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { AccountSecurity } from "@/components/admin/AccountSecurity";
+import { DataRequests, RunRetention } from "@/components/admin/PrivacyTools";
 import { Badge } from "@/components/admin/Badge";
 import { AdminHeader } from "@/components/admin/AdminShell";
+import { Facts } from "@/components/admin/parts";
 import {
   DeliveryRatesForm,
   NotificationsForm,
@@ -18,6 +20,8 @@ import { deliveryRateRegions } from "@/lib/ghana";
 import { formatCedis } from "@/lib/orders";
 import { emailConfigured, notificationSettings } from "@/lib/notify";
 import { onlinePayments } from "@/lib/payments";
+import { lastRetentionRun } from "@/lib/retention";
+import { CONSULTATION_MONTHS, LOGIN_EVENT_MONTHS, ORDER_YEARS, REFERRAL_DAYS, WAITLIST_MONTHS_AFTER_LAUNCH } from "@/lib/retention-rules";
 import { business } from "@/lib/site";
 import { cn } from "@/lib/cn";
 import { getDeliveryRates, getShopSettings } from "@/lib/shop";
@@ -34,23 +38,12 @@ const outcomeBadge = {
   locked: <Badge tone="todo">Locked out</Badge>,
 } as Record<string, React.ReactNode>;
 
-function Facts({ rows }: { rows: Array<[string, React.ReactNode]> }) {
-  return (
-    <dl className="flex flex-col">
-      {rows.map(([label, value]) => (
-        <div key={label} className="grid grid-cols-[7rem_1fr] gap-3 border-t border-border py-2.5">
-          <dt className="font-mono text-meta text-ink-muted">{label}</dt>
-          <dd className="text-body-sm break-words text-ink">{value}</dd>
-        </div>
-      ))}
-    </dl>
-  );
-}
 
 const tabs = [
   { id: "shop", label: "Shop" },
   { id: "delivery", label: "Delivery fees" },
   { id: "notifications", label: "Notifications" },
+  { id: "privacy", label: "Privacy" },
   { id: "account", label: "Account" },
   { id: "history", label: "Login history" },
   { id: "payments", label: "Payments" },
@@ -130,6 +123,7 @@ export default async function SettingsPage({ searchParams }: { searchParams: Pro
               connected={emailConfigured()}
             />
           )}
+          {tab === "privacy" && <PrivacyTab />}
           {tab === "account" && (
             <>
               <section aria-labelledby="account-title" className={settingsCard}>
@@ -272,5 +266,62 @@ function PaymentState({ on, detail }: { on: boolean; detail: string }) {
       <span className="min-w-0">{detail}</span>
       <Badge tone={on ? "done" : "none"}>{on ? "On" : "Not connected"}</Badge>
     </span>
+  );
+}
+
+const removedLabels: Record<string, string> = {
+  referrerNumbers: "referrer numbers",
+  consultations: "consultation requests",
+  waitlistSignups: "waitlist signups",
+  ordersAnonymised: "orders anonymised",
+  loginEvents: "old sign-in records",
+};
+
+async function PrivacyTab() {
+  const last = await lastRetentionRun();
+  const removed = last ? Object.entries(last.removed).filter(([, n]) => n > 0) : [];
+  return (
+    <>
+      <section aria-labelledby="retention-title" className={settingsCard}>
+        <div className="flex flex-col gap-1.5">
+          <h2 id="retention-title" className={settingsCardTitle}>
+            Automatic deletion
+          </h2>
+          <p className="text-body-sm text-ink-secondary">
+            Every night, what the Privacy page says we don&rsquo;t keep is deleted or anonymised.
+          </p>
+        </div>
+        <Facts
+          rows={[
+            ["Referrers", `Number erased ${REFERRAL_DAYS} days after delivery, unless they agreed to stay in touch`],
+            ["Consultations", `Deleted ${CONSULTATION_MONTHS} months after the last contact, unless Won`],
+            ["Waitlists", `Deleted ${WAITLIST_MONTHS_AFTER_LAUNCH} months after the product goes Live`],
+            ["Orders", `Name, phone, email and address removed after ${ORDER_YEARS} years (to confirm with the accountant)`],
+            ["Sign-ins", `Kept ${LOGIN_EVENT_MONTHS} months for the login history`],
+            ["CVs", "By email: delete from the inbox after 12 months"],
+          ]}
+        />
+        <p className="text-body-sm text-ink-secondary">
+          {last
+            ? `Last run ${formatGhanaDateTime(last.ranAt)}: ${
+                removed.length ? removed.map(([key, n]) => `${n} ${removedLabels[key] ?? key}`).join(", ") : "nothing was due"
+              }.`
+            : "Not run yet. It runs nightly once CRON_SECRET is set on the hosting."}
+        </p>
+        <RunRetention />
+      </section>
+      <section aria-labelledby="requests-title" className={settingsCard}>
+        <div className="flex flex-col gap-1.5">
+          <h2 id="requests-title" className={settingsCardTitle}>
+            Requests about someone&rsquo;s details
+          </h2>
+          <p className="text-body-sm text-ink-secondary">
+            When someone asks what we hold about them, or asks us to delete it (the Privacy page&rsquo;s &ldquo;Your
+            rights&rdquo;), find them by phone number.
+          </p>
+        </div>
+        <DataRequests />
+      </section>
+    </>
   );
 }

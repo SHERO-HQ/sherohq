@@ -72,6 +72,12 @@ const entries: Entry[] = [
   { slug: "terms", title: "Terms", route: "/legal/terms", design: { desktop: null, mobile: null } },
   { slug: "cookies", title: "Cookies", route: "/legal/cookies", design: { desktop: null, mobile: null } },
   { slug: "not-found", title: "404", route: "/this-page-does-not-exist", design: { desktop: "404", mobile: "404" } },
+  { slug: "admin-dashboard", title: "Admin: Dashboard", route: "/admin/dashboard", design: { desktop: "Dashboard", mobile: null }, admin: true },
+  { slug: "admin-consultations", title: "Admin: Consultations", route: "/admin/consultations", design: { desktop: "Consultations", mobile: null }, admin: true },
+  { slug: "admin-waitlists", title: "Admin: Waitlists", route: "/admin/waitlists", design: { desktop: "Waitlists", mobile: null }, admin: true },
+  { slug: "admin-referrals", title: "Admin: Referrals", route: "/admin/referrals", design: { desktop: "Referrals", mobile: null }, admin: true },
+  { slug: "admin-testimonials", title: "Admin: Testimonials", route: "/admin/testimonials", design: { desktop: "Testimonials", mobile: null }, admin: true },
+  { slug: "admin-careers", title: "Admin: Careers", route: "/admin/careers", design: { desktop: "Careers", mobile: null }, admin: true },
   { slug: "admin-orders", title: "Admin: Orders", route: "/admin/orders", design: { desktop: "Orders", mobile: null }, admin: true },
   {
     slug: "admin-order",
@@ -129,7 +135,7 @@ async function signInToAdmin(browser: Browser) {
   await page.getByRole("button", { name: "Continue" }).click();
   // The code submits itself once all six digits are in.
   await page.getByLabel("Code from your authenticator app").fill(codeForStep(localAdmin.totpSecret, stepAt(Date.now())));
-  await page.waitForURL("**/admin/orders");
+  await page.waitForURL("**/admin/dashboard");
   adminSession = await context.storageState();
   await context.close();
 }

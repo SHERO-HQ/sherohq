@@ -51,6 +51,7 @@ describe("notificationEmail", () => {
     const email = notificationEmail(
       {
         kind: "consultations",
+        id: "c1",
         name: "Kofi",
         phone: "+233241234567",
         email: null,
@@ -64,6 +65,7 @@ describe("notificationEmail", () => {
     expect(email.subject).toBe("Consultation request: Custom software");
     expect(email.text).toContain("Prefers: WhatsApp");
     expect(email.text).not.toContain("Email:");
+    expect(email.text).toContain(`${base}/consultations?id=c1`);
   });
 
   it("counts the waitlist", () => {
@@ -71,6 +73,7 @@ describe("notificationEmail", () => {
       {
         kind: "waitlists",
         product: "Merchander",
+        productSlug: "merchander",
         name: "Esi",
         phone: "+233241234567",
         business: "Esi's Closet",

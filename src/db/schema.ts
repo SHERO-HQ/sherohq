@@ -333,6 +333,8 @@ export const products = pgTable(
     previewUrl: text("preview_url"),
     /** Where the product lives once it launches. */
     liveUrl: text("live_url"),
+    /** First set Live. Waitlist signups are deleted 6 months after. */
+    launchedAt: timestamp("launched_at", { withTimezone: true }),
     // The waitlist form's product-specific fields.
     namePlaceholder: text("name_placeholder").notNull().default("Ama Mensah"),
     businessLabel: text("business_label").notNull().default("Business name"),
@@ -429,6 +431,8 @@ export const roles = pgTable("roles", {
   description: text("description").notNull(),
   howToApply: text("how_to_apply").notNull(),
   open: boolean("open").notNull().default(true),
+  /** When it was last closed, shown as "last open". */
+  closedAt: timestamp("closed_at", { withTimezone: true }),
   createdAt: createdAt(),
   updatedAt: updatedAt(),
 });
@@ -480,3 +484,10 @@ export const loginEvents = pgTable(
   },
   (t) => [index("login_events_created_idx").on(t.createdAt)],
 );
+
+/** Each run of the daily retention job and what it removed, shown in Settings. */
+export const retentionRuns = pgTable("retention_runs", {
+  id: id(),
+  ranAt: timestamp("ran_at", { withTimezone: true }).notNull().defaultNow(),
+  removed: jsonb("removed").$type<Record<string, number>>().notNull(),
+});

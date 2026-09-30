@@ -1,6 +1,6 @@
 // The emails SHERO sends itself when someone orders, books a consultation or
 // joins a waitlist. Pure, so the wording is tested; sending is in notify.ts.
-// Plain text: they're read on a phone, and a link opens the record.
+// Plain text: they're read on a phone, and a link opens the record in the admin.
 import { contactOptions, needOptions } from "@/lib/forms/consultation";
 import { formatCedis } from "@/lib/orders";
 
@@ -22,6 +22,7 @@ export type OwnerNotification =
     }
   | {
       kind: "consultations";
+      id: string;
       name: string;
       phone: string;
       email: string | null;
@@ -33,6 +34,7 @@ export type OwnerNotification =
   | {
       kind: "waitlists";
       product: string;
+      productSlug: string;
       name: string;
       phone: string;
       business: string;
@@ -82,6 +84,8 @@ export function notificationEmail(n: OwnerNotification, adminBase: string): Emai
           `Phone: ${n.phone}`,
           ...(n.email ? [`Email: ${n.email}`] : []),
           ...(n.message ? ["", n.message] : []),
+          "",
+          `Open the request: ${adminBase}/consultations?id=${n.id}`,
         ].join("\n"),
       };
     }
@@ -95,6 +99,7 @@ export function notificationEmail(n: OwnerNotification, adminBase: string): Emai
           `${n.detailLabel}: ${n.detail}`,
           "",
           `${n.total} ${n.total === 1 ? "person is" : "people are"} on the list now.`,
+          `Open the list: ${adminBase}/waitlists?product=${n.productSlug}`,
         ].join("\n"),
       };
   }
