@@ -1,6 +1,0 @@
-{
-  "framework": "nextjs",
-  "installCommand": "corepack enable && corepack yarn install --immutable",
-  "buildCommand": "corepack yarn build",
-  "crons": [{ "path": "/api/cron/retention", "schedule": "0 3 * * *" }]
-}

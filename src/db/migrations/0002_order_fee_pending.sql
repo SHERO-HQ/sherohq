@@ -1,1 +1,0 @@
-ALTER TABLE "orders" ADD COLUMN "delivery_fee_pending" boolean DEFAULT false NOT NULL;
