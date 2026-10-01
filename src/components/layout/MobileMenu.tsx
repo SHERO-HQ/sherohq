@@ -22,7 +22,6 @@ function menuItems(products: Child[]): Item[] {
     { label: "Work", href: routes.work },
     { label: "About", href: routes.about },
     { label: "Support", href: routes.support },
-    { label: "Track an order", href: shopUrl.track },
   ];
 }
 

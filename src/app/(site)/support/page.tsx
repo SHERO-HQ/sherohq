@@ -24,9 +24,9 @@ const paths: LinkRow[] = [
     href: routes.consultation,
   },
   {
-    title: "Help with an order",
-    text: "Track your order with your order number and phone number, or ask about a device you bought.",
-    textMobile: "Track it with your order number and phone.",
+    title: "Bought from the shop?",
+    text: "Track your order or ask about a device on the shop's site.",
+    textMobile: "Track your order on the shop's site.",
     href: shopUrl.track,
   },
   {

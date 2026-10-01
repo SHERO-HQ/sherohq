@@ -26,7 +26,6 @@ const baseColumns = [
     links: [
       { label: "Support", href: routes.support },
       { label: "FAQ", href: routes.faq },
-      { label: "Track order", href: shopUrl.track },
       // TODO(owner): the design has "Feedback" but no feedback page; it points to Support for now.
       { label: "Feedback", href: routes.support },
     ],
