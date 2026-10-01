@@ -13,8 +13,8 @@ const notes: Record<string, string[]> = {
     "Headline says what SHERO does (your approval, 30 Sep): \"Software, IT support and tested laptops, from Tamale.\" The motto moves to a small line above it, with the logo's bars.",
     "A two-path fork right under it: For your business (Services) and For you (the shop), one link each, so each kind of visitor is one click from their page. On phones both fit on the first screen; the illustration shows on large screens only.",
     "No badge above the headline and no glow behind the hero.",
-    "In stock now shows three devices (two on phones) with one row of delivery, payment and warranty and the WhatsApp prompt. The dispatch countdown and buying details live on the shop and laptop pages.",
-    "The header's Products opens a small menu of the products instead of jumping to a section of Home. The theme switch moved to the footer.",
+    "sherohq.com is now the business site (your decision, 1 Oct): the headline is about software and IT for businesses, and Home has no stock grid. The shop is its own site at shop.sherohq.com, reached from the For you tile, the services row and Shop in the header.",
+    "Header: Services, Work, Products (a small menu of the products), About; Shop set apart on the right, with an arrow because it opens the shop's site; no cart here. The theme switch moved to the footer.",
     "We've worked with, What do you need?, Our own products and the closing section are unchanged.",
 ],
   menu: [
@@ -47,6 +47,7 @@ const notes: Record<string, string[]> = {
   merchander: ["Labelled In development on mobile too.", "The waitlist form saves signups and checks Ghana mobile numbers."],
   pharmasyst: ["Labelled In development on mobile too.", "The waitlist form saves signups and checks Ghana mobile numbers."],
   shop: [
+    "Its own site at shop.sherohq.com, as on the old site (your decision, 1 Oct): its own header (All devices, Track order, the cart, SHERO for business) and a slimmer footer with the same legal line. Old sherohq.com/shop links redirect here. In these screenshots it runs at /shop on the same app.",
     "Real listings from the database. These screenshots use clearly labelled local samples, not real stock or prices.",
     "Battery filter is \"New battery (100%)\": every listing is already 90% or more, so 80%/90% options would filter nothing.",
     "Price is one choice at a time (Any price plus three bands), not checkboxes.",

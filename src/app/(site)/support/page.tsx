@@ -7,7 +7,7 @@ import { buildFaq, type FaqGroup } from "@/content/faq";
 import { getPublishedProducts } from "@/lib/products";
 import { formatCedis } from "@/lib/orders";
 import { shopSettingsForCopy } from "@/lib/shop";
-import { business, routes, whatsappLink } from "@/lib/site";
+import { business, routes, shopUrl, whatsappLink } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Support",
@@ -27,7 +27,7 @@ const paths: LinkRow[] = [
     title: "Help with an order",
     text: "Track your order with your order number and phone number, or ask about a device you bought.",
     textMobile: "Track it with your order number and phone.",
-    href: routes.track,
+    href: shopUrl.track,
   },
   {
     title: "Tech help",

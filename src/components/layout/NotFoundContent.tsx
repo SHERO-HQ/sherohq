@@ -1,8 +1,8 @@
 import { LinkRows } from "@/components/ui/LinkRows";
-import { routes } from "@/lib/site";
+import { routes, shopUrl } from "@/lib/site";
 
 const destinations = [
-  { title: "Shop laptops", text: "UK-used, tested, delivered nationwide.", href: routes.shop },
+  { title: "Shop laptops", text: "UK-used, tested, delivered nationwide.", href: shopUrl.home },
   { title: "Services", text: "Software, hardware and IT support.", href: routes.services },
   { title: "Book a free consultation", text: "Tell us what you need.", href: routes.consultation },
   { title: "Home", text: "Start from the beginning.", href: routes.home },

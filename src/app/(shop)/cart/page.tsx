@@ -10,7 +10,7 @@ import { InlineArrow } from "@/components/ui/InlineArrow";
 import { CART_COOKIE, parseCart } from "@/lib/cart";
 import { formatCedis } from "@/lib/orders";
 import { getListingsByIds, getShopSettings } from "@/lib/shop";
-import { routes } from "@/lib/site";
+import { shopUrl } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Your cart",
@@ -39,7 +39,7 @@ export default async function CartPage() {
         <section className="container-site flex flex-col items-start gap-4 pb-section">
           <p className="text-body-lg text-ink-secondary">Your cart is empty.</p>
           <Link
-            href={routes.shop}
+            href={shopUrl.home}
             className={buttonClass({ size: "lg" })}
           >
             Browse laptops in stock
@@ -93,7 +93,7 @@ export default async function CartPage() {
             </ul>
             <p className="pt-6 text-body-sm text-ink-secondary">
               Each listing is one specific device we&rsquo;ve checked, so there&rsquo;s one of each.{" "}
-              <Link href={routes.shop} className="font-medium whitespace-nowrap text-primary hover:underline">
+              <Link href={shopUrl.home} className="font-medium whitespace-nowrap text-primary hover:underline">
                 Continue shopping <InlineArrow />
               </Link>
             </p>
@@ -117,7 +117,7 @@ export default async function CartPage() {
             </dl>
             {available.length > 0 ? (
               <Link
-                href={routes.checkout}
+                href={shopUrl.checkout}
                 className={buttonClass({ size: "lg", full: true, className: "mt-3" })}
               >
                 Continue to checkout

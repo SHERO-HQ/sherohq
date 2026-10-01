@@ -6,13 +6,13 @@ import { ShopFilters, SortSelect } from "@/components/shop/ShopFilters";
 import { DispatchCountdown } from "@/components/ui/LiveStatus";
 import { buttonClass } from "@/components/ui/Button";
 import { getShopListings, getShopSettings, parseShopFilters, SHOP_PAGE_SIZE } from "@/lib/shop";
-import { routes, whatsappLink } from "@/lib/site";
+import { absoluteUrl, shopUrl, whatsappLink } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Shop UK-used laptops in Tamale",
   description:
     "Grade A++ UK-used laptops, each tested with its battery health listed. One-week warranty, same-day delivery in Tamale and by bus across Ghana.",
-  alternates: { canonical: routes.shop },
+  alternates: { canonical: absoluteUrl(shopUrl.home) },
 };
 
 const recommendMessage = "Hi SHERO, I'm looking for a laptop. I'll mainly use it for: ";
@@ -101,7 +101,7 @@ export default async function ShopPage({ searchParams }: { searchParams: Promise
                 and we&rsquo;ll tell you what&rsquo;s coming.
               </p>
               {filtered && (
-                <Link href={routes.shop} className="font-medium text-primary underline underline-offset-3">
+                <Link href={shopUrl.home} className="font-medium text-primary underline underline-offset-3">
                   Clear filters
                 </Link>
               )}
@@ -111,7 +111,7 @@ export default async function ShopPage({ searchParams }: { searchParams: Promise
           <div className="flex flex-col items-center gap-4 pt-10 lg:pt-12">
             {listings.length < matching && (
               <Link
-                href={`${routes.shop}?${moreParams}`}
+                href={`${shopUrl.home}?${moreParams}`}
                 scroll={false}
                 className={buttonClass({ variant: "outline", size: "lg" })}
               >

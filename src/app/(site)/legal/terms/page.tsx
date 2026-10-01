@@ -3,7 +3,7 @@ import Link from "next/link";
 import { LegalPage } from "@/components/legal/LegalPage";
 import { Fill } from "@/components/ui/Fill";
 import { missing } from "@/lib/content";
-import { business, routes } from "@/lib/site";
+import { business, routes, shopUrl } from "@/lib/site";
 import { formatCedis } from "@/lib/orders";
 import { shopSettingsForCopy } from "@/lib/shop";
 
@@ -36,7 +36,7 @@ export default async function TermsPage() {
             <p>
               You don&rsquo;t need an account to order. After you order, we send your order number; track it with that
               number and your phone number on the{" "}
-              <Link href={routes.track} className={link}>
+              <Link href={shopUrl.track} className={link}>
                 Track Order page
               </Link>
               . <Fill value={missing("What happens if an item sells out after you order, and how cancellations work")} scale={1} />

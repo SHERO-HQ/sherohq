@@ -2,15 +2,14 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useCallback, useRef, useState, useSyncExternalStore } from "react";
-import { ShoppingCart } from "lucide-react";
+import { useCallback, useRef, useState } from "react";
+import { ArrowUpRight } from "lucide-react";
 import { MobileMenu, type Child } from "@/components/layout/MobileMenu";
 import { ProductsMenu } from "@/components/layout/ProductsMenu";
 import { MenuIcon } from "@/components/ui/MenuIcon";
 import { Logo } from "@/components/ui/Logo";
 import { ButtonLink } from "@/components/ui/Button";
-import { cartSnapshot, serverCartSnapshot, subscribeCart } from "@/lib/cart";
-import { mainNav, routes } from "@/lib/site";
+import { mainNav, routes, shopUrl } from "@/lib/site";
 import { cn } from "@/lib/cn";
 
 function isCurrent(pathname: string, href: string) {
@@ -18,38 +17,11 @@ function isCurrent(pathname: string, href: string) {
   return href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`);
 }
 
-const shopPaths = [routes.shop, routes.cart, routes.checkout];
-
 const navLinkClass = (current: boolean) =>
   cn(
     "rounded-md px-3 py-1.5 text-label transition-all duration-150",
     current ? "bg-surface font-semibold text-primary" : "text-ink-secondary hover:bg-surface hover:text-primary",
   );
-
-/** Shown on shop pages, or anywhere once something is in the cart (CLAUDE.md). */
-function CartLink({ pathname }: { pathname: string }) {
-  const count = useSyncExternalStore(subscribeCart, cartSnapshot, serverCartSnapshot).length;
-  const onShop = shopPaths.some((path) => pathname === path || pathname.startsWith(`${path}/`));
-  if (!onShop && count === 0) return null;
-  return (
-    <Link
-      href={routes.cart}
-      aria-label={count === 0 ? "Cart, empty" : `Cart, ${count} ${count === 1 ? "item" : "items"}`}
-      aria-current={pathname === routes.cart ? "page" : undefined}
-      className="relative flex size-11 items-center justify-center rounded-sm text-ink-secondary hover:text-primary"
-    >
-      <ShoppingCart aria-hidden="true" size={20} strokeWidth={1.5} />
-      {count > 0 && (
-        <span
-          aria-hidden="true"
-          className="absolute top-1 right-0 flex h-4 min-w-4 items-center justify-center rounded-full bg-secondary-fill px-1 font-mono text-meta text-on-secondary-fill"
-        >
-          {count}
-        </span>
-      )}
-    </Link>
-  );
-}
 
 export function SiteHeader({ products }: { products: Child[] }) {
   const pathname = usePathname();
@@ -94,7 +66,13 @@ export function SiteHeader({ products }: { products: Child[] }) {
         </div>
 
         <div className="-mr-3 flex items-center lg:mr-0 lg:gap-1.5">
-          <CartLink pathname={pathname} />
+          {/* The shop is its own site: set apart from the business sections. */}
+          <Link
+            href={shopUrl.home}
+            className="hidden items-center gap-1 rounded-md px-3 py-1.5 text-label text-ink-secondary transition-all duration-150 hover:bg-surface hover:text-primary lg:inline-flex"
+          >
+            Shop <ArrowUpRight aria-hidden="true" size={16} strokeWidth={1.5} />
+          </Link>
           <span className="ml-2 hidden lg:contents">
             <ButtonLink href={routes.consultation}>Book a consultation</ButtonLink>
           </span>

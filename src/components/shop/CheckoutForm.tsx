@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { buttonClass } from "@/components/ui/Button";
-import { placeOrder } from "@/app/(site)/checkout/actions";
+import { placeOrder } from "@/app/(shop)/checkout/actions";
 import { SelectField, TextField } from "@/components/forms/fields";
 import { SummaryRow, SummaryTotal } from "@/components/shop/OrderSummary";
 import {

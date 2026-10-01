@@ -11,7 +11,7 @@ import { InlineArrow } from "@/components/ui/InlineArrow";
 import { requireAdmin } from "@/lib/admin/auth";
 import { adminListing } from "@/lib/admin/listings";
 import { getShopSettings } from "@/lib/shop";
-import { routes } from "@/lib/site";
+import { shopUrl } from "@/lib/site";
 
 type Props = { params: Promise<{ id: string }>; searchParams: Promise<{ saved?: string }> };
 
@@ -38,7 +38,7 @@ export default async function ListingPage({ params, searchParams }: Props) {
             <InlineArrow direction="left" /> All listings
           </Link>
           {inShop && (
-            <a href={`${routes.shop}/${listing.slug}`} target="_blank" rel="noopener noreferrer" className="text-label text-primary hover:underline">
+            <a href={shopUrl.listing(listing.slug)} target="_blank" rel="noopener noreferrer" className="text-label text-primary hover:underline">
               See it in the shop <InlineArrow />
             </a>
           )}

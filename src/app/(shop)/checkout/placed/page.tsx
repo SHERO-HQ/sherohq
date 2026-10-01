@@ -10,7 +10,7 @@ import { PLACED_COOKIE } from "@/lib/cart";
 import { paymentLabel } from "@/lib/forms/checkout";
 import { getPlacedOrder } from "@/lib/order-lookup";
 import { formatCedis } from "@/lib/orders";
-import { routes, whatsappLink } from "@/lib/site";
+import { routes, shopUrl, whatsappLink } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Order placed",
@@ -54,7 +54,7 @@ export default async function OrderPlacedPage() {
         )}
         <div className="flex flex-wrap gap-3 pt-2">
           <Link
-            href={`${routes.track}?n=${order.number}`}
+            href={`${shopUrl.track}?n=${order.number}`}
             className={buttonClass({ size: "lg" })}
           >
             Track this order

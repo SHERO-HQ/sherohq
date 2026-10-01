@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { HardwareArt, IntegrationArt, ManagedItArt, SoftwareArt } from "@/components/illustrations/ServiceArt";
-import { routes } from "@/lib/site";
+import { routes, shopUrl } from "@/lib/site";
 import { cn } from "@/lib/cn";
 import { InlineArrow } from "@/components/ui/InlineArrow";
 import { Section, SectionHeader } from "@/components/ui/Section";
@@ -13,7 +13,7 @@ const services = [
     description: "UK-used laptops, tested before they reach you, with the battery health on every listing.",
     action: "Shop laptops",
     Art: HardwareArt,
-    href: routes.shop,
+    href: shopUrl.home,
   },
   {
     title: "I need software built",

@@ -1,6 +1,10 @@
 import type { NextConfig } from "next";
 
 const siteUrl = "https://sherohq.com";
+// The shop's own site (owner, 1 Oct 2026); src/lib/site.ts links to it when NEXT_PUBLIC_SHOP_URL is set.
+const shopUrl = process.env.NEXT_PUBLIC_SHOP_URL?.replace(/\/$/, "") || "https://shop.sherohq.com";
+const shopHost = [{ type: "host" as const, value: new URL(shopUrl).host }];
+const mainHost = [{ type: "host" as const, value: "(www\\.)?sherohq\\.com" }];
 
 // In `next dev`, React uses eval() for debugging and hot reload uses a
 // WebSocket; production needs neither, so they're allowed in development only.
@@ -74,13 +78,24 @@ const nextConfig: NextConfig = {
         permanent: false,
       },
 
-      // Old site's shop and support subdomains.
+      // The shop is its own site at shop.sherohq.com, at clean paths ("/",
+      // "/<laptop>", "/cart"; see rewrites below). The main site's old shop
+      // paths move there for good, and business pages asked for on the shop
+      // host go to the main site. Local and preview builds serve both in one app.
+      { source: "/shop", has: mainHost, destination: `${shopUrl}/`, permanent: true },
+      { source: "/shop/:slug", has: mainHost, destination: `${shopUrl}/:slug`, permanent: true },
+      { source: "/:page(cart|track)", has: mainHost, destination: `${shopUrl}/:page`, permanent: true },
+      { source: "/checkout/:path*", has: mainHost, destination: `${shopUrl}/checkout/:path*`, permanent: true },
+      { source: "/shop", has: shopHost, destination: "/", permanent: true },
+      { source: "/shop/:slug", has: shopHost, destination: "/:slug", permanent: true },
       {
-        source: "/:path*",
-        has: [{ type: "host", value: "shop.sherohq.com" }],
-        destination: `${siteUrl}/shop`,
-        permanent: true,
+        source: "/:section(services|work|about|support|legal|admin)/:path*",
+        has: shopHost,
+        destination: `${siteUrl}/:section/:path*`,
+        permanent: false,
       },
+
+      // The old site's support subdomain.
       {
         source: "/:path*",
         has: [{ type: "host", value: "support.sherohq.com" }],
@@ -88,6 +103,20 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
     ];
+  },
+
+  async rewrites() {
+    return {
+      // On the shop host, clean paths map to this app's shop routes.
+      beforeFiles: [
+        { source: "/", has: shopHost, destination: "/shop" },
+        {
+          source: "/:slug((?!cart$|checkout|track$|shop$|api|uploads|_next|favicon|apple-touch-icon|site\\.webmanifest|robots\\.txt|sitemap\\.xml|opengraph-image)[^/.]+)",
+          has: shopHost,
+          destination: "/shop/:slug",
+        },
+      ],
+    };
   },
 
   async headers() {

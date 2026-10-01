@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import { TrackOrder } from "@/components/shop/TrackOrder";
 import { normaliseOrderNumber } from "@/lib/orders";
-import { routes } from "@/lib/site";
+import { absoluteUrl, shopUrl } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Track your order",
   description: "Track a SHERO order with your order number and the phone number you ordered with. No account needed.",
-  alternates: { canonical: routes.track },
+  alternates: { canonical: absoluteUrl(shopUrl.track) },
 };
 
 export default async function TrackPage({ searchParams }: { searchParams: Promise<{ n?: string | string[] }> }) {

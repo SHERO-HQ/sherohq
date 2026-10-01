@@ -38,14 +38,42 @@ export const routes = {
 
 export const siteUrl = "https://sherohq.com";
 
-/** Pages that exist today. The sitemap lists these plus each product and project from the database. */
+/**
+ * The shop is its own site (owner, 1 Oct 2026): shop.sherohq.com, same app and
+ * admin. In production NEXT_PUBLIC_SHOP_URL is "https://shop.sherohq.com" and
+ * links go there at clean paths ("/", "/<laptop>", "/cart"); next.config.ts
+ * maps those to the routes below. Elsewhere (local, previews) it's unset and
+ * links use this app's own paths. `routes.shop` etc. stay the internal paths,
+ * for revalidatePath, cookies and server redirects.
+ */
+const shopOrigin = (process.env.NEXT_PUBLIC_SHOP_URL ?? "").replace(/\/$/, "");
+
+export const shopUrl = {
+  home: shopOrigin ? `${shopOrigin}/` : routes.shop,
+  cart: shopOrigin ? `${shopOrigin}/cart` : routes.cart,
+  checkout: shopOrigin ? `${shopOrigin}/checkout` : routes.checkout,
+  track: shopOrigin ? `${shopOrigin}/track` : routes.track,
+  listing: (slug: string) => (shopOrigin ? `${shopOrigin}/${slug}` : `${routes.shop}/${slug}`),
+};
+
+/** A main-site page linked from the shop: the full sherohq.com address once the shop has its own. */
+export function mainUrl(path: string): string {
+  return shopOrigin ? `${siteUrl}${path === "/" ? "" : path}` : path;
+}
+
+/** A full address for canonical links and structured data. */
+export function absoluteUrl(href: string): string {
+  return href.startsWith("http") ? href : `${siteUrl}${href}`;
+}
+
+/** Pages that exist today (shop pages included: same app). The sitemap lists the main site's plus each product and project. */
 export const livePages: string[] = [routes.home, routes.services, routes.shop, routes.track, routes.about, routes.work, routes.support, routes.consultation, routes.careers, routes.terms, routes.privacy, routes.cookies];
 
+/** The business site's sections. The shop has its own link, set apart, since it's its own site. */
 export const mainNav = [
   { label: "Services", href: routes.services },
-  { label: "Shop", href: routes.shop },
-  { label: "Products", href: routes.products },
   { label: "Work", href: routes.work },
+  { label: "Products", href: routes.products },
   { label: "About", href: routes.about },
 ] as const;
 

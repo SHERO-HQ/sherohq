@@ -4,7 +4,7 @@ import Form from "next/form";
 import { buttonClass } from "@/components/ui/Button";
 import { useState } from "react";
 import { SlidersHorizontal, X } from "lucide-react";
-import { routes } from "@/lib/site";
+import { shopUrl } from "@/lib/site";
 import { cn } from "@/lib/cn";
 
 const FORM_ID = "shop-filters";
@@ -73,7 +73,7 @@ export function ShopFilters({
 
       <Form
         id={FORM_ID}
-        action={routes.shop}
+        action={shopUrl.home}
         replace
         scroll={false}
         onChange={(event) => {
@@ -139,7 +139,7 @@ export function ShopFilters({
             Show results
           </button>
           {active > 0 && (
-            <a href={routes.shop} className="flex h-9 items-center text-body font-medium text-primary underline underline-offset-3">
+            <a href={shopUrl.home} className="flex h-9 items-center text-body font-medium text-primary underline underline-offset-3">
               Clear filters
             </a>
           )}

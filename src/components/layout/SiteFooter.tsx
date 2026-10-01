@@ -3,7 +3,7 @@ import { Logo } from "@/components/ui/Logo";
 import { OpenNow } from "@/components/ui/LiveStatus";
 import { ThemeSwitch } from "@/components/ui/ThemeSwitch";
 import { productPath, type Product } from "@/lib/products";
-import { business, routes } from "@/lib/site";
+import { business, routes, shopUrl } from "@/lib/site";
 
 const baseColumns = [
   {
@@ -18,7 +18,7 @@ const baseColumns = [
     heading: "offer",
     links: [
       { label: "Services", href: routes.services },
-      { label: "Shop", href: routes.shop },
+      { label: "Shop", href: shopUrl.home },
     ],
   },
   {
@@ -26,7 +26,7 @@ const baseColumns = [
     links: [
       { label: "Support", href: routes.support },
       { label: "FAQ", href: routes.faq },
-      { label: "Track order", href: routes.track },
+      { label: "Track order", href: shopUrl.track },
       // TODO(owner): the design has "Feedback" but no feedback page; it points to Support for now.
       { label: "Feedback", href: routes.support },
     ],

@@ -13,7 +13,7 @@ import { specSummary, type DeviceCheck } from "@/lib/listings";
 import { formatCedis } from "@/lib/orders";
 import { getListing, getShopSettings, getSimilarListings } from "@/lib/shop";
 import { paymentSummary } from "@/lib/payments";
-import { routes, siteUrl, whatsappLink } from "@/lib/site";
+import { absoluteUrl, shopUrl, siteUrl, whatsappLink } from "@/lib/site";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: `${listing.model}, ${formatCedis(listing.pricePesewas)}`,
     description: `Grade A++ UK-used ${listing.model}: ${specSummary(listing.specs)}${battery}. Tested in Tamale, one-week warranty, delivered across Ghana.`,
-    alternates: { canonical: `${routes.shop}/${listing.slug}` },
+    alternates: { canonical: absoluteUrl(shopUrl.listing(listing.slug)) },
   };
 }
 
@@ -83,7 +83,7 @@ export default async function ListingPage({ params }: Props) {
 
   const available = listing.status === "in_stock";
   const isLaptop = listing.category.toLowerCase() === "laptops";
-  const url = `${siteUrl}${routes.shop}/${listing.slug}`;
+  const url = absoluteUrl(shopUrl.listing(listing.slug));
   const freeDelivery = listing.pricePesewas >= settings.freeDeliveryThresholdPesewas;
   const threshold = formatCedis(settings.freeDeliveryThresholdPesewas);
   const specs = specRows.filter((row) => listing.specs[row.key]);
@@ -124,14 +124,14 @@ export default async function ListingPage({ params }: Props) {
       <nav aria-label="Breadcrumb" className="container-site pt-5 font-mono text-meta text-ink-muted lg:pt-6">
         <ol className="flex flex-wrap gap-2.5">
           <li>
-            <Link href={routes.shop} className="text-ink-secondary underline underline-offset-3 hover:text-primary">
+            <Link href={shopUrl.home} className="text-ink-secondary underline underline-offset-3 hover:text-primary">
               shop
             </Link>
           </li>
           <li aria-hidden="true">/</li>
           <li>
             <Link
-              href={`${routes.shop}?category=${listing.category.toLowerCase()}`}
+              href={`${shopUrl.home}?category=${listing.category.toLowerCase()}`}
               className="text-ink-secondary underline underline-offset-3 hover:text-primary"
             >
               {listing.category.toLowerCase()}
@@ -225,7 +225,7 @@ export default async function ListingPage({ params }: Props) {
               <p className="max-w-measure text-body lg:text-body-lg text-ink-secondary">
                 Every device goes through the same check before it&rsquo;s listed. This is the result for this one.
               </p>
-              <Link href={`${routes.shop}#grade`} className="text-body-sm font-medium whitespace-nowrap text-primary hover:underline">
+              <Link href={`${shopUrl.home}#grade`} className="text-body-sm font-medium whitespace-nowrap text-primary hover:underline">
                 What Grade A++ means <InlineArrow />
               </Link>
             </div>

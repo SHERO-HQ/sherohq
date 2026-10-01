@@ -3,10 +3,10 @@ import { ListingPhoto } from "@/components/shop/ListingPhoto";
 import { specSummary } from "@/lib/listings";
 import { formatCedis } from "@/lib/orders";
 import type { ShopListing } from "@/lib/shop";
-import { routes } from "@/lib/site";
+import { shopUrl } from "@/lib/site";
 
 export function listingHref(slug: string) {
-  return `${routes.shop}/${slug}`;
+  return shopUrl.listing(slug);
 }
 
 export function BatteryLabel({ health }: { health: number | null }) {

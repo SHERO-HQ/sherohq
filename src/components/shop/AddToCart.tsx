@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useSyncExternalStore } from "react";
 import { Check } from "lucide-react";
 import { addToCart, cartSnapshot, serverCartSnapshot, subscribeCart } from "@/lib/cart";
-import { routes } from "@/lib/site";
+import { shopUrl } from "@/lib/site";
 import { cn } from "@/lib/cn";
 import { buttonClass } from "@/components/ui/Button";
 
@@ -20,7 +20,7 @@ export function AddToCart({ listingId, available, className }: { listingId: stri
   }
   if (cart.includes(listingId)) {
     return (
-      <Link href={routes.cart} className={buttonClass({ variant: "outline", size: "lg", className })}>
+      <Link href={shopUrl.cart} className={buttonClass({ variant: "outline", size: "lg", className })}>
         <Check aria-hidden="true" size={18} strokeWidth={1.5} />
         In your cart · View cart
       </Link>

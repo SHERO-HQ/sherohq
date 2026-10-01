@@ -5,7 +5,7 @@ import { ConsultationCta } from "@/components/home/ConsultationCta";
 import { HardwareArt, IntegrationArt, ManagedItArt, SoftwareArt } from "@/components/illustrations/ServiceArt";
 import { Card, CardMedia } from "@/components/ui/Card";
 import { Section, SectionHeader } from "@/components/ui/Section";
-import { business, routes } from "@/lib/site";
+import { business, routes, shopUrl } from "@/lib/site";
 import { InlineArrow } from "@/components/ui/InlineArrow";
 
 export const metadata: Metadata = {
@@ -19,6 +19,8 @@ type Service = {
   id: string;
   Art: (props: { className?: string }) => React.ReactNode;
   title: string;
+  /** For the jump links at the top, when the title is long. */
+  short?: string;
   intro: string;
   offers: string[];
   links: Array<{ label: string; href: string }>;
@@ -38,18 +40,18 @@ const services: Service[] = [
   {
     id: "hardware",
     Art: HardwareArt,
-    title: "Hardware",
-    intro: "Laptops and office equipment, tested before they reach you.",
+    title: "Hardware for your business",
+    short: "Hardware",
+    intro: "Laptops and office equipment for a team, sourced, tested and set up. Buying one laptop? The shop has them.",
     offers: [
-      "UK-used business laptops and desktops",
-      "Phones, audio and accessories",
+      "Laptops and desktops for your staff, tested before they reach you",
       "Office hardware sourcing and setup",
       "Advice on what to buy for your needs and budget",
       "Bulk orders delivered outside Ghana, on request",
     ],
     links: [
-      { label: "See laptops in stock", href: routes.shop },
       { label: "Talk to us about office hardware", href: consult("hardware") },
+      { label: "Buying one? Visit the shop", href: shopUrl.home },
     ],
   },
   {
@@ -106,7 +108,7 @@ export default function ServicesPage() {
               href={`#${service.id}`}
               className="inline-flex h-10 items-center gap-2 rounded-sm border border-border px-4 text-label text-ink hover:border-border-strong"
             >
-              {service.title}
+              {service.short ?? service.title}
               <InlineArrow direction="down" className="text-primary" />
             </a>
           ))}

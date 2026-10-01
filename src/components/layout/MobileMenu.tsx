@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { buttonClass } from "@/components/ui/Button";
-import { business, routes } from "@/lib/site";
+import { business, routes, shopUrl } from "@/lib/site";
 import { cn } from "@/lib/cn";
 
 /** `inDevelopment`: unreleased products are always labelled (CLAUDE.md). */
@@ -15,14 +15,14 @@ type Item = { label: string; href: string; children?: Child[] };
 function menuItems(products: Child[]): Item[] {
   return [
     { label: "Services", href: routes.services },
-    { label: "Shop", href: routes.shop },
+    { label: "Shop laptops", href: shopUrl.home },
     products.length > 0
       ? { label: "Products", href: routes.products, children: products }
       : { label: "Products", href: routes.products },
     { label: "Work", href: routes.work },
     { label: "About", href: routes.about },
     { label: "Support", href: routes.support },
-    { label: "Track an order", href: routes.track },
+    { label: "Track an order", href: shopUrl.track },
   ];
 }
 

@@ -118,17 +118,6 @@ export async function getSimilarListings(listing: { id: string; category: string
 }
 
 /** The newest in-stock laptops for the Home page. */
-/** Newest devices that can be bought now, any category (Home). */
-export async function getNewestInStock(limit = 6) {
-  return db
-    .select(listingColumns)
-    .from(listings)
-    .leftJoin(deviceChecks, eq(deviceChecks.listingId, listings.id))
-    .where(eq(listings.status, "in_stock"))
-    .orderBy(desc(listings.createdAt))
-    .limit(limit);
-}
-
 /** Current listing state for the given ids (cart and checkout re-check this). */
 export async function getListingsByIds(ids: string[]) {
   if (ids.length === 0) return [];

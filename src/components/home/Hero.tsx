@@ -2,11 +2,11 @@ import Link from "next/link";
 import { Building2, Laptop } from "lucide-react";
 import { HeroArt } from "@/components/illustrations/ServiceArt";
 import { InlineArrow } from "@/components/ui/InlineArrow";
-import { routes } from "@/lib/site";
+import { routes, shopUrl } from "@/lib/site";
 
-// Two kinds of visitor land here: a business that needs software or IT, and
-// someone who needs a laptop. The headline says what SHERO does; the fork
-// sends each to their page in one click (owner, 30 Sep 2026).
+// sherohq.com is SHERO's business site; the shop is its own site (owner,
+// 1 Oct 2026). The headline says what SHERO does for businesses; the fork
+// sends anyone after a laptop to the shop in one click.
 const paths = [
   {
     label: "For your business",
@@ -21,7 +21,7 @@ const paths = [
     title: "Tested laptops",
     detail: "Checked before they're listed, with the battery health on every one. Delivered across Ghana.",
     action: "Shop laptops",
-    href: routes.shop,
+    href: shopUrl.home,
     Icon: Laptop,
   },
 ];
@@ -42,7 +42,7 @@ export function Hero() {
             </span>
             Redefine Possible.
           </p>
-          <h1 className="max-w-2xl font-display text-h1 text-heading">Software, IT support and tested laptops, from Tamale.</h1>
+          <h1 className="max-w-2xl font-display text-h1 text-heading">Software and IT support for businesses, from Tamale.</h1>
           <ul className="grid w-full gap-3 sm:grid-cols-2">
             {paths.map(({ label, title, detail, action, href, Icon }) => (
               <li key={href}>

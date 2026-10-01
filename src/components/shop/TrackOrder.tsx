@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { buttonClass } from "@/components/ui/Button";
-import { trackOrder, type TrackResult } from "@/app/(site)/track/actions";
+import { trackOrder, type TrackResult } from "@/app/(shop)/track/actions";
 import { TextField } from "@/components/forms/fields";
 import { formatGhanaDateTime } from "@/lib/dates";
 import { paymentLabel } from "@/lib/forms/checkout";
