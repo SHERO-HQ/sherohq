@@ -53,6 +53,7 @@ export async function POST(request: NextRequest) {
 
     const body = await request.json();
     const { title, category, client, description, useCase, technologies, image, link } = body;
+    const status = body.status === "in_development" ? "in_development" : "live";
 
     const projectId = uuidv4();
 
@@ -60,6 +61,7 @@ export async function POST(request: NextRequest) {
       id: projectId,
       title,
       category,
+      status,
       client,
       description,
       useCase,

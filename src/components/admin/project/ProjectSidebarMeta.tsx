@@ -32,6 +32,7 @@ export default function ProjectSidebarMeta({
     "Mobile Apps",
     "Infrastructure",
     "Custom Software",
+    "Products",
   ];
 
   const handleInputChange = (field: keyof Project, value: string) => {
@@ -81,6 +82,25 @@ export default function ProjectSidebarMeta({
                 {errors.category}
               </p>
             )}
+          </div>
+
+          {/* Status */}
+          <div className="space-y-2">
+            <label
+              htmlFor="status"
+              className="text-xs font-semibold text-muted-foreground uppercase tracking-wider"
+            >
+              Status
+            </label>
+            <select
+              id="status"
+              value={projectData.status || "live"}
+              onChange={(e) => handleInputChange("status", e.target.value)}
+              className="w-full bg-muted border-border text-foreground rounded px-3 py-2 text-sm outline-none focus:ring-1 focus:ring-brand-secondary-500/50"
+            >
+              <option value="live">Live</option>
+              <option value="in_development">In development</option>
+            </select>
           </div>
 
           {/* Client Name */}

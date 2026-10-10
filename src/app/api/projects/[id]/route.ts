@@ -42,7 +42,7 @@ export async function PUT(
     const id = (await params).id;
     const body = await request.json();
 
-    const allowedFields = ["title", "category", "client", "description", "useCase", "technologies", "image", "link"];
+    const allowedFields = ["title", "category", "status", "client", "description", "useCase", "technologies", "image", "link"];
     const updates: Record<string, any> = {};
 
     for (const field of allowedFields) {

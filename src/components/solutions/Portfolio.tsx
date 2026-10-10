@@ -49,6 +49,7 @@ const Portfolio = () => {
     "Mobile Apps",
     "Infrastructure",
     "Custom Software",
+    "Products",
   ];
 
   const { data: projects = [], isLoading } = useProjects(

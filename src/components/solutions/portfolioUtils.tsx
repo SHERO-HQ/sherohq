@@ -1,5 +1,5 @@
 import React from "react";
-import { Code2, Smartphone, Server, Layers } from "lucide-react";
+import { Code2, Smartphone, Server, Layers, Package } from "lucide-react";
 
 export const getTechColor = (tech: string) => {
   const name = tech.toLowerCase();
@@ -33,6 +33,8 @@ export const getCategoryIcon = (category: string) => {
       return <Smartphone className="w-4 h-4" />;
     case "Infrastructure":
       return <Server className="w-4 h-4" />;
+    case "Products":
+      return <Package className="w-4 h-4" />;
     case "Custom Software":
       return <Layers className="w-4 h-4" />;
     default:

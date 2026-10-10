@@ -37,6 +37,7 @@ export default function ProjectForm() {
   const [projectData, setProjectData] = useState<Partial<Project>>({
     title: "",
     category: "",
+    status: "live",
     client: "",
     description: "",
     useCase: "",

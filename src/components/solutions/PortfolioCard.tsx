@@ -68,6 +68,11 @@ export function PortfolioCard({ project, idx, onSelect }: PortfolioCardProps) {
             {getCategoryIcon(project.category)}
             {project.category}
           </span>
+          {project.status === "in_development" && (
+            <span className="inline-flex items-center px-2 py-0.5 bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 text-[10px] font-bold uppercase rounded">
+              In development
+            </span>
+          )}
           {project.client && (
             <span className="text-[10px] font-medium text-slate-400 dark:text-slate-500">
               for {project.client}

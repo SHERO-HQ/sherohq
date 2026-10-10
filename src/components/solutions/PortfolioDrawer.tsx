@@ -68,10 +68,17 @@ export function PortfolioDrawer({
               {/* Sticky Top Header Bar (Category, Title, Client & Close Button) */}
               <div className="sticky top-0 z-30 bg-background/95 backdrop-blur-md border-b border-border p-4 md:p-6 space-y-3 shrink-0 shadow-xs">
                 <div className="flex items-center justify-between gap-4">
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-brand-secondary-100 dark:bg-brand-secondary-900/40 text-brand-secondary-700 dark:text-brand-secondary-400 text-xs font-bold uppercase rounded-full border border-brand-secondary-500/20">
-                    {getCategoryIcon(selectedProject.category)}
-                    {selectedProject.category}
-                  </span>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-brand-secondary-100 dark:bg-brand-secondary-900/40 text-brand-secondary-700 dark:text-brand-secondary-400 text-xs font-bold uppercase rounded-full border border-brand-secondary-500/20">
+                      {getCategoryIcon(selectedProject.category)}
+                      {selectedProject.category}
+                    </span>
+                    {selectedProject.status === "in_development" && (
+                      <span className="inline-flex items-center px-3 py-1 bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 text-xs font-bold uppercase rounded-full">
+                        In development
+                      </span>
+                    )}
+                  </div>
                   <button
                     onClick={onClose}
                     className="p-2 rounded-full hover:bg-muted text-foreground transition-colors cursor-pointer active:scale-95"
