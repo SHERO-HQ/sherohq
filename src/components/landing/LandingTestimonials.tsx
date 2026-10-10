@@ -11,7 +11,7 @@ import Link from "next/link";
 // with a description is uploaded in the admin.
 const SHOWN_CLIENTS: { name: string; fallback?: string }[] = [
   { name: "TrustCircle", fallback: "Samakose" },
-  { name: "Tastea", fallback: "Unique Fashion" },
+  { name: "Tastea" },
   { name: "Dajrim" },
 ];
 
