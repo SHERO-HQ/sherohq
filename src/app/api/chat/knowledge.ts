@@ -31,17 +31,14 @@ TROUBLESHOOTING GUIDES
 - Overheating: Clean vents, use on hard surface, update BIOS/drivers, check fan with diagnostics.
 
 COMMON QUESTIONS
-- Warranty: All SHERO products include a minimum 3-month warranty. Extended warranties available on request.
-- Returns: 7-day return policy for defective items. Contact support with your order ID.
-- Payment: Mobile Money (MTN, Vodafone, AirtelTigo), bank transfer, and cash on delivery available.
-- Business hours: Mon-Fri 9AM-6PM, Sat 10AM-3PM (GMT).
+- Business hours: Mon-Fri, 8:00 AM-6:00 PM.
+- Anything not covered here (pricing, timelines, hardware requests, warranty, delivery): send the person to WhatsApp, https://wa.me/233548711582. Do not guess.
 
 SERVICES OFFERED
-- Managed IT Support: Remote and on-site IT management for businesses.
-- Custom Software Development: Tailored web, mobile, and enterprise applications.
-- Cyber Security: Network audits, vulnerability assessments, endpoint protection.
-- Cloud Solutions: Migration, hosting, and infrastructure management.
-- Hardware Sales: Laptops, networking equipment, peripherals, and accessories.
+- Custom Software Development: Tailored web and business applications.
+- IT Setup & Support: Help setting up and supporting your business tools.
+- Workflow & API Architecture: Connecting systems and automating work.
+- Hardware: A service line only. Tell us what you need and we help source and set it up. No prices or online ordering.
 `;
 
 export const GUIDE_MAPPING = [

@@ -336,45 +336,12 @@ export function buildFallbackReply(
     return `I can help you fix this. I recommend checking our Support guides for step-by-step instructions.`;
   }
 
-  // Product discovery
-  const laptopKeywords = ["laptop", "pc", "computer", "macbook", "hp", "dell"];
-  if (laptopKeywords.some((k) => normalized.includes(k))) {
-    const budget = extractBudgetGhs(userMessage);
-    if (normalized.includes("slow")) {
-      if (!guideSlug) {
-        return buildInlineTroubleshootingSteps(userMessage);
-      }
-      return `I can help fix laptop performance first. Check our performance troubleshooting guide in the Support section.`;
-    }
-
-    let brand = "";
-    if (normalized.includes("hp")) brand = "HP ";
-    else if (normalized.includes("dell")) brand = "Dell ";
-    else if (normalized.includes("lenovo")) brand = "Lenovo ";
-    else if (normalized.includes("apple") || normalized.includes("macbook")) brand = "Apple ";
-
-    if (budget && budget < 6000)
-      return `I recommend browsing our entry-level ${brand}laptops within your ${formatGhs(budget)} budget on our Products page. (AI Offline Mode)`;
-    if (budget)
-      return `I've found top-tier options for your ${formatGhs(budget)} budget in our store. (AI Offline Mode)`;
-    return `I can help you browse our current ${brand}laptop inventory. Please visit the Products page to see our full catalog. (AI Offline Mode)`;
+  // Hardware and networking: a service line, not a store
+  const hardwareKeywords = ["laptop", "pc", "computer", "macbook", "hp", "dell", "network", "router", "switch", "wifi", "internet", "server"];
+  if (hardwareKeywords.some((k) => normalized.includes(k)) && !normalized.includes("slow")) {
+    return "Hardware is a service we offer. Tell us what you need on WhatsApp (https://wa.me/233548711582) or book a consultation and we will help.";
   }
 
-  const networkKeywords = ["network", "router", "switch", "wifi", "internet"];
-  if (networkKeywords.some((k) => normalized.includes(k))) {
-    return "Check out our networking hardware including routers and switches on the Products page. (AI Offline Mode)";
-  }
-
-  // Budget-only check
-  const budgetOnly = extractBudgetGhs(userMessage);
-  if (budgetOnly) {
-    return `Noted budget: ${formatGhs(budgetOnly)}. What specifically are you looking for? (Laptops, Networking, or Repair)`;
-  }
-
-  // Generic catch-all
-  if (history.length > 4) {
-    return "I can narrow this quickly. Tell me your exact use case and budget (GHS), and I will recommend the best options. (AI Offline Mode)";
-  }
-
-  return "I'm currently experiencing high traffic or connectivity issues and running in limited offline mode. How can I help you today? (Try asking about laptops, networking, or troubleshooting)";
+  // No match: do not guess, hand over to a person
+  return "I'm not sure about that one, and I would rather not guess. Please message us on WhatsApp: https://wa.me/233548711582";
 }

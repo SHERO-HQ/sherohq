@@ -111,7 +111,7 @@ export async function sendChatMessageStreaming(
     if (process.env.NODE_ENV !== "production") {
       console.error("AI Service Error:", error);
     }
-    const errorMsg = "I'm having trouble reaching the server right now. To make me active, ensure you have an GEMINI_API_KEY set in your .env.local file.";
+    const errorMsg = "I'm having trouble right now. Please message us on WhatsApp: https://wa.me/233548711582";
     onUpdate(errorMsg);
     return {
       id: crypto.randomUUID(),
