@@ -59,7 +59,7 @@ export const MerchanderView: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-background text-foreground transition-colors">
-      <section className="relative overflow-hidden pt-28 pb-16 md:pt-36 md:pb-20 border-b border-border">
+      <section className="relative overflow-hidden pt-10 pb-12 md:pt-14 md:pb-16 border-b border-border">
         <div className="container max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-700 dark:text-amber-400 text-xs font-semibold mb-6">
             <Clock className="w-3.5 h-3.5" />

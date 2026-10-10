@@ -28,17 +28,35 @@ const WorkDetail = ({ project }: WorkDetailProps) => {
 
   return (
     <div className="min-h-screen bg-background text-foreground transition-colors">
-      <section className="pt-28 pb-12 md:pt-36 border-b border-border">
+      <section className="pt-8 pb-6">
         <div className="container max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <Link
             href="/work"
-            className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-8"
+            className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-6"
           >
             <ArrowLeft className="w-4 h-4" />
             Our Work
           </Link>
 
-          <div className="flex flex-wrap items-center gap-2 mb-5">
+        </div>
+      </section>
+
+      <section className="pb-12">
+        <div className="container max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+          {hasImage && (
+            <div className="relative aspect-video rounded overflow-hidden border border-border">
+              <AppImage
+                src={project.image as string}
+                alt={project.title}
+                fill
+                sizes="(max-width: 1024px) 100vw, 896px"
+                className="object-cover"
+              />
+            </div>
+          )}
+
+          <div>
+          <div className="flex flex-wrap items-center gap-2 mb-4">
             <span className="px-2.5 py-1 rounded bg-brand-secondary-100 dark:bg-brand-secondary-900/30 text-brand-secondary-700 dark:text-brand-secondary-400 text-xs font-bold uppercase">
               {project.category}
             </span>
@@ -62,22 +80,7 @@ const WorkDetail = ({ project }: WorkDetailProps) => {
           {project.client && (
             <p className="mt-3 text-muted-foreground">For {project.client}</p>
           )}
-        </div>
-      </section>
-
-      <section className="py-12">
-        <div className="container max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
-          {hasImage && (
-            <div className="relative aspect-video rounded overflow-hidden border border-border">
-              <AppImage
-                src={project.image as string}
-                alt={project.title}
-                fill
-                sizes="(max-width: 1024px) 100vw, 896px"
-                className="object-cover"
-              />
-            </div>
-          )}
+          </div>
 
           {project.description && (
             <div>
