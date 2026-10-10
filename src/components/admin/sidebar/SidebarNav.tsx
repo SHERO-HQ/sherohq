@@ -29,6 +29,7 @@ import {
   Handshake
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { NEWSLETTER_ENABLED } from "@/constants/features";
 import { useQueryClient } from "@tanstack/react-query";
 import { ADMIN_KEYS } from "@/hooks/queries/useAdmin";
 import {
@@ -75,7 +76,9 @@ const navGroups: NavGroup[] = [
       { icon: Users, label: "Customers", href: "/admin/users" },
       { icon: Headset, label: "Support", href: "/admin/support" },
       { icon: MessageCircle, label: "WhatsApp", href: "/admin/whatsapp" },
-      { icon: Megaphone, label: "Campaigns", href: "/admin/newsletter" },
+      ...(NEWSLETTER_ENABLED
+        ? [{ icon: Megaphone, label: "Campaigns", href: "/admin/newsletter" }]
+        : []),
       { icon: LayoutTemplate, label: "Templates", href: "/admin/templates" },
     ],
   },

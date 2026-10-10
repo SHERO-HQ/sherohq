@@ -8,11 +8,5 @@
       "source": "/og/:id",
       "destination": "/api/og/:id"
     }
-  ],
-  "crons": [
-    {
-      "path": "/api/cron/daily",
-      "schedule": "0 2 * * *"
-    }
   ]
 }

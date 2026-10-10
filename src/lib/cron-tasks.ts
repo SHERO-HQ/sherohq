@@ -1,3 +1,4 @@
+import { NEWSLETTER_ENABLED } from "@/constants/features";
 import { db } from "@/lib/db";
 import { orders, abandonedCarts, users, campaignTemplates } from "@/lib/drizzle/schema";
 import { eq, and, sql } from "drizzle-orm";
@@ -12,6 +13,7 @@ import { sendWhatsAppMessageDirect, storeOutgoingMessage } from "@/lib/whatsapp-
  * 1. Process Due Newsletter Campaigns
  */
 export async function processNewsletterTask() {
+  if (!NEWSLETTER_ENABLED) return { success: true, skipped: "newsletter is off" };
   try {
     const result = await processNewsletterCron();
     return { success: true, result };

@@ -1,10 +1,10 @@
 name: Scheduled Cron Jobs
 
 on:
-  schedule:
-    # Runs every hour at minute 0
-    - cron: '0 * * * *'
-  # Allows manual triggering from GitHub Actions tab
+  # Scheduled runs are switched off (the shop is off). To turn them back on, add:
+  #   schedule:
+  #     - cron: '0 2 * * *'
+  # Manual triggering from the GitHub Actions tab still works.
   workflow_dispatch:
     inputs:
       target_endpoint:

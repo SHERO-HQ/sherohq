@@ -8,6 +8,7 @@ import { v4 as uuidv4 } from "uuid";
 import { z } from "zod";
 import { marketingNotifications } from "@/lib/notifications/services/marketing";
 import { canonicalizeEmail } from "@/lib/sanitize";
+import { NEWSLETTER_ENABLED } from "@/constants/features";
 
 const NewsletterSubscribeSchema = z.object({
   email: z.string().email(),
@@ -17,6 +18,9 @@ const NewsletterSubscribeSchema = z.object({
 });
 
 export async function POST(request: NextRequest) {
+  if (!NEWSLETTER_ENABLED) {
+    return apiResponse.error("Newsletter signup is not available.", 404);
+  }
   try {
     const csrfError = await validateCsrf(request);
     if (csrfError) return csrfError;
