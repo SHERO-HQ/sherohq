@@ -49,5 +49,7 @@ jobs:
             exit 0
           else
             echo "Cron failed with HTTP Status: $HTTP_STATUS"
+            # Shown on the run page and in the annotations API, so the reason is visible without opening logs
+            echo "::error title=Cron request failed::HTTP $HTTP_STATUS from $TARGET_URL - $(echo "$HTTP_BODY" | head -c 300 | tr '\n' ' ')"
             exit 1
           fi
