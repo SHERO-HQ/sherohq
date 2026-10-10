@@ -69,7 +69,7 @@ export function ProductBuyBox({
           {product.name}
         </h1>
 
-        <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-8">
+        <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-8 whitespace-pre-line">
           {product.description}
         </p>
 

@@ -65,7 +65,7 @@ export default function ProjectSidebarMeta({
               value={projectData.category || ""}
               onChange={(e) => handleInputChange("category", e.target.value)}
               className={cn(
-                "w-full bg-muted border-border text-foreground rounded px-3 py-2 text-sm outline-none focus:ring-1 focus:ring-brand-secondary-500/50",
+                "w-full bg-muted border border-border text-foreground rounded px-3 py-2 text-sm outline-none focus:ring-1 focus:ring-brand-secondary-500/50",
                 errors.category && "border-rose-500 bg-rose-500/5 focus:ring-rose-500"
               )}
               required
@@ -96,7 +96,7 @@ export default function ProjectSidebarMeta({
               id="status"
               value={projectData.status || "live"}
               onChange={(e) => handleInputChange("status", e.target.value)}
-              className="w-full bg-muted border-border text-foreground rounded px-3 py-2 text-sm outline-none focus:ring-1 focus:ring-brand-secondary-500/50"
+              className="w-full bg-muted border border-border text-foreground rounded px-3 py-2 text-sm outline-none focus:ring-1 focus:ring-brand-secondary-500/50"
             >
               <option value="live">Live</option>
               <option value="in_development">In development</option>
