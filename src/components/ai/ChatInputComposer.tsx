@@ -154,15 +154,6 @@ export function ChatInputComposer({
           </button>
         </div>
       </form>
-      <div className="flex items-center justify-between mt-2 px-1">
-        <p className="text-[9px] text-muted-foreground">
-          AI can make mistakes. Verify critical specifications.
-        </p>
-        <p className="text-[9px] font-semibold text-muted-foreground flex items-center gap-1">
-          Powered by Gemini{" "}
-          <Bot size={10} className="text-brand-secondary-400" />
-        </p>
-      </div>
     </div>
   );
 }
