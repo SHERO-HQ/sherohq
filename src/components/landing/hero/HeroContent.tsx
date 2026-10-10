@@ -49,8 +49,8 @@ export const HeroContent = ({
             size="lg"
             className="font-medium w-full text-sm sm:w-auto bg-brand-primary h-11 px-8 group transition-all hover:-translate-y-0.5 hover:bg-brand-primary-600 shadow-sm active:scale-95"
           >
-            <NavLink href={getAbsoluteUrl("/products")}>
-              <span>Explore Products</span>
+            <NavLink href={getAbsoluteUrl("/solutions")}>
+              <span>See Our Work</span>
               <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
             </NavLink>
           </Button>
