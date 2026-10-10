@@ -70,22 +70,10 @@ const Support = () => {
             <h1 className="text-2xl md:text-4xl font-bold text-foreground mb-6 tracking-tight ">
               Help When You <span className="text-brand-secondary-700 dark:text-brand-secondary-400">Need It</span>
             </h1>
-            <p className="text-muted-foreground text-base max-w-2xl mx-auto mb-8 leading-relaxed ">
+            <p className="text-muted-foreground text-base max-w-2xl mx-auto mb-10 leading-relaxed ">
               Search guides, download updates, or connect directly with our team
               for fast, reliable assistance.
             </p>
-
-            <div className="flex flex-wrap items-center justify-center gap-3 mb-10 ">
-              <span className="text-xs font-mono uppercase tracking-wider text-slate-500 px-3 py-1.5 rounded border border-border bg-card/60">
-                Responsive Direct Support
-              </span>
-              <span className="text-xs font-mono uppercase tracking-wider text-slate-500 px-3 py-1.5 rounded border border-border bg-card/60">
-                Dedicated Support Team
-              </span>
-              <span className="text-xs font-mono uppercase tracking-wider text-slate-500 px-3 py-1.5 rounded border border-border bg-card/60">
-                Human + Self-Service
-              </span>
-            </div>
 
             {/* Search */}
             <form onSubmit={handleSearchSubmit} className="max-w-2xl mx-auto flex flex-col sm:flex-row items-center gap-4 ">
