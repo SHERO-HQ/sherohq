@@ -2,7 +2,7 @@ import Link from "next/link";
 import { ArrowUpRight, ExternalLink } from "lucide-react";
 import type { Project } from "@/services/api";
 import AppImage from "@/components/common/AppImage";
-import { statusLabel } from "@/lib/project-status";
+import { statusLabel, STATUS_DOT } from "@/lib/project-status";
 
 interface PortfolioCardProps {
   project: Project;
@@ -21,7 +21,7 @@ export function PortfolioCard({ project, href }: PortfolioCardProps) {
   const technologies = project.technologies ?? [];
 
   return (
-    <article className="group relative flex h-full flex-row overflow-hidden sm:flex-col rounded-lg border border-slate-200 bg-white transition-shadow hover:shadow-md dark:border-slate-800 dark:bg-slate-900">
+    <article className="group relative flex h-full flex-row overflow-hidden sm:flex-col rounded-xl border border-slate-200 bg-white transition-shadow hover:shadow-md dark:border-slate-800 dark:bg-slate-900">
       {/* Image, with the status on top of it */}
       <div className="relative w-28 shrink-0 self-stretch overflow-hidden sm:aspect-[16/9] sm:w-auto sm:self-auto bg-slate-100 dark:bg-slate-950">
         {hasImage ? (
@@ -42,14 +42,16 @@ export function PortfolioCard({ project, href }: PortfolioCardProps) {
             </span>
           </div>
         )}
-        <span className="absolute left-3 top-3 hidden rounded-full bg-white/95 px-2.5 py-1 text-xs font-semibold text-slate-800 shadow-sm dark:bg-slate-900/95 dark:text-slate-100 sm:block">
+        <span className="absolute left-3 top-3 hidden items-center gap-1.5 rounded-full bg-white/95 px-2.5 py-1 text-xs font-medium text-slate-800 shadow-sm dark:bg-slate-900/95 dark:text-slate-100 sm:inline-flex">
+          <span className={`size-1.5 rounded-full ${STATUS_DOT[project.status] ?? STATUS_DOT.live}`} aria-hidden="true" />
           {status}
         </span>
       </div>
 
       {/* Text */}
       <div className="flex flex-1 flex-col p-4">
-        <p className="mb-1 text-xs font-semibold text-slate-700 dark:text-slate-200 sm:hidden">
+        <p className="mb-1 inline-flex items-center gap-1.5 text-xs font-medium text-slate-700 dark:text-slate-200 sm:hidden">
+          <span className={`size-1.5 rounded-full ${STATUS_DOT[project.status] ?? STATUS_DOT.live}`} aria-hidden="true" />
           {status}
         </p>
         <p className="text-xs font-semibold uppercase tracking-wide text-brand-secondary-700 dark:text-brand-secondary-400">

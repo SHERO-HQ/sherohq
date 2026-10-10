@@ -21,9 +21,14 @@ interface WorkDetailProps {
   };
 }
 
-// Where "Join the free pilot" goes when a product has no link saved.
+// Where "Join the free pilot" goes. This wins over the link saved in the admin.
 const PRODUCT_LINKS: Record<string, string> = {
-  merchander: "https://merchander.app",
+  merchander: "https://app.merchander.app/signup",
+};
+
+// One line shown under Status for products that are still being built.
+const PRODUCT_NOTES: Record<string, string> = {
+  merchander: "Join the free pilot to be among the first merchants to use it.",
 };
 
 const BULLET = /^\s*(?:[-*•]\s+)/;
@@ -68,10 +73,10 @@ function FormattedText({ text }: { text: string }) {
 const WorkDetail = ({ project }: WorkDetailProps) => {
   const isProduct = project.type === "product";
   const ctaLabel = isProduct ? "Join the free pilot" : "Visit";
-  const ctaHref =
-    project.link ||
-    (isProduct ? PRODUCT_LINKS[project.title.trim().toLowerCase()] : null) ||
-    null;
+  const key = project.title.trim().toLowerCase();
+  const ctaHref = (isProduct ? PRODUCT_LINKS[key] : null) || project.link || null;
+  const statusNote =
+    isProduct && project.status !== "live" ? PRODUCT_NOTES[key] : undefined;
   const hasImage =
     !!project.image &&
     (project.image.startsWith("http") ||
@@ -150,6 +155,9 @@ const WorkDetail = ({ project }: WorkDetailProps) => {
             <p className="text-muted-foreground">
               {statusLabel(project.status)}
             </p>
+            {statusNote && (
+              <p className="mt-1 text-muted-foreground">{statusNote}</p>
+            )}
           </div>
 
           {project.technologies.length > 0 && (

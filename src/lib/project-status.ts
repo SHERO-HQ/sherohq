@@ -8,3 +8,10 @@ export const STATUS_LABELS: Record<string, string> = {
 export function statusLabel(status: string | null | undefined): string {
   return STATUS_LABELS[status ?? "live"] ?? "Live";
 }
+
+export const STATUS_DOT: Record<string, string> = {
+  live: "bg-emerald-500",
+  in_development: "bg-amber-500",
+  in_validation: "bg-sky-500",
+  paused: "bg-slate-400",
+};
