@@ -34,7 +34,7 @@ const LandingEcosystem = () => {
   const scrollProgress = useTransform(scrollYProgress, [0, 1], [0, 1]);
 
   return (
-    <section className="relative w-full overflow-hidden bg-slate-50 py-24 dark:bg-slate-950 border-y border-slate-200/50 dark:border-white/10">
+    <section id="services" className="relative w-full overflow-hidden bg-slate-50 py-24 dark:bg-slate-950 border-y border-slate-200/50 dark:border-white/10">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,var(--tw-gradient-stops))] opacity-50 dark:" />
 
       <div className="container relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
