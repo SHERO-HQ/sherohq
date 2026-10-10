@@ -49,7 +49,7 @@ export function PortfolioCard({ project, href }: PortfolioCardProps) {
       </div>
 
       {/* Text */}
-      <div className="flex flex-1 flex-col p-4">
+      <div className="flex min-w-0 flex-1 flex-col p-4">
         <p className="mb-1 inline-flex items-center gap-1.5 text-xs font-medium text-slate-700 dark:text-slate-200 sm:hidden">
           <span className={`size-1.5 rounded-full ${STATUS_DOT[project.status] ?? STATUS_DOT.live}`} aria-hidden="true" />
           {status}
@@ -64,7 +64,7 @@ export function PortfolioCard({ project, href }: PortfolioCardProps) {
           )}
         </p>
 
-        <h3 className="mt-1.5 font-sora text-base font-bold leading-snug text-slate-900 dark:text-white">
+        <h3 className="mt-1.5 break-words font-sora text-base font-bold leading-snug text-slate-900 dark:text-white">
           {/* Stretched link makes the whole card clickable */}
           <Link href={href} className="after:absolute after:inset-0">
             {project.title}
@@ -72,13 +72,13 @@ export function PortfolioCard({ project, href }: PortfolioCardProps) {
         </h3>
 
         {project.description && (
-          <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
+          <p className="mt-2 truncate text-sm text-slate-600 dark:text-slate-300 sm:line-clamp-2 sm:whitespace-normal sm:leading-relaxed">
             {project.description}
           </p>
         )}
 
-        <div className="mt-auto flex items-end justify-between gap-3 pt-3">
-          <p className="min-w-0 truncate text-xs text-slate-500 dark:text-slate-400">
+        <div className="mt-auto flex items-end justify-between gap-3 pt-3 max-sm:justify-end max-sm:pt-2">
+          <p className="hidden min-w-0 truncate text-xs text-slate-500 dark:text-slate-400 sm:block">
             {technologies.slice(0, 3).join(" · ")}
             {technologies.length > 3 ? ` · +${technologies.length - 3}` : ""}
           </p>
