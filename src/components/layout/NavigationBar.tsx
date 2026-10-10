@@ -4,7 +4,6 @@ import { Heart, ShoppingCart } from "lucide-react";
 import NavLink from "@/components/common/NavLink";
 import { m } from "motion/react";
 import { navLinkClass } from "@/lib/utils";
-import BottomNav from "./BottomNav";
 import SearchBar from "./SearchBar";
 import { Badge } from "@/components/ui/badge";
 import { getAbsoluteUrl } from "@/utils/subdomain";
@@ -281,7 +280,6 @@ const Nav = () => {
         logout={logout}
       />
 
-      <BottomNav />
     </>
   );
 };

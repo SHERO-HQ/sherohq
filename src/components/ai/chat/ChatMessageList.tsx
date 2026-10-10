@@ -131,7 +131,7 @@ export function ChatMessageList({
                 )}
                 {msg.supportAction === "contact" && (
                   <Link
-                    href="/contact"
+                    href="/contact-us"
                     className="w-full py-2 bg-slate-800 hover:bg-slate-900 text-white rounded text-center text-xs font-medium transition-colors flex items-center justify-center gap-2"
                   >
                     Contact Support Team
