@@ -79,7 +79,7 @@ const ProductSearch: React.FC<ProductSearchProps> = ({
         <button
           type="submit"
           className="hidden sm:block px-8 py-2 rounded bg-brand-secondary-600 text-white font-semibold
-            hover:bg-brand-secondary-500 hover:shadow hover:shadow-brand-secondary-500/25
+            hover:bg-brand-secondary-500 hover:shadow
             transition cursor-pointer whitespace-nowrap"
         >
           Search

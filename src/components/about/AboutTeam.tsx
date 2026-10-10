@@ -63,8 +63,6 @@ const AboutTeam = () => {
           threshold={0.06}
         >
           {/* Decorative background blur */}
-          <div className="absolute -top-24 -left-24 w-64 h-64 bg-brand-secondary-500/5 rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute -bottom-24 -right-24 w-64 h-64 bg-blue-500/5 rounded-full blur-3xl pointer-events-none" />
 
           {team.map((member: TeamMemberWithPlaceholder, index) => (
             <StaggerItem
@@ -78,7 +76,7 @@ const AboutTeam = () => {
                   setActiveBioId(activeBioId === member.id ? null : member.id)
                 }
                 className={cn(
-                  "group relative p-4 transition-colors duration-500 hover:bg-slate-50/50 dark:hover:bg-white/2 cursor-pointer",
+                  "group relative p-4 transition-colors hover:bg-slate-50/50 dark:hover:bg-white/2 cursor-pointer",
                   // Horizontal borders
                   "border-b border-slate-200 dark:border-white/10",
                   // Vertical borders logic
@@ -96,19 +94,19 @@ const AboutTeam = () => {
  </span>
  </div>
  )} */}
-              <div className="relative overflow-hidden bg-slate-100 dark:bg-slate-800 mb-4 aspect-square transition-colors duration-300">
+              <div className="relative overflow-hidden bg-slate-100 dark:bg-slate-800 mb-4 aspect-square transition-colors ">
                 {member.image ? (
                   <AppImage
                     src={member.image}
                     alt={member.name}
                     fill
                     sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                    className="object-cover rounded transition duration-700 filter grayscale group-hover:grayscale-0 group-active:grayscale-0 group-hover:scale-110 group-active:scale-110"
+                    className="object-cover rounded transition filter grayscale group-hover:grayscale-0 group-active:grayscale-0 group-hover:scale-110 group-active:scale-110"
                   />
                 ) : (
                   <>
-                    <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,var(--tw-gradient-stops))] from-slate-100/50 via-white to-slate-50 dark:from-slate-900/50 dark:via-slate-950 dark:to-black pointer-events-none transition duration-500" />
-                    <div className="w-full h-full flex items-center justify-center text-slate-400 dark:text-slate-500 font-bold text-5xl tracking-tighter transition duration-700 group-hover:from-blue-600 group-hover:to-brand-secondary-600 group-hover:text-white">
+                    <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,var(--tw-gradient-stops))] dark:pointer-events-none transition " />
+                    <div className="w-full h-full flex items-center justify-center text-slate-400 dark:text-slate-500 font-bold text-5xl tracking-tighter transition group-hover:group-hover:group-hover:text-white">
                       {getInitials(member.name)}
                     </div>
                   </>
@@ -118,7 +116,7 @@ const AboutTeam = () => {
                 {member.bio && (
                   <div
                     className={cn(
-                      "absolute inset-0 bg-linear-to-t from-slate-950/90 via-slate-950/40 to-transparent transition-opacity duration-300 flex flex-col justify-end p-8 -[2px]",
+                      "absolute inset-0 transition-opacity flex flex-col justify-end p-8 -[2px]",
                       activeBioId === member.id
                         ? "opacity-100"
                         : "opacity-0 group-hover:opacity-100",
@@ -126,7 +124,7 @@ const AboutTeam = () => {
                   >
                     <p
                       className={cn(
-                        "text-white text-sm leading-relaxed font-medium transition-transform duration-500",
+                        "text-white text-sm leading-relaxed font-medium transition-transform ",
                         activeBioId === member.id
                           ? "translate-y-0"
                           : "translate-y-4 group-hover:translate-y-0",
@@ -140,7 +138,7 @@ const AboutTeam = () => {
 
               <div className="space-y-2">
                 <div>
-                  <h3 className=" font-semibold text-slate-900 dark:text-white group-hover:text-brand-secondary-600 dark:group-hover:text-brand-secondary-400 transition-colors duration-300">
+                  <h3 className=" font-semibold text-slate-900 dark:text-white group-hover:text-brand-secondary-600 dark:group-hover:text-brand-secondary-400 transition-colors ">
                     {member.name}
                   </h3>
                   <p className="text-brand-secondary-600 dark:text-brand-secondary-500 text-[10px] font-bold mt-1 uppercase tracking-[0.2em]">
@@ -167,7 +165,7 @@ const AboutTeam = () => {
                     )}
                   </div>
 
-                  <div className="h-8 w-8 rounded bg-slate-100 dark:bg-white/5 flex items-center justify-center group-hover:bg-brand-secondary-500 group-hover:text-white transition duration-300 text-slate-400">
+                  <div className="h-8 w-8 rounded bg-slate-100 dark:bg-white/5 flex items-center justify-center group-hover:bg-brand-secondary-500 group-hover:text-white transition text-slate-400">
                     <Users className="w-4 h-4" />
                   </div>
                 </div>
@@ -181,16 +179,16 @@ const AboutTeam = () => {
   };
 
   return (
-    <section className="py-12 bg-white pattern-dots dark:bg-slate-900 overflow-hidden border-y border-slate-200 dark:border-white/5 transition-colors duration-300">
+    <section className="py-12 bg-white pattern-dots dark:bg-slate-900 overflow-hidden border-y border-slate-200 dark:border-white/5 transition-colors ">
       <div className="container px-4 md:px-6 mx-auto w-full md:max-w-10/12">
         <div className="mb-10 space-y-3">
           <SectionBadge icon={Users} className="mb-2">
             Our Team
           </SectionBadge>
-          <h2 className="text-xl md:text-2xl font-semibold tracking-tight text-slate-900 dark:text-slate-100 transition-colors duration-300">
+          <h2 className="text-xl md:text-2xl font-semibold tracking-tight text-slate-900 dark:text-slate-100 transition-colors ">
             Meet the <span className="text-brand-secondary-600">Minds</span>
           </h2>
-          <p className="text-slate-600 dark:text-slate-400 transition-colors duration-300 ">
+          <p className="text-slate-600 dark:text-slate-400 transition-colors ">
             The talented individuals behind our innovative products and
             reliable services.
           </p>

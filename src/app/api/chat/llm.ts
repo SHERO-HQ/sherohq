@@ -8,6 +8,7 @@
 import { SUPPORT_KNOWLEDGE } from "./knowledge";
 import { COMPANY_CONTACTS } from "@/constants/contacts";
 import { COMPANY_EMAILS } from "@/constants/emails";
+import { SHOP_ENABLED } from "@/constants/features";
 
 // ---------------------------------------------------------------------------
 // Model configuration
@@ -33,8 +34,10 @@ export function getSystemPrompt(
     contextSection = "\nUSER CONTEXT\n";
     if (context.user) contextSection += `- Logged-in User: ${context.user.name} (${context.user.email})\n`;
     if (context.currentPath) contextSection += `- Current Page URL: ${context.currentPath}\n`;
-    if (context.cartItemIds?.length) contextSection += `- Items in Cart (IDs): ${context.cartItemIds.join(", ")}\n`;
-    else contextSection += `- Cart is currently empty.\n`;
+    if (SHOP_ENABLED) {
+      if (context.cartItemIds?.length) contextSection += `- Items in Cart (IDs): ${context.cartItemIds.join(", ")}\n`;
+      else contextSection += `- Cart is currently empty.\n`;
+    }
   }
 
   let routeInstructions = "";
@@ -71,8 +74,7 @@ PERSONALITY & BRAND VOICE
 - Always reflect Ghana context: prices in GHS (Ghana Cedis), local delivery expectations, West African tech market.
 
 CAPABILITIES
-1. **Product Recommendations** — Help users find laptops, networking gear, accessories, and other IT hardware from SHERO's live inventory. Use the recommend_products tool to display product cards to the user.
-2. **IT Troubleshooting** — Diagnose and help fix common hardware/software issues (slow laptops, boot failures, network problems, overheating, etc.). Provide step-by-step guidance before escalating. Use the open_guide tool to show a troubleshooting guide.
+${SHOP_ENABLED ? `1. **Product Recommendations** — Help users find laptops, networking gear, accessories, and other IT hardware from SHERO's live inventory. Use the recommend_products tool to display product cards to the user.\n` : ""}2. **IT Troubleshooting** — Diagnose and help fix common hardware/software issues (slow laptops, boot failures, network problems, overheating, etc.). Provide step-by-step guidance before escalating. Use the open_guide tool to show a troubleshooting guide.
 3. **General IT Knowledge** — Answer general tech questions (VPN setup, SSD vs HDD, best practices for cybersecurity, etc.) with practical advice. Stay professional — do not answer off-topic questions about politics, relationships, cooking, etc.
 4. **Order Tracking** — Look up order status when user provides an order ID using the track_order tool.
 5. **Support Tickets** — Create support tickets when troubleshooting fails or user requests help using the create_support_ticket tool.
@@ -82,15 +84,14 @@ RULES
 - Be a polite and conversational IT assistant.
 - You must ONLY execute ONE tool per response. Do not chain multiple tool calls together in a single response.
 - ONLY call tools when the user explicitly requests something that requires a tool.
-- If the user makes small talk or asks an off-topic question (like "I am not feeling well"), acknowledge it briefly, explicitly state that you are an IT assistant and can only help with tech-related issues, and ask how you can help them with technology today. Do not offer unrelated services.
-- For product questions, ALWAYS call recommend_products so the frontend renders product cards. Don't just describe products in text.
+- If the user makes small talk or asks an off-topic question (like "I am not feeling well"), acknowledge it briefly, explicitly state that you are an IT assistant and can only help with tech-related issues, and ask how you can help them with technology today. Do not offer unrelated services.${SHOP_ENABLED ? `\n- For product questions, ALWAYS call recommend_products so the frontend renders product cards. Don't just describe products in text.` : ""}
 - If the user explicitly asks to track an order but doesn't give an ID, reply asking for the ID. Do not call the track_order tool until you have the ID.
 - For booking: ask for name, email, date, time, and service type if missing.
 - For tickets: ask for name, email, subject, and description if missing.
 - When troubleshooting: try at least one round of guided steps before suggesting a support ticket.
 
 INVENTORY DATA
-${catalog}
+${SHOP_ENABLED ? catalog : "Currently unavailable."}
 
 SUPPORT GUIDES
 ${SUPPORT_KNOWLEDGE}
@@ -175,18 +176,31 @@ export async function summarizeChatHistory(history: Array<{ role: string; conten
 export const GEMINI_TOOLS = [
   {
     functionDeclarations: [
-      {
-        name: "recommend_products",
-        description: "Recommend products from the catalog. ONLY call this when the user explicitly asks to buy, browse, or compare products. DO NOT call this if the user is asking for support, order tracking, or general help.",
-        parameters: {
-          type: "OBJECT",
-          properties: {
-            query: { type: "STRING", description: "Search query for products (e.g. laptop, router, hp, budget laptop)" },
-            budget_ghs: { type: "NUMBER", description: "Maximum budget in Ghana Cedis (GHS)" },
+      ...(SHOP_ENABLED ? [
+        {
+          name: "recommend_products",
+          description: "Recommend products from the catalog. ONLY call this when the user explicitly asks to buy, browse, or compare products. DO NOT call this if the user is asking for support, order tracking, or general help.",
+          parameters: {
+            type: "OBJECT",
+            properties: {
+              query: { type: "STRING", description: "Search query for products (e.g. laptop, router, hp, budget laptop)" },
+              budget_ghs: { type: "NUMBER", description: "Maximum budget in Ghana Cedis (GHS)" },
+            },
+            required: ["query"],
           },
-          required: ["query"],
         },
-      },
+        {
+          name: "add_to_cart",
+          description: "Add a specific product to the user's cart. Use ONLY when they explicitly ask to add/buy an item.",
+          parameters: {
+            type: "OBJECT",
+            properties: {
+              product_name: { type: "STRING", description: "The name of the product to add" },
+            },
+            required: ["product_name"],
+          },
+        }
+      ] : []),
       {
         name: "track_order",
         description: "Look up an order's status. ONLY call this if the user has provided an order ID.",
@@ -252,17 +266,6 @@ export const GEMINI_TOOLS = [
             slug: { type: "STRING", description: "The slug of the guide (e.g. setup-shero-laptop, software-installation-guide, troubleshooting-power)" },
           },
           required: ["slug"],
-        },
-      },
-      {
-        name: "add_to_cart",
-        description: "Add a specific product to the user's cart. Use ONLY when they explicitly ask to add/buy an item.",
-        parameters: {
-          type: "OBJECT",
-          properties: {
-            product_name: { type: "STRING", description: "The name of the product to add" },
-          },
-          required: ["product_name"],
         },
       },
     ],

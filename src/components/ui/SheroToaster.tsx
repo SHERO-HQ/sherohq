@@ -23,7 +23,7 @@ export function SheroToaster() {
       toastOptions={{
         classNames: {
           toast:
-            "group toast glass-surface border border-border/60 shadow-xl rounded font-sora p-4 text-foreground text-sm flex gap-3 items-start transition-all duration-300",
+            "group toast glass-surface border border-border/60 shadow-xl rounded font-sora p-4 text-foreground text-sm flex gap-3 items-start transition-all ",
           title: "font-semibold text-sm text-foreground leading-tight",
           description: "text-xs text-muted-foreground leading-relaxed mt-1",
           actionButton:

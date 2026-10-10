@@ -21,7 +21,7 @@ const NotFound = () => {
 
       <div className="container max-w-xl mx-auto text-center relative z-10">
         {/* 404 Number */}
-        <div className="text-8xl sm:text-9xl tracking-tighter font-bold bg-linear-to-r from-brand-secondary-500 to-blue-500 bg-clip-text text-transparent mb-4 select-none">
+        <div className="text-8xl sm:text-9xl tracking-tighter font-bold font-mono text-slate-900 dark:text-white mb-4 select-none">
           404
         </div>
 
@@ -37,7 +37,7 @@ const NotFound = () => {
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 max-w-md mx-auto relative z-20">
           <Link
             href="/"
-            className="inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded bg-brand-secondary-600 hover:bg-brand-secondary-700 text-white font-medium transition-colors duration-200 cursor-pointer w-full sm:w-1/2 shadow-sm"
+            className="inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded bg-brand-secondary-600 hover:bg-brand-secondary-700 text-white font-medium transition-colors cursor-pointer w-full sm:w-1/2 shadow-sm"
           >
             <Home className="w-4 h-4" />
             <span>Go Home</span>
@@ -46,7 +46,7 @@ const NotFound = () => {
           <button
             type="button"
             onClick={handleBack}
-            className="inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 font-medium transition-colors duration-200 cursor-pointer w-full sm:w-1/2 shadow-sm"
+            className="inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 font-medium transition-colors cursor-pointer w-full sm:w-1/2 shadow-sm"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Go Back</span>

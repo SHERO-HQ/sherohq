@@ -20,13 +20,12 @@ const Contact = () => {
         <div className="absolute inset-0 pattern-dots opacity-40 dark:opacity-20 pointer-events-none" />
         <Particles count={40} color="100, 116, 139" className="opacity-40" />
 
-        {/* Single Subtle Background Glow */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-125 h-125 bg-brand-secondary-500/5 dark:bg-brand-secondary-500/10 rounded-full blur-[120px] pointer-events-none" />
+
 
         <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           {/* Page Header (always at top) */}
           <div
-            className="text-center max-w-3xl mx-auto mb-10 lg:mb-14 animate-in fade-in slide-in-from-top-4 duration-500"
+            className="text-center max-w-3xl mx-auto mb-10 lg:mb-14 "
           >
             <SectionBadge icon={MessagesSquare} className="mb-4">
               Get In Touch
@@ -35,19 +34,19 @@ const Contact = () => {
               Let&apos;s Redefine What&apos;s Possible
             </h1>
             <p className="mt-3 text-base text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
-              Have a question, a project in mind, or need specialized enterprise tech support? Reach out and our team will get back to you promptly.
+              Have a question, a project in mind, or need dependable business tech support? Reach out and our team will get back to you promptly.
             </p>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
             {/* Left Column: Contact Channels & Context */}
             <div
-              className="lg:col-span-5 space-y-6 animate-in fade-in slide-in-from-left-8 duration-700"
+              className="lg:col-span-5 space-y-6 "
             >
               <div className="space-y-3">
                 <ContactItem
                   icon={
-                    <Mail className="w-5 h-5 text-emerald-600 dark:text-emerald-400 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-6" />
+                    <Mail className="w-5 h-5 text-emerald-600 dark:text-emerald-400 transition-transform group-hover:scale-110 group-hover:rotate-6" />
                   }
                   label="Email Us"
                   value={COMPANY_EMAILS.HELLO}
@@ -56,7 +55,7 @@ const Contact = () => {
                 />
                 <ContactItem
                   icon={
-                    <Phone className="w-5 h-5 text-emerald-600 dark:text-emerald-400 transition-transform duration-500 group-hover:scale-110 group-hover:-rotate-6" />
+                    <Phone className="w-5 h-5 text-emerald-600 dark:text-emerald-400 transition-transform group-hover:scale-110 group-hover:-rotate-6" />
                   }
                   label="Call Us"
                   value={COMPANY_CONTACTS.PHONE_DISPLAY}
@@ -65,7 +64,7 @@ const Contact = () => {
                 />
                 <ContactItem
                   icon={
-                    <MapPin className="w-5 h-5 text-emerald-600 dark:text-emerald-400 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3" />
+                    <MapPin className="w-5 h-5 text-emerald-600 dark:text-emerald-400 transition-transform group-hover:scale-110 group-hover:rotate-3" />
                   }
                   label="Visit Us"
                   value="Tamale, Northern Region, Ghana"
@@ -77,10 +76,10 @@ const Contact = () => {
               {/* Office Details Card */}
               <div
                 style={{ animationDelay: '0.5s' }}
-                className="p-6 bg-slate-900/5 dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800 rounded relative overflow-hidden group hover:border-emerald-500/30 transition-colors duration-500 animate-in fade-in zoom-in-95 fill-mode-both"
+                className="p-6 bg-slate-900/5 dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800 rounded relative overflow-hidden group hover:border-emerald-500/30 transition-colors zoom-in-95 "
               >
-                <div className="absolute inset-0 opacity-[0.03] group-hover:opacity-[0.06] transition-opacity duration-700 pattern-isometric pointer-events-none" />
-                <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:scale-110 transition-transform duration-700">
+                <div className="absolute inset-0 opacity-[0.03] group-hover:opacity-[0.06] transition-opacity pattern-isometric pointer-events-none" />
+                <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:scale-110 transition-transform ">
                   <Globe2 className="w-16 h-16 text-emerald-500" />
                 </div>
                 <div className="relative z-10">
@@ -88,7 +87,7 @@ const Contact = () => {
                     Regional Operations & Support
                   </h2>
                   <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                    Headquartered in Tamale, Ghana, we serve local businesses and regional hubs with specialized logistics and on-site technical deployment teams.
+                    Headquartered in Tamale, Ghana, we provide growing businesses and organizations with reliable equipment supply, hands-on configuration, and ongoing technical support.
                   </p>
                 </div>
               </div>
@@ -97,7 +96,7 @@ const Contact = () => {
             {/* Right Column: Glass Form */}
             <div
               style={{ animationDelay: '0.2s' }}
-              className="lg:col-span-7 relative animate-in fade-in slide-in-from-bottom-8 duration-700 fill-mode-both"
+              className="lg:col-span-7 relative "
             >
               <ContactForm />
             </div>
@@ -105,13 +104,13 @@ const Contact = () => {
 
           {/* Quick FAQ Section */}
           <div
-            className="mt-16 pt-10 border-t border-slate-200 dark:border-slate-800 animate-in fade-in slide-in-from-bottom-4 duration-700"
+            className="mt-16 pt-10 border-t border-slate-200 dark:border-slate-800 "
           >
             <div className="text-center mb-10">
               <SectionBadge icon={MessagesSquare} className="mb-4">
                 Quick Answers
               </SectionBadge>
-              <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100 mb-4 transition-colors duration-300">
+              <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100 mb-4 transition-colors ">
                 Frequently Asked
               </h2>
               <p className="text-slate-600 dark:text-slate-400 max-w-xl mx-auto">
@@ -124,9 +123,9 @@ const Contact = () => {
                 <div
                   key={idx}
                   style={{ animationDelay: `${idx * 0.1}s` }}
-                  className="relative p-6 rounded bg-white/50 dark:bg-white/5 border border-slate-200 dark:border-white/10 hover:border-emerald-500/30 hover:-translate-y-1 hover:shadow-lg hover:shadow-emerald-500/5 transition-all duration-300 overflow-hidden group animate-in fade-in slide-in-from-bottom-4 fill-mode-both"
+                  className="relative p-6 rounded bg-white/50 dark:bg-white/5 border border-slate-200 dark:border-white/10 hover:border-emerald-500/30 hover:-translate-y-1 hover:shadow-lg hover:shadow-emerald-500/5 transition-all overflow-hidden group "
                 >
-                  <span className="absolute -bottom-4 -right-4 text-[120px] font-black text-slate-900/5 dark:text-white/5 pointer-events-none select-none transition-transform duration-500 group-hover:scale-110 group-hover:-rotate-12">
+                  <span className="absolute -bottom-4 -right-4 text-[120px] font-black text-slate-900/5 dark:text-white/5 pointer-events-none select-none transition-transform group-hover:scale-110 group-hover:-rotate-12">
                     {idx + 1}
                   </span>
                   <div className="relative z-10 space-y-3">
@@ -149,19 +148,19 @@ const Contact = () => {
 
 const faqs = [
   {
-    question: "How quickly do you ship hardware?",
+    question: "What is your typical project timeline?",
     answer:
-      "In-stock hardware typically dispatches within 24-48hrs. Custom configurations or bulk orders may take 5-7 business days.",
+      "Project timelines vary based on scope and complexity. A standard web application might take 8-12 weeks, while larger enterprise solutions can take 4-6 months from kickoff to launch.",
   },
   {
-    question: "Do you provide on-site support?",
+    question: "Do you provide ongoing support after launch?",
     answer:
-      "Yes, we offer on-site deployment and maintenance services across various regions in Ghana. Remote support is available for digital solutions and software.",
+      "Yes, we offer flexible maintenance and support packages to ensure your software remains secure, up-to-date, and optimized as your business grows.",
   },
   {
-    question: "Do you offer wholesale pricing?",
+    question: "What is your development process like?",
     answer:
-      "Absolutely. Our Solution Partners and bulk purchasers access tiered wholesale rates that scale with volume.",
+      "We follow an agile methodology. This involves regular check-ins, iterative development cycles, and continuous feedback to ensure the final product aligns perfectly with your goals.",
   },
 ];
 
@@ -180,7 +179,7 @@ const ContactItem = ({
 }) => {
   const content = (
     <>
-      <div className="w-12 h-12 rounded text-slate-900 dark:text-white bg-white/40 dark:bg-white/5 border border-slate-200 dark:border-white/10 flex items-center justify-center group-hover:bg-white/80 dark:group-hover:bg-white/10 group-hover:border-emerald-500/40 group-hover:shadow-[0_0_15px_rgba(16,185,129,0.15)] transition-all duration-300">
+      <div className="w-12 h-12 rounded text-slate-900 dark:text-white bg-white/40 dark:bg-white/5 border border-slate-200 dark:border-white/10 flex items-center justify-center group-hover:bg-white/80 dark:group-hover:bg-white/10 group-hover:border-emerald-500/40 group-hover:shadow-[0_0_15px_rgba(16,185,129,0.15)] transition-all ">
         {icon}
       </div>
       <div>
@@ -197,7 +196,7 @@ const ContactItem = ({
   return (
     <div
       style={{ animationDelay: `${delay}s` }}
-      className="animate-in fade-in slide-in-from-bottom-2 duration-500 fill-mode-both"
+      className=""
     >
       {href ? (
         <a

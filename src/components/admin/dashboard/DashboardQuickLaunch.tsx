@@ -49,7 +49,7 @@ const quickActions = [
 export function DashboardQuickLaunch() {
   return (
     <Card className="bg-card/40 border-border overflow-hidden">
-      <div className="p-6 bg-linear-to-br from-brand-secondary-600/20 to-transparent border-b border-border">
+      <div className="p-6 border-b border-border">
         <h3 className="text-lg font-bold text-foreground">Quick Launch</h3>
         <p className="text-muted-foreground text-sm mt-1">
           Common administrative tasks
@@ -60,7 +60,7 @@ export function DashboardQuickLaunch() {
           <Link
             key={action.title}
             href={action.link}
-            className="flex items-center justify-between p-3 rounded bg-card border border-border hover:border-brand-secondary-500/20 hover:bg-card/50 transition-all duration-300 group"
+            className="flex items-center justify-between p-3 rounded bg-card border border-border hover:border-brand-secondary-500/20 hover:bg-card/50 transition-all group"
           >
             <div className="flex items-center gap-3">
               <div className={cn("p-2 rounded", action.color)}>

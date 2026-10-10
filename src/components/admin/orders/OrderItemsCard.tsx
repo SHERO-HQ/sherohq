@@ -31,8 +31,8 @@ interface OrderItemsCardProps {
 
 export function OrderItemsCard({ items, status, total }: OrderItemsCardProps) {
   return (
-    <Card className="bg-card/40 border-border overflow-hidden relative group duration-300 hover:border-brand-secondary-500/20">
-      <div className="absolute inset-0 bg-radial-gradient from-brand-secondary-500/2 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+    <Card className="bg-card/40 border-border overflow-hidden relative group hover:border-brand-secondary-500/20">
+      <div className="absolute inset-0 bg-radial-gradient opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
       <div className="p-6 border-b border-border flex items-center justify-between relative z-10">
         <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
           <ShoppingBag className="w-5 h-5 text-brand-secondary-400" />
@@ -51,7 +51,7 @@ export function OrderItemsCard({ items, status, total }: OrderItemsCardProps) {
         {items.map((item) => (
           <div
             key={item.id || item.name}
-            className="p-6 flex items-center gap-6 group/item hover:bg-card transition-colors duration-200"
+            className="p-6 flex items-center gap-6 group/item hover:bg-card transition-colors "
           >
             <div className="relative w-20 h-20 rounded bg-muted border border-border overflow-hidden flex items-center justify-center shrink-0">
               {item.image &&
@@ -62,7 +62,7 @@ export function OrderItemsCard({ items, status, total }: OrderItemsCardProps) {
                   alt={item.name}
                   fill
                   sizes="80px"
-                  className="object-cover group-hover/item:scale-110 transition-transform duration-500"
+                  className="object-cover group-hover/item:scale-110 transition-transform "
                 />
               ) : (
                 <div className="text-3xl select-none">{item.image || "📦"}</div>

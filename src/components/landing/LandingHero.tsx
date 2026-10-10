@@ -1,7 +1,6 @@
 import React from "react";
 import { HeroBackground } from "./hero/HeroBackground";
 import { HeroContent as HeroContentComponent } from "./hero/HeroContent";
-import { PartnerGrid } from "./hero/PartnerGrid";
 
 interface HeroContentDef {
   mainHeader: string;
@@ -10,7 +9,7 @@ interface HeroContentDef {
 
 const HERO_CONTENT: HeroContentDef = {
   mainHeader:
-    "Software, Hardware & Technology Solutions \nfor Modern Businesses",
+    "Solutions for People, \n Businesses and Communities",
   subHeader:
     "We build software, deliver reliable hardware, and provide the technology services businesses need to innovate, operate, and grow."
 } as const;
@@ -23,13 +22,13 @@ const LandingHero: React.FC = () => {
 
   return (
     <header
-      className="relative min-h-[85dvh] lg:min-h-[83dvh] w-full overflow-hidden bg-slate-50 dark:bg-slate-950 flex flex-col pt-24 sm:pt-0"
+      className="relative w-full overflow-hidden bg-slate-50 dark:bg-slate-950 flex flex-col py-24 sm:py-16"
       role="banner"
       aria-label="Hero section - Company mission statement"
     >
       <HeroBackground />
 
-      <div className="flex-1 flex flex-col items-center justify-center w-full min-h-0 py-12">
+      <div className="flex-1 flex flex-col items-center justify-center w-full">
         <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full flex flex-col items-center">
           <HeroContentComponent 
             headlineLead={headlineLead}
@@ -38,8 +37,6 @@ const LandingHero: React.FC = () => {
           />
         </div>
       </div>
-
-      <PartnerGrid />
     </header>
   );
 };

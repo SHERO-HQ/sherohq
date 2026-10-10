@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
+import { Red_Hat_Display, Red_Hat_Text, Red_Hat_Mono } from "next/font/google";
 import { Providers } from "@/components/providers";
 import { ServiceWorkerRegistration } from "@/components/common/ServiceWorkerRegistration";
 import { Analytics } from "@vercel/analytics/next";
@@ -23,14 +24,20 @@ const aubette = localFont({
   preload: false,
 });
 
-const sora = localFont({
-  src: "../assets/font/sora-latin-wght-normal.woff2",
+const redHatDisplay = Red_Hat_Display({
+  subsets: ["latin"],
+  variable: "--font-display-next",
+  display: "swap",
+});
+
+const redHatText = Red_Hat_Text({
+  subsets: ["latin"],
   variable: "--font-primary-next",
   display: "swap",
 });
 
-const jetbrains = localFont({
-  src: "../assets/font/jetbrains-mono-latin-wght-normal.woff2",
+const redHatMono = Red_Hat_Mono({
+  subsets: ["latin"],
   variable: "--font-mono-next",
   display: "swap",
 });
@@ -60,7 +67,7 @@ export const metadata: Metadata = {
     "Laptops Ghana",
     "Refurbished laptops",
     "custom software solutions",
-    "IT services Accra",
+    "IT services Tamale",
   ],
   metadataBase: new URL(SITE_URL),
   openGraph: {
@@ -116,7 +123,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning className={`${aubette.variable} ${sora.variable} ${jetbrains.variable}`}>
+    <html lang="en" suppressHydrationWarning className={`${aubette.variable} ${redHatDisplay.variable} ${redHatText.variable} ${redHatMono.variable}`}>
       <head>
         <JsonLd />
         {/* Prevent hydration theme flash by synchronously reading/applying active theme before first paint */}
@@ -161,19 +168,9 @@ export default async function RootLayout({
         />
       </head>
       <body
-        className="font-primary transition-colors duration-500"
+        className="font-primary font-medium transition-colors "
         suppressHydrationWarning
       >
-        {/* Capture the PWA install prompt event before React hydrates.
- Dynamic-imported PWAInstallPrompt may mount after the event fires,
- so we stash it globally for the component to pick up later. */}
-        <Script
-          id="pwa-prompt"
-          strategy="beforeInteractive"
-          dangerouslySetInnerHTML={{
-            __html: `window.__pwaPromptEvent=null;window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();window.__pwaPromptEvent=e});`,
-          }}
-        />
         <Providers>
           {/* Skip to main content link for accessibility */}
           <a

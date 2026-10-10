@@ -87,7 +87,7 @@ export default function InvoiceItemsCard({
 
   return (
     <Card className={cn(
-      "bg-card border border-border p-6 md:p-8 space-y-6 transition-all duration-300",
+      "bg-card border border-border p-6 md:p-8 space-y-6 transition-all ",
       errors.items && "border-rose-500/30 bg-rose-500/2"
     )}>
       <div className="flex items-center justify-between pb-4 border-b border-border">
@@ -122,7 +122,7 @@ export default function InvoiceItemsCard({
         </div>
 
         {searchQuery && (
-          <div className="absolute top-full left-0 right-0 mt-2 bg-card border border-border rounded shadow-2xl z-50 max-h-60 overflow-y-auto animate-in fade-in slide-in-from-top-2 duration-200">
+          <div className="absolute top-full left-0 right-0 mt-2 bg-card border border-border rounded shadow-2xl z-50 max-h-60 overflow-y-auto ">
             {isLoadingProducts ? (
               <div className="p-4 text-center text-muted-foreground">
                 <Loader2 className="w-5 h-5 animate-spin mx-auto text-brand-secondary-400" />
@@ -188,12 +188,12 @@ export default function InvoiceItemsCard({
                 <div
                   key={item.id}
                   className={cn(
-                    "bg-card p-4 rounded border transition-all duration-300 relative overflow-hidden",
+                    "bg-card p-4 rounded border transition-all relative overflow-hidden",
                     isDeleting ? "border-rose-500/25 bg-rose-500/2 opacity-90 scale-[0.99]" : "border-border"
                   )}
                 >
                   {isDeleting ? (
-                    <div className="absolute inset-0 bg-card backdrop-blur-xs z-20 flex items-center justify-between px-6 py-2 text-center animate-in fade-in duration-200">
+                    <div className="absolute inset-0 bg-card backdrop-blur-xs z-20 flex items-center justify-between px-6 py-2 text-center ">
                       <span className="text-xs font-semibold text-rose-400 uppercase tracking-widest animate-pulse">
                         Removing "{item.name}" in {secondsLeft}s
                       </span>

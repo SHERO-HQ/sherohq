@@ -84,7 +84,7 @@ export default function ProjectMediaCard({
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
       className={cn(
-        "bg-card border p-6 md:p-8 space-y-6 transition-all duration-300 relative select-none",
+        "bg-card border p-6 md:p-8 space-y-6 transition-all relative select-none",
         isDragging
           ? "border-brand-secondary-500 bg-brand-secondary-500/5 scale-[0.99] shadow-[0_0_15px_rgba(16,185,129,0.1)]"
           : "border-border"
@@ -92,7 +92,7 @@ export default function ProjectMediaCard({
     >
       {/* Drag overlay guide */}
       {isDragging && (
-        <div className="absolute inset-0 bg-brand-secondary-950/20 backdrop-blur-xs flex flex-col items-center justify-center z-35 pointer-events-none rounded animate-in fade-in duration-200">
+        <div className="absolute inset-0 bg-brand-secondary-950/20 backdrop-blur-xs flex flex-col items-center justify-center z-35 pointer-events-none rounded ">
           <ImageIcon className="w-12 h-12 text-brand-secondary-400 animate-bounce mb-2" />
           <p className="text-sm font-bold text-brand-secondary-300">
             Drop your cover image here
@@ -114,7 +114,7 @@ export default function ProjectMediaCard({
         {image ? (
           <div
             className={cn(
-              "relative aspect-video w-full rounded bg-muted border-2 overflow-hidden shadow transition-all duration-300",
+              "relative aspect-video w-full rounded bg-muted border-2 overflow-hidden shadow transition-all ",
               isDeleting ? "opacity-90 grayscale-30 scale-95 border-rose-500/40" : "border-border"
             )}
           >
@@ -128,7 +128,7 @@ export default function ProjectMediaCard({
 
             {/* Soft Delete Countdown Overlay */}
             {isDeleting ? (
-              <div className="absolute inset-0 bg-card backdrop-blur-xs z-20 flex flex-col items-center justify-center p-2 text-center animate-in fade-in zoom-in-95 duration-200">
+              <div className="absolute inset-0 bg-card backdrop-blur-xs z-20 flex flex-col items-center justify-center p-2 text-center zoom-in-95 ">
                 <p className="text-xs font-semibold text-rose-400 uppercase tracking-widest animate-pulse">
                   Deleting in {secondsLeft}s
                 </p>
@@ -168,7 +168,7 @@ export default function ProjectMediaCard({
         ) : (
           <label
             className={cn(
-              "aspect-video rounded w-full border-2 border-dashed flex flex-col items-center justify-center gap-2 cursor-pointer transition-all duration-300",
+              "aspect-video rounded w-full border-2 border-dashed flex flex-col items-center justify-center gap-2 cursor-pointer transition-all ",
               "border-border hover:border-brand-secondary-500/50 hover:bg-brand-secondary-500/5 hover:scale-[0.98]"
             )}
           >

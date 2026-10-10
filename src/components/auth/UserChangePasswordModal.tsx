@@ -57,8 +57,8 @@ export function UserChangePasswordModal() {
   if (!mustReset || !mounted) return null;
 
   return createPortal(
-    <div className="fixed inset-0 z-100 flex items-center justify-center p-4 bg-slate-900/80  animate-in fade-in duration-300">
-      <div className="w-full max-w-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 shadow overflow-hidden animate-in zoom-in-95 duration-300 rounded">
+    <div className="fixed inset-0 z-100 flex items-center justify-center p-4 bg-slate-900/80  ">
+      <div className="w-full max-w-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 shadow overflow-hidden animate-in zoom-in-95 rounded">
         <div className="p-6 border-b border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/5">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-brand-secondary-500/10 rounded">
@@ -152,7 +152,7 @@ export function UserChangePasswordModal() {
             type="submit"
             disabled={isSubmitting}
             className={cn(
-              "w-full py-3 px-4 bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white font-semibold text-sm transition flex items-center justify-center gap-2 rounded shadow shadow-brand-secondary-600/20",
+              "w-full py-3 px-4 bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white font-semibold text-sm transition flex items-center justify-center gap-2 rounded shadow-sm",
               isSubmitting && "opacity-70 cursor-not-allowed",
             )}
           >

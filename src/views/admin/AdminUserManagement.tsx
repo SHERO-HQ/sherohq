@@ -125,7 +125,7 @@ export default function AdminUserManagement() {
           {canManageRoles && (
             <Button
               onClick={() => setIsRegisterModalOpen(true)}
-              className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-foreground shadow shadow-brand-secondary-500/20"
+              className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-foreground shadow-sm"
             >
               <Plus className="w-4 h-4 mr-2" />
               Add Admin User

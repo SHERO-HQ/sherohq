@@ -38,7 +38,7 @@ export function SchedulerStep1Service({
             key={service.id}
             onClick={() => onSelectService(service.id)}
             className={cn(
-              "flex items-start md:items-center p-4 rounded border-2 transition duration-200 text-left hover:border-brand-secondary-500/50 hover:bg-brand-secondary-50 dark:hover:bg-brand-secondary-900/10 group relative overflow-hidden cursor-pointer",
+              "flex items-start md:items-center p-4 rounded border-2 transition text-left hover:border-brand-secondary-500/50 hover:bg-brand-secondary-50 dark:hover:bg-brand-secondary-900/10 group relative overflow-hidden cursor-pointer",
               selectedService === service.id
                 ? "border-brand-secondary-500 bg-brand-secondary-50/50 dark:bg-brand-secondary-900/10 shadow-sm"
                 : "border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900",

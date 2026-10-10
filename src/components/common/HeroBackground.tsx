@@ -69,16 +69,6 @@ const HeroBackground: React.FC<HeroBackgroundProps> = ({
  <ParticleField count={particleCount} colorVariant="dual" opacity={0.8} animate />
  )}
 
- {/* Gradient Orbs */}
- {showOrbs && (
- <div className="absolute inset-0">
- <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-brand-secondary-500/5 dark:bg-brand-secondary-500/5 blur-[60px] rounded-full" />
- <div className="absolute top-1/2 left-1/2 -translate-y-1/2 w-3/4 h-3/4 bg-blue-500/5 dark:bg-blue-500/5 blur-[50px] rounded-full translate-x-10" />
- </div>
- )}
-
- {/* Bottom Fade */}
- <div className="absolute inset-0 bg-linear-to-b from-transparent via-transparent to-white dark:to-slate-950" />
  </div>
  );
 };

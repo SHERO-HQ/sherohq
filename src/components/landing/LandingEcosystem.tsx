@@ -7,20 +7,20 @@ import { SectionBadge } from "@/components/common/SectionBadge";
 const nodes = [
   {
     id: 1,
-    title: "Reliable Hardware",
-    desc: "We supply dependable, high-performance hardware foundations.",
+    title: "Supportive Hardware",
+    desc: "We supply, configure, and maintain hardware to support your operations.",
     icon: Cpu,
   },
   {
     id: 2,
     title: "Custom Software",
-    desc: "Engineered specifically to maximize your hardware.",
+    desc: "Tailored business applications and web systems engineered to eliminate operational bottlenecks.",
     icon: Code,
   },
   {
     id: 3,
-    title: "Managed IT",
-    desc: "Maintained by the very team that built it.",
+    title: "Unified IT Support",
+    desc: "On-site troubleshooting, routine maintenance, and direct support by the team who knows your setup.",
     icon: Shield,
   },
 ];
@@ -35,7 +35,7 @@ const LandingEcosystem = () => {
 
   return (
     <section className="relative w-full overflow-hidden bg-slate-50 py-24 dark:bg-slate-950 border-y border-slate-200/50 dark:border-white/10">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,var(--tw-gradient-stops))] from-brand-secondary-500/5 via-transparent to-transparent opacity-50 dark:from-brand-secondary-500/10" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,var(--tw-gradient-stops))] opacity-50 dark:" />
 
       <div className="container relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-3xl text-center mb-16 sm:mb-24">
@@ -57,7 +57,7 @@ const LandingEcosystem = () => {
             className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl dark:text-white"
           >
             Why Split IT when you can have{" "}
-            <span className="text-transparent bg-clip-text bg-linear-to-r from-brand-primary-600 to-brand-secondary-500 dark:from-brand-primary-400 dark:to-brand-secondary-400">
+            <span className="text-brand-secondary-600 dark:text-brand-secondary-400">
               All-in-One
             </span>
           </m.h2>
@@ -68,9 +68,9 @@ const LandingEcosystem = () => {
             transition={{ delay: 0.2 }}
             className="mt-6 text-sm text-slate-600 dark:text-slate-300 leading-relaxed"
           >
-            Software redefined specifically for the hardware we supply,
-            supported by the team that built it. When every piece works together
-            seamlessly, businesses can move forward faster.
+            Custom software engineered around your operational hardware, supported
+            directly by the team that built and deployed it. When your systems work
+            together seamlessly, businesses move forward faster.
           </m.p>
         </div>
 
@@ -136,13 +136,13 @@ const LandingEcosystem = () => {
                   className="relative flex flex-row md:flex-col items-start md:items-center gap-6"
                 >
                   {/* Icon Node */}
-                  <div className="relative z-10 flex shrink-0 h-12 w-12 items-center justify-center rounded bg-white shadow shadow-slate-200/50 dark:bg-slate-950 dark:border dark:border-slate-800 transition-transform duration-500 group-hover:scale-110">
-                    <div className="absolute inset-0 rounded bg-brand-primary-500/5 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+                  <div className="relative z-10 flex shrink-0 h-12 w-12 items-center justify-center rounded bg-white shadow shadow-slate-200/50 dark:bg-slate-950 dark:border dark:border-slate-800 transition-transform group-hover:scale-110">
+                    <div className="absolute inset-0 rounded bg-brand-primary-500/5 opacity-0 transition-opacity group-hover:opacity-100" />
                     <Icon className="h-8 w-8 text-brand-primary-500 dark:text-brand-primary-400 transition-colors group-hover:text-brand-secondary-500" />
                   </div>
 
                   {/* Content Card */}
-                  <div className="group flex-1 w-full relative z-10 p-4 md:p-6 rounded bg-white/60 dark:bg-slate-900/40 backdrop-blur-md border border-slate-200/80 dark:border-slate-800/80 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg shadow-sm md:text-center">
+                  <div className="group flex-1 w-full relative z-10 p-4 md:p-6 rounded bg-white/60 dark:bg-slate-900/40 backdrop-blur-md border border-slate-200/80 dark:border-slate-800/80 transition-all hover:-translate-y-1 hover:shadow-lg shadow-sm md:text-center">
                     <h3 className="sm:text-lg text-base font-bold text-slate-900 dark:text-white mb-2 group-hover:text-brand-secondary-600 dark:group-hover:text-brand-secondary-400 transition-colors">
                       {node.title}
                     </h3>

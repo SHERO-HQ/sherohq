@@ -34,7 +34,7 @@ export function OrderInternalActionsCard({
 
   return (
     <div className="bg-card rounded p-5 border border-border relative group overflow-hidden">
-      <div className="absolute inset-0 bg-radial-gradient from-white/2 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+      <div className="absolute inset-0 bg-radial-gradient opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
       <h4 className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-3 relative z-10">
         Customer Communications & Links
       </h4>
@@ -43,7 +43,7 @@ export function OrderInternalActionsCard({
           variant="ghost"
           onClick={onResendConfirmation}
           disabled={isSendingEmail}
-          className={`w-full justify-start text-xs h-9 rounded transition-all duration-200 ${
+          className={`w-full justify-start text-xs h-9 rounded transition-all ${
             isPending
               ? "text-amber-600 dark:text-amber-400 hover:text-amber-700 hover:bg-amber-500/10"
               : "text-muted-foreground hover:text-foreground hover:bg-accent"
@@ -63,7 +63,7 @@ export function OrderInternalActionsCard({
         <Button
           variant="ghost"
           onClick={onCopyPaymentLink}
-          className="w-full justify-start text-xs text-muted-foreground hover:text-foreground hover:bg-accent h-9 rounded transition-all duration-200"
+          className="w-full justify-start text-xs text-muted-foreground hover:text-foreground hover:bg-accent h-9 rounded transition-all "
         >
           <CreditCard className="w-3.5 h-3.5 mr-2 text-muted-foreground" />
           Copy Payment link
@@ -73,7 +73,7 @@ export function OrderInternalActionsCard({
           variant="ghost"
           onClick={onCopyTrackingLink}
           disabled={isStorePickupOrder}
-          className="w-full justify-start text-xs text-muted-foreground hover:text-foreground hover:bg-accent h-9 rounded transition-all duration-200"
+          className="w-full justify-start text-xs text-muted-foreground hover:text-foreground hover:bg-accent h-9 rounded transition-all "
         >
           <Hash className="w-3.5 h-3.5 mr-2 text-muted-foreground" />
           {isStorePickupOrder ? "Tracking not available" : "Copy Tracking link"}

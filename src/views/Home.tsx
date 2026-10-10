@@ -29,17 +29,23 @@ const LandingFinalCTA = dynamic(
   () => import("@/components/landing/LandingFinalCTA"),
 );
 
+import { SHOP_ENABLED } from "@/constants/features";
+
+const HardwareServiceLine = dynamic(
+  () => import("@/components/landing/HardwareServiceLine"),
+);
+
 const Home = () => {
   return (
     <>
       <LandingHero />
-      <LandingValueProps />
+      {SHOP_ENABLED && <LandingValueProps />}
       <LandingAbout />
       <ClientLogoBar />
-      <LandingPillars />
+      {/* <LandingPillars /> */}
       <LandingEcosystem />
-      <LandingSecurity />
-      <LandingProducts />
+      {SHOP_ENABLED && <LandingSecurity />}
+      {SHOP_ENABLED ? <LandingProducts /> : <HardwareServiceLine />}
       <LandingTestimonials limit={5} />
       <LandingFinalCTA />
     </>

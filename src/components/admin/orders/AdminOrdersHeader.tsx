@@ -76,7 +76,7 @@ export function AdminOrdersHeader({
       </DropdownMenu>
 
       <Link href="/admin/orders/new">
-        <Button className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-foreground font-bold transition shadow shadow-brand-secondary-500/20">
+        <Button className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-foreground font-bold transition shadow-sm">
           <Plus className="mr-2 h-4 w-4" /> Create Order
         </Button>
       </Link>

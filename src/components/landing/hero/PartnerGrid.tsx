@@ -25,7 +25,7 @@ export const PartnerGrid = (_props: PartnerGridProps) => {
           {PARTNERS.map((partner) => (
             <li
               key={partner.name}
-              className="flex justify-center items-center transition-transform duration-300 hover:scale-105"
+              className="flex justify-center items-center transition-transform hover:scale-105"
               title={partner.name}
             >
               <Image
@@ -33,7 +33,7 @@ export const PartnerGrid = (_props: PartnerGridProps) => {
                 alt={`${partner.name} logo`}
                 width={120}
                 height={40}
-                className={`w-auto max-w-full object-contain filter grayscale opacity-70 hover:grayscale-0 hover:opacity-100 transition-[opacity,filter] duration-300 ${
+                className={`w-auto max-w-full object-contain filter grayscale opacity-70 hover:grayscale-0 hover:opacity-100 transition-[opacity,filter] ${
                   partner.logoClassName ?? "h-7 sm:h-9"
                 } ${partner.logoDark ? "dark:hidden block" : ""}`}
               />
@@ -43,7 +43,7 @@ export const PartnerGrid = (_props: PartnerGridProps) => {
                   alt={`${partner.name} logo`}
                   width={120}
                   height={40}
-                  className={`w-auto max-w-full object-contain filter grayscale opacity-70 hover:grayscale-0 hover:opacity-100 transition-[opacity,filter] duration-300 ${
+                  className={`w-auto max-w-full object-contain filter grayscale opacity-70 hover:grayscale-0 hover:opacity-100 transition-[opacity,filter] ${
                     partner.logoClassName ?? "h-7 sm:h-9"
                   } hidden dark:block`}
                 />

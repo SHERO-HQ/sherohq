@@ -11,7 +11,7 @@ import {
   Server,
   Shield,
   Zap,
-  ShoppingBag
+  LifeBuoy
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { sendContactMessage } from "@/services/api";
@@ -19,7 +19,7 @@ import { sendContactMessage } from "@/services/api";
 const ContactForm = () => {
   const [step, setStep] = useState(1);
   const [direction, setDirection] = useState(0); // -1 for back, 1 for forward
-  const [inquiryType, setInquiryType] = useState<"proposal" | "general" | "order" | "partnership" | null>(null);
+  const [inquiryType, setInquiryType] = useState<"proposal" | "general" | "support" | "partnership" | null>(null);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -28,14 +28,14 @@ const ContactForm = () => {
     // Proposal-specific fields
     proposalService: "software", // "software" | "cloud" | "mit" | "hardware"
     proposalSize: "10-50",       // "<10" | "10-50" | "50+"
-    // Order-specific fields
-    orderId: ""});
+    // Support-specific fields
+    ticketId: ""});
 
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
 
   const step2FirstFocusRef = useRef<HTMLButtonElement>(null);
 
-  const handleSelectType = (type: "proposal" | "general" | "order" | "partnership") => {
+  const handleSelectType = (type: "proposal" | "general" | "support" | "partnership") => {
     setInquiryType(type);
     setDirection(1);
     setStep(2);
@@ -75,10 +75,10 @@ const ContactForm = () => {
 
 Additional Details:
 ${formData.message}`;
-    } else if (inquiryType === "order") {
+    } else if (inquiryType === "support") {
       subject = "support";
-      formattedMessage = `[Order Support Request]
-• Order ID: ${formData.orderId || "Not Provided"}
+      formattedMessage = `[Technical Support Request]
+• Ticket/Reference ID: ${formData.ticketId || "Not Provided"}
 
 Support Details:
 ${formData.message}`;
@@ -102,7 +102,7 @@ ${formData.message}`;
         message: "",
         proposalService: "software",
         proposalSize: "10-50",
-        orderId: ""});
+        ticketId: ""});
       setStep(1);
       setInquiryType(null);
     } catch (error) {
@@ -116,8 +116,6 @@ ${formData.message}`;
 
   return (
     <div className="w-full glass-surface-md border border-slate-200/80 dark:border-slate-800/80 p-6 md:p-8 rounded shadow-xl relative overflow-hidden bg-white/70 dark:bg-slate-900/60 backdrop-blur-md">
-      {/* Background ambient glow */}
-      <div className="absolute -top-24 -right-24 w-48 h-48 bg-brand-secondary-500/5 rounded-full blur-3xl pointer-events-none" />
 
       {/* Screen Reader Live Region for Announcements */}
       <div aria-live="polite" className="sr-only">
@@ -141,8 +139,8 @@ ${formData.message}`;
               Step {currentDisplayStep} of {totalSteps}
             </span>
             <div className="flex items-center gap-1.5">
-              <span className={`w-2 h-2 rounded-full transition-all duration-300 ${step >= 1 ? "bg-brand-secondary-600 scale-110" : "bg-slate-200 dark:bg-slate-700"}`} />
-              <span className={`w-2 h-2 rounded-full transition-all duration-300 ${step >= 2 ? "bg-brand-secondary-600 scale-110" : "bg-slate-200 dark:bg-slate-700"}`} />
+              <span className={`w-2 h-2 rounded-full transition-all ${step >= 1 ? "bg-brand-secondary-600 scale-110" : "bg-slate-200 dark:bg-slate-700"}`} />
+              <span className={`w-2 h-2 rounded-full transition-all ${step >= 2 ? "bg-brand-secondary-600 scale-110" : "bg-slate-200 dark:bg-slate-700"}`} />
             </div>
           </div>
         </div>
@@ -150,7 +148,7 @@ ${formData.message}`;
 
       {status === "success" && (
         <div
-          className="text-center py-8 space-y-4 animate-in fade-in zoom-in-95 duration-500"
+          className="text-center py-8 space-y-4 zoom-in-95 "
         >
           <div className="w-16 h-16 bg-brand-secondary-100 dark:bg-brand-secondary-900/30 rounded-full flex items-center justify-center mx-auto shadow-md">
             <CheckCircle2 className="w-8 h-8 text-brand-secondary-600 dark:text-brand-secondary-400 animate-bounce" />
@@ -175,7 +173,7 @@ ${formData.message}`;
         <form onSubmit={handleSubmit} className="relative">
           <div
             key={step}
-            className={`animate-in fade-in duration-300 ${direction > 0 ? "slide-in-from-right-4" : "slide-in-from-left-4"}`}
+            className={`${direction > 0 ? "" : ""}`}
           >
             {/* STEP 1: ROUTING CARDS */}
             {step === 1 && (
@@ -194,7 +192,7 @@ ${formData.message}`;
                   <button
                     type="button"
                     onClick={() => handleSelectType("proposal")}
-                    className="group p-5 text-left rounded border border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 hover:border-brand-primary-500/50 dark:hover:border-brand-primary-400/30 hover:bg-brand-primary-500/5 dark:hover:bg-brand-primary-500/5 hover:shadow-md hover:-translate-y-0.5 hover:scale-[1.01] active:scale-[0.99] cursor-pointer transition-all duration-300 flex items-start gap-4 w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900"
+                    className="group p-5 text-left rounded border border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 hover:border-brand-primary-500/50 dark:hover:border-brand-primary-400/30 hover:bg-brand-primary-500/5 dark:hover:bg-brand-primary-500/5 hover:shadow-md hover:-translate-y-0.5 hover:scale-[1.01] active:scale-[0.99] cursor-pointer transition-all flex items-start gap-4 w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900"
                   >
                     <div className="p-2.5 rounded bg-brand-primary-500/10 dark:bg-brand-primary-500/10 text-brand-primary-600 dark:text-brand-primary-400 shrink-0 transition-transform group-hover:scale-105">
                       <Code className="w-5 h-5" />
@@ -214,7 +212,7 @@ ${formData.message}`;
                   <button
                     type="button"
                     onClick={() => handleSelectType("general")}
-                    className="group p-5 text-left rounded border border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 hover:border-brand-secondary-500/50 dark:hover:border-brand-secondary-400/30 hover:bg-brand-secondary-500/5 dark:hover:bg-brand-secondary-500/5 hover:shadow-md hover:-translate-y-0.5 hover:scale-[1.01] active:scale-[0.99] cursor-pointer transition-all duration-300 flex items-start gap-4 w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-secondary-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900"
+                    className="group p-5 text-left rounded border border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 hover:border-brand-secondary-500/50 dark:hover:border-brand-secondary-400/30 hover:bg-brand-secondary-500/5 dark:hover:bg-brand-secondary-500/5 hover:shadow-md hover:-translate-y-0.5 hover:scale-[1.01] active:scale-[0.99] cursor-pointer transition-all flex items-start gap-4 w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-secondary-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900"
                   >
                     <div className="p-2.5 rounded bg-brand-secondary-500/10 dark:bg-brand-secondary-500/10 text-brand-secondary-600 dark:text-brand-secondary-400 shrink-0 transition-transform group-hover:scale-105">
                       <HelpCircle className="w-5 h-5" />
@@ -225,7 +223,7 @@ ${formData.message}`;
                         <ArrowRight className="w-4 h-4 text-slate-400 dark:text-slate-600 group-hover:text-brand-secondary-500 dark:group-hover:text-brand-secondary-400 transition-all group-hover:translate-x-1 shrink-0" />
                       </h3>
                       <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
-                        Ask quick questions about shop deliveries, local branches, or store pickups.
+                        Ask quick questions about our software development services, consulting, or operations.
                       </p>
                     </div>
                   </button>
@@ -233,19 +231,19 @@ ${formData.message}`;
                   {/* Option 3: Support (Emerald) */}
                   <button
                     type="button"
-                    onClick={() => handleSelectType("order")}
-                    className="group p-5 text-left rounded border border-slate-200/80 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 hover:border-emerald-500/50 dark:hover:border-emerald-400/30 hover:bg-emerald-500/5 dark:hover:bg-emerald-500/5 hover:shadow-md hover:-translate-y-0.5 hover:scale-[1.01] active:scale-[0.99] cursor-pointer transition-all duration-300 flex items-start gap-4 w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900"
+                    onClick={() => handleSelectType("support")}
+                    className="group p-5 text-left rounded border border-slate-200/80 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 hover:border-emerald-500/50 dark:hover:border-emerald-400/30 hover:bg-emerald-500/5 dark:hover:bg-emerald-500/5 hover:shadow-md hover:-translate-y-0.5 hover:scale-[1.01] active:scale-[0.99] cursor-pointer transition-all flex items-start gap-4 w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900"
                   >
                     <div className="p-2.5 rounded bg-emerald-500/10 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 shrink-0 transition-transform group-hover:scale-105">
-                      <ShoppingBag className="w-5 h-5" />
+                      <LifeBuoy className="w-5 h-5" />
                     </div>
                     <div className="flex-1 min-w-0">
                       <h3 className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors flex items-center justify-between gap-2">
-                        <span>Order & Support</span>
+                        <span>Technical Support</span>
                         <ArrowRight className="w-4 h-4 text-slate-400 dark:text-slate-600 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-all group-hover:translate-x-1 shrink-0" />
                       </h3>
                       <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
-                        Troubleshoot current online order statuses or ask for product setup help.
+                        Get help with existing software deployments, infrastructure, or SLAs.
                       </p>
                     </div>
                   </button>
@@ -254,7 +252,7 @@ ${formData.message}`;
                   <button
                     type="button"
                     onClick={() => handleSelectType("partnership")}
-                    className="group p-5 text-left rounded border border-slate-200/80 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 hover:border-amber-500/50 dark:hover:border-amber-400/30 hover:bg-amber-500/5 dark:hover:bg-amber-500/5 hover:shadow-md hover:-translate-y-0.5 hover:scale-[1.01] active:scale-[0.99] cursor-pointer transition-all duration-300 flex items-start gap-4 w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900"
+                    className="group p-5 text-left rounded border border-slate-200/80 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 hover:border-amber-500/50 dark:hover:border-amber-400/30 hover:bg-amber-500/5 dark:hover:bg-amber-500/5 hover:shadow-md hover:-translate-y-0.5 hover:scale-[1.01] active:scale-[0.99] cursor-pointer transition-all flex items-start gap-4 w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900"
                   >
                     <div className="p-2.5 rounded bg-amber-500/10 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 shrink-0 transition-transform group-hover:scale-105">
                       <Verified className="w-5 h-5" />
@@ -329,24 +327,24 @@ ${formData.message}`;
                     </div>
                   )}
 
-                  {inquiryType === "order" && (
+                  {inquiryType === "support" && (
                     <div className="space-y-4 pb-4 border-b border-slate-100 dark:border-slate-800/60">
                       <div>
                         <h3 className="text-base font-bold text-slate-900 dark:text-white">
-                          Order Details
+                          Support Details
                         </h3>
                       </div>
                       <div className="space-y-1.5">
-                        <label htmlFor="orderId" className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
-                          Order ID (Optional)
+                        <label htmlFor="ticketId" className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
+                          Ticket/Reference ID (Optional)
                         </label>
                         <input
-                          id="orderId"
+                          id="ticketId"
                           type="text"
-                          value={formData.orderId}
-                          onChange={(e) => setFormData({ ...formData, orderId: e.target.value })}
+                          value={formData.ticketId}
+                          onChange={(e) => setFormData({ ...formData, ticketId: e.target.value })}
                           className="w-full px-4 py-2.5 rounded border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950/50 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-secondary-500/10 focus:border-brand-secondary-500 transition"
-                          placeholder="e.g. #E4G432901"
+                          placeholder="e.g. #TK-432901"
                         />
                       </div>
                     </div>
@@ -404,8 +402,8 @@ ${formData.message}`;
                       placeholder={
                         inquiryType === "proposal"
                           ? "Briefly tell us about your project features, expected timelines, or integrations..."
-                          : inquiryType === "order"
-                            ? "State what product is affected or what delivery issue you are experiencing..."
+                          : inquiryType === "support"
+                            ? "Describe the technical issue or support you need..."
                             : inquiryType === "partnership"
                               ? "Share details about your partnership proposal or background careers inquiry..."
                               : "Type your general inquiry or question here..."
@@ -425,7 +423,7 @@ ${formData.message}`;
                     <Button
                       type="submit"
                       disabled={status === "submitting"}
-                      className="flex-1 md:flex-none px-8 h-10 text-sm font-bold bg-brand-secondary-600 hover:bg-brand-secondary-700 text-white shadow-md shadow-brand-secondary-500/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-secondary-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900"
+                      className="flex-1 md:flex-none px-8 h-10 text-sm font-bold bg-brand-secondary-600 hover:bg-brand-secondary-700 text-white shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-secondary-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900"
                     >
                       {status === "submitting" ? (
                         <span aria-hidden="true">Sending...</span>

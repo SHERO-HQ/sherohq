@@ -82,10 +82,10 @@ export function ExpenseFormModal({
   };
 
   return createPortal(
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs ">
       <Card
         className={cn(
-          "w-full max-w-lg bg-card border shadow-2xl p-6 md:p-8 relative transition-all duration-300",
+          "w-full max-w-lg bg-card border shadow-2xl p-6 md:p-8 relative transition-all ",
           Object.keys(errors).length > 0
             ? "border-rose-500/30"
             : "border-border",
@@ -122,7 +122,7 @@ export function ExpenseFormModal({
               required
             />
             {errors.title && (
-              <p className="text-xs text-rose-400 animate-in slide-in-from-top-1 opacity-100 mt-1">
+              <p className="text-xs text-rose-400 animate-in opacity-100 mt-1">
                 {errors.title}
               </p>
             )}
@@ -149,7 +149,7 @@ export function ExpenseFormModal({
                 required
               />
               {errors.amount && (
-                <p className="text-xs text-rose-400 animate-in slide-in-from-top-1 opacity-100 mt-1">
+                <p className="text-xs text-rose-400 animate-in opacity-100 mt-1">
                   {errors.amount}
                 </p>
               )}
@@ -191,7 +191,7 @@ export function ExpenseFormModal({
                 </PopoverContent>
               </Popover>
               {errors.date && (
-                <p className="text-xs text-rose-400 animate-in slide-in-from-top-1 opacity-100 mt-1">
+                <p className="text-xs text-rose-400 animate-in opacity-100 mt-1">
                   {errors.date}
                 </p>
               )}
@@ -208,7 +208,7 @@ export function ExpenseFormModal({
               onChange={(e) =>
                 setFormData({ ...formData, category: e.target.value })
               }
-              className="w-full bg-muted/50 border border-border rounded text-sm text-foreground h-10 px-3 focus:outline-none focus:ring-2 focus:ring-brand-secondary-500 transition-all duration-200 cursor-pointer"
+              className="w-full bg-muted/50 border border-border rounded text-sm text-foreground h-10 px-3 focus:outline-none focus:ring-2 focus:ring-brand-secondary-500 transition-all cursor-pointer"
               required
             >
               {categories.map((cat) => (

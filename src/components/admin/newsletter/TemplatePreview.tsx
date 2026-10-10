@@ -27,7 +27,7 @@ export function TemplatePreview({
 
   if (channel === "whatsapp") {
     return (
-      <div className="bg-[#efeae2] p-4 rounded max-w-sm w-full mx-auto shadow-[inset_0_2px_10px_rgba(0,0,0,0.05)] relative overflow-hidden flex flex-col h-100 border border-border animate-in fade-in zoom-in-95 duration-300">
+      <div className="bg-[#efeae2] p-4 rounded max-w-sm w-full mx-auto shadow-[inset_0_2px_10px_rgba(0,0,0,0.05)] relative overflow-hidden flex flex-col h-100 border border-border zoom-in-95 ">
         {/* WhatsApp Background Pattern */}
         <div
           className="absolute inset-0 opacity-[0.06] mix-blend-multiply pointer-events-none"
@@ -57,7 +57,7 @@ export function TemplatePreview({
           </div>
 
           {/* Message Bubble */}
-          <div className="bg-white rounded rounded-tl-none p-2.5 shadow-sm text-[14px] text-[#111b21] relative max-w-[90%] self-start animate-in slide-in-from-bottom-2 duration-300">
+          <div className="bg-white rounded rounded-tl-none p-2.5 shadow-sm text-[14px] text-[#111b21] relative max-w-[90%] self-start animate-in ">
             {/* Bubble Tail */}
             <div className="absolute top-0 -left-2 w-0 h-0 border-8 border-transparent border-t-white border-r-white"></div>
 
@@ -79,7 +79,7 @@ export function TemplatePreview({
     // For email, we might have basic variable replacement if we use {{}} instead of standard EJS or liquid.
     // If the content is HTML, we should render it safely in an iframe or a sanitized div.
     return (
-      <div className="bg-white border border-border rounded shadow-lg overflow-hidden flex flex-col h-125 max-w-2xl mx-auto w-full animate-in fade-in zoom-in-95 duration-300">
+      <div className="bg-white border border-border rounded shadow-lg overflow-hidden flex flex-col h-125 max-w-2xl mx-auto w-full zoom-in-95 ">
         {/* Fake Email Header */}
         <div className="bg-accent/50 px-4 py-3 border-b border-border flex flex-col gap-2">
           <div className="flex justify-between items-center">

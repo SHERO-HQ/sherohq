@@ -124,7 +124,6 @@ export default function AdminProfile() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-1 space-y-6">
           <Card className="bg-card border-border overflow-hidden">
-            <div className="h-24 bg-linear-to-br from-brand-secondary-600 bg-primary" />
             <div className="px-6 pb-6 relative">
               <div className="flex justify-center -mt-12 mb-4">
                 <div className="relative group">

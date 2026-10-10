@@ -66,7 +66,7 @@ const AdminLayout = memo(({ children }: Readonly<AdminLayoutProps>) => {
    {/* Main Content Area */}
    <div
     className={cn(
-     "transition-all duration-200 ease-in-out min-h-screen flex flex-col pt-20 relative z-10",
+     "transition-all ease-in-out min-h-screen flex flex-col pt-20 relative z-10",
      isSidebarOpen ? "lg:pl-64" : "lg:pl-20",
      "pl-0 print:pl-0",
     )}
@@ -97,13 +97,6 @@ const AdminLayout = memo(({ children }: Readonly<AdminLayoutProps>) => {
       Admin Panel. Built with precision.
      </p>
     </footer>
-   </div>
-
-   {/* Background Decor */}
-   <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none print:hidden">
-    <div className="absolute top-[-20%] right-[-10%] w-[50%] h-[50%] bg-brand-secondary-500/10 blur-[140px] rounded-full" />
-    <div className="absolute bottom-[-20%] left-[-10%] w-[50%] h-[50%] bg-blue-500/10 blur-[140px] rounded-full" />
-    <div className="absolute top-[30%] left-[20%] w-[30%] h-[30%] bg-brand-secondary-500/5 blur-[120px] rounded-full" />
    </div>
 
    {/* Forced Password Reset Modal */}

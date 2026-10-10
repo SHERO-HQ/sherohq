@@ -235,7 +235,7 @@ const CheckoutSuccess = () => {
         iconBg: "bg-amber-50 dark:bg-amber-500/10",
         iconText: "text-amber-600 dark:text-amber-400",
         pulse: "bg-amber-500",
-        glow: "via-amber-500/20",
+        glow: "",
       };
     }
     if (
@@ -250,7 +250,7 @@ const CheckoutSuccess = () => {
         iconBg: "bg-red-50 dark:bg-red-500/10",
         iconText: "text-red-600 dark:text-red-400",
         pulse: "bg-red-500",
-        glow: "via-red-500/20",
+        glow: "",
       };
     }
     // Default (Emerald / Generic)
@@ -260,7 +260,7 @@ const CheckoutSuccess = () => {
       iconBg: "bg-emerald-50 dark:bg-emerald-500/10",
       iconText: "text-emerald-600 dark:text-emerald-400",
       pulse: "bg-emerald-500",
-      glow: "via-emerald-500/20",
+      glow: "",
     };
   };
 
@@ -323,7 +323,6 @@ const CheckoutSuccess = () => {
           </p>
 
           <div className="w-full bg-white dark:bg-[#0f1115] shadow-[0_8px_30px_rgb(0,0,0,0.08)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.2)] rounded p-8 mb-8 border border-slate-100 dark:border-slate-800/60 relative overflow-hidden">
-            <div className="absolute top-0 left-0 right-0 h-1 bg-linear-to-r from-transparent via-red-500/20 to-transparent" />
 
             <div className="flex flex-col items-center mb-10">
               <span className="text-slate-400 text-[11px] uppercase tracking-[0.2em] font-semibold mb-3">
@@ -416,7 +415,6 @@ const CheckoutSuccess = () => {
         </p>
 
         <div className="w-full bg-white dark:bg-[#0f1115] shadow-[0_8px_30px_rgb(0,0,0,0.08)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.2)] rounded p-8 mb-8 border border-slate-100 dark:border-slate-800/60 relative overflow-hidden">
-          <div className="absolute top-0 left-0 right-0 h-1 bg-linear-to-r from-transparent via-emerald-500/20 to-transparent" />
 
           <div className="flex flex-col items-center mb-10">
             <span className="text-slate-400 text-[11px] uppercase tracking-[0.2em] font-semibold mb-3">

@@ -63,7 +63,7 @@ export default function NotificationCenter() {
             <button
                 onClick={() => setIsOpen(!isOpen)}
                 className={cn(
-                    "relative p-2 rounded transition duration-300",
+                    "relative p-2 rounded transition ",
                     isOpen
                         ? "bg-brand-secondary-500/10 text-brand-secondary-600 dark:text-brand-secondary-400 border-brand-secondary-500/20"
                         : "text-muted-foreground hover:text-foreground hover:bg-muted",
@@ -71,7 +71,7 @@ export default function NotificationCenter() {
                 )}
                 title="Notifications"
             >
-                <Bell className="w-5 h-5 transition-transform duration-300 group-hover:scale-110" />
+                <Bell className="w-5 h-5 transition-transform group-hover:scale-110" />
                 {unreadCount > 0 && (
                     <span className="absolute -top-1.5 -right-1.5 flex items-center justify-center min-w-[18px] h-[18px] px-1 rounded-full bg-brand-secondary-500 text-slate-950 text-[10px] font-bold ring-2 ring-background shadow-sm select-none">
                         <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand-secondary-400 opacity-75" />

@@ -38,7 +38,7 @@ export default function ProductSpecsCard() {
         {fields.map((spec, index) => (
           <div
             key={spec.id}
-            className="flex gap-3 items-start p-3 rounded bg-muted/30 border border-border animate-in fade-in slide-in-from-top-1 duration-200"
+            className="flex gap-3 items-start p-3 rounded bg-muted/30 border border-border "
           >
             <div className="flex-1 space-y-1">
               <Input

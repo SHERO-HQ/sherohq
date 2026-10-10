@@ -166,9 +166,8 @@ export default function DynamicPaymentPortal() {
 
       {/* Main Payment Card */}
       <div className="w-full max-w-md my-8">
-        <Card className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/5 rounded p-6 sm:p-8 shadow-2xl relative overflow-hidden transition-all duration-300">
+        <Card className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/5 rounded p-6 sm:p-8 shadow-2xl relative overflow-hidden transition-all ">
           {/* Subtle Ambient Background */}
-          <div className="absolute top-0 right-0 w-48 h-48 bg-brand-secondary-500/2 rounded-full blur-3xl pointer-events-none" />
 
           {/* Amount Summary */}
           <div className="text-center pb-6 border-b border-slate-100 dark:border-white/5">
@@ -314,7 +313,7 @@ export default function DynamicPaymentPortal() {
             onClick={handleProcessPayment}
             disabled={isPending}
             variant="brand"
-            className="w-full h-12 rounded font-bold flex items-center justify-center gap-2 shadow-lg shadow-brand-secondary-500/20"
+            className="w-full h-12 rounded font-bold flex items-center justify-center gap-2 shadow-sm"
           >
             {isPending ? (
               <>

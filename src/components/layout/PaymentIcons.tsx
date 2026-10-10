@@ -9,7 +9,7 @@ const PaymentIcons = () => {
   ];
 
   return (
-    <div className="flex items-center gap-3 sm:gap-4 transition-colors duration-300">
+    <div className="flex items-center gap-3 sm:gap-4 transition-colors ">
       {icons.map((icon) => (
         <div
           key={icon.name}
@@ -22,7 +22,7 @@ const PaymentIcons = () => {
             width={icon.w}
             height={icon.h}
             style={{ height: `${icon.h}px`, width: 'auto' }}
-            className="object-contain w-fit mix-blend-multiply dark:mix-blend-screen transition-opacity duration-300"
+            className="object-contain w-fit mix-blend-multiply dark:mix-blend-screen transition-opacity "
           />
         </div>
       ))}

@@ -71,8 +71,8 @@ const MagneticStatCard = ({
       }
       className="perspective-distant"
     >
-      <Card className="bg-card/40 border-border hover:border-brand-secondary-500/40 transition-colors duration-500 group relative overflow-hidden h-full">
-        <div className="absolute inset-0 bg-radial-gradient from-brand-secondary-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+      <Card className="bg-card/40 border-border hover:border-brand-secondary-500/40 transition-colors group relative overflow-hidden h-full">
+        <div className="absolute inset-0 bg-radial-gradient opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
 
         <CardHeader className="flex flex-row items-center justify-between pb-2 relative z-10">
           <CardTitle className="text-sm font-medium text-muted-foreground">

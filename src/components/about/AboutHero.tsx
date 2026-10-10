@@ -103,23 +103,6 @@ const AboutHero = () => {
         ))}
       </div>
 
-      <div className="absolute top-0 left-0 right-0 h-28 bg-linear-to-b from-primary/8 to-transparent pointer-events-none" />
-
-      {/* Gradient Orbs */}
-      {/* <div className="absolute inset-0 overflow-hidden pointer-events-none">
- <m.div
- style={{ x: translateX, y: translateY }}
- className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-brand-secondary-500/5 dark:bg-brand-secondary-600/10 rounded-full blur-[120px]"
- />
- <m.div
- style={{
- x: useTransform(smoothX, [-0.5, 0.5], [15, -15]),
- y: useTransform(smoothY, [-0.5, 0.5], [15, -15]),
- }}
- className="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-blue-500/5 dark:bg-blue-600/10 rounded-full blur-[120px]"
- />
- </div> */}
-
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="flex flex-col lg:flex-row items-center gap-10 lg:gap-14">
           {/* LEFT: Vision Content (60%) */}
@@ -151,7 +134,7 @@ const AboutHero = () => {
   text-slate-900 dark:text-white mb-2"
               >
                 Technology is our craft.{" "}
-                <span className="text-transparent bg-clip-text bg-linear-to-r from-brand-primary-700 to-brand-secondary-600 dark:from-brand-primary-500 dark:to-brand-secondary-400">
+                <span className="text-brand-secondary-600 dark:text-brand-secondary-400">
                   Possibility is our purpose.
                 </span>
               </m.h1>
@@ -291,7 +274,7 @@ const AboutHero = () => {
                   x: translateXSeal,
                   y: translateYSeal,
                 }}
-                className="absolute -bottom-6 -right-5 w-fit p-4 bg-linear-to-r from-blue-600 to-blue-500 rounded shadow shadow-blue-500/40 flex flex-col items-center justify-center rotate-6 z-30 pointer-events-none"
+                className="absolute -bottom-6 -right-5 w-fit p-4 rounded shadow shadow-blue-500/40 flex flex-col items-center justify-center rotate-6 z-30 pointer-events-none"
               >
                 <div className="flex gap-0.5">
                   {[1, 2, 3, 4, 5].map((item) => (
@@ -307,7 +290,6 @@ const AboutHero = () => {
               </m.div>
 
               {/* Background Aura */}
-              <div className="absolute inset-0 bg-radial-gradient from-brand-secondary-500/15 to-transparent blur-3xl rounded-full scale-150 pointer-events-none" />
             </m.div>
           </div>
         </div>

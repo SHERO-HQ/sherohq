@@ -71,7 +71,7 @@ export function RevenueChartSection({
   const prefersReducedMotion = useReducedMotion();
   return (
     <div className="bg-card/40 border border-border rounded p-6 relative group overflow-hidden">
-      <div className="absolute inset-0 bg-radial-gradient from-brand-secondary-500/2 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+      <div className="absolute inset-0 bg-radial-gradient opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
       <h3 className="text-lg font-bold text-foreground mb-6 flex items-center gap-2">
         <DollarSign className="w-5 h-5 text-brand-secondary-400" />
         Revenue Over Time
@@ -254,7 +254,7 @@ export function StockDistributionChart({
   const hasData = data && data.length > 0 && data.some((item) => item.value > 0);
 
   return (
-    <div className="bg-card/40 border border-border rounded p-6 hover:border-blue-500/20 transition-colors duration-300">
+    <div className="bg-card/40 border border-border rounded p-6 hover:border-blue-500/20 transition-colors ">
       <h3 className="text-lg font-bold text-foreground mb-6 flex items-center gap-2">
         <PieChartIcon className="w-5 h-5 text-blue-400" />
         Stock Distribution
@@ -307,7 +307,7 @@ export function OrderStatusChart({
   const hasData = data && data.length > 0 && data.some((item) => item.value > 0);
 
   return (
-    <div className="bg-card/40 border border-border rounded p-6 hover:border-amber-500/20 transition-colors duration-300">
+    <div className="bg-card/40 border border-border rounded p-6 hover:border-amber-500/20 transition-colors ">
       <h3 className="text-lg font-bold text-foreground mb-6 flex items-center gap-2">
         <ShoppingCart className="w-5 h-5 text-amber-400" />
         Order Status Chart
@@ -354,7 +354,7 @@ export function OrderStatusChart({
 export function RegionalSalesChart({ data }: { readonly data: RegionalData[] }) {
   const prefersReducedMotion = useReducedMotion();
   return (
-    <div className="bg-card/40 border border-border rounded p-6 hover:border-brand-secondary-500/20 transition-colors duration-300">
+    <div className="bg-card/40 border border-border rounded p-6 hover:border-brand-secondary-500/20 transition-colors ">
       <h3 className="text-lg font-bold text-foreground mb-6 flex items-center gap-2">
         <TrendingUp className="w-5 h-5 text-brand-secondary-400" />
         Sales by Region
@@ -412,7 +412,7 @@ export function RegionalSalesChart({ data }: { readonly data: RegionalData[] }) 
 export function RecentOrders({ orders }: { readonly orders: RecentOrder[] }) {
   return (
     <div className="lg:col-span-2 bg-card/40 border border-border rounded p-6 relative group overflow-hidden">
-      <div className="absolute inset-0 bg-radial-gradient from-blue-500/2 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+      <div className="absolute inset-0 bg-radial-gradient opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
       <h3 className="text-lg font-bold text-foreground mb-6 flex items-center gap-2">
         <ShoppingCart className="w-5 h-5 text-blue-400" />
         Recent Orders
@@ -422,7 +422,7 @@ export function RecentOrders({ orders }: { readonly orders: RecentOrder[] }) {
           orders.map((order) => (
             <div
               key={order.id}
-              className="flex items-center justify-between p-3.5 rounded bg-card border border-border hover:border-blue-500/20 hover:bg-card/50 transition-all duration-300"
+              className="flex items-center justify-between p-3.5 rounded bg-card border border-border hover:border-blue-500/20 hover:bg-card/50 transition-all "
             >
               <div className="flex items-center gap-3">
                 <div className="flex flex-col">
@@ -468,7 +468,7 @@ export function RecentOrders({ orders }: { readonly orders: RecentOrder[] }) {
 export function TopProducts({ products }: { readonly products: TopProduct[] }) {
   return (
     <div className="lg:col-span-1 bg-card/40 border border-border rounded p-6 relative group overflow-hidden">
-      <div className="absolute inset-0 bg-radial-gradient from-purple-500/2 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+      <div className="absolute inset-0 bg-radial-gradient opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
       <h3 className="text-lg font-bold text-foreground mb-6 flex items-center gap-2">
         <Package className="w-5 h-5 text-purple-400" />
         Top Selling Products
@@ -477,7 +477,7 @@ export function TopProducts({ products }: { readonly products: TopProduct[] }) {
         {(products || []).map((product, idx) => (
           <div
             key={`${product.name}-${idx}`}
-            className="flex items-center justify-between p-3.5 rounded bg-card border border-border hover:border-purple-500/20 hover:bg-card/50 transition-all duration-300"
+            className="flex items-center justify-between p-3.5 rounded bg-card border border-border hover:border-purple-500/20 hover:bg-card/50 transition-all "
           >
             <div className="flex items-center gap-3">
               <span className="flex items-center justify-center w-6 h-6 rounded-full bg-muted/80 border border-border text-[10px] font-bold text-foreground font-mono">

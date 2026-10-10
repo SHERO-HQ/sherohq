@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { Cpu, Shield, ArrowRight, Trophy, Headset } from "lucide-react";
+import { Cpu, Shield, ArrowRight, Compass, Headset } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SectionBadge } from "@/components/common/SectionBadge";
 import NavLink from "@/components/common/NavLink";
@@ -13,10 +13,10 @@ const pillars = [
     title: "Hardware",
     badge: "Infrastructure",
     description:
-      "High-performance laptops, enterprise servers, and networking equipment sourced from authorized brand partners.",
+      "High-performance laptops, enterprise servers, and networking equipment configured for modern business operations.",
     color: "secondary",
-    href: "/products",
-    linkText: "Explore Hardware",
+    href: "/consultation?service=hardware",
+    linkText: "Consult Hardware",
   },
   {
     icon: Shield,
@@ -25,8 +25,8 @@ const pillars = [
     description:
       "Custom-engineered digital solutions built for your workflow, with zero off-the-shelf compromises.",
     color: "primary",
-    href: "/solutions",
-    linkText: "Explore Solutions",
+    href: "/consultation?service=software",
+    linkText: "Consult Software",
   },
   {
     icon: Headset,
@@ -35,61 +35,47 @@ const pillars = [
     description:
       "Reliable IT management and proactive infrastructure support so your team focuses on growth.",
     color: "secondary",
-    href: "/solutions",
-    linkText: "Explore Solutions",
+    href: "/consultation?service=managed-it",
+    linkText: "Consult Managed IT",
   },
 ] as const;
 
 const AboutManifesto = () => {
   return (
-    <section className="py-16 md:py-24 bg-white dark:bg-slate-950 overflow-hidden relative border-t border-slate-200 dark:border-slate-800/80 transition-colors duration-300">
-      {/* High-performance CSS ambient glow overlay (No canvas JS loops or expensive CSS filter blurs) */}
-      <div 
-        aria-hidden="true"
-        className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-125 pointer-events-none opacity-60 dark:opacity-30"
-        style={{
-          background: "radial-gradient(ellipse 65% 50% at 50% 0%, rgba(16, 185, 129, 0.12), rgba(4, 50, 132, 0.06) 60%, transparent 100%)",
-        }}
-      />
-      
-      {/* Decorative dot pattern */}
-      <div className="absolute inset-0 pattern-dots opacity-60 dark:opacity-40 pointer-events-none" />
-
+    <section className="pt-16 pb-20 md:pt-24 md:pb-28 bg-white dark:bg-slate-950 overflow-hidden relative border-t border-slate-200 dark:border-slate-800/80 transition-colors">
       <div className="container px-4 md:px-6 relative z-10 mx-auto max-w-7xl">
         <FadeInView direction="up" delay={0}>
           <div className="flex flex-col items-center text-center max-w-3xl mx-auto">
             {/* Section Badge */}
-            <SectionBadge icon={Trophy} className="mb-4">
-              Our Manifesto
+            <SectionBadge icon={Compass} className="mb-4">
+              About SHERO
             </SectionBadge>
 
             {/* Main Headline Statement */}
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-slate-900 dark:text-slate-100 mb-6 transition-colors duration-300 leading-tight">
-              We don't just build technology. We build{" "}
-              <span className="font-bold bg-linear-to-r from-brand-secondary-600 via-brand-primary-600 to-brand-secondary-600 dark:from-brand-secondary-400 dark:via-brand-primary-300 dark:to-brand-secondary-400 bg-clip-text text-transparent">
+            <h1 className="text-4xl sm:text-5xl  font-bold tracking-tight text-slate-900 dark:text-slate-100 mb-6 transition-colors leading-[1.15]">
+              We don&apos;t just build technology. <br className="hidden sm:inline" />
+              We build{" "}
+              <span className="text-brand-secondary-600 dark:text-brand-secondary-400">
                 what moves businesses forward.
               </span>
-            </h2>
+            </h1>
 
             {/* Narrative Paragraphs */}
-            <div className="space-y-3 text-slate-600 dark:text-slate-300/90 text-base md:text-lg leading-relaxed max-w-2xl">
+            <div className="space-y-4 text-slate-600 dark:text-slate-300 text-base md:text-lg leading-relaxed max-w-2xl mx-auto">
               <p>
-                Technology should expand what's possible, remove operational barriers, and unlock new opportunities for growth.
+                Technology should expand what&apos;s possible, remove operational barriers, and create real opportunities for sustainable growth.
               </p>
               <p>
-                We engineer software, deliver reliable hardware, and manage IT infrastructure so your organization can innovate with total confidence.
-              </p>
-              <p className="text-base md:text-lg font-bold bg-linear-to-r from-brand-secondary-600 to-brand-primary-600 dark:from-brand-secondary-400 dark:to-brand-primary-300 bg-clip-text text-transparent pt-2">
-                Redefine Possible
+                From custom software engineering to dependable commercial hardware and proactive IT support, we build infrastructure your organization can rely on every single day.
               </p>
             </div>
 
-            {/* Primary Action CTA */}
-            <div className="mt-8">
+            {/* Primary & Secondary Action CTAs */}
+            <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-center justify-center gap-3.5 w-full sm:w-auto">
               <Button
                 variant="brand"
                 size="lg"
-                className="group text-base px-8 py-3 bg-brand-secondary-600 hover:bg-brand-secondary-700 text-white rounded font-bold transition-all shadow shadow-brand-secondary-500/20 hover:-translate-y-0.5 hover:shadow-brand-secondary-500/40 cursor-pointer"
+                className="w-full sm:w-auto group text-sm sm:text-base px-8 py-3 bg-brand-secondary-600 hover:bg-brand-secondary-700 text-white rounded font-semibold transition-all shadow-sm hover:shadow hover:-translate-y-0.5 cursor-pointer"
                 asChild
               >
                 <NavLink href={getAbsoluteUrl("/contact-us")}>
@@ -97,6 +83,13 @@ const AboutManifesto = () => {
                   <ArrowRight className="ml-2 size-4 group-hover:translate-x-1 transition-transform" />
                 </NavLink>
               </Button>
+
+              <NavLink
+                href={getAbsoluteUrl("/consultation")}
+                className="w-full sm:w-auto inline-flex items-center justify-center px-7 py-3 bg-slate-100/90 dark:bg-slate-900/80 hover:bg-slate-200/90 dark:hover:bg-slate-800/80 active:bg-slate-300/80 dark:active:bg-slate-700 text-slate-800 dark:text-slate-200 border border-slate-200/80 dark:border-slate-800 rounded font-semibold text-sm transition-all hover:-translate-y-0.5"
+              >
+                Book Consultation
+              </NavLink>
             </div>
           </div>
         </FadeInView>
@@ -106,10 +99,10 @@ const AboutManifesto = () => {
           <StaggerContainer className="grid grid-cols-1 md:grid-cols-3 gap-6" staggerDelay={0.1}>
             {pillars.map((pillar) => (
               <StaggerItem key={pillar.title} yOffset={20} scale={0.98}>
-                <div className="group h-full p-8 rounded bg-slate-50 dark:bg-slate-900/40 border border-slate-200/90 dark:border-slate-800 hover:border-brand-secondary-500/40 dark:hover:border-brand-secondary-500/40 shadow-xs hover:shadow-lg hover:shadow-brand-secondary-500/5 transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between">
+                <div className="group h-full p-8 rounded bg-slate-50 dark:bg-slate-900/40 border border-slate-200/90 dark:border-slate-800 hover:border-brand-secondary-500/40 dark:hover:border-brand-secondary-500/40 shadow-xs hover:shadow-lg hover:shadow-brand-secondary-500/5 transition-all hover:-translate-y-1 flex flex-col justify-between">
                   <div>
                     <div className="flex items-center justify-between mb-5">
-                      <div className="w-12 h-12 rounded flex items-center justify-center bg-brand-secondary-500/10 dark:bg-brand-secondary-500/15 border border-brand-secondary-500/20 text-brand-secondary-600 dark:text-brand-secondary-400 group-hover:scale-105 transition-transform duration-300">
+                      <div className="w-12 h-12 rounded flex items-center justify-center bg-brand-secondary-500/10 dark:bg-brand-secondary-500/15 border border-brand-secondary-500/20 text-brand-secondary-600 dark:text-brand-secondary-400 group-hover:scale-105 transition-transform ">
                         <pillar.icon className="w-6 h-6" />
                       </div>
                       <span className="text-[10px] font-mono uppercase tracking-wider font-semibold text-slate-500 dark:text-slate-400 bg-white dark:bg-slate-800/80 px-2.5 py-1 rounded border border-slate-200 dark:border-slate-700/60">

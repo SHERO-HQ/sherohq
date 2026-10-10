@@ -33,11 +33,11 @@ const PARTNERS: Partner[] = [
 ];
 
 const logoImageClass = (logoClassName?: string) =>
-  `w-auto max-w-full object-contain filter grayscale opacity-45 dark:opacity-40 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300 ${logoClassName ?? "h-6 sm:h-12"}`;
+  `w-auto max-w-full object-contain filter grayscale opacity-45 dark:opacity-40 group-hover:grayscale-0 group-hover:opacity-100 transition-all ${logoClassName ?? "h-6 sm:h-12"}`;
 
 const PartnerLogo = ({ partner }: { partner: Partner }) => (
   <div
-    className="group flex flex-col items-center justify-center py-2 sm:h-20 transition-all duration-300 hover:scale-105"
+    className="group flex flex-col items-center justify-center py-2 sm:h-20 transition-all hover:scale-105"
     title={partner.name}
   >
     <img
@@ -65,14 +65,14 @@ const PartnerLogo = ({ partner }: { partner: Partner }) => (
 
 const LandingPartners = () => {
   return (
-    <section className="relative w-full overflow-hidden border-y border-slate-200 bg-white py-14 transition-colors duration-300 dark:border-white/10 dark:bg-slate-950">
-      <div className="pointer-events-none absolute inset-0 pattern-dots opacity-80 transition-opacity duration-300 dark:opacity-25" />
+    <section className="relative w-full overflow-hidden border-y border-slate-200 bg-white py-14 transition-colors dark:border-white/10 dark:bg-slate-950">
+      <div className="pointer-events-none absolute inset-0 pattern-dots opacity-80 transition-opacity dark:opacity-25" />
 
       <div className="container relative z-10 mx-auto mb-10 max-w-7xl px-4 text-center sm:px-6 lg:px-8">
         <SectionBadge icon={Briefcase} className="mb-4">
           Trusted Brands
         </SectionBadge>
-        <h2 className="text-xl font-bold tracking-tight text-slate-900 transition-colors duration-300 md:text-2xl dark:text-slate-100">
+        <h2 className="text-xl font-bold tracking-tight text-slate-900 transition-colors md:text-2xl dark:text-slate-100">
           Trusted Brands We Supply & Support
         </h2>
       </div>

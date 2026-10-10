@@ -142,10 +142,10 @@ const OrderItem: React.FC<OrderItemProps> = ({
 
       {/* Expandable Content */}
       {isExpanded && (
-        <div className="p-6 border-t border-slate-100 dark:border-slate-800 animate-in fade-in slide-in-from-top-2 duration-200">
+        <div className="p-6 border-t border-slate-100 dark:border-slate-800 ">
           {/* Pending Order Notice Banner */}
           {isPending && (
-            <div className="mb-6 p-4 rounded-lg bg-amber-500/10 border border-amber-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="mb-6 p-4 rounded-md bg-amber-500/10 border border-amber-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div className="flex items-start gap-3">
                 <div className="p-2 bg-amber-500/20 text-amber-600 dark:text-amber-400 rounded-full shrink-0 mt-0.5">
                   <Clock className="w-4 h-4" />

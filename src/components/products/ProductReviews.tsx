@@ -153,7 +153,6 @@ const ProductReviews = ({ productId }: ProductReviewsProps) => {
                 {/* Review Form */}
                 <div className="lg:col-span-5 h-fit lg:sticky lg:top-24">
                     <div className="p-8 rounded bg-white dark:bg-white/5  border border-slate-200 dark:border-white/10 shadow overflow-hidden relative group">
-                        <div className="absolute top-0 right-0 w-32 h-32 bg-brand-secondary-500/10 blur-3xl -mr-16 -mt-16 group-hover:scale-150 transition-transform duration-700" />
 
                         <div className="relative">
                             <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-6 uppercase tracking-tight flex items-center gap-2">
@@ -173,7 +172,7 @@ const ProductReviews = ({ productId }: ProductReviewsProps) => {
                                                 onClick={() => setRating(star)}
                                                 onMouseEnter={() => setHoveredRating(star)}
                                                 onMouseLeave={() => setHoveredRating(0)}
-                                                className="focus:outline-none transition duration-300 hover:scale-125 hover:-translate-y-1"
+                                                className="focus:outline-none transition hover:scale-125 hover:-translate-y-1"
                                             >
                                                 <Star
                                                     size={28}
@@ -214,7 +213,7 @@ const ProductReviews = ({ productId }: ProductReviewsProps) => {
                                 <button
                                     type="submit"
                                     disabled={submitting}
-                                    className="w-full h-12 bg-brand-secondary-600 hover:bg-brand-secondary-500 disabled:opacity-50 text-white font-semibold uppercase tracking-widest text-xs rounded shadow shadow-brand-secondary-500/20 transition active:scale-[0.98] flex items-center justify-center gap-3"
+                                    className="w-full h-12 bg-brand-secondary-600 hover:bg-brand-secondary-500 disabled:opacity-50 text-white font-semibold uppercase tracking-widest text-xs rounded shadow-sm transition active:scale-[0.98] flex items-center justify-center gap-3"
                                 >
                                     {submitting ? (
                                         <>

@@ -193,7 +193,7 @@ export default function UserMFASetup({ isOpen, onClose, onSuccess }: UserMFASetu
                 </div>
               </>
             ) : (
-              <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+              <div className="space-y-6 ">
                 <div className="text-center space-y-2">
                   <div className="w-12 h-12 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 rounded-full flex items-center justify-center mx-auto mb-4">
                     <CheckCircle2 size={28} />

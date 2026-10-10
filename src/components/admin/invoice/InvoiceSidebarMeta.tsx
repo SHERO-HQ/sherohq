@@ -45,10 +45,10 @@ export default function InvoiceSidebarMeta({
           onClick={onSubmit}
           disabled={isSaving || !hasItems}
           className={cn(
-            "w-full font-bold h-11 text-slate-100 transition-all select-none shadow-lg",
+            "w-full font-bold h-11 text-slate-100 transition-all select-none shadow-sm",
             mode === "invoice"
-              ? "bg-brand-secondary-600 hover:bg-brand-secondary-500 shadow-brand-secondary-500/10"
-              : "bg-blue-600 hover:bg-blue-500 shadow-blue-600/10"
+              ? "bg-brand-secondary-600 hover:bg-brand-secondary-500"
+              : "bg-blue-600 hover:bg-blue-500"
           )}
         >
           {isSaving ? (

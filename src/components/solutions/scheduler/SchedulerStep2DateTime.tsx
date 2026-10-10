@@ -159,7 +159,7 @@ export function SchedulerStep2DateTime({
               : isPassed
                 ? "bg-slate-100 dark:bg-slate-800/40 text-slate-400 dark:text-slate-600 border-slate-200 dark:border-slate-800 opacity-40 !cursor-not-allowed line-through"
                 : isSelected
-                  ? "bg-brand-secondary-600 text-white border-brand-secondary-600 shadow shadow-brand-secondary-500/20 scale-[1.02] cursor-pointer ring-2 ring-brand-secondary-500/30"
+                  ? "bg-brand-secondary-600 text-white border-brand-secondary-600 shadow-sm scale-[1.02] cursor-pointer ring-2 ring-brand-secondary-500/30"
                   : "bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 border-slate-200 dark:border-slate-700 hover:border-brand-secondary-500 hover:text-brand-secondary-500 dark:hover:text-brand-secondary-400 hover:shadow-xs cursor-pointer",
           )}
         >
@@ -180,7 +180,7 @@ export function SchedulerStep2DateTime({
 
         {/* Floating Notification-Style Booked Badge */}
         {isBooked && !isPassed && (
-          <span className="absolute -top-2 -right-1.5 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider bg-rose-500 text-white dark:bg-rose-600 rounded shadow-xs border border-white dark:border-slate-900 pointer-events-none z-10 flex items-center gap-0.5 animate-in zoom-in-75 duration-150">
+          <span className="absolute -top-2 -right-1.5 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider bg-rose-500 text-white dark:bg-rose-600 rounded shadow-xs border border-white dark:border-slate-900 pointer-events-none z-10 flex items-center gap-0.5 animate-in zoom-in-75 ">
             Booked
           </span>
         )}
@@ -331,7 +331,7 @@ export function SchedulerStep2DateTime({
               </p>
             </div>
           ) : (
-            <div className="space-y-4 animate-in fade-in slide-in-from-top-2 duration-300 flex-1 flex flex-col">
+            <div className="space-y-4 flex-1 flex flex-col">
               {/* Notice if all slots for today have passed */}
               {allSlotsPassedToday && (
                 <div className="p-3 rounded bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/60 text-amber-900 dark:text-amber-200 text-xs flex items-start gap-2 shadow-xs">
@@ -420,7 +420,7 @@ export function SchedulerStep2DateTime({
 
               {/* Active Selection Feedback Banner */}
               {time && (
-                <div className="mt-auto p-3 rounded bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-700/60 flex flex-col gap-1 text-xs text-emerald-900 dark:text-emerald-100 animate-in fade-in duration-200 shadow-xs">
+                <div className="mt-auto p-3 rounded bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-700/60 flex flex-col gap-1 text-xs text-emerald-900 dark:text-emerald-100 shadow-xs">
                   <div className="flex items-center gap-2 font-bold">
                     <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
                     <span>
@@ -459,7 +459,7 @@ export function SchedulerStep2DateTime({
           className={cn(
             "flex-1 md:flex-none rounded px-8 transition-all",
             isValid
-              ? "bg-brand-secondary-600 hover:bg-brand-secondary-700 text-white shadow shadow-brand-secondary-500/20"
+              ? "bg-brand-secondary-600 hover:bg-brand-secondary-700 text-white shadow-sm"
               : "opacity-50 !cursor-not-allowed",
           )}
         >

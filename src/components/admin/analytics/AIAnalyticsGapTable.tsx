@@ -20,7 +20,7 @@ interface AIAnalyticsGapTableProps {
 export function AIAnalyticsGapTable({ topGaps }: AIAnalyticsGapTableProps) {
   return (
     <Card className="bg-card/40 border-border overflow-hidden relative group">
-      <div className="absolute inset-0 bg-radial-gradient from-amber-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+      <div className="absolute inset-0 bg-radial-gradient opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
       <CardHeader className="border-b border-border bg-card/30">
         <div className="flex items-center justify-between">
           <div>
@@ -59,7 +59,7 @@ export function AIAnalyticsGapTable({ topGaps }: AIAnalyticsGapTableProps) {
               topGaps.map((gap) => (
                 <tr
                   key={gap.keyword}
-                  className="border-b border-border last:border-0 hover:bg-accent transition-colors duration-200"
+                  className="border-b border-border last:border-0 hover:bg-accent transition-colors "
                 >
                   <td className="px-6 py-4">
                     <span className="text-sm font-bold text-foreground capitalize">

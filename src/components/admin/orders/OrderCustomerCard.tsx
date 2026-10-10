@@ -5,8 +5,8 @@ import { type Order } from "@/services/api";
 export function OrderCustomerCard({ order }: { order: Order }) {
   return (
     <div className="grid md:grid-cols-2 gap-6">
-      <Card className="bg-card/40 border-border p-6 hover:border-blue-500/20 duration-300 relative group overflow-hidden">
-        <div className="absolute inset-0 bg-radial-gradient from-blue-500/2 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+      <Card className="bg-card/40 border-border p-6 hover:border-blue-500/20 relative group overflow-hidden">
+        <div className="absolute inset-0 bg-radial-gradient opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
         <h3 className="text-foreground font-bold mb-4 flex items-center gap-2 relative z-10">
           <Mail className="w-4 h-4 text-blue-400" />
           Customer Contact
@@ -39,8 +39,8 @@ export function OrderCustomerCard({ order }: { order: Order }) {
         </div>
       </Card>
 
-      <Card className="bg-card/40 border-border p-6 hover:border-amber-500/20 duration-300 relative group overflow-hidden">
-        <div className="absolute inset-0 bg-radial-gradient from-amber-500/2 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+      <Card className="bg-card/40 border-border p-6 hover:border-amber-500/20 relative group overflow-hidden">
+        <div className="absolute inset-0 bg-radial-gradient opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
         <h3 className="text-foreground font-bold mb-4 flex items-center gap-2 relative z-10">
           <MapPin className="w-4 h-4 text-amber-400" />
           Shipping Address

@@ -54,29 +54,28 @@ const Support = () => {
 
   return (
     <>
-      <div className="pt-8 pb-12 bg-background min-h-screen text-foreground relative overflow-hidden transition-colors duration-300">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-brand-secondary-500/5 dark:bg-brand-secondary-500/10 rounded-full blur-[100px] -z-10" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-500/5 dark:bg-blue-500/10 rounded-full blur-[100px] -z-10" />
+      <div className="pt-8 pb-12 bg-background min-h-screen text-foreground relative overflow-hidden transition-colors ">
+
 
         <div className="container max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Header */}
           <div className="text-center mb-16 relative">
             <div
-              className="mb-6 animate-in fade-in zoom-in-95 duration-700 fill-mode-both"
+              className="mb-6 zoom-in-95 "
             >
               <SectionBadge icon={LifeBuoy}>
                 Customer Support
               </SectionBadge>
             </div>
-            <h1 className="text-2xl md:text-4xl font-bold text-foreground mb-6 tracking-tight animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100 fill-mode-both">
-              Get Help in <span className="text-brand-secondary-700 dark:text-brand-secondary-400">Minutes</span>
+            <h1 className="text-2xl md:text-4xl font-bold text-foreground mb-6 tracking-tight ">
+              Help When You <span className="text-brand-secondary-700 dark:text-brand-secondary-400">Need It</span>
             </h1>
-            <p className="text-muted-foreground text-base max-w-2xl mx-auto mb-8 leading-relaxed animate-in fade-in slide-in-from-bottom-4 duration-700 delay-200 fill-mode-both">
+            <p className="text-muted-foreground text-base max-w-2xl mx-auto mb-8 leading-relaxed ">
               Search guides, download updates, or connect directly with our team
               for fast, reliable assistance.
             </p>
 
-            <div className="flex flex-wrap items-center justify-center gap-3 mb-10 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300 fill-mode-both">
+            <div className="flex flex-wrap items-center justify-center gap-3 mb-10 ">
               <span className="text-xs font-mono uppercase tracking-wider text-slate-500 px-3 py-1.5 rounded border border-border bg-card/60">
                 Responsive Direct Support
               </span>
@@ -89,7 +88,7 @@ const Support = () => {
             </div>
 
             {/* Search */}
-            <form onSubmit={handleSearchSubmit} className="max-w-2xl mx-auto flex flex-col sm:flex-row items-center gap-4 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-500 fill-mode-both">
+            <form onSubmit={handleSearchSubmit} className="max-w-2xl mx-auto flex flex-col sm:flex-row items-center gap-4 ">
               <div className="relative w-full group">
                 <input
                   type="text"
@@ -102,7 +101,7 @@ const Support = () => {
                 <button
                   type="submit"
                   disabled={!searchQuery.trim()}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center justify-center w-10 h-10 rounded bg-linear-to-r from-brand-secondary-600 to-brand-primary-600 text-white hover:from-brand-secondary-500 hover:to-brand-primary-500 transition shadow disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center justify-center w-10 h-10 rounded text-white hover:hover:transition shadow disabled:opacity-50 disabled:cursor-not-allowed"
                   aria-label="Search or Ask AI"
                 >
                   <ArrowRight className="w-5 h-5" />
@@ -138,7 +137,6 @@ const Support = () => {
                   animate={{ opacity: 1, scale: 1 }}
                   className="mb-24 max-w-2xl mx-auto bg-card/60 dark:bg-slate-900/60 p-8 rounded border border-border text-center shadow-lg relative overflow-hidden"
                 >
-                  <div className="absolute inset-0 bg-linear-to-r from-brand-secondary-500/5 to-brand-primary-500/5 animate-pulse" />
                   <Meh className="w-14 h-14 mx-auto mb-4 opacity-80 text-muted-foreground" />
                   <h2 className="text-xl font-bold text-foreground mb-2">No guides found</h2>
                   <p className="text-muted-foreground text-sm max-w-md mx-auto">
@@ -154,9 +152,8 @@ const Support = () => {
                   <div key={guide.id}>
                     <Link
                       href={`/support/${guide.category}/${guide.slug}`}
-                      className="block bg-card dark:bg-slate-900/40 rounded border border-border hover:border-brand-secondary-500/30 hover:shadow hover:shadow-brand-secondary-500/10 transition duration-300 overflow-hidden group h-full relative"
+                      className="block bg-card dark:bg-slate-900/40 rounded border border-border hover:border-brand-secondary-500/30 hover:shadow hover:shadow-brand-secondary-500/10 transition overflow-hidden group h-full relative"
                     >
-                      <div className="absolute inset-0 bg-linear-to-br from-brand-secondary-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
 
                       {guide.coverImage && (
                         <div className="h-48 overflow-hidden bg-secondary relative">
@@ -165,9 +162,8 @@ const Support = () => {
                             alt={guide.title}
                             fill
                             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                            className="object-cover group-hover:scale-110 transition-transform duration-700"
+                            className="object-cover group-hover:scale-110 transition-transform "
                           />
-                          <div className="absolute inset-0 bg-linear-to-t from-slate-950/60 to-transparent" />
                         </div>
                       )}
                       <div className="p-7 relative z-10">
@@ -188,7 +184,7 @@ const Support = () => {
                               {format(new Date(guide.createdAt), "MMM d, yyyy")}
                             </span>
                           </div>
-                          <ArrowRight className="w-5 h-5 text-brand-secondary-500 opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition duration-300" />
+                          <ArrowRight className="w-5 h-5 text-brand-secondary-500 opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition " />
                         </div>
                       </div>
                     </Link>
@@ -203,21 +199,20 @@ const Support = () => {
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="flex flex-col lg:flex-row items-center justify-between bg-linear-to-br from-card via-card to-brand-secondary-50 dark:from-slate-900 dark:via-slate-900 dark:to-brand-secondary-900/20  rounded p-8 md:p-16 border border-border text-center lg:text-left relative overflow-hidden shadow pattern-dots pattern-brand-secondary-500/10 pattern-opacity-100 pattern-size-4"
+            className="flex flex-col lg:flex-row items-center justify-between dark:rounded p-8 md:p-16 border border-border text-center lg:text-left relative overflow-hidden shadow pattern-dots pattern-brand-secondary-500/10 pattern-opacity-100 pattern-size-4"
           >
-            <div className="absolute top-0 right-0 w-96 h-96 bg-brand-secondary-500/5 dark:bg-brand-secondary-500/10 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2" />
-            <div className="absolute bottom-0 left-0 w-96 h-96 bg-blue-500/5 dark:bg-blue-500/10 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/2" />
+
 
             <div className="z-10 flex flex-col lg:flex-row items-center gap-10 lg:gap-16 w-full">
               <div className="p-6 group shrink-0 flex">
-                <HeadsetIcon className="w-24 h-24 md:w-28 md:h-28 text-brand-secondary-600 dark:text-brand-secondary-400 group-hover:rotate-12 transition-transform duration-500" />
+                <HeadsetIcon className="w-24 h-24 md:w-28 md:h-28 text-brand-secondary-600 dark:text-brand-secondary-400 group-hover:rotate-12 transition-transform " />
               </div>
 
               <div className="flex-1">
                 <SectionBadge icon={LifeBuoy} className="mb-4">
                   Connect With Support
                 </SectionBadge>
-                <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4 tracking-tight transition-colors duration-300">
+                <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4 tracking-tight transition-colors ">
                   Still need help?
                 </h2>
                 <p className="text-muted-foreground text-sm mb-10 max-w-xl">
@@ -229,7 +224,7 @@ const Support = () => {
                   <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4 w-full sm:w-auto">
                     <button
                       onClick={() => setIsTicketModalOpen(true)}
-                      className="flex items-center gap-2 px-6 py-2.5 rounded bg-brand-secondary-600 text-white font-medium text-sm hover:bg-brand-secondary-500 transition shadow-md shadow-brand-secondary-500/20 hover:-translate-y-0.5 active:scale-95 w-full sm:w-auto justify-center"
+                      className="flex items-center gap-2 px-6 py-2.5 rounded bg-brand-secondary-600 text-white font-medium text-sm hover:bg-brand-secondary-500 transition shadow-sm hover:-translate-y-0.5 active:scale-95 w-full sm:w-auto justify-center"
                       aria-label="Submit a Ticket"
                     >
                       <Ticket className="w-4 h-4 md:w-5 md:h-5" />

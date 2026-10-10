@@ -1,14 +1,10 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import PWAInstallBanner from "./PWAInstallBanner";
 import Nav from "./NavigationBar";
 
 /**
- * Coordinates banner and nav positioning as a single fixed stack
- * - Banner appears above nav when active
- * - Both move together as a unit
- * - No overlap or coverage
+ * Coordinates nav positioning as a single fixed stack
  */
 export default function TopBarStack() {
   const stackRef = useRef<HTMLDivElement>(null);
@@ -45,7 +41,6 @@ export default function TopBarStack() {
       ref={stackRef}
       className="fixed top-0 left-0 right-0 z-50 flex flex-col"
     >
-      <PWAInstallBanner />
       <Nav />
     </div>
   );

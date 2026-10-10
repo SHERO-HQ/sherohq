@@ -77,7 +77,7 @@ export const SectionBadge = React.forwardRef<HTMLElement, SectionBadgeProps>(
       <Component
         ref={ref as any}
         className={cn(
-          "inline-flex items-center rounded border font-semibold transition-colors duration-300",
+          "inline-flex items-center rounded border font-semibold transition-colors ",
           uppercase && "uppercase tracking-wide",
           variantStyles[variant],
           sizeStyles[size],

@@ -126,7 +126,7 @@ export default function TrackOrder({
             <div className="space-y-6">
               {/* Pending Order Notice */}
               {isPending && (
-                <div className="p-4 rounded-lg bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-700/60 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div className="p-4 rounded-md bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-700/60 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                   <div className="flex items-start gap-3">
                     <div className="p-2 bg-amber-500/20 text-amber-600 dark:text-amber-400 rounded-full shrink-0 mt-0.5">
                       <Clock className="w-4 h-4" />
@@ -199,7 +199,7 @@ export default function TrackOrder({
 
                       {/* Progress line */}
                       <div
-                        className="absolute left-0 top-1/2 -translate-y-1/2 h-1 bg-brand-secondary-500 rounded-full -z-10 transition-all duration-500"
+                        className="absolute left-0 top-1/2 -translate-y-1/2 h-1 bg-brand-secondary-500 rounded-full -z-10 transition-all "
                         style={{
                           width: order.status.toLowerCase() === 'pending' ? '0%' :
                             order.status.toLowerCase() === 'processing' ? '33%' :
@@ -221,9 +221,9 @@ export default function TrackOrder({
 
                         return (
                           <div key={step.id} className="flex flex-col items-center bg-white dark:bg-slate-900 px-2 sm:px-4">
-                            <div className={`w-8 h-8 rounded-full flex items-center justify-center border-2 transition-colors duration-300 ${isCompleted
-                                ? 'bg-brand-secondary-500 border-brand-secondary-500 text-white shadow-sm shadow-brand-secondary-500/30'
-                                : 'bg-slate-100 dark:bg-slate-800 border-slate-300 dark:border-slate-600 text-slate-400'
+                            <div className={`w-8 h-8 rounded-full flex items-center justify-center border-2 transition-colors ${isCompleted
+                              ? 'bg-brand-secondary-500 border-brand-secondary-500 text-white shadow-sm shadow-brand-secondary-500/30'
+                              : 'bg-slate-100 dark:bg-slate-800 border-slate-300 dark:border-slate-600 text-slate-400'
                               }`}>
                               <step.icon className={`w-4 h-4 ${isCurrent ? 'animate-pulse' : ''}`} />
                             </div>

@@ -85,13 +85,14 @@ const AboutTestimonials = ({ limit }: AboutTestimonialsProps = {}) => {
     sectionRef,
   );
 
-  return (
-    <section ref={sectionRef} className="py-16 md:py-24 bg-white dark:bg-slate-950 overflow-hidden relative border-t border-slate-200 dark:border-white/5 transition-colors duration-300">
-      {/* Background decoration */}
-      <div className="absolute top-0 left-0 w-full h-px bg-linear-to-r from-transparent via-brand-secondary-500/20 to-transparent" />
+  if (!isLoading && displayTestimonials.length === 0) {
+    return null;
+  }
 
-      {/* Soft Glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-200 h-125 bg-brand-secondary-500/5 rounded-full blur-[60px] pointer-events-none transition-colors duration-300" />
+  return (
+    <section ref={sectionRef} className="py-16 md:py-24 bg-white dark:bg-slate-950 overflow-hidden relative border-t border-slate-200 dark:border-white/5 transition-colors ">
+      {/* Background decoration */}
+
       <div className="absolute inset-0 pattern-dots opacity-80 pointer-events-none" />
 
       <div className="container px-4 md:px-6 relative z-10 w-full mx-auto md:w-11/12 max-w-7xl">
@@ -103,10 +104,10 @@ const AboutTestimonials = ({ limit }: AboutTestimonialsProps = {}) => {
               <SectionBadge icon={UserCheck} className="mb-2">
                 Client Voices
               </SectionBadge>
-              <h2 className="text-2xl md:text-4xl font-bold tracking-tight text-slate-900 dark:text-slate-100 mb-3 transition-colors duration-300 leading-tight">
+              <h2 className="text-2xl md:text-4xl font-bold tracking-tight text-slate-900 dark:text-slate-100 mb-3 transition-colors leading-tight">
                 Empowering Businesses, Innovators & Communities.
               </h2>
-              <p className="text-slate-600 dark:text-slate-400 text-sm mb-3 transition-colors duration-300 leading-relaxed">
+              <p className="text-slate-600 dark:text-slate-400 text-sm mb-3 transition-colors leading-relaxed">
                 We believe technology exists to expand what's possible. See how we've partnered with forward-thinking organizations to build reliable infrastructure that removes barriers and creates opportunities.
               </p>
 
@@ -179,7 +180,7 @@ const AboutTestimonials = ({ limit }: AboutTestimonialsProps = {}) => {
                         onClick={isFront ? handleNext : undefined}
                       >
                         <div className="bg-white dark:bg-slate-900 p-8 sm:p-10 rounded border border-slate-200/80 dark:border-slate-800 flex flex-col relative group h-full min-h-80">
-                          <div className="absolute top-6 right-6 transition-transform duration-300">
+                          <div className="absolute top-6 right-6 transition-transform ">
                             <Quote className="size-8 text-brand-secondary-500/20" />
                           </div>
 

@@ -241,7 +241,7 @@ export function AdminUserDrawer({
                 <div className="p-6 space-y-6 overflow-y-auto max-h-[calc(80vh-80px)]">
                   {/* User Info */}
                   <div className="flex items-start gap-4">
-                    <div className="relative w-16 h-16 rounded bg-linear-to-br from-brand-secondary-500 to-blue-500 flex items-center justify-center text-foreground text-2xl font-bold overflow-hidden">
+                    <div className="relative w-16 h-16 rounded flex items-center justify-center text-foreground text-2xl font-bold overflow-hidden">
                       {user.avatar ? (
                         <AppImage
                           src={user.avatar}

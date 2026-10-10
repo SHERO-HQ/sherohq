@@ -20,8 +20,7 @@ export default function GlobalError({
             className="max-w-md w-full text-center space-y-8"
           >
             <div className="relative inline-flex mb-4">
-              <div className="absolute inset-0 bg-brand-secondary-500/20 blur-3xl rounded-full" />
-              <div className="relative w-24 h-24 bg-linear-to-br from-slate-800 to-slate-900 rounded border border-white/10 flex items-center justify-center text-brand-secondary-500 shadow">
+              <div className="relative w-24 h-24 rounded border border-white/10 flex items-center justify-center text-brand-secondary-500 shadow">
                 <AlertTriangle className="size-12 text-red-500" />
               </div>
             </div>

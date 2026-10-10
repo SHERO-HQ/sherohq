@@ -57,19 +57,19 @@ export async function sendOrderConfirmation(
               <tr>
                 ${imgHtml ? `<td style="padding-right: 12px; vertical-align: middle; width: 40px;">${imgHtml}</td>` : ""}
                 <td style="vertical-align: middle;">
-                  <strong style="display: block; font-family: Helvetica, Arial, sans-serif; font-size: 13px; font-weight: bold; color: #0f172a; margin-bottom: 2px;">${item.name}</strong>
-                  ${item.sku ? `<span style="font-family: 'Courier New', Courier, monospace; font-size: 10px; color: #64748b;">SKU: ${item.sku}</span>` : ""}
+                  <strong style="display: block; font-family: 'Red Hat Display', sans-serif; font-size: 13px; font-weight: bold; color: #0f172a; margin-bottom: 2px;">${item.name}</strong>
+                  ${item.sku ? `<span style="font-family: 'Red Hat Mono', monospace; font-size: 10px; color: #64748b;">SKU: ${item.sku}</span>` : ""}
                 </td>
               </tr>
             </table>
           </td>
-          <td style="padding: 12px 0; border-bottom: 1px solid #f1f5f9; text-align: right; color: #475569; font-family: Helvetica, Arial, sans-serif; font-size: 12px; width: 45px;">
+          <td style="padding: 12px 0; border-bottom: 1px solid #f1f5f9; text-align: right; color: #475569; font-family: 'Red Hat Display', sans-serif; font-size: 12px; width: 45px;">
             ${item.quantity}
           </td>
-          <td style="padding: 12px 0; border-bottom: 1px solid #f1f5f9; text-align: right; color: #475569; font-family: 'Courier New', Courier, monospace; font-size: 12px; width: 85px;">
+          <td style="padding: 12px 0; border-bottom: 1px solid #f1f5f9; text-align: right; color: #475569; font-family: 'Red Hat Mono', monospace; font-size: 12px; width: 85px;">
             GHS${item.price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </td>
-          <td style="padding: 12px 0; border-bottom: 1px solid #f1f5f9; text-align: right; color: #1e293b; font-family: Helvetica, Arial, sans-serif; font-weight: bold; font-size: 12px; width: 90px;">
+          <td style="padding: 12px 0; border-bottom: 1px solid #f1f5f9; text-align: right; color: #1e293b; font-family: 'Red Hat Display', sans-serif; font-weight: bold; font-size: 12px; width: 90px;">
             GHS${(item.price * item.quantity).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </td>
         </tr>`;
@@ -81,8 +81,8 @@ export async function sendOrderConfirmation(
     <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 24px;">
       <tr>
         <td style="padding: 16px 20px;">
-          <div style="font-family: Helvetica, Arial, sans-serif; font-size: 14px; font-weight: bold; color: #0f172a; margin-bottom: 4px;">Order Confirmed! 🎉</div>
-          <div style="font-family: Helvetica, Arial, sans-serif; font-size: 12px; color: #475569;">
+          <div style="font-family: 'Red Hat Display', sans-serif; font-size: 14px; font-weight: bold; color: #0f172a; margin-bottom: 4px;">Order Confirmed! 🎉</div>
+          <div style="font-family: 'Red Hat Display', sans-serif; font-size: 12px; color: #475569;">
             Hi <strong>${shippingInfo.firstName}</strong>, we've received order <strong>${readableOrderId}</strong>. Estimated delivery: <span style="color: #059669; font-weight: bold;">${deliveryRange}</span>
           </div>
         </td>
@@ -93,10 +93,10 @@ export async function sendOrderConfirmation(
     <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 24px;">
       <thead>
         <tr>
-          <th style="padding: 0 0 12px 0; text-align: left; font-family: Helvetica, Arial, sans-serif; font-size: 10px; font-weight: bold; color: #94a3b8; letter-spacing: 1px; border-bottom: 1px solid #e2e8f0;">ITEM</th>
-          <th style="padding: 0 0 12px 0; text-align: right; font-family: Helvetica, Arial, sans-serif; font-size: 10px; font-weight: bold; color: #94a3b8; letter-spacing: 1px; border-bottom: 1px solid #e2e8f0; width: 45px;">QTY</th>
-          <th style="padding: 0 0 12px 0; text-align: right; font-family: Helvetica, Arial, sans-serif; font-size: 10px; font-weight: bold; color: #94a3b8; letter-spacing: 1px; border-bottom: 1px solid #e2e8f0; width: 85px;">PRICE</th>
-          <th style="padding: 0 0 12px 0; text-align: right; font-family: Helvetica, Arial, sans-serif; font-size: 10px; font-weight: bold; color: #94a3b8; letter-spacing: 1px; border-bottom: 1px solid #e2e8f0; width: 90px;">TOTAL</th>
+          <th style="padding: 0 0 12px 0; text-align: left; font-family: 'Red Hat Display', sans-serif; font-size: 10px; font-weight: bold; color: #94a3b8; letter-spacing: 1px; border-bottom: 1px solid #e2e8f0;">ITEM</th>
+          <th style="padding: 0 0 12px 0; text-align: right; font-family: 'Red Hat Display', sans-serif; font-size: 10px; font-weight: bold; color: #94a3b8; letter-spacing: 1px; border-bottom: 1px solid #e2e8f0; width: 45px;">QTY</th>
+          <th style="padding: 0 0 12px 0; text-align: right; font-family: 'Red Hat Display', sans-serif; font-size: 10px; font-weight: bold; color: #94a3b8; letter-spacing: 1px; border-bottom: 1px solid #e2e8f0; width: 85px;">PRICE</th>
+          <th style="padding: 0 0 12px 0; text-align: right; font-family: 'Red Hat Display', sans-serif; font-size: 10px; font-weight: bold; color: #94a3b8; letter-spacing: 1px; border-bottom: 1px solid #e2e8f0; width: 90px;">TOTAL</th>
         </tr>
       </thead>
       <tbody>
@@ -111,19 +111,19 @@ export async function sendOrderConfirmation(
         <td style="width: 50%;">
           <table width="100%" cellpadding="0" cellspacing="0" border="0">
             <tr>
-              <td style="padding: 8px 0; text-align: left; font-family: Helvetica, Arial, sans-serif; font-size: 12px; color: #475569;">Subtotal</td>
-              <td style="padding: 8px 0; text-align: right; font-family: 'Courier New', Courier, monospace; font-size: 12px; color: #1e293b;">GHS${total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+              <td style="padding: 8px 0; text-align: left; font-family: 'Red Hat Display', sans-serif; font-size: 12px; color: #475569;">Subtotal</td>
+              <td style="padding: 8px 0; text-align: right; font-family: 'Red Hat Mono', monospace; font-size: 12px; color: #1e293b;">GHS${total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
             </tr>
             <tr>
-              <td style="padding: 8px 0; text-align: left; font-family: Helvetica, Arial, sans-serif; font-size: 12px; color: #475569;">Tax (0%)</td>
-              <td style="padding: 8px 0; text-align: right; font-family: 'Courier New', Courier, monospace; font-size: 12px; color: #1e293b;">GHS0.00</td>
+              <td style="padding: 8px 0; text-align: left; font-family: 'Red Hat Display', sans-serif; font-size: 12px; color: #475569;">Tax (0%)</td>
+              <td style="padding: 8px 0; text-align: right; font-family: 'Red Hat Mono', monospace; font-size: 12px; color: #1e293b;">GHS0.00</td>
             </tr>
             <tr>
               <td colspan="2" style="border-bottom: 1px solid #e2e8f0;"></td>
             </tr>
             <tr>
-              <td style="padding: 16px 0 0 0; text-align: left; font-family: Helvetica, Arial, sans-serif; font-size: 12px; font-weight: bold; color: #059669; letter-spacing: 1px;">GRAND TOTAL</td>
-              <td style="padding: 16px 0 0 0; text-align: right; font-family: Helvetica, Arial, sans-serif; font-size: 18px; font-weight: bold; color: #1e293b;">GHS${total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+              <td style="padding: 16px 0 0 0; text-align: left; font-family: 'Red Hat Display', sans-serif; font-size: 12px; font-weight: bold; color: #059669; letter-spacing: 1px;">GRAND TOTAL</td>
+              <td style="padding: 16px 0 0 0; text-align: right; font-family: 'Red Hat Display', sans-serif; font-size: 18px; font-weight: bold; color: #1e293b;">GHS${total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
             </tr>
           </table>
         </td>
@@ -132,26 +132,26 @@ export async function sendOrderConfirmation(
 
     <!-- CTA -->
     <p style="text-align: center; margin: 0 0 32px;">
-      <a href="${trackUrl}/track/${orderId}" style="display: inline-block; padding: 14px 36px; background: #059669; color: #fff; text-decoration: none; border-radius: 6px; font-weight: bold; font-family: Helvetica, Arial, sans-serif; font-size: 14px;">Track Your Order</a>
+      <a href="${trackUrl}/track/${orderId}" style="display: inline-block; padding: 14px 36px; background: #059669; color: #fff; text-decoration: none; border-radius: 6px; font-weight: bold; font-family: 'Red Hat Display', sans-serif; font-size: 14px;">Track Your Order</a>
     </p>
 
     <!-- Footer -->
     <table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-top: 1px solid #f1f5f9; padding-top: 24px; text-align: center;">
       <tr>
-        <td style="font-family: Helvetica, Arial, sans-serif; font-size: 10px; font-weight: bold; color: #94a3b8; letter-spacing: 1px; margin-bottom: 12px;">THANK YOU FOR YOUR BUSINESS!</td>
+        <td style="font-family: 'Red Hat Display', sans-serif; font-size: 10px; font-weight: bold; color: #94a3b8; letter-spacing: 1px; margin-bottom: 12px;">THANK YOU FOR YOUR BUSINESS!</td>
       </tr>
       <tr>
-        <td style="font-family: Helvetica, Arial, sans-serif; font-size: 10px; color: #64748b; line-height: 1.5; padding: 12px 0;">
+        <td style="font-family: 'Red Hat Display', sans-serif; font-size: 10px; color: #64748b; line-height: 1.5; padding: 12px 0;">
           This document is a computer-generated invoice and requires no signature. Subject to our standard Terms & Conditions of Sale. Returns and exchanges are governed by our return policy available at ${COMPANY_CONTACTS.WEBSITE_DISPLAY}/terms.
         </td>
       </tr>
       <tr>
-        <td style="font-family: Helvetica, Arial, sans-serif; font-size: 11px; font-weight: bold; color: #64748b; padding-bottom: 8px;">
+        <td style="font-family: 'Red Hat Display', sans-serif; font-size: 11px; font-weight: bold; color: #64748b; padding-bottom: 8px;">
           SHERO TECHNOLOGIES | ${COMPANY_CONTACTS.HQ_LOCATION}
         </td>
       </tr>
       <tr>
-        <td style="font-family: Helvetica, Arial, sans-serif; font-size: 11px;">
+        <td style="font-family: 'Red Hat Display', sans-serif; font-size: 11px;">
           <a href="mailto:${COMPANY_EMAILS.SUPPORT}" style="color: #059669; text-decoration: underline;">${COMPANY_EMAILS.SUPPORT}</a>
           &nbsp;|&nbsp;
           <a href="https://wa.me/${COMPANY_CONTACTS.PHONE_DISPLAY.replace(/[^0-9]/g, '')}" style="color: #059669; text-decoration: underline;">WhatsApp: ${COMPANY_CONTACTS.PHONE_DISPLAY}</a>

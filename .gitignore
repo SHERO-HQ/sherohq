@@ -63,7 +63,17 @@ clean-bad-route.sh
 
 Company
 .agents
+.agent
+.claude
+.codex
+.gemini
+.impeccable
+.github/agents
+.github/hooks
+.github/skills
 AGENTS.md
 CLAUDE.md
 log.md
 compiled_errors.txt
+shero-handoff*
+*.zip

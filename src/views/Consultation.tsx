@@ -10,7 +10,6 @@ const Consultation = () => {
 
       {/* Trust/Process Section */}
       <section className="py-24 bg-white dark:bg-slate-900 border-y border-slate-200 dark:border-slate-800 relative z-30 overflow-hidden">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-brand-secondary-500/5 rounded-full blur-3xl" />
         <div className="container max-w-7xl mx-auto px-4">
           <div className="max-w-3xl mb-16 px-1">
             <SectionBadge icon={Target} className="mb-4">
@@ -29,7 +28,7 @@ const Consultation = () => {
             {expertTopics.map((topic, idx) => (
               <div
                 key={idx}
-                className="p-8 bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-800 rounded group hover:border-brand-secondary-500/30 transition-all duration-300 shadow-sm hover:shadow"
+                className="p-8 bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-800 rounded group hover:border-brand-secondary-500/30 transition-all shadow-sm hover:shadow"
               >
                 <div className="size-12 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                   <topic.icon className="size-6 text-brand-secondary-600 dark:text-brand-secondary-400" />

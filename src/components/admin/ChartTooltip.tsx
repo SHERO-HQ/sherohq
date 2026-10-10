@@ -16,7 +16,7 @@ const parseLabel = (label: any) => {
 export const ChartTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-card backdrop-blur-md border border-border p-3 rounded shadow-[0_10px_25px_rgba(0,0,0,0.5)] space-y-1.5 animate-in fade-in zoom-in-95 duration-100 select-none">
+      <div className="bg-card backdrop-blur-md border border-border p-3 rounded shadow-[0_10px_25px_rgba(0,0,0,0.5)] space-y-1.5 zoom-in-95 select-none">
         {label && (
           <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider font-mono">
             {parseLabel(label)}

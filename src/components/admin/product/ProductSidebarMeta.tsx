@@ -86,7 +86,7 @@ export default function ProductSidebarMeta({
     <div className="space-y-6">
       {/* Pricing & Stock Card */}
       <Card className={cn(
-        "bg-card border border-border p-6 space-y-6 transition-all duration-300",
+        "bg-card border border-border p-6 space-y-6 transition-all ",
         (errors.price || errors.stockQuantity || errors.costPrice) && "border-rose-500/30 bg-rose-500/2"
       )}>
         <div className="flex items-center gap-2 pb-2 border-b border-border">
@@ -167,7 +167,7 @@ export default function ProductSidebarMeta({
               placeholder="0.00"
             />
             {errors.price && (
-              <p className="text-xs text-rose-400 animate-in slide-in-from-top-1 opacity-100 mt-1">
+              <p className="text-xs text-rose-400 animate-in opacity-100 mt-1">
                 {errors.price.message}
               </p>
             )}
@@ -198,7 +198,7 @@ export default function ProductSidebarMeta({
               placeholder="Initial buying price"
             />
             {errors.costPrice && (
-              <p className="text-xs text-rose-400 animate-in slide-in-from-top-1 opacity-100 mt-1">
+              <p className="text-xs text-rose-400 animate-in opacity-100 mt-1">
                 {errors.costPrice.message}
               </p>
             )}
@@ -249,7 +249,7 @@ export default function ProductSidebarMeta({
 
       {/* Categorization Card */}
       <Card className={cn(
-        "bg-card border border-border p-6 space-y-6 transition-all duration-300",
+        "bg-card border border-border p-6 space-y-6 transition-all ",
         errors.category && "border-rose-500/30 bg-rose-500/2"
       )}>
         <div className="flex items-center gap-2 pb-2 border-b border-border">
@@ -318,7 +318,7 @@ export default function ProductSidebarMeta({
               ))}
             </select>
             {errors.category && (
-              <p className="text-xs text-rose-400 animate-in slide-in-from-top-1 opacity-100 mt-1">
+              <p className="text-xs text-rose-400 animate-in opacity-100 mt-1">
                 {errors.category.message}
               </p>
             )}
@@ -356,7 +356,7 @@ export default function ProductSidebarMeta({
           <div
             onClick={() => setValue("isSpotlight", !isSpotlight, { shouldDirty: true, shouldValidate: true })}
             className={cn(
-              "cursor-pointer flex items-center justify-between p-4 bg-muted/30 border rounded transition-all duration-300 hover:bg-muted/50 group select-none",
+              "cursor-pointer flex items-center justify-between p-4 bg-muted/30 border rounded transition-all hover:bg-muted/50 group select-none",
               isSpotlight
                 ? "border-brand-secondary-500 bg-brand-secondary-500/5 shadow-[0_0_12px_rgba(16,185,129,0.08)]"
                 : "border-border"
@@ -374,7 +374,7 @@ export default function ProductSidebarMeta({
               </span>
             </div>
             <div className={cn(
-              "w-5 h-5 rounded flex items-center justify-center border transition-all duration-200",
+              "w-5 h-5 rounded flex items-center justify-center border transition-all ",
               isSpotlight
                 ? "border-brand-secondary-500 bg-brand-secondary-600 text-white"
                 : "border-border bg-card group-hover:border-border"
@@ -391,7 +391,7 @@ export default function ProductSidebarMeta({
           <div
             onClick={() => setValue("isFeatured", !isFeatured, { shouldDirty: true, shouldValidate: true })}
             className={cn(
-              "cursor-pointer flex items-center justify-between p-4 bg-muted/30 border rounded transition-all duration-300 hover:bg-muted/50 group select-none",
+              "cursor-pointer flex items-center justify-between p-4 bg-muted/30 border rounded transition-all hover:bg-muted/50 group select-none",
               isFeatured
                 ? "border-brand-secondary-500 bg-brand-secondary-500/5 shadow-[0_0_12px_rgba(16,185,129,0.08)]"
                 : "border-border"
@@ -409,7 +409,7 @@ export default function ProductSidebarMeta({
               </span>
             </div>
             <div className={cn(
-              "w-5 h-5 rounded flex items-center justify-center border transition-all duration-200",
+              "w-5 h-5 rounded flex items-center justify-center border transition-all ",
               isFeatured
                 ? "border-brand-secondary-500 bg-brand-secondary-600 text-white"
                 : "border-border bg-card group-hover:border-border"

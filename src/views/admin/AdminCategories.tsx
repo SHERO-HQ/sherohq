@@ -235,7 +235,7 @@ const AdminCategories = () => {
                 className="bg-muted/30 border border-border rounded p-4 flex items-center justify-between group hover:border-brand-secondary-500/30 transition relative overflow-hidden"
               >
                 {isDeleting && (
-                  <div className="absolute inset-0 bg-card backdrop-blur-xs z-10 flex items-center justify-between px-3 py-2 animate-in fade-in duration-200 select-none">
+                  <div className="absolute inset-0 bg-card backdrop-blur-xs z-10 flex items-center justify-between px-3 py-2 select-none">
                     <span className="text-[10px] font-bold text-rose-400 animate-pulse truncate mr-1">
                       Removing in {secondsLeft}s
                     </span>

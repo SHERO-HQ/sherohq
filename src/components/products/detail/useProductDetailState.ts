@@ -49,7 +49,7 @@ export function useProductDetailState(product: Product) {
     .slice(0, 4);
 
   const shareSlug = product.slug || product.sku || product.id;
-  const shareUrl = getAbsoluteUrl(`/shop/${shareSlug}`);
+  const shareUrl = getAbsoluteUrl(`/products/${shareSlug}`);
 
   const handleAddToCart = () => {
     for (let i = 0; i < quantity; i++) {

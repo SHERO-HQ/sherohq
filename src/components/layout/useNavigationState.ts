@@ -7,8 +7,9 @@ import { useWishlist } from "@/hooks/queries/useWishlistQuery";
 import { useIsMounted } from "@/hooks/useIsMounted";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { usePathname } from "next/navigation";
-import { ShoppingBag, Cpu, MessageSquare, Info } from "lucide-react";
+import { ShoppingBag, MessageSquare, Info, Package } from "lucide-react";
 import { getAbsoluteUrl } from "@/utils/subdomain";
+import { SHOP_ENABLED } from "@/constants/features";
 
 export function useNavigationState() {
   const [isOpen, setIsOpen] = useState(false);
@@ -56,18 +57,23 @@ export function useNavigationState() {
 
   const navLinks = useMemo(
     () => [
-      {
-        name: "Shop",
-        icon: ShoppingBag,
-        desc: "Explore catalog",
-        href: "/shop",
-      },
-      {
-        name: "Solutions",
-        icon: Cpu,
-        desc: "Business innovations",
-        href: "/solutions",
-      },
+      ...(SHOP_ENABLED
+        ? [
+            {
+              name: "Shop",
+              icon: ShoppingBag,
+              desc: "Explore catalog",
+              href: "/shop",
+            },
+          ]
+        : [
+            {
+              name: "Products",
+              icon: Package,
+              desc: "Computers & hardware",
+              href: "/products",
+            },
+          ]),
       {
         name: "Consultation",
         icon: MessageSquare,

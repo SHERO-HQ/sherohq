@@ -193,7 +193,7 @@ export default function ProjectForm() {
   return (
     <div className="max-w-5xl mx-auto space-y-6 pb-20">
       {/* Sticky Header Action Bar */}
-      <div className="sticky top-20 bg-card backdrop-blur-md z-20 py-4 border-b border-border flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all duration-300">
+      <div className="sticky top-20 bg-card backdrop-blur-md z-20 py-4 border-b border-border flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all ">
         <div className="flex items-center gap-4">
           <Button
             variant="ghost"

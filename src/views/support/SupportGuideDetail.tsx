@@ -90,10 +90,7 @@ const SupportGuideDetail = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background text-foreground relative overflow-hidden transition-colors duration-300">
-      {/* Ambient Background Glows */}
-      <div className="absolute top-0 right-1/4 w-125 h-125 bg-brand-secondary-500/5 dark:bg-brand-secondary-500/10 rounded-full blur-[60px] -z-10 animate-pulse" />
-      <div className="absolute bottom-0 left-1/4 w-125 h-125 bg-blue-500/5 dark:bg-blue-500/10 rounded-full blur-[60px] -z-10" />
+    <div className="min-h-screen bg-background text-foreground relative overflow-hidden transition-colors ">
 
       <div className="pt-8 pb-12">
         <div className="container max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -113,7 +110,7 @@ const SupportGuideDetail = () => {
             animate={{ opacity: 1, y: 0 }}
             className="bg-card/40 dark:bg-slate-900/40  rounded border border-border overflow-hidden shadow relative"
           >
-            <div className="absolute inset-0 bg-linear-to-br from-brand-secondary-500/5 to-transparent pointer-events-none" />
+            <div className="absolute inset-0 bg-secondary/20 pointer-events-none" />
 
             {/* Cover Image */}
             {guide.coverImage && (
@@ -126,7 +123,7 @@ const SupportGuideDetail = () => {
                   sizes="100vw"
                   className="object-cover"
                 />
-                <div className="absolute inset-0 bg-linear-to-t from-slate-900 via-transparent to-transparent" />
+                <div className="absolute inset-0 bg-black/20" />
               </div>
             )}
 

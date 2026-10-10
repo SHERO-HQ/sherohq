@@ -104,7 +104,7 @@ const ProductFiltersSidebar: React.FC<ProductFiltersSidebarProps> = ({
                                         <span className="text-sm">{category.name}</span>
                                         <span
                                             className={`text-xs px-2 py-0.5 rounded-full transition-colors ${activeCategory === category.id
-                                                    ? "bg-brand-secondary-600 text-white shadow-sm shadow-brand-secondary-500/20"
+                                                    ? "bg-brand-secondary-600 text-white shadow-xs"
                                                     : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 group-hover:bg-brand-secondary-50 dark:group-hover:bg-brand-secondary-900/20"
                                                 }`}
                                         >
@@ -138,8 +138,7 @@ const ProductFiltersSidebar: React.FC<ProductFiltersSidebarProps> = ({
                                         className="flex items-center gap-3 cursor-pointer group"
                                     >
                                         <div
-                                            className={`w-4 h-4 rounded border border-brand-secondary-700 flex items-center justify-center transition duration-200
- ${isPriceRangeActive(range.range) ? "bg-brand-secondary-400 border-brand-secondary-400" : "dark:bg-slate-800/50 group-hover:border-brand-secondary-500"}`}
+                                            className={`w-4 h-4 rounded border border-brand-secondary-700 flex items-center justify-center transition ${isPriceRangeActive(range.range) ? "bg-brand-secondary-400 border-brand-secondary-400" : "dark:bg-slate-800/50 group-hover:border-brand-secondary-500"}`}
                                         >
                                             {isPriceRangeActive(range.range) && (
                                                 <Check className="w-3 h-3 dark:text-white text-brand-secondary-700" />
@@ -187,8 +186,7 @@ const ProductFiltersSidebar: React.FC<ProductFiltersSidebarProps> = ({
                                         className="flex items-center gap-3 cursor-pointer group"
                                     >
                                         <div
-                                            className={`w-4 h-4 rounded border dark:border-white/5 border-slate-600 flex items-center justify-center transition duration-200
- ${filters.brands.includes(brand) ? "bg-brand-secondary-400 border-brand-secondary-700" : "dark:bg-slate-800/50 group-hover:border-brand-secondary-500"}`}
+                                            className={`w-4 h-4 rounded border dark:border-white/5 border-slate-600 flex items-center justify-center transition ${filters.brands.includes(brand) ? "bg-brand-secondary-400 border-brand-secondary-700" : "dark:bg-slate-800/50 group-hover:border-brand-secondary-500"}`}
                                         >
                                             {filters.brands.includes(brand) && (
                                                 <Check className="w-3 h-3 dark:text-white text-brand-secondary-700" />
@@ -276,10 +274,10 @@ const ProductFiltersSidebar: React.FC<ProductFiltersSidebarProps> = ({
                         {expandedSections.includes("stock") && (
                             <label className="flex items-center gap-3 cursor-pointer group">
                                 <div
-                                    className={`w-10 h-6 rounded-full p-1 transition-colors duration-300 ${filters.inStock ? "bg-brand-secondary-600" : "dark:bg-slate-700 bg-slate-500"}`}
+                                    className={`w-10 h-6 rounded-full p-1 transition-colors ${filters.inStock ? "bg-brand-secondary-600" : "dark:bg-slate-700 bg-slate-500"}`}
                                 >
                                     <div
-                                        className={`w-4 h-4 rounded-full bg-white transform transition-transform duration-300 ${filters.inStock ? "translate-x-4" : "translate-x-0"}`}
+                                        className={`w-4 h-4 rounded-full bg-white transform transition-transform ${filters.inStock ? "translate-x-4" : "translate-x-0"}`}
                                     />
                                 </div>
                                 <input

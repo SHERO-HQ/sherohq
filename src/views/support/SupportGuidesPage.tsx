@@ -25,10 +25,8 @@ const SupportGuidesPage = () => {
   );
 
   return (
-    <div className="pt-8 pb-12 bg-background min-h-screen text-foreground relative overflow-hidden transition-colors duration-300">
-      {/* Ambient Background Glows */}
-      <div className="absolute top-0 left-1/4 w-125 h-125 bg-brand-secondary-500/5 dark:bg-brand-secondary-500/10 rounded-full blur-[60px] -z-10 animate-pulse" />
-      <div className="absolute bottom-1/4 right-0 w-100 h-100 bg-blue-500/5 dark:bg-blue-500/10 rounded-full blur-[60px] -z-10" />
+    <div className="pt-8 pb-12 bg-background min-h-screen text-foreground relative overflow-hidden transition-colors ">
+
 
       <div className="container max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
@@ -119,9 +117,8 @@ const SupportGuidesPage = () => {
                 <div key={guide.id}>
                   <Link
                     href={`/support/${category}/${guide.slug}`}
-                    className="block bg-card dark:bg-slate-900/40  rounded border border-border hover:border-brand-secondary-500/30 hover:shadow hover:shadow-brand-secondary-500/10 transition duration-300 overflow-hidden group h-full relative"
+                    className="block bg-card dark:bg-slate-900/40  rounded border border-border hover:border-brand-secondary-500/30 hover:shadow hover:shadow-brand-secondary-500/10 transition overflow-hidden group h-full relative"
                   >
-                    <div className="absolute inset-0 bg-linear-to-br from-brand-secondary-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
 
                     {guide.coverImage && (
                       <div className="h-48 overflow-hidden bg-secondary relative">
@@ -130,9 +127,8 @@ const SupportGuidesPage = () => {
                           alt={guide.title}
                           fill
                           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                          className="object-cover group-hover:scale-110 transition-transform duration-700"
+                          className="object-cover group-hover:scale-110 transition-transform "
                         />
-                        <div className="absolute inset-0 bg-linear-to-t from-slate-950/60 to-transparent" />
                       </div>
                     )}
                     <div className="p-7 relative z-10">
@@ -154,7 +150,7 @@ const SupportGuidesPage = () => {
                             </span>
                           )}
                         </div>
-                        <ArrowRight className="w-5 h-5 text-brand-secondary-500 opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition duration-300" />
+                        <ArrowRight className="w-5 h-5 text-brand-secondary-500 opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition " />
                       </div>
                     </div>
                   </Link>

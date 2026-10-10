@@ -240,7 +240,7 @@ export default function ProductForm() {
     <FormProvider {...methods}>
       <div className="max-w-7xl mx-auto space-y-6 pb-20 px-4">
         {/* Sticky Header Action Bar */}
-        <div className="sticky top-20 bg-card backdrop-blur-md z-20 py-4 border-b border-border flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all duration-300">
+        <div className="sticky top-20 bg-card backdrop-blur-md z-20 py-4 border-b border-border flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all ">
           <div className="flex items-center gap-4">
             <Button
               type="button"

@@ -115,7 +115,7 @@ const Scheduler = () => {
           {/* Vertical Line for Desktop */}
           <div className="hidden md:block absolute left-4 top-2 bottom-1 w-0.5 bg-slate-200 dark:bg-slate-800 -z-10">
             <div
-              className="w-full bg-brand-secondary-500 transition duration-500 ease-out"
+              className="w-full bg-brand-secondary-500 transition ease-out"
               style={{ height: `${((step - 1) / 2) * 100}%` }}
             />
           </div>
@@ -123,7 +123,7 @@ const Scheduler = () => {
           {/* Horizontal Line for Mobile */}
           <div className="md:hidden absolute top-4 sm:left-20 sm:right-20 left-12 right-12 h-0.5 bg-slate-200 dark:bg-slate-800 -z-10">
             <div
-              className="h-full bg-brand-secondary-500 transition duration-500 ease-out"
+              className="h-full bg-brand-secondary-500 transition ease-out"
               style={{ width: `${((step - 1) / 2) * 100}%` }}
             />
           </div>
@@ -141,7 +141,7 @@ const Scheduler = () => {
             >
               <div
                 className={cn(
-                  "w-8 h-8 rounded-full flex items-center justify-center text-xs md:text-sm font-bold relative z-10 transition duration-300 shrink-0 border-2",
+                  "w-8 h-8 rounded-full flex items-center justify-center text-xs md:text-sm font-bold relative z-10 transition shrink-0 border-2",
                   step === s.id
                     ? "bg-brand-secondary-600 border-brand-secondary-600 text-white shadow shadow-brand-secondary-500/30 ring-4 ring-brand-secondary-50 dark:ring-brand-secondary-900/20"
                     : step > s.id

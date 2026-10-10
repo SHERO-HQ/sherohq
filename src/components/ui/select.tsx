@@ -40,7 +40,7 @@ const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
  </div>
  </div>
  {error && (
- <p className="text-xs font-medium text-red-500 mt-1 animate-in fade-in slide-in-from-top-1">
+ <p className="text-xs font-medium text-red-500 mt-1 ">
  {error}
  </p>
  )}

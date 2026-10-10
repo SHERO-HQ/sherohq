@@ -78,7 +78,7 @@ export function TrackTimeline({ order, isStorePickupOrder }: TrackTimelineProps)
         {/* Active Progress Line */}
         <div className="absolute top-4 left-[12.5%] right-[12.5%] h-1 z-0">
           <div
-            className="absolute top-0 left-0 h-1 bg-brand-secondary-500 transition-all duration-1000 ease-out"
+            className="absolute top-0 left-0 h-1 bg-brand-secondary-500 transition-all ease-out"
             style={{
               width: `${Math.max(0, (currentStep - 1) / (steps.length - 1)) * 100}%`,
             }}
@@ -98,7 +98,7 @@ export function TrackTimeline({ order, isStorePickupOrder }: TrackTimelineProps)
               >
                 <div
                   className={cn(
-                    "w-8 h-8 rounded-full flex items-center justify-center transition-all duration-500 mx-auto",
+                    "w-8 h-8 rounded-full flex items-center justify-center transition-all mx-auto",
                     isCompleted
                       ? "bg-brand-secondary-500 text-white"
                       : isActive

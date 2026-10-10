@@ -15,6 +15,7 @@ import {
   InstagramIcon,
   FacebookIcon,
 } from "@/assets/icons/icons";
+import { SEARCH_ENABLED, AUTH_ENABLED } from "@/constants/features";
 
 interface MobileNavDrawerProps {
   isOpen: boolean;
@@ -90,14 +91,16 @@ export function MobileNavDrawer({
             </div>
 
             <div className="flex-1 overflow-y-auto p-6">
-              <div className="mb-2 p-1">
-                <SearchBar alwaysOpen={true} />
-              </div>
+              {SEARCH_ENABLED && (
+                <div className="mb-2 p-1">
+                  <SearchBar alwaysOpen={true} />
+                </div>
+              )}
 
               <div className="space-y-3 mt-4">
-                <ul className="space-y-5">
-                  {navLinks.map((item, index) => (
-                    <li key={item.name}>
+                <ul className="space-y-4">
+                  {navLinks.map((item: any, index) => (
+                    <li key={item.name} className="space-y-1">
                       <NavLink
                         href={getAbsoluteUrl(item.href)}
                         onClick={() => setIsOpen(false)}
@@ -118,69 +121,90 @@ export function MobileNavDrawer({
                           </>
                         )}
                       </NavLink>
+                      {item.subItems && item.subItems.length > 0 && (
+                        <div className="pl-3 pt-1 space-y-1">
+                          {item.subItems.map((sub: any) => (
+                            <NavLink
+                              key={sub.name}
+                              href={getAbsoluteUrl(sub.href)}
+                              onClick={() => setIsOpen(false)}
+                              className="flex items-center justify-between py-1.5 px-3 rounded hover:bg-slate-100 dark:hover:bg-slate-800 text-sm font-medium text-slate-600 dark:text-slate-400"
+                            >
+                              <span>{sub.name}</span>
+                              {sub.badge && (
+                                <span className="text-[9px] uppercase font-bold px-1.5 py-0.5 rounded bg-brand-secondary-500/10 text-brand-secondary-600 dark:text-brand-secondary-400">
+                                  {sub.badge}
+                                </span>
+                              )}
+                            </NavLink>
+                          ))}
+                        </div>
+                      )}
                     </li>
                   ))}
                 </ul>
               </div>
 
               {/* Profile Section */}
-              <div className="mt-10 pt-8 border-t border-slate-100 dark:border-slate-800/50">
-                {mounted && isAuthenticated ? (
-                  <div className="space-y-6">
-                    <div className="flex items-center gap-4 p-4 rounded bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800/50">
-                      <div className="w-12 h-12 rounded font-medium bg-linear-to-br from-brand-secondary-500 to-brand-secondary-600 flex items-center justify-center text-xl text-white shadow shadow-brand-secondary-500/20">
-                        {user?.name?.charAt(0)}
+              {AUTH_ENABLED && (
+                <div className="mt-10 pt-8 border-t border-slate-100 dark:border-slate-800/50">
+                  {mounted && isAuthenticated ? (
+                    <div className="space-y-6">
+                      <div className="flex items-center gap-4 p-4 rounded bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800/50">
+                        <div className="w-12 h-12 rounded font-medium flex items-center justify-center text-xl text-white shadow shadow-brand-secondary-500/20">
+                          {user?.name?.charAt(0)}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-[15px] font-medium text-slate-900 dark:text-white truncate">
+                            {user?.name}
+                          </p>
+                          <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate">
+                            {user?.email}
+                          </p>
+                        </div>
                       </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-[15px] font-medium text-slate-900 dark:text-white truncate">
-                          {user?.name}
-                        </p>
-                        <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate">
-                          {user?.email}
-                        </p>
+                      <div className="grid grid-cols-2 gap-3">
+                        <NavLink
+                          href={getAbsoluteUrl("/profile")}
+                          onClick={() => setIsOpen(false)}
+                          className="flex flex-col items-center justify-center gap-2 p-4 text-slate-700 dark:text-slate-300 bg-slate-50 dark:bg-slate-900/50 hover:bg-white dark:hover:bg-slate-900 border border-transparent hover:border-slate-200 dark:hover:border-slate-800 rounded transition-all group/item shadow-sm"
+                        >
+                          <User className="w-5 h-5 text-slate-400 group-hover/item:text-brand-secondary-500" />
+                          <span className="font-medium text-[11px]">Profile</span>
+                        </NavLink>
+                        <button
+                          onClick={() => {
+                            logout();
+                            setIsOpen(false);
+                          }}
+                          className="flex flex-col items-center justify-center gap-2 p-3 text-red-600 dark:text-red-400 bg-red-50/30 dark:bg-red-950/10 hover:bg-red-50 dark:hover:bg-red-950/20 border border-transparent hover:border-red-100 dark:hover:border-red-900/30 rounded transition-all group/logout shadow-sm"
+                        >
+                          <LogOut className="w-5 h-5 opacity-70 group-hover/logout:opacity-100" />
+                          <span className="font-medium text-[11px]">Logout</span>
+                        </button>
                       </div>
                     </div>
-                    <div className="grid grid-cols-2 gap-3">
-                      <NavLink
-                        href={getAbsoluteUrl("/profile")}
-                        onClick={() => setIsOpen(false)}
-                        className="flex flex-col items-center justify-center gap-2 p-4 text-slate-700 dark:text-slate-300 bg-slate-50 dark:bg-slate-900/50 hover:bg-white dark:hover:bg-slate-900 border border-transparent hover:border-slate-200 dark:hover:border-slate-800 rounded transition-all group/item shadow-sm"
-                      >
-                        <User className="w-5 h-5 text-slate-400 group-hover/item:text-brand-secondary-500" />
-                        <span className="font-medium text-[11px]">Profile</span>
-                      </NavLink>
-                      <button
-                        onClick={() => {
-                          logout();
-                          setIsOpen(false);
-                        }}
-                        className="flex flex-col items-center justify-center gap-2 p-3 text-red-600 dark:text-red-400 bg-red-50/30 dark:bg-red-950/10 hover:bg-red-50 dark:hover:bg-red-950/20 border border-transparent hover:border-red-100 dark:hover:border-red-900/30 rounded transition-all group/logout shadow-sm"
-                      >
-                        <LogOut className="w-5 h-5 opacity-70 group-hover/logout:opacity-100" />
-                        <span className="font-medium text-[11px]">Logout</span>
-                      </button>
-                    </div>
-                  </div>
-                ) : (
-                  <NavLink
-                    href={getAbsoluteUrl("/login")}
-                    onClick={() => setIsOpen(false)}
-                    className="flex items-center gap-4 p-2 text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-50/50 dark:bg-brand-secondary-200/20 rounded transition-all duration-300 hover:bg-brand-secondary-100 dark:hover:bg-brand-secondary-900/40 border border-brand-secondary-100 dark:border-brand-secondary-800/50 group shadow-sm shadow-brand-secondary-500/5"
-                  >
-                    <div className="w-8 h-8 rounded bg-brand-secondary-600 text-white flex items-center justify-center shadow shadow-brand-secondary-600/20 group-hover:scale-105 transition-transform">
-                      <User className="w-4 h-4" />
-                    </div>
-                    <div className="flex-1">
-                      <span className="block font-medium text-[15px] tracking-tight">
-                        Login
-                      </span>
-                      <span className="block text-[11px] text-brand-secondary-600/70 dark:text-brand-secondary-400/70 mt-0.5">
-                        Sign in to manage orders
-                      </span>
-                    </div>
-                  </NavLink>
-                )}
-              </div>
+                  ) : (
+                    <NavLink
+                      href={getAbsoluteUrl("/login")}
+                      onClick={() => setIsOpen(false)}
+                      className="flex items-center gap-4 p-2 text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-50/50 dark:bg-brand-secondary-200/20 rounded transition-all hover:bg-brand-secondary-100 dark:hover:bg-brand-secondary-900/40 border border-brand-secondary-100 dark:border-brand-secondary-800/50 group shadow-sm"
+                    >
+                      <div className="w-8 h-8 rounded bg-brand-secondary-600 text-white flex items-center justify-center shadow-xs group-hover:scale-105 transition-transform">
+                        <User className="w-4 h-4" />
+                      </div>
+                      <div className="flex-1">
+                        <span className="block font-medium text-[15px] tracking-tight">
+                          Login
+                        </span>
+                        <span className="block text-[11px] text-brand-secondary-600/70 dark:text-brand-secondary-400/70 mt-0.5">
+                          Sign in to manage orders
+                        </span>
+                      </div>
+                    </NavLink>
+                  )}
+                </div>
+              )}
             </div>
 
             {/* Social Footer */}
@@ -219,14 +243,7 @@ export function MobileNavDrawer({
                   <FacebookIcon className="w-5 h-5" />
                 </a>
               </div>
-              <div className="space-y-1">
-                <p className="text-center text-[10px] text-slate-400 dark:text-slate-500 font-semibold font-logo uppercase tracking-widest">
-                  SHERO
-                </p>
-                <p className="text-center text-[9px] text-slate-400 dark:text-slate-600 font-medium">
-                  Purposeful Tech & Modern Solutions
-                </p>
-              </div>
+            
             </div>
           </m.div>
         </div>

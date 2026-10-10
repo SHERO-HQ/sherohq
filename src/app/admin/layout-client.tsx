@@ -12,8 +12,6 @@ import AdminLayout from "@/components/admin/AdminLayout";
 function AdminSplashLoading() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-background text-foreground relative overflow-hidden">
-      {/* Background Decor */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-125 h-125 bg-brand-secondary-500/10 blur-[120px] rounded-full animate-pulse" />
 
       <div className="relative">
         <div className="w-16 h-16 border-2 border-brand-secondary-500/20 rounded-full" />
@@ -38,7 +36,6 @@ function AdminSplashLoading() {
         <h2 className="text-foreground font-bold tracking-widest text-xs uppercase opacity-50 animate-pulse">
           SHERO TECHNOLOGIES
         </h2>
-        <div className="h-px w-24 bg-linear-to-r from-transparent via-brand-secondary-500/50 to-transparent" />
       </div>
     </div>
   );

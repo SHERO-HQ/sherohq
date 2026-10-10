@@ -60,7 +60,7 @@ export default function GuideSidebarMeta({
           <div
             onClick={() => onPublishedChange(!published)}
             className={cn(
-              "flex items-start gap-3 p-4 rounded border cursor-pointer transition-all duration-300 select-none",
+              "flex items-start gap-3 p-4 rounded border cursor-pointer transition-all select-none",
               published
                 ? "bg-emerald-500/5 border-emerald-500/30 text-emerald-100"
                 : "bg-muted/40 border-border text-muted-foreground hover:bg-muted/60"

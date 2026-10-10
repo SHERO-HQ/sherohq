@@ -45,7 +45,7 @@ export function DesktopUserMenu({
           aria-controls="desktop-user-menu"
         >
           <span className="sr-only">User Menu</span>
-          <div className="w-7 h-7 rounded font-semibold bg-linear-to-br from-brand-secondary-500 to-brand-secondary-600 flex items-center justify-center text-xs text-white shrink-0 shadow-sm">
+          <div className="w-7 h-7 rounded font-semibold flex items-center justify-center text-xs text-white shrink-0 shadow-sm">
             {user?.name?.charAt(0)}
           </div>
         </button>
@@ -64,7 +64,7 @@ export function DesktopUserMenu({
           id="desktop-user-menu"
           role="menu"
           aria-label="User menu"
-          className="absolute right-0 top-full mt-2 w-56 bg-white dark:bg-slate-900 rounded shadow border border-slate-200 dark:border-slate-800 py-1 transition duration-200 z-50"
+          className="absolute right-0 top-full mt-2 w-56 bg-white dark:bg-slate-900 rounded shadow border border-slate-200 dark:border-slate-800 py-1 transition z-50"
         >
           <div className="px-4 py-2 border-b border-slate-100 dark:border-slate-800">
             <p className="text-sm font-semibold text-slate-900 dark:text-white line-clamp-1">

@@ -1,5 +1,5 @@
 import React from "react";
-import { Loader2, ExternalLink, Check, CheckCheck, AlertTriangle, Sparkles, MousePointerClick } from "lucide-react";
+import { Loader2, ExternalLink, Check, CheckCheck, AlertTriangle, LayoutTemplate, MousePointerClick } from "lucide-react";
 import { ConversationMessage, BUILTIN_WHATSAPP_TEMPLATES } from "./types";
 
 interface ConversationThreadProps {
@@ -71,7 +71,7 @@ export function ConversationThread({
         </div>
       ) : messages.length === 0 ? (
         <div className="flex justify-center py-4">
-          <div className="bg-card text-muted-foreground text-xs px-4 py-1.5 rounded-lg shadow-sm border border-border">
+          <div className="bg-card text-muted-foreground text-xs px-4 py-1.5 rounded-md shadow-sm border border-border">
             No messages in this conversation.
           </div>
         </div>
@@ -93,11 +93,10 @@ export function ConversationThread({
                 className={`flex mb-0.5 ${msg.direction === "inbound" ? "justify-start" : "justify-end"} ${isFirstInSequence ? "mt-3" : ""}`}
               >
                 <div
-                  className={`max-w-[85%] md:max-w-[75%] px-3 py-2 shadow-sm relative text-[14.2px] leading-5 ${
-                    msg.direction === "inbound"
-                      ? `bg-card text-foreground border border-border/60 dark:border-transparent dark:bg-[#202c33] dark:text-[#e9edef] rounded-lg ${isFirstInSequence ? "rounded-tl-none" : ""}`
-                      : `bg-brand-secondary-600 text-white dark:bg-[#005c4b] dark:text-[#e9edef] rounded-lg ${isFirstInSequence ? "rounded-tr-none" : ""}`
-                  }`}
+                  className={`max-w-[85%] md:max-w-[75%] px-3 py-2 shadow-sm relative text-[14.2px] leading-5 ${msg.direction === "inbound"
+                      ? `bg-card text-foreground border border-border/60 dark:border-transparent dark:bg-[#202c33] dark:text-[#e9edef] rounded-md ${isFirstInSequence ? "rounded-tl-none" : ""}`
+                      : `bg-brand-secondary-600 text-white dark:bg-[#005c4b] dark:text-[#e9edef] rounded-md ${isFirstInSequence ? "rounded-tr-none" : ""}`
+                    }`}
                 >
                   {isFirstInSequence && msg.direction === "inbound" && (
                     <svg
@@ -173,9 +172,9 @@ export function ConversationThread({
                       rawMsg?.interactive?.button_reply?.title ||
                       rawMsg?.interactive?.list_reply?.title ||
                       (msg.content &&
-                      msg.content !== `[${msg.message_type}]` &&
-                      msg.content !== "[button]" &&
-                      msg.content !== "[interactive]"
+                        msg.content !== `[${msg.message_type}]` &&
+                        msg.content !== "[button]" &&
+                        msg.content !== "[interactive]"
                         ? msg.content
                         : null) ||
                       rawMsg?.button?.payload ||
@@ -219,7 +218,7 @@ export function ConversationThread({
                       <>
                         {templateName && (
                           <div className="flex items-center gap-1 text-[10px] font-semibold tracking-wide text-amber-200 dark:text-amber-300 bg-black/25 px-1.5 py-0.5 rounded w-fit mb-1.5 border border-white/10">
-                            <Sparkles className="w-2.5 h-2.5 shrink-0" />
+                            <LayoutTemplate className="w-2.5 h-2.5 shrink-0" />
                             <span>Meta Template: {templateName}</span>
                           </div>
                         )}

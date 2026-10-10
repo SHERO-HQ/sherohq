@@ -85,6 +85,7 @@ body,
     --color-chart-4: var(--chart-4);
     --color-chart-5: var(--chart-5);
     /* Fonts Registration */
+    --font-display: var(--font-display-next);
     --font-primary: var(--font-primary-next);
     --font-mono: var(--font-mono-next);
     --font-sora: var(--font-primary-next);
@@ -112,11 +113,11 @@ body,
 }
 
 :root {
-    font-size: 15px;
+    font-size: 16px;
     /* Font variables are set by next/font classes on <html> */
 
     color-scheme: light dark;
-    --radius: 0.5rem;
+    --radius: 0.35rem;
     /* 8px - Cleaner look than 10px */
 
     /* Logo Palette Tokens
@@ -189,7 +190,7 @@ body,
 
 /* Increase base line-height for calmer reading */
 body {
-    line-height: 1.6;
+    line-height: 1;
 }
 
 /* Reduce repeating grid pattern intensity */
@@ -293,6 +294,7 @@ h3,
 h4,
 h5,
 h6 {
+    font-family: var(--font-display);
     font-weight: 600 !important;
 }
 

@@ -1,45 +1,80 @@
 "use client";
-import { Home, ShoppingBag, ShoppingCart, Heart } from "lucide-react";
+import { Home, ShoppingBag, ShoppingCart, Heart, Cpu, MessageSquare, Package, Info } from "lucide-react";
 import NavLink from "@/components/common/NavLink";
 import { useCart } from "@/hooks/queries/useCartQuery";
 import { useWishlist } from "@/hooks/queries/useWishlistQuery";
 import { useIsMounted } from "@/hooks/useIsMounted";
 import { getAbsoluteUrl } from "@/utils/subdomain";
+import { SHOP_ENABLED } from "@/constants/features";
 
 const BottomNav = () => {
+  // Hidden for now
+  return null;
+
   const { setIsCartOpen, totalQuantity } = useCart();
   const { setIsWishlistOpen, wishlist } = useWishlist();
   const mounted = useIsMounted();
 
   const homeHref = getAbsoluteUrl("/");
-  const navItems = [
-    {
-      icon: Home,
-      label: "Home",
-      path: homeHref,
-      end: true,
-      iconClassName: "w-7 h-7",
-    },
-    {
-      icon: ShoppingBag,
-      label: "Shop",
-      path: getAbsoluteUrl("/shop"),
-      end: false,
-      iconClassName: "w-7 h-7",
-    },
-    {
-      icon: Heart,
-      label: "Wishlist",
-      path: getAbsoluteUrl("/wishlist"),
-      end: true,
-    },
-    {
-      icon: ShoppingCart,
-      label: "Cart",
-      path: getAbsoluteUrl("/cart"),
-      end: true,
-    },
-  ];
+  const navItems = SHOP_ENABLED
+    ? [
+        {
+          icon: Home,
+          label: "Home",
+          path: homeHref,
+          end: true,
+          iconClassName: "w-7 h-7",
+        },
+        {
+          icon: ShoppingBag,
+          label: "Shop",
+          path: getAbsoluteUrl("/shop"),
+          end: false,
+          iconClassName: "w-7 h-7",
+        },
+        {
+          icon: Heart,
+          label: "Wishlist",
+          path: getAbsoluteUrl("/wishlist"),
+          end: true,
+        },
+        {
+          icon: ShoppingCart,
+          label: "Cart",
+          path: getAbsoluteUrl("/cart"),
+          end: true,
+        },
+      ]
+    : [
+        {
+          icon: Home,
+          label: "Home",
+          path: homeHref,
+          end: true,
+          iconClassName: "w-6 h-6",
+        },
+        {
+          icon: Package,
+          label: "Products",
+          path: getAbsoluteUrl("/products"),
+          end: false,
+          iconClassName: "w-6 h-6",
+        },
+        {
+          icon: MessageSquare,
+          label: "Consult",
+          path: getAbsoluteUrl("/consultation"),
+          end: false,
+          iconClassName: "w-6 h-6",
+        },
+        {
+          icon: Info,
+          label: "About",
+          path: getAbsoluteUrl("/about-us"),
+          end: false,
+          iconClassName: "w-6 h-6",
+        },
+      ];
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50 md:hidden pb-safe">
@@ -94,7 +129,7 @@ const BottomNav = () => {
                 href={item.path}
                 end={item.end}
                 className={({ isActive }) =>
-                  `relative flex flex-col items-center justify-center w-full h-full gap-1 transition-all duration-300 focus:outline-none ${
+                  `relative flex flex-col items-center justify-center w-full h-full gap-1 transition-all focus:outline-none ${
                     isActive
                       ? "text-brand-secondary-600 dark:text-brand-secondary-400 font-medium"
                       : "bg-transparent text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200"

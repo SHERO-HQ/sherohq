@@ -29,35 +29,6 @@ const ConsultationHero = () => {
       {/* Dot Pattern Background (muted) */}
       <div className="absolute inset-0 pattern-dots opacity-80 pointer-events-none" />
 
-      {/* Animated Gradient Orbs */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <m.div
-          animate={{
-            y: [0, -30, 0],
-            scale: [1, 1.1, 1],
-            opacity: [0.4, 0.6, 0.4],
-          }}
-          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-0 left-1/4 w-96 h-96 bg-blue-500/10 dark:bg-blue-500/10 rounded-full blur-3xl"
-        />
-        <m.div
-          animate={{
-            y: [0, 40, 0],
-            scale: [1, 1.2, 1],
-            opacity: [0.4, 0.7, 0.4],
-          }}
-          transition={{
-            duration: 10,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 1,
-          }}
-          className="absolute bottom-0 right-1/4 w-96 h-96 bg-brand-secondary-500/10 dark:bg-brand-secondary-500/10 rounded-full blur-3xl"
-        />
-      </div>
-
-      <div className="absolute top-0 left-0 right-0 h-32 bg-linear-to-b from-slate-50 to-transparent dark:from-slate-950 pointer-events-none" />
-
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-8 items-center">
           {/* Left Column: Text Content */}
@@ -74,7 +45,7 @@ const ConsultationHero = () => {
               className="text-4xl sm:text-5xl md:text-6xl lg:text-[4rem] leading-[1.1] font-semibold text-slate-900 dark:text-slate-100 mb-6 tracking-tight animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100 fill-mode-both"
             >
               Accelerate Your <br />
-              <span className="text-transparent bg-clip-text bg-linear-to-r from-brand-primary-700 to-brand-secondary-600 dark:from-brand-primary-500 dark:to-brand-secondary-400">
+              <span className="text-emerald-500">
                 Technical Vision
               </span>
             </h1>
@@ -106,17 +77,15 @@ const ConsultationHero = () => {
             className="relative hidden lg:block"
           >
             <div className="relative w-full aspect-square max-w-lg mx-auto">
-              {/* Central Glow */}
-              <div className="absolute inset-0 bg-linear-to-tr from-brand-primary-500/20 to-brand-secondary-500/20 rounded-full blur-3xl opacity-50" />
               
               {/* Card 1: Main Session Card */}
               <m.div 
                 animate={{ y: [-10, 10, -10] }}
                 transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute top-[20%] left-0 right-12 z-20 bg-white dark:bg-slate-900/90 backdrop-blur-xl border border-slate-200/60 dark:border-slate-800/60 p-6 rounded shadow flex items-start gap-5"
+                className="absolute top-[20%] left-0 right-12 z-20 bg-white dark:bg-slate-900/90 backdrop-blur-xl border border-slate-200/60 dark:border-slate-800/60 p-4 rounded shadow flex items-start gap-5"
               >
-                <div className="size-14 rounded bg-brand-primary-50 dark:bg-brand-primary-900/30 flex items-center justify-center shrink-0 border border-brand-primary-100 dark:border-brand-primary-800/50">
-                  <Calendar className="size-7 text-brand-primary-600 dark:text-brand-primary-400" />
+                <div className="size-12 rounded bg-brand-primary-50 dark:bg-brand-primary-900/30 flex items-center justify-center shrink-0 border border-brand-primary-100 dark:border-brand-primary-800/50">
+                  <Calendar className="size-8 text-brand-primary-600 dark:text-brand-primary-400" />
                 </div>
                 <div>
                   <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Strategy Session</h2>
@@ -142,10 +111,6 @@ const ConsultationHero = () => {
                  </div>
                  <div className="size-2 rounded-full bg-emerald-500 animate-pulse" />
               </m.div>
-              
-              {/* Decorative Background Elements */}
-              <div className="absolute top-[10%] right-[10%] size-20 rounded-full bg-brand-secondary-400/20 dark:bg-brand-secondary-500/10 blur-xl" />
-              <div className="absolute bottom-[10%] left-[10%] size-32 rounded-full bg-blue-400/20 dark:bg-blue-500/10 blur-xl" />
             </div>
           </m.div>
         </div>

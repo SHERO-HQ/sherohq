@@ -54,7 +54,7 @@ const AdminSupport = () => {
 
   return (
     <div className="flex flex-col h-[calc(100dvh-11rem)] space-y-4">
-      <div className="space-y-8 animate-in fade-in duration-500">
+      <div className="space-y-8 ">
         <AdminPageHeader
           icon={HelpCircle}
           title="Support & Inquiries"
@@ -109,7 +109,7 @@ const AdminSupport = () => {
           <TabsList className="bg-card/50 border border-border p-1 mb-8 flex justify-center items-center flex-wrap sm:flex-nowrap overflow-x-auto scrollbar-hide w-fit">
             <TabsTrigger
               value="tickets"
-              className="data-[state=active]:bg-brand-secondary-500 data-[state=active]:text-foreground data-[state=active]:shadow data-[state=active]:shadow-brand-secondary-500/20 px-3 sm:px-6 text-xs sm:text-sm whitespace-nowrap"
+              className="data-[state=active]:bg-brand-secondary-500 data-[state=active]:text-foreground data-[state=active]:shadow-sm px-3 sm:px-6 text-xs sm:text-sm whitespace-nowrap"
             >
               <Headset className="w-4 h-4 mr-1 sm:mr-2" />
               <span className="hidden xs:inline">Support </span>Tickets
@@ -119,7 +119,7 @@ const AdminSupport = () => {
             </TabsTrigger>
             <TabsTrigger
               value="consultations"
-              className="data-[state=active]:bg-brand-secondary-500 data-[state=active]:text-foreground data-[state=active]:shadow data-[state=active]:shadow-brand-secondary-500/20 px-3 sm:px-6 text-xs sm:text-sm whitespace-nowrap"
+              className="data-[state=active]:bg-brand-secondary-500 data-[state=active]:text-foreground data-[state=active]:shadow-sm px-3 sm:px-6 text-xs sm:text-sm whitespace-nowrap"
             >
               <Calendar className="w-4 h-4 mr-1 sm:mr-2" />
               Consultations
@@ -129,7 +129,7 @@ const AdminSupport = () => {
             </TabsTrigger>
             <TabsTrigger
               value="inquiries"
-              className="data-[state=active]:bg-brand-secondary-500 data-[state=active]:text-foreground data-[state=active]:shadow data-[state=active]:shadow-brand-secondary-500/20 px-3 sm:px-6 text-xs sm:text-sm whitespace-nowrap"
+              className="data-[state=active]:bg-brand-secondary-500 data-[state=active]:text-foreground data-[state=active]:shadow-sm px-3 sm:px-6 text-xs sm:text-sm whitespace-nowrap"
             >
               <MessageSquare className="w-4 h-4 mr-1 sm:mr-2" />
               <span className="hidden xs:inline">Contact </span>Messages

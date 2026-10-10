@@ -153,7 +153,7 @@ export default function WhatsAppDashboard() {
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
                 className={`px-4 py-2 text-xs font-semibold rounded transition-all flex items-center gap-2 ${activeTab === tab.id
-                    ? "bg-brand-secondary-600 text-white shadow-md shadow-brand-secondary-600/10"
+                    ? "bg-brand-secondary-600 text-white shadow-sm"
                     : "text-muted-foreground hover:text-foreground hover:bg-accent"
                   }`}
               >

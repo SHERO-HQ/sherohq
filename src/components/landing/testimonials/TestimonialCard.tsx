@@ -19,7 +19,7 @@ export interface TestimonialCardProps {
 export const TestimonialCard = ({ item }: TestimonialCardProps) => {
   return (
     <div className="bg-white dark:bg-slate-900 p-8 sm:p-10 rounded border border-slate-200/80 dark:border-slate-800 flex flex-col relative group h-full min-h-80">
-      <div className="absolute top-6 right-6 transition-transform duration-300">
+      <div className="absolute top-6 right-6 transition-transform ">
         <Quote className="size-8 text-brand-secondary-500/20" />
       </div>
 

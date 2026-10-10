@@ -99,7 +99,7 @@ export const ProductRow = memo(function ProductRow({
           <div className="w-12 h-1 bg-muted rounded-full overflow-hidden">
             <div
               className={cn(
-                "h-full rounded-full transition duration-500",
+                "h-full rounded-full transition ",
                 (product.quantity ?? 0) === 0
                   ? "bg-rose-500"
                   : (product.quantity ?? 0) <= 5

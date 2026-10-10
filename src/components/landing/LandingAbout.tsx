@@ -1,196 +1,141 @@
 "use client";
+
 import Link from "next/link";
-import { FadeInView, StaggerContainer, StaggerItem } from "@/components/motion/AnimateSection";
-import {
-  ArrowRight,
-  CheckCircle2,
-  Code2,
-  Cpu,
-  Globe,
-  Globe2} from "lucide-react";
+import { FadeInView } from "@/components/motion/AnimateSection";
+import { ArrowRight, Compass, Crosshair } from "lucide-react";
 import { SectionBadge } from "@/components/common/SectionBadge";
-import { } from "@/components/ui/card";
 
 const LandingAbout = () => {
-  const features = [
-    "Purpose-Built Ecosystems",
-    "Technology that Solves Real Problems",
-    "Trusted Hardware & Solution Partners",
-  ];
-
   return (
-    <section className="relative w-full py-10 lg:py-12 overflow-hidden bg-white dark:bg-slate-950 transition-colors duration-300">
+    <section className="relative w-full py-12 lg:py-16 overflow-hidden bg-white dark:bg-slate-950 transition-colors">
       {/* Background Ambience */}
-      <div className="absolute inset-x-0 top-0 h-40 bg-linear-to-b from-brand-secondary-600/8 to-transparent pointer-events-none" />
       <div className="absolute inset-0 pattern-grid-brand opacity-[0.03] dark:opacity-[0.05] pointer-events-none" />
 
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="flex flex-col lg:flex-row gap-10 lg:gap-16 items-center">
-          {/* LEFT COLUMN: Narrative */}
-          <FadeInView direction="left" delay={0}>
-            <div className="w-full space-y-6">
-              <div className="space-y-4">
-                <SectionBadge icon={Globe} className="mb-4">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
+          {/* LEFT COLUMN: Narrative on Who We Are */}
+          <div className="lg:col-span-7">
+            <FadeInView direction="left" delay={0}>
+              <div className="space-y-6">
+                <SectionBadge icon={Compass} className="mb-2">
                   Who We Are
                 </SectionBadge>
 
-                <h2 className="text-2xl md:text-4xl font-bold text-slate-900 dark:text-slate-100 mb-4 leading-tight">
-                  Redefining <br />
-                  <span className="text-brand-secondary-600">What's Possible</span>
+                <h2 className="text-2xl sm:text-3xl font-bold font-sora text-slate-900 dark:text-slate-100 tracking-tight leading-[1.15]">
+                  Redefine{" "}
+                  <span className="text-brand-secondary-600 dark:text-brand-secondary-400">
+                    Possible
+                  </span>
                 </h2>
 
-                <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed max-w-xl transition-colors duration-300">
-                  At SHERO, we believe technology is humanity's greatest enabler
-                  of progress. We build software, supply reliable hardware, and 
-                  manage the IT infrastructure that businesses need to create 
-                  new opportunities and expand their possibilities.
-                </p>
-              </div>
+                <div className="space-y-4 text-sm sm:text-base text-slate-600 dark:text-slate-400 leading-relaxed max-w-xl transition-colors">
+                  <p>
+                    SHERO believes technology is humanity&apos;s greatest enabler
+                    of progress. We observe, analyze and create solutions that
+                    empower people, businesses and communities to expand their possibilities.
+                  </p>
+                  <p>
+                    We focus is on solutions that are  accessible,
+                    and grounded in the everyday needs of people and local enterprises.
+                  </p>
+                </div>
 
-              {/* Feature List */}
-              <StaggerContainer
-                as="ul"
-                className="space-y-4"
-                staggerDelay={0.1}
-                delayChildren={0.15}
-              >
-                {features.map((item) => (
-                  <StaggerItem
-                    key={item}
-                    as="li"
-                    xOffset={-10}
-                    yOffset={0}
-                    className="flex items-center gap-3 text-slate-700 dark:text-slate-300 font-medium transition-colors duration-300"
+                <div className="pt-2">
+                  <Link
+                    href="/about-us"
+                    className="group inline-flex items-center gap-2 text-sm font-semibold text-slate-900 dark:text-white hover:text-brand-secondary-600 dark:hover:text-brand-secondary-400 transition-colors"
                   >
-                    <CheckCircle2 className="w-5 h-5 text-brand-secondary-500 shrink-0" />
-                    <span>{item}</span>
-                  </StaggerItem>
-                ))}
-              </StaggerContainer>
-
-              {/* CTA */}
-              <div className="pt-2">
-                <Link
-                  href="/about-us"
-                  className="group inline-flex items-center gap-2 text-slate-900 dark:text-white font-semibold border-b-2 border-brand-secondary-600 pb-1 hover:text-brand-secondary-700 dark:hover:text-brand-secondary-300 transition-colors"
-                >
-                  Discover Our Story
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </Link>
-              </div>
-            </div>
-          </FadeInView>
-
-          {/* RIGHT COLUMN: Tech Nexus Visualization */}
-          <div className="w-full lg:w-1/2 relative h-125 flex items-center justify-center select-none">
-            <div className="absolute inset-0 pattern-dots mask-radial-faded" />
-
-            <div className="relative z-20 w-96 h-96 rounded-full flex items-center justify-center border-2 border-dashed border-brand-secondary-600/20 bg-brand-secondary-500/1">
-              {/* Concentric Blueprint Rings */}
-              <div className="absolute inset-6 border-2 border-dashed border-brand-secondary-600/35 rounded-full animate-[spin_60s_linear_infinite]" />
-              <div className="absolute inset-12 border-2 border-dashed border-brand-secondary-500/20 rounded-full animate-[spin_40s_linear_infinite]" />
-
-              {/* Central Pattern Centerpiece */}
-              <div className="relative z-10 w-32 h-32 rounded-full flex items-center justify-center border border-brand-secondary-600/10 overflow-hidden bg-white/70 dark:bg-slate-900/70 backdrop-blur-xs">
-                {/* Pattern as the 'Glow' */}
-                <div className="absolute inset-0 pattern-dots opacity-40 dark:opacity-60 mask-radial-faded scale-150" />
-
-                {/* The Icon itself */}
-                <img
-                  src="/assets/logo/shero.svg"
-                  alt="SHERO"
-                  width={64}
-                  height={64}
-                  className="relative z-20 w-16 h-16 drop-shadow-sm hover:scale-105 transition-transform duration-300"
-                  suppressHydrationWarning
-                />
-              </div>
-
-              {/* Sleek, High-Fidelity Purpose Driven Badge - Positioned Clear of Orbit Path (Strict Brand Palette) */}
-              <div className="absolute flex items-center justify-center gap-2 -top-16 sm:-right-12 right-3 bg-white/95 dark:bg-slate-900/90 border border-brand-secondary-500/20 dark:border-brand-secondary-500/30 px-3.5 py-1.5 rounded shadow-md backdrop-blur-xs hover:scale-105 transition-transform duration-300 z-30">
-                <p className="text-base font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 tracking-tight font-sora leading-none">
-                  Purpose
-                </p>
-                <p className="text-[9px] text-brand-secondary-700 dark:text-brand-secondary-300 font-mono tracking-widest uppercase font-medium">
-                  Driven
-                </p>
-              </div>
-
-              {/* Multi-layered Concentric Orbits: Synchronized in a resonant 45s spin cycle, cardinally aligned (Globe top, Cpu bottom, Code right) to keep them perfectly in line and clear of overlays */}
-              
-              {/* 1. Globe2 - Orbiting the Outermost Ring (Radius 192px, Top cardinal start) */}
-              <div 
-                className="absolute inset-0 z-30 pointer-events-none rounded-full"
-                style={{ animation: "spin 45s linear infinite" }}
-              >
-                <div 
-                  className="absolute -top-4 left-1/2 -translate-x-1/2 pointer-events-auto"
-                  style={{ animation: "spin 45s linear infinite reverse" }}
-                >
-                  <FloatingCard
-                    icon={
-                      <Globe2 className="w-4.5 h-4.5 text-brand-primary-700 dark:text-brand-primary-400" />
-                    }
-                  />
+                    <span>Discover our story</span>
+                    <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                  </Link>
                 </div>
               </div>
+            </FadeInView>
+          </div>
 
-              {/* 2. Cpu - Orbiting the Middle Ring (Radius 168px / inset-6, Bottom cardinal start) */}
-              <div 
-                className="absolute inset-6 z-30 pointer-events-none rounded-full"
-                style={{ animation: "spin 45s linear infinite" }}
-              >
-                <div 
-                  className="absolute -bottom-4 left-1/2 -translate-x-1/2 pointer-events-auto"
-                  style={{ animation: "spin 45s linear infinite reverse" }}
+          {/* RIGHT COLUMN: Clean Architectural Emblem (Zero Spin, Technical Precision) */}
+          <div className="lg:col-span-5 w-full relative h-96 sm:h-110 flex items-center justify-center select-none">
+            <FadeInView direction="right" delay={0.1}>
+              <div className="relative w-72 h-72 sm:w-88 sm:h-88 flex items-center justify-center">
+                {/* Background Ambience Dots */}
+                <div className="absolute inset-0 pattern-dots mask-radial-faded opacity-35 dark:opacity-45 pointer-events-none" />
+
+                {/* SVG Precision Technical Blueprint Rings & Cardinal Markers */}
+                <svg
+                  className="absolute inset-0 w-full h-full text-slate-300 dark:text-slate-800 pointer-events-none"
+                  viewBox="0 0 352 352"
+                  fill="none"
                 >
-                  <FloatingCard
-                    icon={
-                      <Cpu className="w-4.5 h-4.5 text-brand-secondary-600 dark:text-brand-secondary-400" />
-                    }
+                  {/* Outer Fine Ring */}
+                  <circle
+                    cx="176"
+                    cy="176"
+                    r="160"
+                    stroke="currentColor"
+                    strokeWidth="1"
+                    className="opacity-60 dark:opacity-40"
+                  />
+                  {/* Dashed Mid Ring */}
+                  <circle
+                    cx="176"
+                    cy="176"
+                    r="128"
+                    stroke="#05735a"
+                    strokeWidth="1"
+                    strokeDasharray="4 6"
+                    className="opacity-30 dark:opacity-40"
+                  />
+                  {/* Inner Fine Ring */}
+                  <circle
+                    cx="176"
+                    cy="176"
+                    r="96"
+                    stroke="currentColor"
+                    strokeWidth="1"
+                    className="opacity-40 dark:opacity-30"
+                  />
+
+                  {/* Cardinal Compass Ticks (Top, Bottom, Left, Right) */}
+                  <line x1="176" y1="8" x2="176" y2="24" stroke="currentColor" strokeWidth="1.5" className="opacity-70 dark:opacity-60" />
+                  <line x1="176" y1="328" x2="176" y2="344" stroke="currentColor" strokeWidth="1.5" className="opacity-70 dark:opacity-60" />
+                  <line x1="8" y1="176" x2="24" y2="176" stroke="currentColor" strokeWidth="1.5" className="opacity-70 dark:opacity-60" />
+                  <line x1="328" y1="176" x2="344" y2="176" stroke="currentColor" strokeWidth="1.5" className="opacity-70 dark:opacity-60" />
+
+                  {/* Corner Accent Dots */}
+                  <circle cx="63" cy="63" r="2" fill="currentColor" className="opacity-50 dark:opacity-40" />
+                  <circle cx="289" cy="63" r="2" fill="currentColor" className="opacity-50 dark:opacity-40" />
+                  <circle cx="63" cy="289" r="2" fill="currentColor" className="opacity-50 dark:opacity-40" />
+                  <circle cx="289" cy="289" r="2" fill="currentColor" className="opacity-50 dark:opacity-40" />
+                </svg>
+
+                {/* Central Nucleus: Glassmorphic Frame with SHERO Emblem */}
+                <div className="relative z-10 w-18 h-18 rounded-full flex flex-col items-center justify-center bg-white/95 dark:bg-slate-900/95 border border-slate-200/90 dark:border-slate-800 shadow-md backdrop-blur-xs group hover:scale-105 transition-transform duration-300">
+                  <div className="absolute inset-0 bg-gradient-to-br from-brand-secondary-500/5 via-transparent to-brand-primary-500/5 rounded-2xl pointer-events-none" />
+
+                  <img
+                    src="/assets/logo/shero.svg"
+                    alt="SHERO"
+                    width={26}
+                    height={26}
+                    className="relative z-20 w-13 h-13 sm:w-14 sm:h-14 drop-shadow-xs transition-transform duration-300 group-hover:scale-105"
+                    suppressHydrationWarning
                   />
                 </div>
-              </div>
 
-              {/* 3. Code2 - Orbiting the Innermost Ring (Radius 144px / inset-12, Right cardinal start) */}
-              <div 
-                className="absolute inset-12 z-30 pointer-events-none rounded-full"
-                style={{ animation: "spin 45s linear infinite" }}
-              >
-                <div 
-                  className="absolute -right-4 top-1/2 -translate-y-1/2 pointer-events-auto"
-                  style={{ animation: "spin 45s linear infinite reverse" }}
-                >
-                  <FloatingCard
-                    icon={
-                      <Code2 className="w-4.5 h-4.5 text-brand-primary-600 dark:text-brand-primary-300" />
-                    }
-                  />
+                {/* Grounded Purpose-Driven Pill Badge */}
+                <div className="absolute -top-3 right-4 sm:right-6 z-20 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/95 dark:bg-slate-900/95 border border-slate-200/90 dark:border-slate-800 shadow-xs backdrop-blur-xs">
+                  <Crosshair className="w-4 h-4 rounded-full text-brand-secondary-500" />
+                  <span className="text-xs font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 font-sora">
+                    Purpose Driven
+                  </span>
                 </div>
               </div>
-            </div>
-
-            {/* Abstract Background Mesh for Column */}
-            <div className="absolute inset-10 pattern-grid-brand opacity-10 dark:opacity-20 mask-radial-faded rounded-full" />
+            </FadeInView>
           </div>
         </div>
       </div>
     </section>
   );
 };
-
-// Helper for floating cards: Lightweight Glassmorphism strictly adhering to the Brand Guide
-const FloatingCard = ({
-  icon}: {
-  icon: React.ReactNode;
-}) => (
-  <div className="hover:scale-110 transition-transform duration-300">
-    <div
-      className="flex items-center justify-center p-2 rounded-full bg-white/95 dark:bg-slate-900/90 border border-brand-secondary-500/20 dark:border-brand-secondary-500/35 shadow-md backdrop-blur-xs hover:border-brand-primary-500/40 dark:hover:border-brand-primary-400/40 transition-all duration-300"
-    >
-      {icon}
-    </div>
-  </div>
-);
 
 export default LandingAbout;

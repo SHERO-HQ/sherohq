@@ -106,8 +106,6 @@ const ProductHero = () => {
         ))}
       </div>
 
-      <div className="absolute top-0 left-0 right-0 h-28 bg-linear-to-b from-primary/8 to-transparent pointer-events-none" />
-
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-8">
           {/* LEFT: Content (60%) */}
@@ -139,7 +137,7 @@ const ProductHero = () => {
  text-slate-900 dark:text-white mb-4"
               >
                 Technology you can{" "}
-                <span className="text-transparent bg-clip-text bg-linear-to-r from-brand-primary-700 to-brand-secondary-600 dark:from-brand-primary-500 dark:to-brand-secondary-400">
+                <span className="text-brand-secondary-600 dark:text-brand-secondary-400">
                   deploy with confidence
                 </span>
               </m.h1>
@@ -314,7 +312,6 @@ const ProductHero = () => {
               </m.div>
 
               {/* Background Aura */}
-              <div className="absolute inset-0 bg-radial-gradient from-brand-secondary-500/10 to-transparent blur-3xl rounded-full scale-150 pointer-events-none" />
             </m.div>
           </div>
         </div>

@@ -127,7 +127,7 @@ export default function TrackOrderPage({ params, searchParams }: Props) {
       <div className="max-w-4xl mx-auto px-6 pt-26 space-y-8">
         {/* Pending Order Recovery Callout */}
         {isPending && (
-          <div className="p-4 sm:p-5 rounded-lg bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-700/60 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 animate-in fade-in slide-in-from-top-2">
+          <div className="p-4 sm:p-5 rounded-md bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-700/60 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 ">
             <div className="flex items-start gap-3">
               <div className="p-2 bg-amber-500/20 text-amber-600 dark:text-amber-400 rounded-full shrink-0 mt-0.5">
                 <Clock className="w-5 h-5" />

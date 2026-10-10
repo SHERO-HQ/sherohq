@@ -37,7 +37,7 @@ const values = [
 
 const AboutValues = () => {
   return (
-    <section className="py-16 md:py-20 bg-slate-50/90 dark:bg-slate-900/60 border-y border-slate-200 dark:border-slate-800/80 relative overflow-hidden transition-colors duration-300">
+    <section className="py-16 md:py-20 bg-slate-50/90 dark:bg-slate-900/60 border-y border-slate-200 dark:border-slate-800/80 relative overflow-hidden transition-colors ">
       {/* Background Ambience */}
       <div 
         aria-hidden="true"
@@ -53,10 +53,10 @@ const AboutValues = () => {
           <SectionBadge icon={Lightbulb} className="mb-4">
             Core Values
           </SectionBadge>
-          <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100 mb-3 transition-colors duration-300">
+          <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100 mb-3 transition-colors ">
             Our Core Principles
           </h2>
-          <p className="max-w-xl mx-auto text-sm md:text-base text-slate-600 dark:text-slate-400 transition-colors duration-300 leading-relaxed">
+          <p className="max-w-xl mx-auto text-sm md:text-base text-slate-600 dark:text-slate-400 transition-colors leading-relaxed">
             The foundational standards guiding every engineering decision, customer interaction, and partnership we build.
           </p>
         </div>
@@ -70,7 +70,7 @@ const AboutValues = () => {
             <StaggerItem key={item.title} yOffset={20} scale={0.98}>
               <div
                 className={cn(
-                  "group p-7 rounded bg-white dark:bg-slate-950/60 border border-slate-200/90 dark:border-slate-800 shadow-xs hover:shadow-lg transition-all duration-300 hover:-translate-y-1 h-full flex flex-col justify-between",
+                  "group p-7 rounded bg-white dark:bg-slate-950/60 border border-slate-200/90 dark:border-slate-800 shadow-xs hover:shadow-lg transition-all hover:-translate-y-1 h-full flex flex-col justify-between",
                   item.color === "primary" &&
                     "hover:border-brand-primary-500/40 dark:hover:border-brand-primary-500/40 hover:shadow-brand-primary-500/5",
                   item.color === "secondary" &&
@@ -81,7 +81,7 @@ const AboutValues = () => {
                   <div className="flex items-center justify-between mb-5">
                     <div
                       className={cn(
-                        "w-12 h-12 rounded flex items-center justify-center transition duration-300 border shadow-xs group-hover:scale-105",
+                        "w-12 h-12 rounded flex items-center justify-center transition border shadow-xs group-hover:scale-105",
                         item.color === "primary" &&
                           "bg-brand-primary-500/10 dark:bg-brand-primary-500/15 border-brand-primary-500/20 text-brand-primary-600 dark:text-brand-primary-400",
                         item.color === "secondary" &&

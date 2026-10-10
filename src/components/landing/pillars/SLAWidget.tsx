@@ -38,13 +38,13 @@ export const SLAWidget: React.FC = () => {
           Shero-SLA Active
         </span>
         <span className="text-slate-700 dark:text-slate-300">
-          Uptime: 99.99%
+          SYS_ONLINE
         </span>
       </div>
 
       <div className="flex-1 flex flex-col justify-center py-1">
         <div
-          className={`p-2 rounded border transition-all duration-300 ${alertState === 0
+          className={`p-2 rounded border transition-all ${alertState === 0
               ? "bg-slate-100 dark:bg-slate-900 border-slate-300 dark:border-slate-800 text-slate-700 dark:text-slate-400"
               : alertState === 1
                 ? "bg-amber-50 dark:bg-amber-500/10 border-amber-300 dark:border-amber-500/30 text-amber-700 dark:text-amber-400"
@@ -76,7 +76,6 @@ export const SLAWidget: React.FC = () => {
 
       <div className="pt-1.5 border-t border-slate-200 dark:border-slate-800 flex justify-between items-center text-[7px] text-slate-700 dark:text-slate-400">
         <span>SLA Ticket dispatch</span>
-        <span>Avg Resp: 4.8m</span>
       </div>
     </div>
   );

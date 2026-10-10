@@ -40,49 +40,7 @@ const AdminSidebar = memo(({ isOpen, setIsOpen }: Readonly<SidebarProps>) => {
     "Support": unresolvedSupportCount > 0 ? unresolvedSupportCount : undefined,
   };
 
-  const [pwaPrompt, setPwaPrompt] = useState<BeforeInstallPromptEvent | null>(
-    () => {
-      if (typeof window === "undefined") return null;
-
-      const windowWithPwaPrompt = window as WindowWithPwaPrompt;
-      const capturedPrompt = windowWithPwaPrompt.__pwaPromptEvent ?? null;
-      if (capturedPrompt) {
-        windowWithPwaPrompt.__pwaPromptEvent = null;
-      }
-
-      return capturedPrompt;
-    },
-  );
-
-  useEffect(() => {
-    const navigatorWithStandalone = window.navigator as NavigatorWithStandalone;
-    const isInstalled =
-      window.matchMedia("(display-mode: standalone)").matches ||
-      navigatorWithStandalone.standalone === true;
-
-    if (isInstalled) return;
-
-    const handlePrompt = (event: Event) => {
-      const promptEvent = event as BeforeInstallPromptEvent;
-      promptEvent.preventDefault();
-      setPwaPrompt(promptEvent);
-    };
-
-    window.addEventListener("beforeinstallprompt", handlePrompt);
-    return () =>
-      window.removeEventListener("beforeinstallprompt", handlePrompt);
-  }, []);
-
-  const handleInstallClick = async () => {
-    if (!pwaPrompt) return;
-    try {
-      await pwaPrompt.prompt();
-      const { outcome } = await pwaPrompt.userChoice;
-      if (outcome === "accepted") setPwaPrompt(null);
-    } catch (err) {
-      console.error("PWA Install failed", err);
-    }
-  };
+  const handleInstallClick = async () => {};
 
   return (
     <>
@@ -100,7 +58,7 @@ const AdminSidebar = memo(({ isOpen, setIsOpen }: Readonly<SidebarProps>) => {
 
       <aside
         className={cn(
-          "fixed top-0 left-0 h-full glass-surface z-50 transition-all duration-200 ease-in-out shadow",
+          "fixed top-0 left-0 h-full glass-surface z-50 transition-all ease-in-out shadow",
           isOpen
             ? "w-64 translate-x-0"
             : "w-20 -translate-x-full lg:translate-x-0",
@@ -120,7 +78,7 @@ const AdminSidebar = memo(({ isOpen, setIsOpen }: Readonly<SidebarProps>) => {
             isOpen={isOpen} 
             admin={admin} 
             logout={logout} 
-            pwaPrompt={pwaPrompt} 
+            pwaPrompt={null} 
             handleInstallClick={handleInstallClick} 
           />
         </div>

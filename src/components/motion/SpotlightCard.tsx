@@ -52,7 +52,7 @@ export default function SpotlightCard({
       className={cn("relative overflow-hidden", className)}
     >
       <m.div
-        className="pointer-events-none absolute -inset-px z-0 transition-opacity duration-300"
+        className="pointer-events-none absolute -inset-px z-0 transition-opacity "
         style={{
           background,
           opacity: isHovered ? 1 : 0,

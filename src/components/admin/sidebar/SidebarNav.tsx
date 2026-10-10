@@ -196,7 +196,7 @@ export function SidebarNav({ isOpen, setIsOpen, admin, badges }: SidebarNavProps
                 <span>{group.title}</span>
                 <ChevronDown
                   className={cn(
-                    "w-3 h-3 transition-transform duration-200",
+                    "w-3 h-3 transition-transform ",
                     isExpanded ? "rotate-180" : ""
                   )}
                 />
@@ -226,7 +226,7 @@ export function SidebarNav({ isOpen, setIsOpen, admin, badges }: SidebarNavProps
                       }}
                       className={({ isActive }) =>
                         cn(
-                          "flex items-center px-3 py-2.5 rounded group relative transition-all duration-200",
+                          "flex items-center px-3 py-2.5 rounded group relative transition-all ",
                           isOpen ? "gap-3" : "gap-0",
                           isActive
                             ? "bg-brand-secondary-500/10 text-brand-secondary-400 border border-brand-secondary-500/20 shadow-sm"
@@ -239,7 +239,7 @@ export function SidebarNav({ isOpen, setIsOpen, admin, badges }: SidebarNavProps
                         <>
                           <item.icon
                             className={cn(
-                              "w-5 h-5 shrink-0 transition-transform duration-200 group-hover:scale-110",
+                              "w-5 h-5 shrink-0 transition-transform group-hover:scale-110",
                               isActive
                                 ? "text-brand-secondary-400"
                                 : "text-muted-foreground group-hover:text-foreground",
@@ -247,7 +247,7 @@ export function SidebarNav({ isOpen, setIsOpen, admin, badges }: SidebarNavProps
                           />
                           <span
                             className={cn(
-                              "font-medium text-sm whitespace-nowrap transition-all duration-200",
+                              "font-medium text-sm whitespace-nowrap transition-all ",
                               isOpen
                                 ? "opacity-100 translate-x-0 w-auto flex-1"
                                 : "opacity-0 -translate-x-4 pointer-events-none w-0 overflow-hidden flex-none",
@@ -258,7 +258,7 @@ export function SidebarNav({ isOpen, setIsOpen, admin, badges }: SidebarNavProps
                           {badges[item.label] !== undefined && (
                             <span
                               className={cn(
-                                "bg-brand-secondary-500 text-foreground text-[10px] font-bold rounded-full transition-all duration-200",
+                                "bg-brand-secondary-500 text-foreground text-[10px] font-bold rounded-full transition-all ",
                                 isOpen ? "opacity-100 scale-100 ml-2 px-1.5 py-0.5" : "opacity-0 scale-0 pointer-events-none w-0 overflow-hidden m-0 p-0"
                               )}
                             >

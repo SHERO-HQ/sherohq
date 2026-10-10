@@ -241,10 +241,10 @@ const CategorySidebar: React.FC<CategorySidebarProps> = ({
                 <div className="pt-2 border-t border-slate-200 dark:border-slate-800">
                     <label className="flex items-center gap-3 cursor-pointer group py-2">
                         <div
-                            className={`shrink-0 w-10 h-6 rounded-full p-1 transition-colors duration-300 ${filters.inStock ? "bg-brand-secondary-600" : "bg-slate-300 dark:bg-slate-700"}`}
+                            className={`shrink-0 w-10 h-6 rounded-full p-1 transition-colors ${filters.inStock ? "bg-brand-secondary-600" : "bg-slate-300 dark:bg-slate-700"}`}
                         >
                             <div
-                                className={`w-4 h-4 rounded-full bg-white transform transition-transform duration-300 ${filters.inStock ? "translate-x-4" : "translate-x-0"}`}
+                                className={`w-4 h-4 rounded-full bg-white transform transition-transform ${filters.inStock ? "translate-x-4" : "translate-x-0"}`}
                             />
                         </div>
                         <input

@@ -144,7 +144,7 @@ const AdminStats = () => {
  };
 
  return (
- <div className="space-y-8 animate-in fade-in duration-500 pb-12">
+ <div className="space-y-8 pb-12">
   <AdminPageHeader
     icon={BarChart}
     title="Site Statistics"

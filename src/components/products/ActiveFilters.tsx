@@ -34,7 +34,7 @@ export const ActiveFilters = ({
   if (!hasActiveFilters) return null;
 
   return (
-    <div className="flex flex-wrap items-center gap-2 mb-6 animate-in fade-in slide-in-from-top-2 duration-500">
+    <div className="flex flex-wrap items-center gap-2 mb-6 ">
       <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mr-2 flex items-center gap-1">
         Active Filters:
       </span>
@@ -104,7 +104,7 @@ const FilterChip = ({ label, onRemove }: { label: string; onRemove: () => void }
     initial={{ opacity: 0, scale: 0.8 }}
     animate={{ opacity: 1, scale: 1 }}
     exit={{ opacity: 0, scale: 0.8 }}
-    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-full group hover:border-brand-secondary-500/30 transition-all duration-300"
+    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-full group hover:border-brand-secondary-500/30 transition-all "
   >
     <span className="text-[10px] font-bold text-slate-700 dark:text-slate-300">
       {label}

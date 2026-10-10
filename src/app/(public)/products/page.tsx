@@ -1,6 +1,12 @@
-import { redirect } from "next/navigation";
+import type { Metadata } from "next";
+import Solutions from "@/views/Solutions";
 
-// /products → /shop redirect
-export default function ProductsRedirect() {
- redirect("/shop");
+export const metadata: Metadata = {
+  title: "Products & Solutions",
+  description:
+    "Explore our commercial hardware, purposeful software products, and technology solutions built for modern businesses.",
+};
+
+export default function ProductsPage() {
+  return <Solutions />;
 }

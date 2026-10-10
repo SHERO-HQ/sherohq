@@ -113,7 +113,7 @@ const LandingProducts = () => {
           <div
             role="group"
             aria-label="Product categories"
-            className="w-full max-w-fit mx-auto h-auto p-1 rounded-lg bg-slate-100 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700/60 overflow-x-auto no-scrollbar justify-start sm:justify-center flex flex-nowrap gap-1"
+            className="w-full max-w-fit mx-auto h-auto p-1 rounded-md bg-slate-100 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700/60 overflow-x-auto no-scrollbar justify-start sm:justify-center flex flex-nowrap gap-1"
           >
             {categories.map((category) => {
               const isActive = activeCategory === category;
@@ -123,11 +123,10 @@ const LandingProducts = () => {
                   type="button"
                   aria-pressed={isActive}
                   onClick={() => setActiveCategory(category)}
-                  className={`px-5 py-2 text-xs sm:text-sm font-semibold rounded whitespace-nowrap transition-all duration-200 cursor-pointer ${
-                    isActive
+                  className={`px-5 py-2 text-xs sm:text-sm font-semibold rounded whitespace-nowrap transition-all cursor-pointer ${isActive
                       ? "bg-brand-secondary-800 text-white shadow-sm"
                       : "text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/60 dark:hover:bg-slate-700/50"
-                  }`}
+                    }`}
                 >
                   {category}
                 </button>
@@ -184,7 +183,7 @@ const LandingProducts = () => {
   hover:border-brand-secondary-500 dark:hover:border-brand-secondary-500
   hover:text-brand-secondary-600 dark:hover:text-brand-secondary-400
   hover:shadow
-  transition duration-300 group"
+  transition group"
             >
               <span>Shop Now</span>
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />

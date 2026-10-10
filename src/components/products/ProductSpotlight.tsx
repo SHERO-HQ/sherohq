@@ -99,20 +99,7 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
       ref={sectionRef}
       className="relative w-full h-full lg:min-h-[calc(90vh-5rem)] overflow-hidden group/spotlight flex flex-col justify-center pt-5 lg:pt-0"
     >
-      {/* Immersive Background: Animates based on current product */}
-      <div
-        key={`bg-${currentProduct.id}`}
-        className="absolute inset-0 z-0 overflow-hidden pointer-events-none"
-      >
-        <AppImage
-          src={getImageUrl(currentProduct.image)}
-          alt=""
-          fill
-          priority
-          className="object-cover opacity-30 dark:opacity-20 blur-[60px] scale-150 transform-gpu"
-        />
-        <div className="absolute inset-0 bg-slate-50/70 dark:bg-slate-950/70 backdrop-blur-3xl" />
-      </div>
+
 
       {/* Kinetic pattern overlay */}
       <div className="absolute inset-0 pattern-dots opacity-40 mix-blend-overlay pointer-events-none z-0" />
@@ -125,8 +112,8 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
         <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col items-center w-full max-w-6xl mx-auto">
             <div className="flex flex-col-reverse lg:flex-row lg:items-stretch gap-8 lg:gap-12 relative w-full">
-              {/* Left Side: Glassmorphic Info Card */}
-              <div className="w-full lg:w-[55%] flex flex-col justify-between p-6 sm:p-10 lg:p-12 bg-white/70 dark:bg-slate-900/60 backdrop-blur-2xl border border-white/40 dark:border-white/10 rounded shadow-[0_8px_32px_rgba(0,0,0,0.08)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.4)]">
+              {/* Left Side: Info Card */}
+              <div className="w-full lg:w-[55%] flex flex-col justify-between p-6 sm:p-10 lg:p-12 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-md shadow-sm">
                 <div className="max-w-xl flex flex-col justify-between h-full">
                   <div>
                     <div className="flex items-center justify-between mb-6">
@@ -154,7 +141,7 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                           key={i}
                           className={
                             i === 0
-                              ? "text-transparent bg-clip-text bg-linear-to-r from-brand-secondary-600 to-brand-primary-600 dark:from-brand-secondary-400 dark:to-brand-primary-400"
+                              ? "text-brand-secondary-600 dark:text-brand-secondary-400"
                               : ""
                           }
                         >
@@ -185,7 +172,7 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                           href={getAbsoluteUrl(
                             `/shop/${currentProduct.slug || currentProduct.sku || currentProduct.id}`,
                           )}
-                          className="group flex items-center justify-center gap-3 w-full sm:w-auto px-8 py-2 bg-brand-secondary-600 hover:bg-brand-secondary-700 text-white rounded font-semibold transition duration-300 shadow shadow-brand-secondary-500/25 hover:scale-[1.02] active:scale-95"
+                          className="group flex items-center justify-center gap-3 w-full sm:w-auto px-8 py-2 bg-brand-secondary-600 hover:bg-brand-secondary-700 text-white rounded font-semibold transition shadow-sm hover:scale-[1.02] active:scale-95"
                         >
                           Details
                           <ArrowRight
@@ -209,11 +196,10 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                               setCurrentIndex(i);
                               setIsAutoPlaying(false);
                             }}
-                            className={`h-1.5 transition-all duration-500 rounded ${
-                              i === safeCurrentIndex
+                            className={`h-1.5 transition-all rounded ${i === safeCurrentIndex
                                 ? "w-10 bg-brand-secondary-600 shadow-[0_0_10px_rgba(var(--color-brand-secondary-500),0.5)]"
                                 : "w-3 bg-slate-300 dark:bg-slate-700 hover:bg-slate-400 dark:hover:bg-slate-600"
-                            }`}
+                              }`}
                           />
                         ))}
                       </div>
@@ -256,12 +242,12 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                     alt={currentProduct.name}
                     fill
                     priority
-                    className="object-contain drop-shadow-2xl rounded transition-transform duration-1000 group-hover/image:scale-110"
+                    className="object-contain drop-shadow-2xl rounded transition-transform group-hover/image:scale-110"
                   />
                 </div>
 
                 {/* Desktop Action Overlay: Share & Maximize */}
-                <div className="absolute top-4 right-4 z-20 flex flex-col gap-3 opacity-0 group-hover/image:opacity-100 transition-opacity duration-300 pointer-events-none">
+                <div className="absolute top-4 right-4 z-20 flex flex-col gap-3 opacity-0 group-hover/image:opacity-100 transition-opacity pointer-events-none">
                   <button
                     aria-label="Share product"
                     onClick={(e) => {
@@ -276,7 +262,7 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                             title: currentProduct.name,
                             url: url,
                           })
-                          .catch(() => {});
+                          .catch(() => { });
                       } else {
                         navigator.clipboard.writeText(url);
                       }
@@ -343,11 +329,10 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                         setCurrentIndex(i);
                         setIsAutoPlaying(false);
                       }}
-                      className={`h-1.5 transition-all duration-500 rounded ${
-                        i === safeCurrentIndex
+                      className={`h-1.5 transition-all rounded ${i === safeCurrentIndex
                           ? "w-6 bg-brand-secondary-600"
                           : "w-2 bg-slate-900/20 dark:bg-white/40 hover:bg-slate-900/40 dark:hover:bg-white/60"
-                      }`}
+                        }`}
                     />
                   ))}
                 </div>
@@ -360,10 +345,6 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
       {/* Autoplay Progress Bar */}
       {isAutoPlaying && (
         <div className="absolute z-20 bottom-0 left-0 right-0 h-1.5 bg-slate-200 dark:bg-white/10 overflow-hidden">
-          <div
-            key={safeCurrentIndex}
-            className="h-full bg-linear-to-r from-brand-primary-500 to-brand-secondary-500 shadow-[0_0_10px_rgba(var(--color-brand-secondary-500),0.8)] animate-[slideRight_8s_linear_forwards]"
-          />
         </div>
       )}
     </section>

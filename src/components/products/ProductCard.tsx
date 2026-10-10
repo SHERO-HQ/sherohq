@@ -97,7 +97,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
  border border-slate-200 dark:border-white/10
  hover:border-brand-secondary-500/50 dark:hover:border-brand-secondary-400/30
  hover:-translate-y-0.75 hover:shadow-sm dark:hover:shadow-black/20
- transition-all duration-300 ease-out cursor-pointer
+ transition-all ease-out cursor-pointer
  flex flex-col h-full will-change-transform"
       style={{
         isolation: "isolate",
@@ -105,7 +105,6 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
       }}
     >
       {/* Immersive Hover Background */}
-      <div className="absolute inset-0 opacity-0 group-hover:opacity-40 bg-linear-to-b from-brand-secondary-500/5 via-transparent to-transparent transition-opacity duration-500 pointer-events-none" />
 
       {/* Image Container */}
       <div className="relative aspect-3/4 sm:aspect-4/5 lg:aspect-3/4 bg-slate-100 dark:bg-slate-900 overflow-hidden shrink-0">
@@ -117,10 +116,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
             alt={product.name}
             fill
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-            className="object-contain object-center sm:group-hover:scale-105 sm:transition-transform sm:duration-500 will-change-auto"
+            className="object-contain object-center sm:group-hover:scale-105 sm:transition-transform sm:will-change-auto"
           />
         ) : (
-          <div className="absolute inset-0 flex items-center justify-center text-6xl select-none opacity-30 group-hover:scale-105 transition-transform duration-700">
+          <div className="absolute inset-0 flex items-center justify-center text-6xl select-none opacity-30 group-hover:scale-105 transition-transform ">
             {product.image}
           </div>
         )}
@@ -130,7 +129,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
           {/* Primary Action - Always Visible */}
           <button
             onClick={toggleWishlist}
-            className="w-9 h-9 rounded-full bg-white/90 dark:bg-black/60 backdrop-blur-sm border border-white/20 flex items-center justify-center hover:bg-red-500 hover:text-white transition-all duration-300 shadow-sm cursor-pointer"
+            className="w-9 h-9 rounded-full bg-white/90 dark:bg-black/60 backdrop-blur-sm border border-white/20 flex items-center justify-center hover:bg-red-500 hover:text-white transition-all shadow-sm cursor-pointer"
             title={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
             aria-label={isWishlisted ? `Remove ${product.name} from wishlist` : `Add ${product.name} to wishlist`}
           >
@@ -141,10 +140,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
           </button>
 
           {/* Secondary Actions - Slide in on Hover (Always visible on mobile) */}
-          <div className="flex flex-col gap-2 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 translate-x-0 lg:translate-x-4 lg:group-hover:translate-x-0 transition-all duration-300 pointer-events-auto lg:pointer-events-none lg:group-hover:pointer-events-auto">
+          <div className="flex flex-col gap-2 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 translate-x-0 lg:translate-x-4 lg:group-hover:translate-x-0 transition-all pointer-events-auto lg:pointer-events-none lg:group-hover:pointer-events-auto">
             <button
               onClick={handleQuickView}
-              className="w-9 h-9 rounded-full bg-white/90 dark:bg-black/60 backdrop-blur-sm border border-white/20 flex items-center justify-center hover:bg-brand-secondary-500 hover:text-white transition-all duration-300 shadow-sm cursor-pointer"
+              className="w-9 h-9 rounded-full bg-white/90 dark:bg-black/60 backdrop-blur-sm border border-white/20 flex items-center justify-center hover:bg-brand-secondary-500 hover:text-white transition-all shadow-sm cursor-pointer"
               title="Quick view"
               aria-label={`Quick view ${product.name}`}
             >

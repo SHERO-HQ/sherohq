@@ -69,7 +69,7 @@ const AboutStory = () => {
               <SectionBadge icon={Clover} className="mb-4">
                 Our Story
               </SectionBadge>
-              <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100 mb-4 transition-colors duration-300">
+              <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100 mb-4 transition-colors ">
                 Driven by
                 <span className="text-brand-secondary-600 dark:text-brand-secondary-400">
                   {" "}
@@ -96,7 +96,7 @@ const AboutStory = () => {
         <StaggerContainer className="grid md:grid-cols-2 gap-8 mb-16 lg:grid-cols-2!">
           {/* Mission */}
           <StaggerItem>
-            <div className="group h-full bg-white/60 dark:bg-slate-900/40 backdrop-blur-md p-8 lg:p-10 rounded border border-slate-200/80 dark:border-slate-800/80 hover:border-brand-primary-500/50 dark:hover:border-brand-primary-500/50 transition-all duration-500 shadow-sm hover:shadow-xl hover:-translate-y-1">
+            <div className="group h-full bg-white/60 dark:bg-slate-900/40 backdrop-blur-md p-8 lg:p-10 rounded border border-slate-200/80 dark:border-slate-800/80 hover:border-brand-primary-500/50 dark:hover:border-brand-primary-500/50 transition-all shadow-sm hover:shadow-xl hover:-translate-y-1">
               <div className="w-12 h-12 bg-brand-primary-500 rounded flex items-center justify-center mb-4 shadow shadow-brand-primary-500/20 group-hover:scale-110 transition-transform">
                 <Target className="w-8 h-8 text-white" />
               </div>
@@ -111,7 +111,7 @@ const AboutStory = () => {
 
           {/* Vision */}
           <StaggerItem>
-            <div className="group h-full bg-white/60 dark:bg-slate-900/40 backdrop-blur-md p-8 lg:p-10 rounded border border-slate-200/80 dark:border-slate-800/80 hover:border-brand-secondary-500/50 dark:hover:border-brand-secondary-500/50 transition-all duration-500 shadow-sm hover:shadow-xl hover:-translate-y-1">
+            <div className="group h-full bg-white/60 dark:bg-slate-900/40 backdrop-blur-md p-8 lg:p-10 rounded border border-slate-200/80 dark:border-slate-800/80 hover:border-brand-secondary-500/50 dark:hover:border-brand-secondary-500/50 transition-all shadow-sm hover:shadow-xl hover:-translate-y-1">
               <div className="w-12 h-12 bg-brand-secondary-500 rounded flex items-center justify-center mb-4 shadow shadow-brand-secondary-500/20 group-hover:scale-110 transition-transform">
                 <Globe className="w-8 h-8 text-white" />
               </div>
@@ -151,8 +151,8 @@ const AboutStory = () => {
                   Technical Expertise
                 </h4>
                 <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-                  Deep understanding of the African market combined with
-                  international best practices.
+                  Deep understanding of regional business operations combined with
+                  proven engineering and deployment standards.
                 </p>
               </div>
               <div className="pt-8 md:pt-0 md:pl-10">

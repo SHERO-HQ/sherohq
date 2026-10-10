@@ -159,7 +159,7 @@ const PaymentFailureSupport = ({
                   href={whatsappUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded bg-[#25D366] text-white font-bold hover:bg-[#128C7E] transition-colors shadow shadow-brand-secondary-500/10"
+                  className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded bg-[#25D366] text-white font-bold hover:bg-[#128C7E] transition-colors shadow-sm"
                 >
                   <WhatsAppIcon className="w-5 h-5 fill-current" />
                   Chat Support

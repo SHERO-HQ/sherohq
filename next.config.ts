@@ -45,9 +45,49 @@ const nextConfig: NextConfig = {
   // Optimise production builds
   productionBrowserSourceMaps: false,
 
-  // Redirect old checkout complete URLs to the new success page
+  // Redirect old checkout complete URLs to the new success page, and shop routes to /#services
   async redirects() {
     return [
+      {
+        source: "/shop",
+        destination: "/#services",
+        permanent: true,
+      },
+      {
+        source: "/shop/:path*",
+        destination: "/#services",
+        permanent: true,
+      },
+      {
+        source: "/cart",
+        destination: "/#services",
+        permanent: true,
+      },
+      {
+        source: "/cart/:path*",
+        destination: "/#services",
+        permanent: true,
+      },
+      {
+        source: "/checkout",
+        destination: "/#services",
+        permanent: true,
+      },
+      {
+        source: "/checkout/:path*",
+        destination: "/#services",
+        permanent: true,
+      },
+      {
+        source: "/track",
+        destination: "/#services",
+        permanent: true,
+      },
+      {
+        source: "/track/:path*",
+        destination: "/#services",
+        permanent: true,
+      },
       {
         source: "/checkout/complete",
         destination: "/shop/checkout/success",

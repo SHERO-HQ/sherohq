@@ -53,7 +53,7 @@ const AboutFounder = () => {
             {/* Tagline */}
             <m.p
               variants={fadeUp}
-              className="mt-8 text-base md:text-lg font-bold tracking-wide bg-gradient-to-r from-brand-primary-500 to-brand-secondary-500 bg-clip-text text-transparent uppercase"
+              className="mt-8 text-base md:text-lg font-bold tracking-wide text-brand-secondary-600 dark:text-brand-secondary-400 uppercase"
             >
               Redefine Possible.
             </m.p>

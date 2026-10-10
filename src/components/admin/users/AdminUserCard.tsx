@@ -66,7 +66,7 @@ export function AdminUserCard({
   const RoleIcon = config.icon;
 
   return (
-    <div className="group relative bg-card/40 border border-border rounded p-6 hover:border-brand-secondary-500/30 transition duration-500">
+    <div className="group relative bg-card/40 border border-border rounded p-6 hover:border-brand-secondary-500/30 transition ">
       <div className="absolute top-4 right-4 ring-offset-slate-950">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

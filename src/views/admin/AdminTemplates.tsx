@@ -124,7 +124,7 @@ export default function AdminTemplates() {
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-500">
+    <div className="space-y-6 ">
       <AdminPageHeader title="Templates Management" icon={LayoutTemplate}>
         <div className="flex gap-2">
           <Button onClick={() => fetchTemplates(true)} variant="outline" disabled={isLoading || isSyncing}>
@@ -140,8 +140,8 @@ export default function AdminTemplates() {
 
       {/* Glassmorphic Modal for Creating Template */}
       {isCreating && mounted && createPortal(
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="bg-card border border-border p-6 rounded w-full max-w-2xl shadow-2xl animate-in zoom-in-95 duration-300">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm ">
+          <div className="bg-card border border-border p-6 rounded w-full max-w-2xl shadow-2xl animate-in zoom-in-95 ">
             <div className="flex justify-between items-center mb-6">
               <h3 className="font-bold text-xl text-foreground flex items-center gap-2">
                 <LayoutTemplate className="w-5 h-5 text-brand-secondary-500" />
@@ -198,7 +198,7 @@ export default function AdminTemplates() {
               </div>
 
               {formData.channel === "whatsapp" && (
-                <div className="grid grid-cols-2 gap-5 animate-in slide-in-from-top-2">
+                <div className="grid grid-cols-2 gap-5 animate-in ">
                   <div className="space-y-1.5">
                     <label className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">Language Code</label>
                     <Input
@@ -216,7 +216,7 @@ export default function AdminTemplates() {
               <Button variant="ghost" onClick={() => setIsCreating(false)} className="rounded px-6">
                 Cancel
               </Button>
-              <Button onClick={handleSave} className="bg-brand-secondary-600 text-white hover:bg-brand-secondary-500 rounded px-6 shadow-md shadow-brand-secondary-500/20">
+              <Button onClick={handleSave} className="bg-brand-secondary-600 text-white hover:bg-brand-secondary-500 rounded px-6 shadow-sm">
                 <Save className="h-4 w-4 mr-2" /> Save Template
               </Button>
             </div>
@@ -241,7 +241,7 @@ export default function AdminTemplates() {
         {templates.map((t) => (
           <div
             key={t.id}
-            className="group flex flex-col bg-card border border-border/80 rounded overflow-hidden shadow-sm hover:shadow-xl hover:shadow-black/5 hover:-translate-y-1 transition-all duration-300"
+            className="group flex flex-col bg-card border border-border/80 rounded overflow-hidden shadow-sm hover:shadow-xl hover:shadow-black/5 hover:-translate-y-1 transition-all "
           >
             {/* Card Header */}
             <div className="p-5 border-b border-border/50 flex justify-between items-start bg-accent/10">

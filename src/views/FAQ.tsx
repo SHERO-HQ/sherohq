@@ -29,22 +29,11 @@ const FAQ = () => {
       items: [
         {
           q: "How long does delivery usually take?",
-          a: "Delivery within Tamale takes 1-2 business days. National deliveries across Ghana typically take 3-5 business days. Regional deliveries (Nigeria, Ivory Coast) may take 7-14 business days.",
+          a: "Delivery within Tamale takes 1-2 business days. Deliveries to other regions across Ghana typically take 2-4 business days depending on destination and courier schedules.",
         },
         {
           q: "How can I track my order?",
-          a: (
-            <>
-              Once your order is dispatched, you will receive an email and SMS with a tracking link to monitor your delivery status in real-time. You can also track your order directly on our{" "}
-              <Link
-                href="/track-order"
-                className="text-brand-secondary-600 hover:underline font-medium"
-              >
-                Track Order
-              </Link>{" "}
-              page.
-            </>
-          ),
+          a: "Once your order is confirmed and dispatched, our team sends dispatch confirmation and tracking updates directly via SMS and WhatsApp. You can also contact our support desk anytime with your order details for an immediate status update.",
         },
         {
           q: "What is your return policy?",
@@ -57,11 +46,11 @@ const FAQ = () => {
       items: [
         {
           q: "What is the warranty period for laptops?",
-          a: "All our products come with a standard warranty. We also offer an optional extended warranty plan depending on the product and your needs.",
+          a: "All laptops and hardware come with standard warranty coverage (typically 6 to 12 months depending on the specific model and manufacturer). Extended support agreements are available for business fleet deployments.",
         },
         {
           q: "Do you sell refurbished items?",
-          a: "Yes we do! We have a specific certified refurbished section which is clearly labeled.",
+          a: "Yes. When pre-owned or refurbished hardware is available, each device undergoes hardware diagnostic testing and is clearly labeled with its exact condition and specifications.",
         },
       ],
     },
@@ -85,14 +74,21 @@ const FAQ = () => {
           q: "How do I contact technical support?",
           a: (
             <>
-              You can reach our technical support team via the ticketing system on your dashboard, by emailing{" "}
+              You can reach our technical support team by opening a ticket on our{" "}
+              <Link
+                href="/support"
+                className="text-brand-secondary-600 hover:underline font-medium"
+              >
+                Support
+              </Link>{" "}
+              page, emailing{" "}
               <a
                 href={`mailto:${COMPANY_EMAILS.SUPPORT}`}
                 className="text-brand-secondary-600 hover:underline font-medium"
               >
                 {COMPANY_EMAILS.SUPPORT}
               </a>
-              , or through our dedicated WhatsApp support line.
+              , or messaging our dedicated WhatsApp support line.
             </>
           ),
         },
@@ -108,11 +104,11 @@ const FAQ = () => {
     <>
       <div className="pt-8 pb-12 bg-slate-50 dark:bg-slate-950 min-h-screen">
         <div className="container max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-10 animate-in fade-in slide-in-from-bottom-4 duration-700 fill-mode-both">
+          <div className="text-center mb-10 ">
             <SectionBadge icon={HelpCircle} className="mb-4">
               Help Center
             </SectionBadge>
-            <h1 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-slate-100 mb-4 tracking-tight transition-colors duration-300">
+            <h1 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-slate-100 mb-4 tracking-tight transition-colors ">
               Answers to common{" "}
               <span className="text-brand-secondary-600">Questions</span>
             </h1>
@@ -171,7 +167,7 @@ const FAQItem = ({
         </span>
       </button>
       <div
-        className={`grid transition-[grid-template-rows,opacity] duration-300 ease-in-out ${
+        className={`grid transition-[grid-template-rows,opacity] ease-in-out ${
           isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
         }`}
       >

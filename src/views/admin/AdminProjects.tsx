@@ -260,7 +260,7 @@ export default function AdminProjects() {
  asChild
  >
  <a
- href={`/solutions`}
+ href={`/products`}
  target="_blank"
  rel="noreferrer"
  >

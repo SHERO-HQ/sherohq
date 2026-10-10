@@ -61,7 +61,7 @@ const LandingPathways = () => {
  label: "For Enterprise",
  title: "Solutions",
  description: "Custom software and managed IT infrastructure.",
- link: "/solutions",
+ link: "/consultation",
  pattern: "pattern-dots",
  span: "lg:col-span-4 lg:row-span-1",
  color: "text-brand-primary-500",
@@ -87,7 +87,7 @@ const LandingPathways = () => {
  </p>
  </div>
  <Link
- href="/solutions"
+ href="/consultation"
  className="group w-fit flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-slate-900 dark:text-white border-b-2 border-brand-secondary-500 pb-1"
  >
  All Services{" "}

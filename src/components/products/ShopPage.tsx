@@ -251,7 +251,7 @@ const ShopView = () => {
                     >
                       <SlidersHorizontal
                         size={16}
-                        className="group-hover:rotate-180 transition-transform duration-500 sm:w-4.5 sm:h-4.5"
+                        className="group-hover:rotate-180 transition-transform sm:w-4.5 sm:h-4.5"
                       />
                       <span>Filters</span>
                     </button>
@@ -308,8 +308,8 @@ const ShopView = () => {
                     <button
                       key={cat.id}
                       onClick={() => handleCategoryChange(cat.id)}
-                      className={`flex items-center gap-2 px-4 py-2 rounded whitespace-nowrap transition border duration-300 ${activeCategory === cat.id
-                          ? "bg-brand-secondary-600 border-brand-secondary-500 text-white shadow shadow-brand-secondary-500/40"
+                      className={`flex items-center gap-2 px-4 py-2 rounded whitespace-nowrap transition border ${activeCategory === cat.id
+                          ? "bg-brand-secondary-600 border-brand-secondary-500 text-white shadow-sm"
                           : "bg-white dark:bg-slate-900 border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-400 hover:border-brand-secondary-500/30"
                         }`}
                     >

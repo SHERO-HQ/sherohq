@@ -178,7 +178,7 @@ export function PortfolioDrawer({
                       Solution
                     </h4>
                     <div className="relative p-6 bg-card border border-border rounded overflow-hidden group shadow-sm">
-                      <div className="absolute top-0 right-0 p-4 opacity-5 text-brand-secondary-600 dark:text-brand-secondary-400 select-none pointer-events-none transition-transform duration-500 group-hover:scale-110 group-hover:-rotate-6">
+                      <div className="absolute top-0 right-0 p-4 opacity-5 text-brand-secondary-600 dark:text-brand-secondary-400 select-none pointer-events-none transition-transform group-hover:scale-110 group-hover:-rotate-6">
                         <Info className="w-20 h-20" />
                       </div>
                       <p className="text-base text-foreground italic leading-relaxed relative z-10 font-medium">
@@ -209,7 +209,7 @@ export function PortfolioDrawer({
                       {selectedProject.technologies.map((tech) => (
                         <span
                           key={tech}
-                          className={`px-3.5 py-1.5 text-sm font-semibold rounded-full border border-border bg-background/50 backdrop-blur-sm shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md cursor-default ${getTechColor(tech)}`}
+                          className={`px-3.5 py-1.5 text-sm font-semibold rounded-full border border-border bg-background/50 backdrop-blur-sm shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md cursor-default ${getTechColor(tech)}`}
                         >
                           {tech}
                         </span>
@@ -256,19 +256,19 @@ export function PortfolioDrawer({
                       href={selectedProject.link}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center justify-center gap-2 w-full sm:w-auto px-6 py-3.5 bg-brand-secondary-600 hover:bg-brand-secondary-700 text-white text-sm font-bold rounded shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer group/btn shrink-0"
+                      className="inline-flex items-center justify-center gap-2 w-full sm:w-auto px-6 py-3.5 bg-brand-secondary-600 hover:bg-brand-secondary-700 text-white text-sm font-bold rounded shadow-sm hover:shadow transition-all hover:-translate-y-0.5 active:translate-y-0 cursor-pointer group/btn shrink-0"
                     >
                       <span>Launch Project</span>
-                      <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover/btn:translate-x-1" />
+                      <ArrowRight className="w-4 h-4 transition-transform group-hover/btn:translate-x-1" />
                     </a>
                   </>
                 ) : (
                   <a
                     href="/contact-us?inquiry=solution"
-                    className="inline-flex items-center justify-center gap-2 w-full px-6 py-3.5 bg-brand-secondary-600 hover:bg-brand-secondary-700 text-white text-sm font-bold rounded shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer group/btn"
+                    className="inline-flex items-center justify-center gap-2 w-full px-6 py-3.5 bg-brand-secondary-600 hover:bg-brand-secondary-700 text-white text-sm font-bold rounded shadow-sm hover:shadow transition-all hover:-translate-y-0.5 active:translate-y-0 cursor-pointer group/btn"
                   >
                     <span>Inquire About This Solution</span>
-                    <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover/btn:translate-x-1" />
+                    <ArrowRight className="w-4 h-4 transition-transform group-hover/btn:translate-x-1" />
                   </a>
                 )}
               </m.div>

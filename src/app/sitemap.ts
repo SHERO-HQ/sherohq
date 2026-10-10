@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { API_BASE } from "@/services/client";
 import type { Product } from "@/types/product";
+import { SHOP_ENABLED } from "@/constants/features";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const siteUrl = (
@@ -15,13 +16,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticRoutes = [
     "",
     "/about-us",
-    "/solutions",
+    "/products",
     "/consultation",
     "/contact-us",
     "/support",
     "/faq",
     "/privacy",
     "/terms",
+    "/merchander",
   ].map((route) => ({
     url: `${siteUrl}${route}`,
     lastModified: new Date(),
@@ -29,38 +31,40 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: route === "" ? 1 : 0.8,
   }));
 
-  // Dynamic Products from API
+  // Dynamic Products from API - only when shop is enabled
   let productRoutes: MetadataRoute.Sitemap = [];
-  try {
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 5000); // 5 second timeout
-
+  if (SHOP_ENABLED) {
     try {
-      const res = await fetch(`${API_BASE}/products`, {
-        next: { revalidate: 3600 },
-        signal: controller.signal,
-      });
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 5000); // 5 second timeout
 
-      if (res.ok) {
-        const products: Product[] = await res.json();
-        productRoutes = products.map((product) => ({
-          url: `${shopSiteUrl}/${product.id}`,
-          lastModified: new Date(),
-          changeFrequency: "daily" as const,
-          priority: 0.7,
-        }));
+      try {
+        const res = await fetch(`${API_BASE}/products`, {
+          next: { revalidate: 3600 },
+          signal: controller.signal,
+        });
+
+        if (res.ok) {
+          const products: Product[] = await res.json();
+          productRoutes = products.map((product) => ({
+            url: `${shopSiteUrl}/${product.id}`,
+            lastModified: new Date(),
+            changeFrequency: "daily" as const,
+            priority: 0.7,
+          }));
+        }
+      } finally {
+        clearTimeout(timeout);
       }
-    } finally {
-      clearTimeout(timeout);
-    }
-  } catch (error) {
-    // Silently skip dynamic products if API is unavailable during build
-    // This is expected during initial deployment when server may not be ready yet
-    if (process.env.NODE_ENV === "development") {
-      console.debug(
-        "Sitemap: Skipping dynamic products (API unavailable)",
-        (error as Error)?.message,
-      );
+    } catch (error) {
+      // Silently skip dynamic products if API is unavailable during build
+      // This is expected during initial deployment when server may not be ready yet
+      if (process.env.NODE_ENV === "development") {
+        console.debug(
+          "Sitemap: Skipping dynamic products (API unavailable)",
+          (error as Error)?.message,
+        );
+      }
     }
   }
 

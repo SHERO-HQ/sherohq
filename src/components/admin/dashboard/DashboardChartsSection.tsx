@@ -54,7 +54,7 @@ const ChartSkeleton = () => (
       {[40, 65, 80, 50, 95, 70, 110].map((height, i) => (
         <div key={i} className="flex-1 flex flex-col items-center gap-2 h-full justify-end">
           <div
-            className="w-full bg-accent/50 rounded-t transition-all duration-500"
+            className="w-full bg-accent/50 rounded-t transition-all "
             style={{ height: `${(height / 110) * 100}%` }}
           />
           <div className="h-1.5 w-8 bg-accent/50 rounded" />
@@ -208,7 +208,7 @@ export function DashboardOrderStatusPieChart({
 
   return (
     <Card className="bg-card/40 border-border overflow-hidden relative group">
-      <div className="absolute inset-0 bg-radial-gradient from-blue-500/2 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+      <div className="absolute inset-0 bg-radial-gradient opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
       <CardHeader className="pb-4 border-b border-border">
         <div className="flex items-center justify-between">
           <CardTitle className="text-sm text-foreground">

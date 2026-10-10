@@ -28,10 +28,10 @@ export function PortfolioCard({ project, idx, onSelect }: PortfolioCardProps) {
         y: { duration: 0.5, delay: idx * 0.08 },
       }}
       onClick={() => onSelect(project)}
-      className="group rounded bg-white/70 dark:bg-slate-900/40 backdrop-blur-md border border-slate-200 dark:border-slate-800/80 overflow-hidden hover:-translate-y-1.5 hover:scale-[1.01] hover:border-brand-secondary-500/80 dark:hover:border-brand-secondary-500/80 hover:shadow-xl hover:shadow-brand-secondary-500/5 transition-all duration-300 flex flex-col h-full cursor-pointer"
+      className="group rounded bg-white/70 dark:bg-slate-900/40 backdrop-blur-md border border-slate-200 dark:border-slate-800/80 overflow-hidden hover:-translate-y-1.5 hover:scale-[1.01] hover:border-brand-secondary-500/80 dark:hover:border-brand-secondary-500/80 hover:shadow-xl hover:shadow-brand-secondary-500/5 transition-all flex flex-col h-full cursor-pointer"
     >
       {/* Project Image Box */}
-      <div className="relative aspect-video bg-linear-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-700 flex items-center justify-center overflow-hidden shrink-0 border-b border-slate-150 dark:border-slate-800/50">
+      <div className="relative aspect-video flex items-center justify-center overflow-hidden shrink-0 border-b border-slate-150 dark:border-slate-800/50">
         {project.image &&
         (project.image.startsWith("http") ||
           project.image.startsWith("/") ||
@@ -41,10 +41,10 @@ export function PortfolioCard({ project, idx, onSelect }: PortfolioCardProps) {
             alt={project.title}
             fill
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-            className="object-cover group-hover:scale-103 transition-transform duration-500"
+            className="object-cover group-hover:scale-103 transition-transform "
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center bg-slate-50 dark:bg-slate-900/50 overflow-hidden relative group-hover:scale-105 transition-transform duration-500 select-none">
+          <div className="w-full h-full flex items-center justify-center bg-slate-50 dark:bg-slate-900/50 overflow-hidden relative group-hover:scale-105 transition-transform select-none">
             <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-size-[12px_12px]" />
             <div className="relative z-10 p-3.5 rounded bg-white/95 dark:bg-slate-800/95 shadow-sm border border-slate-200/50 dark:border-slate-700/50">
               <Layers className="w-8 h-8 text-brand-secondary-500/70" />
@@ -53,8 +53,8 @@ export function PortfolioCard({ project, idx, onSelect }: PortfolioCardProps) {
         )}
 
         {/* Hover details overlay */}
-        <div className="absolute inset-0 bg-brand-secondary-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-          <span className="px-3.5 py-2 bg-slate-950/95 text-white text-[10px] font-bold uppercase tracking-wider rounded border border-white/10 flex items-center gap-1.5 translate-y-2 group-hover:translate-y-0 transition-all duration-300 shadow-md">
+        <div className="absolute inset-0 bg-brand-secondary-600/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+          <span className="px-3.5 py-2 bg-slate-950/95 text-white text-[10px] font-bold uppercase tracking-wider rounded border border-white/10 flex items-center gap-1.5 translate-y-2 group-hover:translate-y-0 transition-all shadow-md">
             View Details <Info className="w-3.5 h-3.5" />
           </span>
         </div>

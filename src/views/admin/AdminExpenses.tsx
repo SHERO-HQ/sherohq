@@ -166,8 +166,8 @@ export default function AdminExpenses() {
       {deleteConfirmId &&
         mounted &&
         createPortal(
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs animate-in fade-in duration-200 select-none">
-            <Card className="w-full max-w-sm bg-card border border-rose-500/20 shadow-2xl p-6 text-center space-y-4 animate-in zoom-in-95 duration-200">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs select-none">
+            <Card className="w-full max-w-sm bg-card border border-rose-500/20 shadow-2xl p-6 text-center space-y-4 animate-in zoom-in-95 ">
               <div className="w-12 h-12 rounded-full bg-rose-500/10 flex items-center justify-center mx-auto text-rose-500">
                 <Trash2 className="w-5 h-5 stroke-[2px]" />
               </div>

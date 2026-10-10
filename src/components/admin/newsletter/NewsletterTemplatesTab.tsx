@@ -99,7 +99,7 @@ export function NewsletterTemplatesTab({
         {templates.map((template: any) => (
           <div
             key={template.id}
-            className="group rounded border border-border/80 bg-card flex flex-col justify-between overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 hover:shadow-black/5 transition-all duration-300"
+            className="group rounded border border-border/80 bg-card flex flex-col justify-between overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 hover:shadow-black/5 transition-all "
           >
             {/* Card Header & Preview */}
             <div className="flex flex-col flex-1">

@@ -1,5 +1,5 @@
 import React from "react";
-import { MessageSquare, Code, Send, Loader2, AlertCircle, Sparkles } from "lucide-react";
+import { MessageSquare, Code, Send, Loader2, AlertCircle, Zap } from "lucide-react";
 import { TemplatePreview } from "../newsletter/TemplatePreview";
 import { BUILTIN_WHATSAPP_TEMPLATES } from "./types";
 
@@ -74,7 +74,7 @@ export function MessageComposer({
             }}
             className="px-3 py-1 text-xs font-semibold bg-amber-500 hover:bg-amber-600 text-black rounded transition-colors shrink-0 flex items-center gap-1 shadow-sm"
           >
-            <Sparkles className="w-3 h-3" />
+            <Zap className="w-3 h-3" />
             Use Follow-Up Template
           </button>
         </div>

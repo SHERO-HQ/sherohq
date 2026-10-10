@@ -10,7 +10,7 @@ export const metadata = {
 
 export default function FeedbackPage() {
   return (
-    <div className="min-h-screen inset-0 pattern-dots bg-linear-to-br from-slate-50 via-white to-slate-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 py-20 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen inset-0 pattern-dots dark:py-20 px-4 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-2xl">
         {/* Header */}
         <div className="mb-16 text-center">
@@ -24,13 +24,13 @@ export default function FeedbackPage() {
         </div>
 
         {/* Form Container */}
-        <div className="mb-12 rounded bg-white dark:bg-slate-900 p-4 sm:p-12 shadow-sm ring-1 ring-slate-200 dark:ring-slate-800 transition-all duration-300 hover:shadow-md hover:ring-slate-300">
+        <div className="mb-12 rounded bg-white dark:bg-slate-900 p-4 sm:p-12 shadow-sm ring-1 ring-slate-200 dark:ring-slate-800 transition-all hover:shadow-md hover:ring-slate-300">
           <FeedbackForm />
         </div>
 
         {/* Info Cards */}
         <div className="grid gap-6 sm:grid-cols-2">
-          <div className="rounded bg-white dark:bg-slate-800 p-4 ring-1 ring-slate-200 dark:ring-slate-800 transition-all duration-300 hover:ring-slate-300">
+          <div className="rounded bg-white dark:bg-slate-800 p-4 ring-1 ring-slate-200 dark:ring-slate-800 transition-all hover:ring-slate-300">
             <div className="mb-3 flex items-center gap-2">
               <ShieldCheck className="h-4 w-4 text-slate-900 dark:text-slate-200" />
               <h3 className="font-semibold text-sm text-slate-900 dark:text-slate-200">Privacy Protected</h3>
@@ -39,7 +39,7 @@ export default function FeedbackPage() {
               Your feedback is securely stored and only viewed by our team.
             </p>
           </div>
-          <div className="rounded dark:bg-slate-800 bg-white p-4 ring-1 ring-slate-200 dark:ring-slate-800 transition-all duration-300 hover:ring-slate-300">
+          <div className="rounded dark:bg-slate-800 bg-white p-4 ring-1 ring-slate-200 dark:ring-slate-800 transition-all hover:ring-slate-300">
             <div className="mb-3 flex items-center gap-2">
               <Glasses className="h-4 w-4 text-slate-900 dark:text-slate-200" />
               <h3 className="font-semibold text-sm text-slate-900 dark:text-slate-200">Stay Anonymous</h3>

@@ -37,7 +37,7 @@ export default function JsonLd({ product }: { product?: Product }) {
         "priceRange": "$$",
         "address": {
           "@type": "PostalAddress",
-          "streetAddress": "Shero Tech Hub, Jisonayili Road",
+          "streetAddress": "Shero HQ, Jisonayili Road",
           "addressLocality": "Tamale",
           "addressRegion": "Northern",
           "postalCode": "NS-124-3920",
@@ -45,8 +45,8 @@ export default function JsonLd({ product }: { product?: Product }) {
         },
         "geo": {
           "@type": "GeoCoordinates",
-          "latitude": "5.6037",
-          "longitude": "-0.1870"
+          "latitude": "9.4008",
+          "longitude": "-0.8393"
         },
         "openingHoursSpecification": [
           {
@@ -65,20 +65,12 @@ export default function JsonLd({ product }: { product?: Product }) {
         "parentOrganization": {
           "@id": `https://${COMPANY_CONTACTS.WEBSITE}/#organization`
         },
-        "url": `https://${COMPANY_CONTACTS.WEBSITE}/solutions`,
+        "url": `https://${COMPANY_CONTACTS.WEBSITE}/products`,
         "description": "High-performance custom platforms, software engineering, managed enterprise IT infrastructure, and cloud systems designed to grow with your ambitions.",
         "areaServed": [
           {
             "@type": "Country",
             "name": "Ghana"
-          },
-          {
-            "@type": "Country",
-            "name": "Nigeria"
-          },
-          {
-            "@type": "Country",
-            "name": "Kenya"
           }
         ],
         "offers": {

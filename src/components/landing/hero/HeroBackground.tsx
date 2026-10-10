@@ -17,9 +17,6 @@ export const HeroBackground = () => {
 
       {/* Lightweight Ambient Particles */}
       <ParticleField count={6} colorVariant="single" opacity={0.15} animate />
-
-      {/* Top Ambient Linear Glow */}
-      <div className="absolute top-0 left-0 right-0 h-40 bg-linear-to-b from-brand-primary-500/10 via-brand-secondary-500/5 to-transparent pointer-events-none" />
     </>
   );
 };

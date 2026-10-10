@@ -176,7 +176,7 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
-                    className={`relative px-6 py-3 md:px-8 text-left transition-all duration-300 flex-1 md:flex-none whitespace-nowrap md:whitespace-normal ${activeTab === tab.id
+                    className={`relative px-6 py-3 md:px-8 text-left transition-all flex-1 md:flex-none whitespace-nowrap md:whitespace-normal ${activeTab === tab.id
                         ? "text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-500/10 font-bold shadow-xs"
                         : "text-slate-400 hover:text-slate-600 dark:hover:text-white"
                       }`}
@@ -273,7 +273,7 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
                           setTempFilters({ ...tempFilters, brands: newBrands });
                         }}
                         className={`px-4 py-2 rounded font-medium tracking-tight text-xs md:text-sm border-2 transition ${tempFilters.brands.includes(brand)
-                            ? "bg-brand-secondary-500 border-brand-secondary-500 text-white shadow shadow-brand-secondary-500/20"
+                            ? "bg-brand-secondary-500 border-brand-secondary-500 text-white shadow-sm"
                             : "bg-slate-50 dark:bg-white/5 border-transparent text-slate-500"
                           }`}
                       >
@@ -357,7 +357,7 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
               </button>
               <button
                 onClick={handleApply}
-                className="flex-1 flex items-center justify-center gap-3 h-10 bg-brand-secondary-600 text-white rounded font-semibold tracking-tight text-sm hover:bg-brand-secondary-500 shadow shadow-brand-secondary-500/20 active:scale-[0.98] transition group"
+                className="flex-1 flex items-center justify-center gap-3 h-10 bg-brand-secondary-600 text-white rounded font-semibold tracking-tight text-sm hover:bg-brand-secondary-500 shadow-sm active:scale-[0.98] transition group"
               >
                 Apply Filters{" "}
                 <ArrowRight

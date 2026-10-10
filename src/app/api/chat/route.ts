@@ -23,6 +23,7 @@ import { db } from "@/lib/db";
 import { aiChatSessions } from "@/lib/drizzle/schema";
 import { eq, sql } from "drizzle-orm";
 import { rateLimit } from "@/lib/rate-limit";
+import { SHOP_ENABLED } from "@/constants/features";
 
 export async function POST(request: Request) {
   try {
@@ -37,7 +38,7 @@ export async function POST(request: Request) {
     const safeHistory: ChatHistoryMessage[] = Array.isArray(history) ? history : [];
     const budgetCap = resolveBudgetFromConversation(message, safeHistory);
 
-    const catalogSummary = await fetchDynamicCatalogSummary(message);
+    const catalogSummary = SHOP_ENABLED ? await fetchDynamicCatalogSummary(message) : "";
     
     // Categorize intent for multi-agent routing
     const agentRoute = await categorizeIntent(message, safeHistory);

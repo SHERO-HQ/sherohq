@@ -38,8 +38,7 @@ const LandingSecurity = () => {
         <Shield className="w-[120vw] h-[120vw] sm:w-[80vw] sm:h-[80vw] text-brand-primary-500" strokeWidth={0.5} />
       </div>
       
-      {/* Glow effect at top */}
-      <div className="absolute top-0 left-1/2 h-125 w-200 -translate-x-1/2 rounded-full bg-brand-primary-500/10 opacity-20 blur-[100px]" />
+
 
       <div className="container relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-3xl text-center mb-16 sm:mb-20">
@@ -62,7 +61,7 @@ const LandingSecurity = () => {
             className="text-2xl font-bold tracking-tight text-white sm:text-3xl"
           >
             Secure By{" "}
-            <span className="text-transparent bg-clip-text bg-linear-to-r from-brand-primary-400 to-white">
+            <span className="text-brand-secondary-400">
               Design.
             </span>
           </m.h2>
@@ -74,7 +73,8 @@ const LandingSecurity = () => {
             transition={{ delay: 0.2 }}
             className="mt-6 text-sm text-slate-400 leading-relaxed max-w-2xl mx-auto"
           >
-            We don't just bolt on security as an afterthought. It is woven into the very fabric of our hardware and custom software ecosystem.
+            Security is built into every step of our work — from authorized hardware
+            provisioning and network configuration to robust data protection and ongoing system maintenance.
           </m.p>
         </div>
 
@@ -91,10 +91,9 @@ const LandingSecurity = () => {
                 className="group relative rounded border border-white/5 bg-white/2 p-8 transition-colors hover:bg-white/4 hover:border-brand-primary-500/30 overflow-hidden"
               >
                 {/* Hover gradient overlay */}
-                <div className="absolute inset-0 bg-linear-to-br from-brand-primary-500/10 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
                 
                 <div className="relative z-10 flex items-start gap-5">
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded bg-brand-primary-500/10 border border-brand-primary-500/20 text-brand-primary-400 group-hover:bg-brand-primary-500 group-hover:text-slate-950 transition-colors duration-300">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded bg-brand-primary-500/10 border border-brand-primary-500/20 text-brand-primary-400 group-hover:bg-brand-primary-500 group-hover:text-slate-950 transition-colors ">
                     <Icon className="h-6 w-6" />
                   </div>
                   <div>

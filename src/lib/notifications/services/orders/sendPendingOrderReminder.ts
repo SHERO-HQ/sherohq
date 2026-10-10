@@ -62,19 +62,19 @@ export async function sendPendingOrderReminderNotification({
               <tr>
                 ${imgHtml ? `<td style="padding-right: 12px; vertical-align: middle; width: 40px;">${imgHtml}</td>` : ""}
                 <td style="vertical-align: middle;">
-                  <strong style="display: block; font-family: Helvetica, Arial, sans-serif; font-size: 13px; font-weight: bold; color: #0f172a; margin-bottom: 2px;">${item.name}</strong>
-                  ${item.sku ? `<span style="font-family: 'Courier New', Courier, monospace; font-size: 10px; color: #64748b;">SKU: ${item.sku}</span>` : ""}
+                  <strong style="display: block; font-family: 'Red Hat Display', sans-serif; font-size: 13px; font-weight: bold; color: #0f172a; margin-bottom: 2px;">${item.name}</strong>
+                  ${item.sku ? `<span style="font-family: 'Red Hat Mono', monospace; font-size: 10px; color: #64748b;">SKU: ${item.sku}</span>` : ""}
                 </td>
               </tr>
             </table>
           </td>
-          <td style="padding: 12px 0; border-bottom: 1px solid #f1f5f9; text-align: right; color: #475569; font-family: Helvetica, Arial, sans-serif; font-size: 12px; width: 45px;">
+          <td style="padding: 12px 0; border-bottom: 1px solid #f1f5f9; text-align: right; color: #475569; font-family: 'Red Hat Display', sans-serif; font-size: 12px; width: 45px;">
             ${item.quantity}
           </td>
-          <td style="padding: 12px 0; border-bottom: 1px solid #f1f5f9; text-align: right; color: #475569; font-family: 'Courier New', Courier, monospace; font-size: 12px; width: 85px;">
+          <td style="padding: 12px 0; border-bottom: 1px solid #f1f5f9; text-align: right; color: #475569; font-family: 'Red Hat Mono', monospace; font-size: 12px; width: 85px;">
             GHS${Number(item.price).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </td>
-          <td style="padding: 12px 0; border-bottom: 1px solid #f1f5f9; text-align: right; color: #1e293b; font-family: Helvetica, Arial, sans-serif; font-weight: bold; font-size: 12px; width: 90px;">
+          <td style="padding: 12px 0; border-bottom: 1px solid #f1f5f9; text-align: right; color: #1e293b; font-family: 'Red Hat Display', sans-serif; font-weight: bold; font-size: 12px; width: 90px;">
             GHS${(Number(item.price) * item.quantity).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </td>
         </tr>`;
@@ -86,8 +86,8 @@ export async function sendPendingOrderReminderNotification({
     <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #fffbeb; border: 1px solid #fef3c7; border-radius: 8px; margin-bottom: 24px;">
       <tr>
         <td style="padding: 16px 20px;">
-          <div style="font-family: Helvetica, Arial, sans-serif; font-size: 14px; font-weight: bold; color: #92400e; margin-bottom: 4px;">${bannerTitle}</div>
-          <div style="font-family: Helvetica, Arial, sans-serif; font-size: 12px; color: #78350f; line-height: 1.5;">
+          <div style="font-family: 'Red Hat Display', sans-serif; font-size: 14px; font-weight: bold; color: #92400e; margin-bottom: 4px;">${bannerTitle}</div>
+          <div style="font-family: 'Red Hat Display', sans-serif; font-size: 12px; color: #78350f; line-height: 1.5;">
             ${bannerText}
           </div>
         </td>
@@ -98,10 +98,10 @@ export async function sendPendingOrderReminderNotification({
     <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 24px;">
       <thead>
         <tr>
-          <th style="padding: 0 0 12px 0; text-align: left; font-family: Helvetica, Arial, sans-serif; font-size: 10px; font-weight: bold; color: #94a3b8; letter-spacing: 1px; border-bottom: 1px solid #e2e8f0;">ITEM</th>
-          <th style="padding: 0 0 12px 0; text-align: right; font-family: Helvetica, Arial, sans-serif; font-size: 10px; font-weight: bold; color: #94a3b8; letter-spacing: 1px; border-bottom: 1px solid #e2e8f0; width: 45px;">QTY</th>
-          <th style="padding: 0 0 12px 0; text-align: right; font-family: Helvetica, Arial, sans-serif; font-size: 10px; font-weight: bold; color: #94a3b8; letter-spacing: 1px; border-bottom: 1px solid #e2e8f0; width: 85px;">PRICE</th>
-          <th style="padding: 0 0 12px 0; text-align: right; font-family: Helvetica, Arial, sans-serif; font-size: 10px; font-weight: bold; color: #94a3b8; letter-spacing: 1px; border-bottom: 1px solid #e2e8f0; width: 90px;">TOTAL</th>
+          <th style="padding: 0 0 12px 0; text-align: left; font-family: 'Red Hat Display', sans-serif; font-size: 10px; font-weight: bold; color: #94a3b8; letter-spacing: 1px; border-bottom: 1px solid #e2e8f0;">ITEM</th>
+          <th style="padding: 0 0 12px 0; text-align: right; font-family: 'Red Hat Display', sans-serif; font-size: 10px; font-weight: bold; color: #94a3b8; letter-spacing: 1px; border-bottom: 1px solid #e2e8f0; width: 45px;">QTY</th>
+          <th style="padding: 0 0 12px 0; text-align: right; font-family: 'Red Hat Display', sans-serif; font-size: 10px; font-weight: bold; color: #94a3b8; letter-spacing: 1px; border-bottom: 1px solid #e2e8f0; width: 85px;">PRICE</th>
+          <th style="padding: 0 0 12px 0; text-align: right; font-family: 'Red Hat Display', sans-serif; font-size: 10px; font-weight: bold; color: #94a3b8; letter-spacing: 1px; border-bottom: 1px solid #e2e8f0; width: 90px;">TOTAL</th>
         </tr>
       </thead>
       <tbody>
@@ -112,8 +112,8 @@ export async function sendPendingOrderReminderNotification({
     <!-- Total -->
     <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 28px;">
       <tr>
-        <td style="text-align: right; font-family: Helvetica, Arial, sans-serif; font-size: 13px; color: #64748b; padding-right: 12px;">Total Due:</td>
-        <td style="text-align: right; font-family: Helvetica, Arial, sans-serif; font-size: 16px; font-weight: bold; color: #043284; width: 110px;">
+        <td style="text-align: right; font-family: 'Red Hat Display', sans-serif; font-size: 13px; color: #64748b; padding-right: 12px;">Total Due:</td>
+        <td style="text-align: right; font-family: 'Red Hat Display', sans-serif; font-size: 16px; font-weight: bold; color: #043284; width: 110px;">
           GHS${Number(total).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
         </td>
       </tr>
@@ -123,14 +123,14 @@ export async function sendPendingOrderReminderNotification({
     <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 24px;">
       <tr>
         <td style="text-align: center;">
-          <a href="${payUrl}" style="display: inline-block; background-color: #043284; color: #ffffff; font-family: Helvetica, Arial, sans-serif; font-size: 14px; font-weight: bold; padding: 14px 36px; border-radius: 6px; text-decoration: none; letter-spacing: 0.5px; box-shadow: 0 2px 4px rgba(4, 50, 132, 0.2);">
+          <a href="${payUrl}" style="display: inline-block; background-color: #043284; color: #ffffff; font-family: 'Red Hat Display', sans-serif; font-size: 14px; font-weight: bold; padding: 14px 36px; border-radius: 6px; text-decoration: none; letter-spacing: 0.5px; box-shadow: 0 2px 4px rgba(4, 50, 132, 0.2);">
             Complete Payment Now →
           </a>
         </td>
       </tr>
       <tr>
         <td style="text-align: center; padding-top: 12px;">
-          <a href="${trackUrl}" style="font-family: Helvetica, Arial, sans-serif; font-size: 12px; color: #64748b; text-decoration: underline;">
+          <a href="${trackUrl}" style="font-family: 'Red Hat Display', sans-serif; font-size: 12px; color: #64748b; text-decoration: underline;">
             View order details
           </a>
         </td>
@@ -140,7 +140,7 @@ export async function sendPendingOrderReminderNotification({
     <!-- Assistance Note -->
     <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; margin-top: 16px;">
       <tr>
-        <td style="padding: 14px 16px; font-family: Helvetica, Arial, sans-serif; font-size: 12px; color: #64748b; line-height: 1.5;">
+        <td style="padding: 14px 16px; font-family: 'Red Hat Display', sans-serif; font-size: 12px; color: #64748b; line-height: 1.5;">
           <strong>Need help completing your payment?</strong><br />
           If you experienced issues with Mobile Money network prompts or card authorization, reach out to our team directly on WhatsApp at <a href="https://wa.me/${COMPANY_CONTACTS.WHATSAPP}" style="color: #059669; font-weight: bold; text-decoration: none;">${COMPANY_CONTACTS.PHONE_DISPLAY}</a>.
         </td>

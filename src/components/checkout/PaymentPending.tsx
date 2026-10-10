@@ -43,7 +43,7 @@ export function PaymentPending({
 
       <div className="w-full bg-white dark:bg-[#0f1115] shadow-[0_8px_30px_rgb(0,0,0,0.08)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.2)] rounded p-8 mb-8 border border-slate-100 dark:border-slate-800/60 relative overflow-hidden">
         <div
-          className={`absolute top-0 left-0 right-0 h-1 bg-linear-to-r from-transparent ${brand.glow} to-transparent`}
+          className={`absolute top-0 left-0 right-0 h-1 ${brand.glow} `}
         />
 
         <div className="flex flex-col items-center mb-10">

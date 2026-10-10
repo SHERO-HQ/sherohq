@@ -209,7 +209,7 @@ const AdminGuides = () => {
  }
 
  return (
- <div className="space-y-8 animate-in fade-in duration-500">
+ <div className="space-y-8 ">
  <div className="flex flex-col gap-4">
  {/* Back Button */}
  <div>

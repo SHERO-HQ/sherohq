@@ -182,7 +182,7 @@ export function SchedulerStep3Info({
             type="submit"
             disabled={status === "submitting"}
             size="lg"
-            className="flex-1 md:flex-none rounded px-8 bg-brand-secondary-600 hover:bg-brand-secondary-700 text-white shadow shadow-brand-secondary-500/30"
+            className="flex-1 md:flex-none rounded px-8 bg-brand-secondary-600 hover:bg-brand-secondary-700 text-white shadow-sm"
           >
             {status === "submitting" ? "Confirming..." : "Confirm Booking"}
           </Button>

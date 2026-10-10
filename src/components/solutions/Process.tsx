@@ -35,7 +35,7 @@ const steps = [
   {
     title: "Integration & Testing",
     description:
-      "Rigorous testing ensures seamless integration of all systems, with security audits and performance optimization.",
+      "Thorough testing ensures seamless integration across all systems, with security checks, functional validation, and performance optimization.",
     icon: Wrench,
   },
   {
@@ -47,7 +47,7 @@ const steps = [
   {
     title: "Support & Maintenance",
     description:
-      "Ongoing monitoring, updates, hardware maintenance, and 24/7 IT support to keep your systems running optimally.",
+      "Ongoing monitoring, updates, hardware maintenance, and IT support to keep your systems running optimally.",
     icon: Shield,
   },
 ];
@@ -69,7 +69,7 @@ const ProcessStep = ({ step, index }: { step: typeof steps[0]; index: number }) 
         {/* Content Card */}
         <div className="w-full pl-14 md:pl-0 md:w-5/12">
           <div
-            className={`relative p-6 rounded bg-white/60 dark:bg-slate-900/40 backdrop-blur-md border transition-all duration-500 overflow-hidden group hover:-translate-y-1 hover:shadow-xl hover:shadow-brand-secondary-900/20 ${
+            className={`relative p-6 rounded bg-white/60 dark:bg-slate-900/40 backdrop-blur-md border transition-all overflow-hidden group hover:-translate-y-1 hover:shadow-xl hover:shadow-brand-secondary-900/20 ${
               isInView
                 ? "border-brand-secondary-500/50 dark:border-brand-secondary-500/50 shadow-brand-secondary-500/10 shadow-lg md:scale-105 scale-102"
                 : "border-slate-200/80 dark:border-slate-800/80 shadow-sm"
@@ -79,7 +79,7 @@ const ProcessStep = ({ step, index }: { step: typeof steps[0]; index: number }) 
             <div
               className={`absolute -bottom-4 z-0 transform-gpu ${
                 isEven ? "md:-left-2 right-0" : "right-0 md:right-1"
-              } text-[100px] font-black select-none pointer-events-none leading-none tracking-tighter transition-colors duration-500 ${
+              } text-[100px] font-black select-none pointer-events-none leading-none tracking-tighter transition-colors ${
                 isInView
                   ? "text-brand-secondary-500/10 dark:text-brand-secondary-400/10"
                   : "text-slate-900/10 dark:text-white/10 group-hover:text-brand-secondary-500/5"
@@ -90,7 +90,7 @@ const ProcessStep = ({ step, index }: { step: typeof steps[0]; index: number }) 
 
             <div className="relative z-10">
               <h3
-                className={`text-md md:text-lg font-bold tracking-tight mb-2 transition-colors duration-500 ${
+                className={`text-md md:text-lg font-bold tracking-tight mb-2 transition-colors ${
                   isInView
                     ? "text-brand-secondary-600 dark:text-brand-secondary-400"
                     : "text-slate-900 dark:text-white group-hover:text-brand-secondary-500"
@@ -108,14 +108,14 @@ const ProcessStep = ({ step, index }: { step: typeof steps[0]; index: number }) 
         {/* Timeline Icon */}
         <div className="absolute left-5 md:left-1/2 md:-translate-x-1/2 -translate-x-1/2 flex items-center justify-center z-10">
           <div
-            className={`w-10 h-10 md:w-12 md:h-12 rounded-full shadow flex items-center justify-center border-4 transition-all duration-500 ${
+            className={`w-10 h-10 md:w-12 md:h-12 rounded-full shadow flex items-center justify-center border-4 transition-all ${
               isInView
                 ? "bg-brand-secondary-600 dark:bg-brand-secondary-500 border-brand-secondary-100 dark:border-slate-800 scale-125 shadow-brand-secondary-500/50"
                 : "bg-slate-300 dark:bg-slate-700 border-white dark:border-slate-900 scale-100"
             }`}
           >
             <Icon
-              className={`w-5 h-5 md:w-5 md:h-5 transition-colors duration-500 ${
+              className={`w-5 h-5 md:w-5 md:h-5 transition-colors ${
                 isInView ? "text-white" : "text-slate-500 dark:text-slate-400"
               }`}
             />

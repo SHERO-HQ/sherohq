@@ -261,7 +261,7 @@ export default function AdminClients() {
             return (
               <div
                 key={client.id}
-                className={`group relative bg-card border rounded p-5 flex flex-col justify-between transition-all duration-200 hover:shadow-md ${
+                className={`group relative bg-card border rounded p-5 flex flex-col justify-between transition-all hover:shadow-md ${
                   client.active ? "border-slate-200 dark:border-slate-800" : "border-slate-200/50 dark:border-slate-800/50 opacity-60 bg-muted/20"
                 }`}
               >

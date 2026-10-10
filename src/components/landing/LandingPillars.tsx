@@ -13,13 +13,13 @@ import { PillarCard, PillarProps } from "./pillars/PillarCard";
 
 const PILLARS: PillarProps[] = [
   {
-    header: "Hardware Supply & Support",
-    subheader: "Laptops, Servers & Gear",
+    header: "Hardware as a Service",
+    subheader: "Computers, Servers & Gear",
     content:
-      "We supply and support reliable laptops, desktop workstations, servers, and networking equipment tailored for business operations.",
+      "We supply, configure, and maintain business computers, enterprise servers, and networking equipment tailored specifically to your organization's operations.",
     icon: <ShoppingBag className="w-6 h-6" />,
     className: "md:col-span-1",
-    gradient: "from-blue-500/20 to-cyan-500/20",
+    gradient: "",
     glowColor: "rgba(6, 182, 212, 0.12)", // Cyan
     widget: <TerminalWidget />
   },
@@ -30,7 +30,7 @@ const PILLARS: PillarProps[] = [
       "Custom software solutions engineered for your exact business needs, integrating seamlessly into your existing workflows.",
     icon: <Server className="w-6 h-6" />,
     className: "md:col-span-1",
-    gradient: "from-brand-secondary-500/20 to-green-500/20",
+    gradient: "",
     glowColor: "rgba(59, 130, 246, 0.12)", // Blue
     widget: <POSWidget />
   },
@@ -41,7 +41,7 @@ const PILLARS: PillarProps[] = [
       "Office workstation setup, local network configuration, data backups, and ongoing IT support to keep operations running smoothly.",
     icon: <MessageSquare className="w-6 h-6" />,
     className: "md:col-span-1",
-    gradient: "from-purple-500/20 to-pink-500/20",
+    gradient: "",
     glowColor: "rgba(168, 85, 247, 0.12)", // Purple
     widget: <SLAWidget />
   },
@@ -52,7 +52,7 @@ const PILLARS: PillarProps[] = [
       "Custom digital integrations designed to connect payment gateways, inventory software, POS, and third-party tools into one smooth workflow.",
     icon: <Code className="w-6 h-6" />,
     className: "md:col-span-3",
-    gradient: "from-brand-primary-500/20 to-brand-secondary-500/20",
+    gradient: "",
     glowColor: "rgba(16, 185, 129, 0.12)", // Emerald
     widget: <PharmasystWidget />
   },
@@ -60,7 +60,7 @@ const PILLARS: PillarProps[] = [
 
 const LandingPillars = () => {
   return (
-    <section className="relative w-full py-12 lg:py-16 bg-white dark:bg-slate-950 overflow-hidden transition-colors duration-300">
+    <section id="services" className="relative w-full py-12 lg:py-16 bg-white dark:bg-slate-950 overflow-hidden transition-colors ">
       <svg className="absolute w-0 h-0" aria-hidden="true">
         <defs>
           <filter id="pillar-noise">
@@ -73,8 +73,8 @@ const LandingPillars = () => {
           </filter>
         </defs>
       </svg>
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,var(--tw-gradient-stops))] from-slate-55 via-white to-slate-100 dark:from-slate-900 dark:via-slate-950 dark:to-black transition duration-500 opacity-50 dark:opacity-100" />
-      <div className="absolute inset-0 hero-grid-pattern transition-opacity duration-300" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,var(--tw-gradient-stops))] dark:transition opacity-50 dark:opacity-100" />
+      <div className="absolute inset-0 hero-grid-pattern transition-opacity " />
 
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center mb-10">
@@ -82,13 +82,13 @@ const LandingPillars = () => {
             <SectionBadge icon={Zap} className="mb-4">
               What We've Built
             </SectionBadge>
-            <h2 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-slate-100 mb-4 transition-colors duration-300 tracking-tight">
+            <h2 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-slate-100 mb-4 transition-colors tracking-tight">
               Platforms & Systems
             </h2>
           </Reveal>
           <Reveal direction="up" distance={40} delay={0.2}>
-            <p className="text-sm text-slate-600 dark:text-slate-400 max-w-2xl mx-auto leading-relaxed transition-colors duration-300">
-              A practical showcase of the actual custom software, hardware solutions,
+            <p className="text-sm text-slate-600 dark:text-slate-400 max-w-2xl mx-auto leading-relaxed transition-colors ">
+              A preview of the software platforms, hardware setups,
               and managed IT support frameworks we build to keep business operations clear.
             </p>
           </Reveal>

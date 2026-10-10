@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
       return apiResponse.error("Date parameter is required", 400);
     }
 
-    // Parse the date and establish midnight-to-midnight boundary in UTC/Local
+    // Parse the date and establish midnight-boundary in UTC/Local
     const targetDate = new Date(dateParam);
     if (isNaN(targetDate.getTime())) {
       return apiResponse.error("Invalid date format", 400);

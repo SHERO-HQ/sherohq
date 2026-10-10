@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { Sparkles, User, ArrowRight, Calendar } from "lucide-react";
+import { Bot, User, ArrowRight, Calendar } from "lucide-react";
 import type { ChatMessage } from "@/services/ai/chat";
 import { ChatProductCard } from "./ChatProductCard";
 import { LiveTrackingCard } from "./LiveTrackingCard";
@@ -40,7 +40,7 @@ export function ChatMessageList({
           <div className="w-6 h-6 rounded-full shrink-0 flex items-center justify-center text-[10px] shadow-sm overflow-hidden border border-slate-200/50 dark:border-white/10">
             {msg.role === "assistant" ? (
               <div className="w-full h-full bg-brand-secondary-500 text-white flex items-center justify-center">
-                <Sparkles size={12} />
+                <Bot size={12} />
               </div>
             ) : (
               <div className="w-full h-full bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 flex items-center justify-center">
@@ -150,7 +150,7 @@ export function ChatMessageList({
                 >
                   <div className="flex items-start gap-3">
                     <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white shrink-0">
-                      <Sparkles size={16} />
+                      <Bot size={16} />
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-[10px] uppercase font-bold text-blue-600 mb-0.5">

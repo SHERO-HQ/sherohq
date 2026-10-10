@@ -36,14 +36,14 @@ export function StarRating({ value, onChange, disabled }: StarRatingProps) {
             onMouseLeave={() => !disabled && setHovered(null)}
             onClick={() => onChange(star)}
             className={cn(
-              "p-1.5 transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-secondary-500 rounded-full",
+              "p-1.5 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-secondary-500 rounded-full",
               disabled && "cursor-not-allowed opacity-50",
             )}
             aria-label={`Rate ${star} stars`}
           >
             <Star
               className={cn(
-                "h-6 w-6 sm:h-8 sm:w-8 transition-all duration-500",
+                "h-6 w-6 sm:h-8 sm:w-8 transition-all ",
                 (hovered !== null ? star <= hovered : star <= value)
                   ? (hovered || value) <= 2
                     ? "fill-rose-500 text-rose-500 drop-shadow-[0_0_15px_rgba(244,63,94,0.5)]"

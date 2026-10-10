@@ -44,9 +44,9 @@ export function FeedbackIdentityFields({
           type="button"
           onClick={() => setValue("anonymous", !anonymousValue)}
           className={cn(
-            "flex items-center gap-2 text-[10px] font-medium px-4 py-1 rounded transition-all duration-300 border shadow-sm active:scale-95",
+            "flex items-center gap-2 text-[10px] font-medium px-4 py-1 rounded transition-all border shadow-sm active:scale-95",
             anonymousValue
-              ? "bg-emerald-500 text-white border-emerald-600 shadow-emerald-500/20"
+              ? "bg-emerald-500 text-white border-emerald-600"
               : "bg-white dark:bg-white/5 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-white/10",
           )}
         >
@@ -115,7 +115,7 @@ export function FeedbackIdentityFields({
                 <button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
-                  className="absolute -bottom-2 -right-2 p-2 bg-brand-secondary-600 text-white rounded shadow-lg hover:bg-brand-secondary-500 transition-all hover:rotate-6 active:scale-90"
+                  className="absolute -bottom-2 -right-2 p-2 bg-brand-secondary-600 text-white rounded shadow-sm hover:bg-brand-secondary-500 transition-all hover:rotate-6 active:scale-90"
                 >
                   <Camera className="h-3 w-3" />
                 </button>

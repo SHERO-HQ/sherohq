@@ -30,7 +30,7 @@ export const TerminalWidget: React.FC = () => {
     },
     {
       label: "OS SECURE DEPLOYMENT",
-      detail: "Fully Provisioned & Encrypted",
+      detail: "Fully Provisioned & Ready",
       status: "Ready"
     },
   ];
@@ -54,7 +54,7 @@ export const TerminalWidget: React.FC = () => {
           return (
             <div
               key={step.label}
-              className={`flex items-center justify-between transition-all duration-300 ${isActive
+              className={`flex items-center justify-between transition-all ${isActive
                   ? "text-brand-secondary-400 font-bold translate-x-1"
                   : isDone
                     ? "text-slate-600 dark:text-slate-400"

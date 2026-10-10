@@ -71,7 +71,7 @@ const OrderHistory: React.FC<OrderHistoryProps> = ({
     <div className="space-y-6">
       {/* Pending Orders Attention Banner */}
       {pendingOrders.length > 0 && (
-        <div className="p-4 sm:p-5 rounded-lg bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-700/60 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div className="p-4 sm:p-5 rounded-md bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-700/60 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="flex items-start gap-3">
             <div className="p-2 bg-amber-500/20 text-amber-600 dark:text-amber-400 rounded-full shrink-0 mt-0.5">
               <AlertTriangle className="w-5 h-5" />
@@ -105,31 +105,28 @@ const OrderHistory: React.FC<OrderHistoryProps> = ({
       <div className="flex items-center gap-2 border-b border-slate-200 dark:border-slate-800 pb-3 overflow-x-auto">
         <button
           onClick={() => setFilter("all")}
-          className={`px-3 py-1.5 text-xs font-semibold rounded transition-colors ${
-            filter === "all"
+          className={`px-3 py-1.5 text-xs font-semibold rounded transition-colors ${filter === "all"
               ? "bg-slate-900 text-white dark:bg-white dark:text-slate-900"
               : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800"
-          }`}
+            }`}
         >
           All ({orders.length})
         </button>
 
         <button
           onClick={() => setFilter("pending")}
-          className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded transition-colors ${
-            filter === "pending"
+          className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded transition-colors ${filter === "pending"
               ? "bg-amber-600 text-white"
               : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800"
-          }`}
+            }`}
         >
           Pending Payment
           {pendingOrders.length > 0 && (
             <span
-              className={`px-1.5 py-0.2 rounded-full text-[10px] font-bold ${
-                filter === "pending"
+              className={`px-1.5 py-0.2 rounded-full text-[10px] font-bold ${filter === "pending"
                   ? "bg-white text-yellow-500"
                   : "bg-yellow-100 text-yellow-500 dark:bg-yellow-900/40 dark:text-yellow-300"
-              }`}
+                }`}
             >
               {pendingOrders.length}
             </span>
@@ -138,22 +135,20 @@ const OrderHistory: React.FC<OrderHistoryProps> = ({
 
         <button
           onClick={() => setFilter("delivered")}
-          className={`px-3 py-1.5 text-xs font-semibold rounded transition-colors ${
-            filter === "delivered"
+          className={`px-3 py-1.5 text-xs font-semibold rounded transition-colors ${filter === "delivered"
               ? "bg-brand-secondary-600 text-white"
               : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800"
-          }`}
+            }`}
         >
           Delivered
         </button>
 
         <button
           onClick={() => setFilter("processing")}
-          className={`px-3 py-1.5 text-xs font-semibold rounded transition-colors ${
-            filter === "processing"
+          className={`px-3 py-1.5 text-xs font-semibold rounded transition-colors ${filter === "processing"
               ? "bg-blue-600 text-white"
               : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800"
-          }`}
+            }`}
         >
           Processing / In Transit
         </button>

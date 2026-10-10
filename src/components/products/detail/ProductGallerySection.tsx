@@ -128,7 +128,7 @@ export function ProductGallerySection({
             <button
               key={`detail-thumb-${idx}`}
               onClick={() => setSelectedImage(idx)}
-              className={`shrink-0 w-14 h-14 rounded overflow-hidden border-2 transition duration-200 ${
+              className={`shrink-0 w-14 h-14 rounded overflow-hidden border-2 transition ${
                 idx === selectedImage
                   ? "border-brand-secondary-500 scale-105"
                   : "border-transparent bg-white dark:bg-white/5 opacity-50 hover:opacity-100"

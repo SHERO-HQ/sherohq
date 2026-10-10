@@ -18,7 +18,7 @@ export function SidebarHeader({ isOpen }: SidebarHeaderProps) {
     >
       <div
         className={cn(
-          "flex items-center transition-all duration-200",
+          "flex items-center transition-all ",
           isOpen ? "gap-3" : "gap-0",
         )}
       >
@@ -36,7 +36,7 @@ export function SidebarHeader({ isOpen }: SidebarHeaderProps) {
         </div>
         <span
           className={cn(
-            "text-foreground font-bold text-sm whitespace-nowrap transition-all duration-200",
+            "text-foreground font-bold text-sm whitespace-nowrap transition-all ",
             isOpen
               ? "opacity-100 translate-x-0 w-auto"
               : "opacity-0 -translate-x-4 pointer-events-none w-0 overflow-hidden",

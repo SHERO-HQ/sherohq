@@ -3,7 +3,7 @@
 import React from "react";
 import { m, AnimatePresence } from "motion/react";
 import {
-  Sparkles,
+  Bot,
   X,
   Minimize2,
   Maximize2,
@@ -18,6 +18,7 @@ import { ChatFloatingTrigger } from "./ChatFloatingTrigger";
 import { ChatInputComposer } from "./ChatInputComposer";
 import { ChatMessageList } from "./chat/ChatMessageList";
 import { useAIChat } from "./chat/useAIChat";
+import { SHOP_ENABLED } from "@/constants/features";
 
 export default function AIChatAssistant() {
   const {
@@ -68,7 +69,7 @@ export default function AIChatAssistant() {
               scale: 1,
             }}
             exit={{ y: 20, opacity: 0, scale: 0.95 }}
-            className={`fixed inset-x-0 bottom-0 sm:inset-auto sm:bottom-6 sm:right-6 z-60 w-full sm:w-100 border border-border bg-card flex flex-col overflow-hidden transition-all duration-300 ${
+            className={`fixed inset-x-0 bottom-0 sm:inset-auto sm:bottom-6 sm:right-6 z-60 w-full sm:w-100 border border-border bg-card flex flex-col overflow-hidden transition-all ${
               isMinimized ? "h-16" : "h-150 sm:h-137.5 sm:rounded"
             }`}
           >
@@ -76,7 +77,7 @@ export default function AIChatAssistant() {
             <div className="p-4 bg-muted/50 border-b border-border flex items-center justify-between shrink-0">
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 flex items-center justify-center shrink-0">
-                  <Sparkles className="w-6 h-6 text-brand-secondary-400" />
+                  <Bot className="w-6 h-6 text-brand-secondary-400" />
                 </div>
                 <div>
                   <h3 className="text-sm font-bold text-brand-secondary-500 uppercase tracking-wider flex items-center">
@@ -119,26 +120,27 @@ export default function AIChatAssistant() {
             {/* Quick Actions (Sticky at Top) */}
             {!isMinimized && messages.length <= 1 && (
               <div className="px-4 py-2 flex flex-wrap gap-2 bg-muted/30 border-b border-border shrink-0">
-                {(pathname?.includes("/product/")
-                  ? [
-                      { label: "Compare with similar products", icon: Brain },
-                      { label: "Is this compatible with...", icon: Sparkles },
-                    ]
-                  : pathname?.includes("/checkout") || cart.length > 0
+                {(
+                  (SHOP_ENABLED && pathname?.includes("/product/"))
                     ? [
-                        { label: "Apply a discount code", icon: Package },
-                        { label: "Estimate shipping", icon: Package },
+                        { label: "Compare with similar products", icon: Brain },
+                        { label: "Is this compatible with...", icon: Bot },
                       ]
-                    : pathname?.includes("/support")
+                    : (SHOP_ENABLED && (pathname?.includes("/checkout") || cart.length > 0))
                       ? [
-                          { label: "Open a support ticket", icon: Ticket },
-                          { label: "Troubleshooting guide", icon: Brain },
+                          { label: "Apply a discount code", icon: Package },
+                          { label: "Estimate shipping", icon: Package },
                         ]
-                      : [
-                          { label: "Track my order", icon: Package },
-                          { label: "Book consultation", icon: Calendar },
-                          { label: "Fix slow laptop", icon: Laptop },
-                        ]
+                      : pathname?.includes("/support")
+                        ? [
+                            { label: "Open a support ticket", icon: Ticket },
+                            { label: "Troubleshooting guide", icon: Brain },
+                          ]
+                        : [
+                            ...(SHOP_ENABLED ? [{ label: "Track my order", icon: Package }] : []),
+                            { label: "Book consultation", icon: Calendar },
+                            { label: "Fix slow laptop", icon: Laptop },
+                          ]
                 ).map((action) => (
                   <button
                     key={action.label}

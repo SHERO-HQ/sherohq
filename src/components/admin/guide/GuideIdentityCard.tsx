@@ -37,7 +37,7 @@ export default function GuideIdentityCard({
   return (
     <Card
       className={cn(
-        "bg-card border border-border p-6 md:p-8 space-y-6 transition-all duration-300",
+        "bg-card border border-border p-6 md:p-8 space-y-6 transition-all ",
         (errors.title || errors.content) && "border-rose-500/30 bg-rose-500/2",
       )}
     >
@@ -68,7 +68,7 @@ export default function GuideIdentityCard({
             required
           />
           {errors.title && (
-            <p className="text-xs text-rose-400 animate-in slide-in-from-top-1 opacity-100 mt-1">
+            <p className="text-xs text-rose-400 animate-in opacity-100 mt-1">
               {errors.title}
             </p>
           )}
@@ -115,7 +115,7 @@ export default function GuideIdentityCard({
             />
           </div>
           {errors.content && (
-            <p className="text-xs text-rose-400 animate-in slide-in-from-top-1 opacity-100 mt-1">
+            <p className="text-xs text-rose-400 animate-in opacity-100 mt-1">
               {errors.content}
             </p>
           )}

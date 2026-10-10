@@ -45,7 +45,7 @@ const ProductGrid: React.FC<ProductGridProps> = ({
         className="w-full py-12 flex flex-col items-center justify-center text-center"
       >
         <div className="relative mb-4 group">
-          <div className="absolute inset-0 blur-[50px] group-hover:bg-brand-secondary-500/30 transition-colors duration-500" />
+
           <div className="relative w-32 h-32  flex items-center justify-center">
             <PackageX className="w-16 h-16 text-slate-300 dark:text-slate-700" />
           </div>
@@ -65,11 +65,11 @@ const ProductGrid: React.FC<ProductGridProps> = ({
             if (onReset) onReset();
             else router.refresh();
           }}
-          className="group flex items-center gap-3 px-10 h-10 bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white font-bold uppercase tracking-widest text-xs rounded shadow shadow-brand-secondary-500/20 active:scale-95 transition"
+          className="group flex items-center gap-3 px-10 h-10 bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white font-bold uppercase tracking-widest text-xs rounded shadow-sm active:scale-95 transition"
         >
           <RefreshCcw
             size={18}
-            className="group-hover:rotate-180 transition-transform duration-700"
+            className="group-hover:rotate-180 transition-transform "
           />
           Reset Search
         </button>

@@ -71,8 +71,8 @@ export function OrderSidebarCard({
   const statusConfig = getStatusConfig(status);
 
   return (
-    <Card className="bg-card/40 border-border p-6 space-y-6 hover:border-brand-secondary-500/20 duration-300 relative group overflow-hidden">
-      <div className="absolute inset-0 bg-radial-gradient from-brand-secondary-500/2 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+    <Card className="bg-card/40 border-border p-6 space-y-6 hover:border-brand-secondary-500/20 relative group overflow-hidden">
+      <div className="absolute inset-0 bg-radial-gradient opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
       <div className="relative z-10">
         <h3 className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-3">
           Order Status

@@ -55,11 +55,11 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
           {/* Navigation & Actions Header */}
           <div className="flex items-center justify-between mb-4">
             <button
-              onClick={() => (window.location.href = getAbsoluteUrl("/shop"))}
+              onClick={() => (window.location.href = getAbsoluteUrl("/products"))}
               className="group flex items-center gap-2 text-sm tracking-widest text-slate-500 hover:text-brand-secondary-500 transition-colors"
             >
               <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-              Shop
+              Products
             </button>
             {product.rating > 0 && (
               <div className="flex items-center gap-1.5">

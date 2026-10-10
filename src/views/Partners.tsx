@@ -35,24 +35,24 @@ const Partners = () => {
 
   const steps = [
     {
-      title: "Application",
-      desc: "Submit your partnership interest form with core business details.",
+      title: "Inquiry",
+      desc: "Submit your collaboration goals, hardware requirements, or technical needs.",
     },
     {
-      title: "Validation",
-      desc: "Our executive team reviews local alignment and technical capacity.",
+      title: "Discovery",
+      desc: "Our team reviews your operational context to determine the best technical and commercial approach.",
     },
     {
       title: "Onboarding",
-      desc: "Gain full access to the SHERO portal and tiered wholesale pricing.",
+      desc: "Establish clear service terms, preferred supply channels, and direct engineering support.",
     },
   ];
 
   const benefits = [
-    "Access to enterprise-grade commercial hardware at wholesale rates",
-    "Priority technical support and dedicated account management",
-    "Co-marketing opportunities and brand visibility",
-    "Early access to new product launches and innovations",
+    "Commercial laptops, workstations, and servers on dependable B2B terms",
+    "Priority technical support and direct engineering contact",
+    "Custom software development and systems integration tailored to your operations",
+    "Proactive equipment maintenance and rapid regional replacement support",
   ];
 
   return (
@@ -61,30 +61,18 @@ const Partners = () => {
         <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Hero Section */}
           <div
-            className="text-center max-w-3xl mx-auto mb-10 animate-in fade-in slide-in-from-bottom-4 duration-700 fill-mode-both"
+            className="text-center max-w-3xl mx-auto mb-10 "
           >
             <SectionBadge icon={Handshake} className="mb-4">
               Strategic Partnerships
             </SectionBadge>
-            <h1 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-slate-100 mb-6 tracking-tight transition-colors duration-300">
-              Grow with <span className="text-transparent bg-clip-text bg-linear-to-r from-brand-primary-600 to-brand-secondary-600 dark:from-brand-primary-500 dark:to-brand-secondary-500">SHERO</span>
+            <h1 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-slate-100 mb-6 tracking-tight transition-colors ">
+              Grow with <span className="text-brand-secondary-600 dark:text-brand-secondary-400">SHERO</span>
             </h1>
             <p className="text-base text-slate-600 dark:text-slate-300 leading-relaxed">
               Collaborate on technology projects, unlock distribution
               opportunities, and deliver measurable value across markets.
             </p>
-
-            <div className="flex flex-wrap items-center justify-center gap-3 mt-8">
-              <span className="text-[11px] font-mono uppercase tracking-wider text-slate-500 px-3 py-1.5 rounded border border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-900/60">
-                Wholesale Access
-              </span>
-              <span className="text-[11px] font-mono uppercase tracking-wider text-slate-500 px-3 py-1.5 rounded border border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-900/60">
-                Dedicated Team
-              </span>
-              <span className="text-[11px] font-mono uppercase tracking-wider text-slate-500 px-3 py-1.5 rounded border border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-900/60">
-                Co-Marketing Support
-              </span>
-            </div>
           </div>
 
           {/* Partnership Process */}
@@ -93,7 +81,7 @@ const Partners = () => {
               <SectionBadge icon={Workflow} className="mb-4">
                 The Path to Partnership
               </SectionBadge>
-              <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100 transition-colors duration-300">
+              <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100 transition-colors ">
                 We Grow Together
               </h2>
             </div>
@@ -104,9 +92,6 @@ const Partners = () => {
                     <div className="size-10 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm flex items-center justify-center font-mono font-bold text-brand-secondary-700 dark:text-brand-secondary-400">
                       0{idx + 1}
                     </div>
-                    {idx < 3 && (
-                      <div className="hidden md:block h-px flex-1 bg-linear-to-r from-slate-200 to-transparent dark:from-slate-800" />
-                    )}
                   </div>
                   <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">
                     {step.title}
@@ -125,7 +110,7 @@ const Partners = () => {
               <SectionBadge icon={Globe2} className="mb-4">
                 Strategic Ecosystem
               </SectionBadge>
-              <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100 mb-4 transition-colors duration-300">
+              <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100 mb-4 transition-colors ">
                 Expanding Reach
               </h2>
               <p className="text-slate-600 dark:text-slate-400 max-w-xl mx-auto">
@@ -156,14 +141,13 @@ const Partners = () => {
 
           {/* Become a Partner CTA */}
           <div className="relative overflow-hidden bg-white dark:bg-slate-900 rounded p-6 md:p-8 border border-slate-200 dark:border-slate-800 shadow">
-            <div className="absolute inset-0 bg-linear-to-bl from-brand-secondary-500/5 to-transparent pointer-events-none" />
 
             <div className="relative z-10 flex flex-col md:flex-row md:items-center md:gap-12">
               <div className="md:flex-1">
                 <SectionBadge icon={Handshake} className="mb-6">
                   Tiered Benefits
                 </SectionBadge>
-                <h2 className="text-xl md:text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100 mb-6 transition-colors duration-300">
+                <h2 className="text-xl md:text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100 mb-6 transition-colors ">
                   Become a Solution Partner
                 </h2>
                 <ul className="space-y-4 mb-8 text-sm">
@@ -178,10 +162,10 @@ const Partners = () => {
                 </ul>
                 <button
                   onClick={handleApplyClick}
-                  className="group cursor-pointer inline-flex items-center gap-2 px-8 py-2.5 bg-brand-secondary-700 hover:bg-brand-secondary-800 dark:bg-brand-secondary-600 dark:hover:bg-brand-secondary-500 text-white text-sm rounded font-semibold transition duration-300 shadow shadow-brand-secondary-500/25 hover:shadow hover:shadow-brand-secondary-500/30 hover:scale-[1.02] active:scale-95"
+                  className="group cursor-pointer inline-flex items-center gap-2 px-8 py-2.5 bg-brand-secondary-700 hover:bg-brand-secondary-800 dark:bg-brand-secondary-600 dark:hover:bg-brand-secondary-500 text-white text-sm rounded font-semibold transition shadow-sm hover:shadow hover:scale-[1.02] active:scale-95"
                 >
                   <span>Start Partnership</span>
-                  <ArrowRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
+                  <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
                 </button>
               </div>
 

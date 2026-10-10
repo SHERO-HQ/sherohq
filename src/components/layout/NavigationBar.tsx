@@ -1,6 +1,5 @@
 "use client";
 
-import { ToggleTheme } from "./toggle-theme";
 import { Heart, ShoppingCart } from "lucide-react";
 import NavLink from "@/components/common/NavLink";
 import { m } from "motion/react";
@@ -12,6 +11,7 @@ import { getAbsoluteUrl } from "@/utils/subdomain";
 import { MobileNavDrawer } from "./MobileNavDrawer";
 import { DesktopUserMenu } from "./DesktopUserMenu";
 import { useNavigationState } from "./useNavigationState";
+import { SHOP_ENABLED, SEARCH_ENABLED, AUTH_ENABLED } from "@/constants/features";
 
 const Nav = () => {
   const {
@@ -44,7 +44,7 @@ const Nav = () => {
   return (
     <>
       <nav
-        className={`sticky top-0 w-full transition-[background-color,backdrop-filter,border-color,box-shadow] duration-300 ease-in-out z-50 border-t-0 ${
+        className={`sticky top-0 w-full transition-[background-color,backdrop-filter,border-color,box-shadow] ease-in-out z-50 border-t-0 ${
           isOpen || scrolled
             ? "glass-surface-md shadow-sm"
             : "bg-transparent border-b border-transparent"
@@ -53,7 +53,7 @@ const Nav = () => {
         id="nav-menu"
       >
         <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 md:py-0">
-          <div className="flex justify-between items-center h-12 lg:h-16">
+          <div className="flex justify-between items-center h-12 lg:h-14">
             {/* Logo */}
             <NavLink
               href={homeHref}
@@ -104,10 +104,10 @@ const Nav = () => {
                 className="flex items-center gap-6 h-full relative pointer-events-auto"
                 suppressHydrationWarning
               >
-                {navLinks.map((item) => (
+                {navLinks.map((item: any) => (
                   <li
                     key={item.name}
-                    className="h-full flex items-center"
+                    className="h-full flex items-center relative group/navitem"
                     suppressHydrationWarning
                   >
                     <NavLink
@@ -116,6 +116,26 @@ const Nav = () => {
                     >
                       {item.name}
                     </NavLink>
+                    {item.subItems && item.subItems.length > 0 && (
+                      <div className="absolute top-full left-1/2 -translate-x-1/2 pt-1 opacity-0 pointer-events-none group-hover/navitem:opacity-100 group-hover/navitem:pointer-events-auto transition-all z-50">
+                        <div className="bg-background border border-border rounded shadow-lg p-1.5 min-w-52">
+                          {item.subItems.map((sub: any) => (
+                            <NavLink
+                              key={sub.name}
+                              href={getAbsoluteUrl(sub.href)}
+                              className="flex items-center justify-between px-3 py-2 rounded hover:bg-muted text-xs font-medium text-foreground transition-colors"
+                            >
+                              <span>{sub.name}</span>
+                              {sub.badge && (
+                                <span className="text-[9px] uppercase font-bold px-1.5 py-0.5 rounded bg-brand-secondary-500/10 text-brand-secondary-600 dark:text-brand-secondary-400">
+                                  {sub.badge}
+                                </span>
+                              )}
+                            </NavLink>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </li>
                 ))}
 
@@ -139,70 +159,80 @@ const Nav = () => {
 
             {/* Right Groups Wrapper */}
             <div className="flex items-center gap-2 lg:gap-4 ml-auto z-20">
-              <div className="flex items-center gap-0.5 sm:gap-1 bg-slate-50 dark:bg-slate-800/80 rounded transition-colors">
-                <SearchBar className="hidden lg:flex h-9 items-center justify-center text-slate-600 dark:text-slate-400" />
-
-                {/* Wishlist Button - Hidden on mobile (< md) where BottomNav handles it */}
-                <button
-                  onClick={() => setIsWishlistOpen(true)}
-                  className="hidden md:flex cursor-pointer relative p-2 h-9 w-9 items-center justify-center text-slate-600 dark:text-slate-400 hover:bg-slate-200/70 dark:hover:bg-slate-700/70 hover:text-red-500 dark:hover:text-red-400 transition-colors rounded border-none"
-                  aria-label="Open Wishlist"
-                >
-                  <Heart
-                    className={`w-5 h-5 ${mounted && wishlist.length > 0 ? "fill-red-500 text-red-500" : ""}`}
-                  />
-                  {mounted && wishlist.length > 0 && (
-                    <Badge
-                      variant="destructive"
-                      className={`absolute -top-1.5 -right-1.5 h-4.5 min-w-4.5 px-1 flex items-center justify-center rounded-full text-[9px] ring-2 ring-background ${!prefersReducedMotion ? "animate-in zoom-in" : ""}`}
-                    >
-                      {wishlist.length}
-                    </Badge>
+              {(SHOP_ENABLED || SEARCH_ENABLED || AUTH_ENABLED) && (
+                <div className="flex items-center gap-0.5 sm:gap-1 bg-secondary rounded transition-colors">
+                  {SEARCH_ENABLED && (
+                    <SearchBar className="hidden lg:flex h-9 items-center justify-center text-muted-foreground" />
                   )}
-                </button>
 
-                {/* Cart Button - Hidden on mobile (< md) where BottomNav handles it */}
-                <button
-                  onClick={() => setIsCartOpen(true)}
-                  className="hidden md:flex cursor-pointer relative p-2 h-9 w-9 items-center justify-center text-slate-600 dark:text-slate-400 hover:bg-slate-200/70 dark:hover:bg-slate-700/70 hover:text-brand-secondary-600 dark:hover:text-brand-secondary-400 transition-colors rounded border-none"
-                  aria-label="Open Cart"
-                >
-                  <ShoppingCart className="w-5 h-5" />
-                  {mounted && totalQuantity > 0 && (
-                    <Badge
-                      variant="brandSecondary"
-                      className={`absolute -top-1.5 -right-1.5 h-4.5 min-w-4.5 px-1 flex items-center justify-center rounded-full text-[9px] ring-2 ring-background ${!prefersReducedMotion ? "animate-in zoom-in" : ""}`}
+                  {/* Wishlist Button - Hidden on mobile (< md) where BottomNav handles it */}
+                  {SHOP_ENABLED && (
+                    <button
+                      onClick={() => setIsWishlistOpen(true)}
+                      className="hidden md:flex cursor-pointer relative p-2 h-9 w-9 items-center justify-center text-muted-foreground hover:bg-muted hover:text-destructive transition-colors rounded border-none"
+                      aria-label="Open Wishlist"
                     >
-                      {totalQuantity}
-                    </Badge>
+                      <Heart
+                        className={`w-5 h-5 ${mounted && wishlist.length > 0 ? "fill-red-500 text-red-500" : ""}`}
+                      />
+                      {mounted && wishlist.length > 0 && (
+                        <Badge
+                          variant="destructive"
+                          className={`absolute -top-1.5 -right-1.5 h-4.5 min-w-4.5 px-1 flex items-center justify-center rounded-full text-[9px] ring-2 ring-background ${!prefersReducedMotion ? "animate-in zoom-in" : ""}`}
+                        >
+                          {wishlist.length}
+                        </Badge>
+                      )}
+                    </button>
                   )}
-                </button>
 
-                <div className="w-px h-5 bg-slate-200 dark:bg-slate-700 mx-0.5 hidden lg:block" />
+                  {/* Cart Button - Hidden on mobile (< md) where BottomNav handles it */}
+                  {SHOP_ENABLED && (
+                    <button
+                      onClick={() => setIsCartOpen(true)}
+                      className="hidden md:flex cursor-pointer relative p-2 h-9 w-9 items-center justify-center text-muted-foreground hover:bg-muted hover:text-brand-secondary-600 dark:hover:text-brand-secondary-400 transition-colors rounded border-none"
+                      aria-label="Open Cart"
+                    >
+                      <ShoppingCart className="w-5 h-5" />
+                      {mounted && totalQuantity > 0 && (
+                        <Badge
+                          variant="brandSecondary"
+                          className={`absolute -top-1.5 -right-1.5 h-4.5 min-w-4.5 px-1 flex items-center justify-center rounded-full text-[9px] ring-2 ring-background ${!prefersReducedMotion ? "animate-in zoom-in" : ""}`}
+                        >
+                          {totalQuantity}
+                        </Badge>
+                      )}
+                    </button>
+                  )}
 
-                <DesktopUserMenu
-                  userMenuRef={userMenuRef}
-                  userMenuButtonRef={userMenuButtonRef}
-                  mounted={mounted}
-                  isAuthenticated={isAuthenticated}
-                  isUserMenuOpen={isUserMenuOpen}
-                  setIsUserMenuOpen={setIsUserMenuOpen}
-                  user={user}
-                  logout={logout}
-                />
-              </div>
+                  {AUTH_ENABLED && (
+                    <>
+                      {SHOP_ENABLED && (
+                        <div className="w-px h-5 bg-border mx-0.5 hidden lg:block" />
+                      )}
 
-              <div className="flex items-center gap-0.5 sm:gap-1 bg-slate-50 dark:bg-slate-800/80 rounded transition-colors">
-                <ToggleTheme />
-              </div>
+                      <DesktopUserMenu
+                        userMenuRef={userMenuRef}
+                        userMenuButtonRef={userMenuButtonRef}
+                        mounted={mounted}
+                        isAuthenticated={isAuthenticated}
+                        isUserMenuOpen={isUserMenuOpen}
+                        setIsUserMenuOpen={setIsUserMenuOpen}
+                        user={user}
+                        logout={logout}
+                      />
+                    </>
+                  )}
+                </div>
+              )}
 
               <div className="flex items-center lg:hidden">
                 <button
                   ref={mobileMenuButtonRef}
-                  className={`relative w-9 h-9 rounded flex items-center justify-center transition-all duration-200 cursor-pointer shadow hover:scale-105 ${
+                  className={`relative min-w-11 min-h-8 rounded flex items-center justify-center transition-all cursor-pointer shadow hover:scale-105 ${
                     isOpen
-                      ? "bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 border border-red-400"
-                      : "bg-slate-100 dark:bg-slate-900 text-slate-900 dark:text-slate-300 border border-slate-200 dark:border-slate-800"
+                      ? "bg-destructive/10 text-destructive border border-destructive/50"
+                      : "bg-secondary text-foreground border border-border"
                   }`}
                   type="button"
                   onClick={() => setIsOpen(!isOpen)}
@@ -219,7 +249,7 @@ const Nav = () => {
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     fill="none"
-                    className={`transition-transform duration-500 ${isOpen ? "rotate-90" : "rotate-0"}`}
+                    className={`transition-transform ${isOpen ? "rotate-90" : "rotate-0"}`}
                   >
                     <path
                       d={
@@ -227,7 +257,7 @@ const Nav = () => {
                           ? "M18 6L6 18M6 6L18 18"
                           : "M5 17H13M5 12H19M11 7H19"
                       }
-                      className="transition duration-300"
+                      className="transition "
                     />
                   </svg>
                 </button>

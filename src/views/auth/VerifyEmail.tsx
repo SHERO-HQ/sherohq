@@ -40,10 +40,7 @@ const VerifyEmail = () => {
  return (
     <div className="py-6 sm:py-10 flex justify-center px-4">
       <div className="w-full max-w-md">
-        {/* Ambient background glow */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10">
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-brand-primary-500/10 rounded-full blur-3xl" />
-          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-brand-secondary-500/10 rounded-full blur-3xl" />
           <div className="absolute inset-0 pattern-dots mask-radial-faded" />
         </div>
 

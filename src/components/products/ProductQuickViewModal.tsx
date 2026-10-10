@@ -274,7 +274,7 @@ export default function ProductQuickViewModal({
                 <div className="grid grid-cols-1 gap-3">
                   <button
                     onClick={handleAddToCart}
-                    className="w-full flex items-center justify-center gap-2 py-3 px-4 bg-brand-secondary-600 hover:bg-brand-secondary-700 text-white font-bold rounded shadow-lg shadow-brand-secondary-600/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
+                    className="w-full flex items-center justify-center gap-2 py-3 px-4 bg-brand-secondary-600 hover:bg-brand-secondary-700 text-white font-bold rounded shadow-sm transition-all hover:scale-[1.02] active:scale-[0.98]"
                   >
                     <ShoppingCart className="w-4 h-4" />
                     Add to Cart

@@ -43,7 +43,7 @@ const Portfolio = () => {
     };
   }, []);
 
-  const categories = [
+  const allCategoryDefinitions = [
     "All",
     "Web Development",
     "Mobile Apps",
@@ -51,50 +51,17 @@ const Portfolio = () => {
     "Custom Software",
   ];
 
-  const FEATURED_FALLBACK_PROJECTS: Project[] = [
-    {
-      id: "dajrim",
-      title: "Dajrim Platform",
-      category: "Custom Software",
-      client: "SHERO Ecosystem",
-      description: "Digital management and operational platform built to streamline business workflows and digital service delivery.",
-      useCase: "Digital Business Management & Operations",
-      technologies: ["Next.js", "TypeScript", "TailwindCSS", "Node.js"],
-      image: null,
-      link: null,
-      createdAt: new Date().toISOString(),
-    },
-    {
-      id: "samakose-trustcircle",
-      title: "Samakose / TrustCircle",
-      category: "Web Development",
-      client: "Community & Financial Growth",
-      description: "Trusted collaborative ecosystem enabling secure community circles, transparent financial tracking, and shared resource growth.",
-      useCase: "Community Trust & Shared Resource Management",
-      technologies: ["React", "TypeScript", "PostgreSQL", "TailwindCSS"],
-      image: null,
-      link: null,
-      createdAt: new Date().toISOString(),
-    },
-    {
-      id: "hardware-it-infrastructure",
-      title: "Managed IT & Hardware Deployment",
-      category: "Infrastructure",
-      client: "Regional Enterprise Hub",
-      description: "Full-scale hardware supply, workstation setup, and high-availability IT infrastructure for business operations.",
-      useCase: "Managed Hardware & Infrastructure Setup",
-      technologies: ["HP & Dell Hardware", "Network Routing", "Systems IT Support"],
-      image: null,
-      link: null,
-      createdAt: new Date().toISOString(),
-    },
-  ];
-
   const { data: projects = [], isLoading } = useProjects(
     activeCategory === "All" ? undefined : activeCategory,
   );
 
-  const activeProjects = projects.length > 0 ? projects : FEATURED_FALLBACK_PROJECTS;
+  const activeProjects = projects;
+
+  // Filter out any categories that have zero active projects
+  const presentCategories = new Set(activeProjects.map((p) => p.category));
+  const categories = allCategoryDefinitions.filter(
+    (c) => c === "All" || presentCategories.has(c),
+  );
 
   const filteredProjects = activeProjects.filter((p) => {
     if (activeCategory === "All") return true;
@@ -115,7 +82,7 @@ const Portfolio = () => {
           <SectionBadge icon={Wrench} className="mb-4">
             Our Work
           </SectionBadge>
-          <h2 className="text-xl md:text-2xl font-bold text-slate-900 dark:text-slate-100 mb-4 transition-colors duration-300">
+          <h2 className="text-xl md:text-2xl font-bold text-slate-900 dark:text-slate-100 mb-4 transition-colors ">
             What We've Built
           </h2>
           <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
@@ -136,7 +103,7 @@ const Portfolio = () => {
                 <TabsTrigger
                   key={category}
                   value={category}
-                  className="px-6 py-2 text-sm whitespace-nowrap data-[state=active]:bg-brand-secondary-600 data-[state=active]:text-white data-[state=active]:shadow transition duration-300"
+                  className="px-6 py-2 text-sm whitespace-nowrap data-[state=active]:bg-brand-secondary-600 data-[state=active]:text-white data-[state=active]:shadow transition "
                 >
                   {category}
                 </TabsTrigger>

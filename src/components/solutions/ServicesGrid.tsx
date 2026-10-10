@@ -1,13 +1,13 @@
 "use client";
 import { easeOut, m } from "motion/react";
 import {
-  Smartphone,
   Workflow,
-  Settings,
   CheckCircle,
-  Briefcase,
   ArrowRight,
-  ShoppingBag,
+  Laptop,
+  Code,
+  ShieldCheck,
+  Cpu,
 } from "lucide-react";
 import SpotlightCard from "@/components/motion/SpotlightCard";
 import { SectionBadge } from "@/components/common/SectionBadge";
@@ -24,59 +24,59 @@ interface Service {
 const ServicesGrid = () => {
   const services: Service[] = [
     {
-      icon: <ShoppingBag className="w-8 h-8" />,
-      title: "Hardware Supply & Support",
+      icon: <Laptop className="w-5 h-5" />,
+      title: "Hardware for Teams",
       description:
-        "We supply, configure, and maintain reliable computers, servers, networking gear, and workstations tailored for business operations.",
+        "The right tools to move work forward. We source, inspect, and configure high-performance hardware so your team never loses momentum to poor tech.",
       features: [
-        "Business laptops & workstations",
-        "Office hardware procurement & setup",
-        "Servers & networking gear",
-        "Hardware support & warranty guidance",
+        "High-performance laptops configured for your workflow",
+        "Rigorous battery and thermal quality benchmarks",
+        "Ready-to-use workstations with zero setup friction",
+        "Honest specs backed by local support",
       ],
-      gradient: "from-blue-500 to-blue-600",
+      gradient: "",
       textClass: "text-blue-600 dark:text-blue-400",
     },
     {
-      icon: <Smartphone className="w-8 h-8" />,
-      title: "Custom Software & Apps",
+      icon: <Code className="w-5 h-5" />,
+      title: "Software Engineering & Digital Products",
       description:
-        "We design, build, and support custom web applications, mobile apps, and internal digital tools engineered for your exact business workflows.",
+        "Purpose-built software engineered to solve real operational bottlenecks. From client portals to core business systems, we build software designed to last.",
       features: [
-        "Responsive web applications",
-        "Internal business management software & dashboards",
-        "Mobile & web application development",
-        "Custom cloud product development",
+        "Modern web applications and cloud architectures",
+        "Internal operations software and automation dashboards",
+        "High-reliability database design and API services",
+        "Clean, maintainable codebases with full client ownership",
       ],
-      gradient: "from-brand-secondary-500 to-brand-secondary-600",
+      gradient: "",
       textClass: "text-brand-secondary-600 dark:text-brand-secondary-400",
     },
     {
-      icon: <Settings className="w-8 h-8" />,
-      title: "Managed IT & Infrastructure",
+      icon: <ShieldCheck className="w-5 h-5" />,
+      title: "Systems Reliability & IT Operations",
       description:
-        "Complete IT setup and proactive system maintenance — from server management to network security. We keep your tech running smoothly.",
+        "Dependable infrastructure setup and proactive system maintenance. We keep your business tools, workstations, and operational data secure, stable, and ready to perform.",
       features: [
-        "Office workstation setup & IT onboarding",
-        "Server & local office network configuration",
-        "Technical support & IT troubleshooting",
-        "Data backups & system maintenance",
+        "Workspace environment & toolchain deployment",
+        "Local network security & automated data backups",
+        "Direct technical support and rapid issue resolution",
+        "Proactive system health checks without corporate bloat",
       ],
-      gradient: "from-brand-primary-500 to-brand-primary-600",
+      gradient: "",
       textClass: "text-brand-primary-600 dark:text-brand-primary-400",
     },
     {
-      icon: <Workflow className="w-8 h-8" />,
-      title: "Systems & API Integration",
+      icon: <Workflow className="w-5 h-5" />,
+      title: "Workflow & API Architecture",
       description:
-        "Link your payment gateways, inventory, POS, CRM, and business software into one smooth workflow with zero manual friction.",
+        "Connect your software, payment processors, and business tools into unified, automated pipelines that eliminate manual data entry and human error.",
       features: [
-        "Payment gateway setup & integration",
-        "POS & inventory software synchronization",
-        "RESTful API & third-party software integration",
-        "Business workflow automation",
+        "Payment gateway and checkout workflow integration",
+        "Real-time inventory and database synchronization",
+        "Secure REST & webhook data pipelines",
+        "Multi-platform automation connecting mobile and web tools",
       ],
-      gradient: "from-brand-secondary-500 to-brand-secondary-600",
+      gradient: "",
       textClass: "text-brand-secondary-600 dark:text-brand-secondary-400",
     },
   ];
@@ -114,84 +114,75 @@ const ServicesGrid = () => {
           viewport={{ once: true }}
           className="text-center mb-10"
         >
-          <SectionBadge icon={Briefcase} className="mb-4">
-            Our Services
+          <SectionBadge icon={Cpu} className="mb-4">
+            Core Capabilities
           </SectionBadge>
-          <h2 className="text-xl md:text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100 mb-4 transition-colors duration-300">
-            What We Do
+          <h2 className="text-xl md:text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100 mb-4 transition-colors ">
+            What We Build & Support
           </h2>
           <p className="text-sm text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
-            From custom apps to complete IT management — solutions designed
-            to help your business grow
+            Purposeful technology built to remove operational friction, automate workflows, and expand what your business can achieve.
           </p>
         </m.div>
 
-        {/* Services Grid */}
+        {/* Services Grid (4 col desktop, 2 col tablet/small, 1 col mobile) */}
         <m.div
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, amount: 0.2 }}
-          className="grid grid-cols-1 md:grid-cols-2 gap-8"
+          viewport={{ once: true, amount: 0.15 }}
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5"
         >
           {services.map((service) => (
             <m.div
               key={service.title}
               variants={cardVariants}
-              whileHover={{ y: -8 }}
+              whileHover={{ y: -6 }}
               className="h-full"
             >
               <SpotlightCard
-                className="group relative bg-white dark:bg-slate-900 rounded border border-slate-200 dark:border-slate-800 shadow-sm transition-all duration-300 h-full flex flex-col overflow-hidden"
+                className="group relative bg-white dark:bg-slate-900/60 rounded border border-slate-200/90 dark:border-slate-800 shadow-xs hover:shadow-md transition-all h-full flex flex-col overflow-hidden"
               >
-                {/* Hover Glow Background */}
-                <div
-                  className={`absolute inset-0 bg-linear-to-br ${service.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-300 pointer-events-none`}
-                />
-
-                <div className="p-6 sm:p-8 flex flex-col h-full relative z-10">
+                <div className="p-5 sm:p-6 flex flex-col h-full relative z-10">
                   {/* Icon */}
-                <div
-                  className={`inline-flex items-center justify-center w-12 h-12 rounded mb-6
-                  bg-linear-to-br ${service.gradient} text-white
-                  group-hover:scale-110 transition-transform duration-300`}
-                >
-                  {service.icon}
-                </div>
+                  <div
+                    className={`inline-flex items-center justify-center w-10 h-10 rounded mb-4 bg-slate-100 dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/60 ${service.textClass} group-hover:scale-105 transition-transform`}
+                  >
+                    {service.icon}
+                  </div>
 
-                {/* Title */}
-                <h3 className="text-lg md:text-xl font-bold tracking-tight text-slate-900 dark:text-slate-100 mb-3">
-                  {service.title}
-                </h3>
+                  {/* Title */}
+                  <h3 className="text-base font-bold tracking-tight text-slate-900 dark:text-slate-100 mb-2">
+                    {service.title}
+                  </h3>
 
-                {/* Description */}
-                <p className="text-slate-600 dark:text-slate-400 mb-6 leading-relaxed grow">
-                  {service.description}
-                </p>
+                  {/* Description */}
+                  <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mb-4 leading-relaxed grow">
+                    {service.description}
+                  </p>
 
-                {/* Features List */}
-                <ul className="space-y-3 mt-auto mb-6">
-                  {service.features.map((feature) => (
-                    <li key={feature} className="flex items-start gap-3">
-                      <CheckCircle
-                        className={`w-5 h-5 mt-0.5 shrink-0 ${service.textClass}`}
-                      />
-                      <span className="text-sm text-slate-700 dark:text-slate-300">
-                        {feature}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
+                  {/* Features List */}
+                  <ul className="space-y-2 mt-auto mb-5 pt-3 border-t border-slate-100 dark:border-slate-800/80">
+                    {service.features.map((feature) => (
+                      <li key={feature} className="flex items-start gap-2">
+                        <CheckCircle
+                          className={`w-3.5 h-3.5 mt-0.5 shrink-0 ${service.textClass}`}
+                        />
+                        <span className="text-xs text-slate-600 dark:text-slate-400 leading-normal">
+                          {feature}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
 
-                {/* Learn More Link */}
-                <a
-                  href="/consultation"
-                  className={`inline-flex items-center gap-2 ${service.textClass} font-medium
-                  hover:gap-3 transition group/link`}
-                >
-                  <span>Get Started</span>
-                  <ArrowRight className="w-4 h-4" />
-                </a>
+                  {/* Learn More Link */}
+                  <a
+                    href="/consultation"
+                    className={`inline-flex items-center gap-1.5 ${service.textClass} text-xs font-semibold hover:gap-2 transition-all mt-auto`}
+                  >
+                    <span>Get Started</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </a>
                 </div>
               </SpotlightCard>
             </m.div>

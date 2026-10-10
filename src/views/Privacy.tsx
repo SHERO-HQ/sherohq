@@ -34,9 +34,9 @@ const Privacy = () => {
                 </p>
                 <ul className="list-disc pl-6 space-y-2">
                   <li>
-                    <strong>Personal Data:</strong> Name, shipping address,
-                    email address, and telephone number when you register or
-                    make a purchase.
+                    <strong>Personal Data:</strong> Name, organization name,
+                    email address, and phone number provided when you contact us,
+                    book a consultation, or submit a service inquiry.
                   </li>
                   <li>
                     <strong>Financial Data:</strong> Payment information stored

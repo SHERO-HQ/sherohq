@@ -54,7 +54,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(({ className, type,
  {rightIcon && <div className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground">{rightIcon}</div>}
  </div>
  {error && (
- <p id={`${inputId}-error`} className="text-xs font-medium text-destructive mt-1 animate-in fade-in slide-in-from-top-1">
+ <p id={`${inputId}-error`} className="text-xs font-medium text-destructive mt-1 ">
  {error}
  </p>
  )}

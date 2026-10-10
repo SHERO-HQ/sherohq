@@ -51,7 +51,7 @@ const UserTableRow = ({
   >
     <td className="px-6 py-4">
       <div className="flex items-center gap-3">
-        <div className="relative w-10 h-10 rounded bg-linear-to-br from-brand-secondary-500 to-brand-secondary-500/60 font-bold text-lg flex items-center justify-center text-foreground overflow-hidden">
+        <div className="relative w-10 h-10 rounded font-bold text-lg flex items-center justify-center text-foreground overflow-hidden">
           {user.avatar ? (
             <AppImage
               src={user.avatar}

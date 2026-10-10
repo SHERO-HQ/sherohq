@@ -2,7 +2,7 @@
 
 import { useEffect, useState, Suspense } from "react";
 import { useSearchParams, useRouter, notFound } from "next/navigation";
-import { CreditCard, ShieldAlert, Sparkles, ShieldCheck } from "lucide-react";
+import { CreditCard, ShieldAlert, Code, ShieldCheck } from "lucide-react";
 import { } from "@/components/ui/button";
 import { toReadableOrderId, displayOrderId } from "@/utils/orderId";
 
@@ -88,7 +88,7 @@ function MockPaymentContent() {
       {/* Header */}
       <div className="text-center">
         <div className="inline-flex items-center gap-1.5 rounded-full border border-amber-200 dark:border-amber-900/40 bg-amber-50 dark:bg-amber-900/10 px-3.5 py-1 text-xs font-semibold text-amber-700 dark:text-amber-300 mb-4">
-          <Sparkles className="w-3.5 h-3.5" />
+          <Code className="w-3.5 h-3.5" />
           Developer Sandbox Mode
         </div>
         <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white mb-2">
@@ -133,7 +133,7 @@ function MockPaymentContent() {
         <button
           onClick={() => handleSimulate(true)}
           disabled={isProcessing}
-          className="flex flex-col items-center justify-center p-6 border-2 border-emerald-500/20 hover:border-emerald-500 bg-emerald-50/10 hover:bg-emerald-50/20 text-emerald-600 dark:text-emerald-400 rounded transition-all duration-300 group shadow-sm disabled:opacity-50"
+          className="flex flex-col items-center justify-center p-6 border-2 border-emerald-500/20 hover:border-emerald-500 bg-emerald-50/10 hover:bg-emerald-50/20 text-emerald-600 dark:text-emerald-400 rounded transition-all group shadow-sm disabled:opacity-50"
         >
           <div className="w-12 h-12 rounded-full bg-emerald-100 dark:bg-emerald-950/50 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
             <ShieldCheck className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
@@ -147,7 +147,7 @@ function MockPaymentContent() {
         <button
           onClick={() => handleSimulate(false)}
           disabled={isProcessing}
-          className="flex flex-col items-center justify-center p-6 border-2 border-rose-500/20 hover:border-rose-500 bg-rose-50/10 hover:bg-rose-50/20 text-rose-600 dark:text-rose-400 rounded transition-all duration-300 group shadow-sm disabled:opacity-50"
+          className="flex flex-col items-center justify-center p-6 border-2 border-rose-500/20 hover:border-rose-500 bg-rose-50/10 hover:bg-rose-50/20 text-rose-600 dark:text-rose-400 rounded transition-all group shadow-sm disabled:opacity-50"
         >
           <div className="w-12 h-12 rounded-full bg-rose-100 dark:bg-rose-950/50 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
             <ShieldAlert className="w-6 h-6 text-rose-600 dark:text-rose-400" />

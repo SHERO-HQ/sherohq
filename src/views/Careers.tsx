@@ -96,11 +96,10 @@ export default function Careers() {
   }, [safeOpenRoles, filterDept]);
 
   return (
-    <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
+    <div className="min-h-screen bg-background text-foreground transition-colors ">
       {/* Hero Section */}
       <section className="relative pt-32 pb-20 overflow-hidden lg:pt-48 lg:pb-32">
         <div className="absolute inset-0 bg-muted/30 -z-10" />
-        <div className="absolute inset-x-0 top-0 h-40 bg-linear-to-b from-muted to-transparent opacity-50 -z-10" />
 
         <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl mx-auto text-center">
@@ -160,7 +159,7 @@ export default function Careers() {
               viewport={{ once: true }}
               className="text-2xl font-bold text-foreground sm:text-3xl"
             >
-              Build With <span className="text-transparent bg-linear-to-r from-brand-primary-700 to-brand-secondary-700 dark:from-brand-primary-500 dark:to-brand-secondary-500 bg-clip-text font-black">SHERO</span>
+              Build With <span className="text-brand-secondary-600 dark:text-brand-secondary-400 font-black">SHERO</span>
             </m.h2>
             <m.p
               initial={{ opacity: 0, y: 20 }}
@@ -181,7 +180,7 @@ export default function Careers() {
               return (
                 <div
                   key={index}
-                  className="bg-card border border-border rounded overflow-hidden transition-all duration-300"
+                  className="bg-card border border-border rounded overflow-hidden transition-all "
                 >
                   <button
                     onClick={() => setOpenBenefit(isOpen ? null : index)}
@@ -196,7 +195,7 @@ export default function Careers() {
                       </h3>
                     </div>
                     <ChevronDown
-                      className={`w-5 h-5 text-muted-foreground transition-transform duration-300 ${
+                      className={`w-5 h-5 text-muted-foreground transition-transform ${
                         isOpen ? "rotate-180" : ""
                       }`}
                     />
@@ -309,7 +308,7 @@ export default function Careers() {
                           >
                             <div
                               onClick={() => setSelectedJob(role)}
-                              className="group flex flex-col h-full bg-card p-6 sm:p-8 rounded border border-border dark:hover:border-brand-primary-500 hover:border-brand-primary-800 hover:shadow-md transition-all duration-300 cursor-pointer"
+                              className="group flex flex-col h-full bg-card p-6 sm:p-8 rounded border border-border dark:hover:border-brand-primary-500 hover:border-brand-primary-800 hover:shadow-md transition-all cursor-pointer"
                             >
                               <div className="flex-1">
                                 <h3 className="text-xl font-semibold text-card-foreground dark:group-hover:text-brand-primary-500 group-hover:text-brand-primary-800 transition-colors">

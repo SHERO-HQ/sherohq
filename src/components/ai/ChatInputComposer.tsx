@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Image as ImageIcon, Mic, Volume2, Send, X, Sparkles } from "lucide-react";
+import { Image as ImageIcon, Mic, Volume2, Send, X, Bot } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface ChatInputComposerProps {
@@ -160,7 +160,7 @@ export function ChatInputComposer({
         </p>
         <p className="text-[9px] font-semibold text-muted-foreground flex items-center gap-1">
           Powered by Gemini{" "}
-          <Sparkles size={10} className="text-brand-secondary-400" />
+          <Bot size={10} className="text-brand-secondary-400" />
         </p>
       </div>
     </div>

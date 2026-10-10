@@ -32,7 +32,7 @@ export default function InvoiceCustomerCard({
 
   return (
     <Card className={cn(
-      "bg-card border border-border p-6 md:p-8 space-y-6 transition-all duration-300",
+      "bg-card border border-border p-6 md:p-8 space-y-6 transition-all ",
       (errors.firstName || errors.email || errors.address) && "border-rose-500/30 bg-rose-500/2"
     )}>
       <div className="flex items-center gap-2 pb-2 border-b border-border">
@@ -63,7 +63,7 @@ export default function InvoiceCustomerCard({
               required
             />
             {errors.firstName && (
-              <p className="text-xs text-rose-400 animate-in slide-in-from-top-1 opacity-100 mt-1">
+              <p className="text-xs text-rose-400 animate-in opacity-100 mt-1">
                 {errors.firstName}
               </p>
             )}
@@ -110,7 +110,7 @@ export default function InvoiceCustomerCard({
               required
             />
             {errors.email && (
-              <p className="text-xs text-rose-400 animate-in slide-in-from-top-1 opacity-100 mt-1">
+              <p className="text-xs text-rose-400 animate-in opacity-100 mt-1">
                 {errors.email}
               </p>
             )}
@@ -156,7 +156,7 @@ export default function InvoiceCustomerCard({
               required
             />
             {errors.address && (
-              <p className="text-xs text-rose-400 animate-in slide-in-from-top-1 opacity-100 mt-1">
+              <p className="text-xs text-rose-400 animate-in opacity-100 mt-1">
                 {errors.address}
               </p>
             )}

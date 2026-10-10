@@ -42,7 +42,7 @@ export default function ProjectSidebarMeta({
     <div className="space-y-6">
       {/* Category & Details */}
       <Card className={cn(
-        "bg-card border border-border p-6 space-y-6 transition-all duration-300",
+        "bg-card border border-border p-6 space-y-6 transition-all ",
         errors.category && "border-rose-500/30"
       )}>
         <div className="flex items-center gap-2 pb-2 border-b border-border">

@@ -36,7 +36,7 @@ export default function CheckoutProgress() {
         {/* Progress Bar Line */}
         <div className="mt-4 h-1.5 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
           <div
-            className="h-full bg-brand-secondary-600 rounded-full transition duration-300"
+            className="h-full bg-brand-secondary-600 rounded-full transition "
             style={{ width: `${(currentStep / CHECKOUT_STEPS.length) * 100}%` }}
           />
         </div>
@@ -48,7 +48,7 @@ export default function CheckoutProgress() {
           {/* Progress Track & Line */}
           <div className="absolute top-6 left-6 right-6 h-1 bg-slate-200 dark:bg-slate-800 -translate-y-1/2 rounded-full">
             <div
-              className="h-full bg-brand-secondary-600 transition duration-300 rounded-full"
+              className="h-full bg-brand-secondary-600 transition rounded-full"
               style={{ width: `${((currentStep - 1) / (CHECKOUT_STEPS.length - 1)) * 100}%` }}
             />
           </div>

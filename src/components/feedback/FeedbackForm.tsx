@@ -157,7 +157,7 @@ export default function FeedbackForm({
   return (
     <Card
       className={cn(
-        "border-none shadow-md dark:bg-slate-950/80 backdrop-blur-2xl ring-1 ring-white/10 overflow-hidden w-full rounded",
+        "border-none shadow-md dark:bg-slate-950/80 backdrop-ring-1 ring-white/10 overflow-hidden w-full rounded",
         className,
       )}
     >

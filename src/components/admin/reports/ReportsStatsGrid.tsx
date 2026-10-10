@@ -53,8 +53,8 @@ function StatCard({
   };
 
   return (
-    <div className="bg-card/40 border border-border hover:border-brand-secondary-500/30 transition-all duration-300 rounded p-5 flex flex-col gap-3 relative group overflow-hidden">
-      <div className="absolute inset-0 bg-radial-gradient from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+    <div className="bg-card/40 border border-border hover:border-brand-secondary-500/30 transition-all rounded p-5 flex flex-col gap-3 relative group overflow-hidden">
+      <div className="absolute inset-0 bg-radial-gradient opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
       <div className="flex items-center gap-4 relative z-10">
         <div className={`p-2.5 rounded ${bg} ${color}`}>
           <Icon className="w-5 h-5" />

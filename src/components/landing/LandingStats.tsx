@@ -37,7 +37,7 @@ const LandingStats = () => {
   if (!isLoading && stats.length === 0) return null;
 
   return (
-    <section className="relative w-full py-16 bg-white dark:bg-slate-950 overflow-hidden border-y border-slate-200 dark:border-slate-900 transition-colors duration-300">
+    <section className="relative w-full py-16 bg-white dark:bg-slate-950 overflow-hidden border-y border-slate-200 dark:border-slate-900 transition-colors ">
       {/* Background patterns */}
       <div className="absolute inset-0 pattern-grid-brand opacity-[0.03] dark:opacity-[0.5] pointer-events-none" />
 
@@ -45,7 +45,7 @@ const LandingStats = () => {
         {/* The Hub Container */}
         <div className="relative flex flex-col md:flex-row items-center border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 rounded overflow-hidden shadow shadow-brand-secondary-600/5 group/hub">
           {/* Pulsing Aura */}
-          <div className="absolute inset-0 bg-brand-secondary-600/5 opacity-0 group-hover/hub:opacity-100 transition-opacity duration-1000 animate-pulse pointer-events-none" />
+          <div className="absolute inset-0 bg-brand-secondary-600/5 opacity-0 group-hover/hub:opacity-100 transition-opacity animate-pulse pointer-events-none" />
 
           {/* Scanning Line Effect (Horizontal) */}
           <div className="absolute inset-y-0 left-0 w-px bg-brand-secondary-600/30 hidden md:block" />
@@ -146,7 +146,7 @@ const StatItem = ({ stat }: { stat: Stat }) => {
       {/* Mini Progress Line */}
       <div className="mt-4 w-12 h-0.5 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
         <div
-          className="h-full bg-brand-secondary-600 transition duration-1000 ease-out"
+          className="h-full bg-brand-secondary-600 transition ease-out"
           style={{ width: isInView ? "100%" : "0%" }}
         />
       </div>

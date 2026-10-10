@@ -80,8 +80,8 @@ export function AIAnalyticsCharts({
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
       {/* Interaction Volume */}
-      <Card className="bg-card/40 border-border hover:border-brand-secondary-500/30 transition-colors duration-300 relative group overflow-hidden">
-        <div className="absolute inset-0 bg-radial-gradient from-brand-secondary-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+      <Card className="bg-card/40 border-border hover:border-brand-secondary-500/30 transition-colors relative group overflow-hidden">
+        <div className="absolute inset-0 bg-radial-gradient opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
         <CardHeader>
           <CardTitle className="text-foreground">Interaction Trends</CardTitle>
           <CardDescription className="text-muted-foreground">
@@ -136,8 +136,8 @@ export function AIAnalyticsCharts({
       </Card>
 
       {/* Volume Velocity */}
-      <Card className="bg-card/40 border-border hover:border-blue-500/30 transition-colors duration-300 relative group overflow-hidden">
-        <div className="absolute inset-0 bg-radial-gradient from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+      <Card className="bg-card/40 border-border hover:border-blue-500/30 transition-colors relative group overflow-hidden">
+        <div className="absolute inset-0 bg-radial-gradient opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
         <CardHeader>
           <CardTitle className="text-foreground">Engagement Velocity</CardTitle>
           <CardDescription className="text-muted-foreground">
@@ -198,8 +198,8 @@ export function AIAnalyticsCharts({
       </Card>
 
       {/* User Intent Distribution */}
-      <Card className="bg-card/40 border-border hover:border-purple-500/30 transition-colors duration-300 relative group overflow-hidden">
-        <div className="absolute inset-0 bg-radial-gradient from-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+      <Card className="bg-card/40 border-border hover:border-purple-500/30 transition-colors relative group overflow-hidden">
+        <div className="absolute inset-0 bg-radial-gradient opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
         <CardHeader>
           <CardTitle className="text-foreground">User Intent Map</CardTitle>
           <CardDescription className="text-muted-foreground">
@@ -258,8 +258,8 @@ export function AIAnalyticsCharts({
       </Card>
 
       {/* Catalog Gap Pressure */}
-      <Card className="bg-card/40 border-border hover:border-amber-500/30 transition-colors duration-300 relative group overflow-hidden">
-        <div className="absolute inset-0 bg-radial-gradient from-amber-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+      <Card className="bg-card/40 border-border hover:border-amber-500/30 transition-colors relative group overflow-hidden">
+        <div className="absolute inset-0 bg-radial-gradient opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
         <CardHeader>
           <CardTitle className="text-foreground">Gap Pressure</CardTitle>
           <CardDescription className="text-muted-foreground">

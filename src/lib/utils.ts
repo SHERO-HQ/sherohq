@@ -17,7 +17,7 @@ const NAV_LINK_STYLES = {
   base: [
     "px-3 py-1.5",
     "rounded",
-    "transition-all duration-300 ease-in-out",
+    "transition-all ease-in-out",
     // Focus states
     // "focus:ring-2 focus:ring-brand-secondary-500/50",
     "focus:outline-none",
@@ -89,7 +89,7 @@ export function navLinkClassVariant(
         "px-2 py-1",
         "rounded",
         "w-full",
-        "transition-colors duration-200",
+        "transition-colors ",
         "focus:outline-none",
         "focus:border-b-2 focus:border-brand-secondary-500",
       ],
@@ -104,7 +104,7 @@ export function navLinkClassVariant(
       base: [
         "px-2 py-1",
         "text-sm",
-        "transition-colors duration-200",
+        "transition-colors ",
         "focus:outline-none",
       ],
       active: ["text-brand-secondary-400", "font-medium", "underline"],
@@ -115,7 +115,7 @@ export function navLinkClassVariant(
         "relative block py-2.5 px-4",
         "rounded",
         "text-base font-medium",
-        "transition-all duration-300",
+        "transition-all ",
         "focus:outline-none",
       ],
       active: [
