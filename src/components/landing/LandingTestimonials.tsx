@@ -3,9 +3,17 @@ import { useMemo } from "react";
 import { Briefcase } from "lucide-react";
 import { SectionBadge } from "@/components/common/SectionBadge";
 import { useProjects } from "@/hooks/queries/useProjects";
+import { slugify } from "@/lib/slug";
+import Link from "next/link";
 
 // Clients that have given permission to be shown. Anyone else is not listed.
-const SHOWN_CLIENTS = ["TrustCircle", "Tastea", "Dajrim"];
+// The fallback line is the product we built for them, used until a project
+// with a description is uploaded in the admin.
+const SHOWN_CLIENTS: { name: string; fallback?: string }[] = [
+  { name: "TrustCircle", fallback: "Samakose" },
+  { name: "Tastea", fallback: "Unique Fashion" },
+  { name: "Dajrim" },
+];
 
 const firstSentence = (text: string) => {
   const match = text.trim().match(/^.*?[.!?](\s|$)/);
@@ -18,17 +26,17 @@ const LandingTestimonials = (_props: { limit?: number } = {}) => {
 
   const items = useMemo(
     () =>
-      SHOWN_CLIENTS.map((name) => {
-        const project = projects.find(
-          (p) =>
-            p.client?.toLowerCase().includes(name.toLowerCase()) &&
-            p.description?.trim(),
+      SHOWN_CLIENTS.map(({ name, fallback }) => {
+        const project = projects.find((p) =>
+          p.client?.toLowerCase().includes(name.toLowerCase()),
         );
+        const line = project?.description?.trim()
+          ? firstSentence(project.description)
+          : fallback || project?.title || "";
         return {
           name,
-          line: project?.description
-            ? firstSentence(project.description)
-            : "A SHERO client.",
+          line,
+          href: project ? `/work/${slugify(project.title) || project.id}` : null,
         };
       }),
     [projects],
@@ -49,14 +57,22 @@ const LandingTestimonials = (_props: { limit?: number } = {}) => {
           {items.map((item) => (
             <li
               key={item.name}
-              className="rounded border border-slate-200 dark:border-slate-800 bg-card p-5"
+              className="relative rounded border border-slate-200 dark:border-slate-800 bg-card p-5"
             >
               <p className="font-semibold text-slate-900 dark:text-slate-100">
-                {item.name}
+                {item.href ? (
+                  <Link href={item.href} className="after:absolute after:inset-0">
+                    {item.name}
+                  </Link>
+                ) : (
+                  item.name
+                )}
               </p>
-              <p className="mt-1 text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-                {item.line}
-              </p>
+              {item.line && (
+                <p className="mt-1 text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                  {item.line}
+                </p>
+              )}
             </li>
           ))}
         </ul>
