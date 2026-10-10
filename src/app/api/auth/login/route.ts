@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from "uuid";
 import { randomBytes } from "node:crypto";
 import { cookies } from "next/headers";
 import { z } from "zod";
-import { rateLimit } from "@/lib/rate-limit";
+import { rateLimit, isRateLimited, getClientIp } from "@/lib/rate-limit";
 
 import { USER_SESSION_COOKIE, getAuthCookieOptions } from "@/lib/auth";
 
@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
     const csrfError = await validateCsrf(request);
     if (csrfError) return csrfError;
 
-    const ip = request.headers.get("x-forwarded-for") || "anonymous";
+    const ip = getClientIp(request);
     const limiter = await rateLimit(`user_login_${ip}`, 5, 60 * 1000);
 
     if (!limiter.success) {
@@ -41,8 +41,10 @@ export async function POST(request: NextRequest) {
     const { email, password } = validated.data;
 
     // Per-account rate limiting
-    const accountLimiter = await rateLimit(`account_login_${email.toLowerCase()}`, 5, 15 * 60_000);
-    if (!accountLimiter.success) {
+    // Only failed attempts count toward the lockout (recorded below), so a
+    // user's own successful logins can't lock them out.
+    const accountKey = `account_login_${email.toLowerCase()}`;
+    if (await isRateLimited(accountKey, 5, 15 * 60_000)) {
       return apiResponse.error("This account is temporarily locked due to too many failed attempts. Please try again in 15 minutes.", 429);
     }
 
@@ -58,6 +60,7 @@ export async function POST(request: NextRequest) {
     );
 
     if (!user || !isMatch) {
+      await rateLimit(accountKey, 5, 15 * 60_000);
       return apiResponse.unauthorized("Invalid credentials");
     }
 
@@ -99,7 +102,6 @@ export async function POST(request: NextRequest) {
 
     return apiResponse.success({
       success: true,
-      token,
       user: {
         id: user.id,
         email: user.email,

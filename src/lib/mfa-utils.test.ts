@@ -5,6 +5,7 @@ import {
   generateRecoveryCodes,
   hashRecoveryCode,
   verifyRecoveryCode,
+  parseRecoveryCodes,
 } from "./mfa-utils";
 
 describe("mfa-utils security functions", () => {
@@ -51,5 +52,13 @@ describe("mfa-utils security functions", () => {
 
     expect(verifyRecoveryCode(firstCode, hashed)).toBe(true);
     expect(verifyRecoveryCode("INVALIDCODE", hashed)).toBe(false);
+  });
+
+  it("parses recovery codes stored as an array or as legacy double-encoded JSON", () => {
+    const codes = ["a:1", "b:2"];
+    expect(parseRecoveryCodes(codes)).toEqual(codes);
+    expect(parseRecoveryCodes(JSON.stringify(codes))).toEqual(codes);
+    expect(parseRecoveryCodes(null)).toEqual([]);
+    expect(parseRecoveryCodes("not json")).toEqual([]);
   });
 });

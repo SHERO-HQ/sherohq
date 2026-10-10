@@ -83,19 +83,7 @@ function handleProxy(request: NextRequest) {
   const host = hostname.toLowerCase();
   const path = url.pathname;
 
-  // Bypass subdomain routing entirely on default cloud deployments (Vercel, Netlify)
-  // as they do not support wildcard subdomains on their base domains (*.vercel.app, *.netlify.app)
-  if (
-    host.endsWith(".vercel.app") ||
-    host.endsWith(".netlify.app") ||
-    host.includes(".vercel.app:") ||
-    host.includes(".netlify.app:")
-  ) {
-    console.log(`[Proxy] Bypassing cloud domain: ${host}${path}`);
-    return NextResponse.next();
-  }
-
-
+  // API requests get origin checks on every host, including cloud preview domains.
   if (path.startsWith("/api")) {
     const isAllowed = isAllowedOrigin(request);
 
@@ -142,6 +130,17 @@ function handleProxy(request: NextRequest) {
     }
 
     return response;
+  }
+
+  // Bypass subdomain routing entirely on default cloud deployments (Vercel, Netlify)
+  // as they do not support wildcard subdomains on their base domains (*.vercel.app, *.netlify.app)
+  if (
+    host.endsWith(".vercel.app") ||
+    host.endsWith(".netlify.app") ||
+    host.includes(".vercel.app:") ||
+    host.includes(".netlify.app:")
+  ) {
+    return NextResponse.next();
   }
 
   // NOTE: Do NOT redirect www ↔ non-www here.

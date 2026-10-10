@@ -6,7 +6,7 @@ import { eq } from "drizzle-orm";
 import { createHash, randomBytes } from "node:crypto";
 import { z } from "zod";
 import { notificationService } from "@/lib/notifications";
-import { rateLimit } from "@/lib/rate-limit";
+import { rateLimit, getClientIp } from "@/lib/rate-limit";
 
 const ForgotPasswordSchema = z.object({
   email: z.string().email(),
@@ -14,7 +14,7 @@ const ForgotPasswordSchema = z.object({
 
 export async function POST(request: NextRequest) {
   try {
-    const ip = request.headers.get("x-forwarded-for") || "anonymous";
+    const ip = getClientIp(request);
     const limiter = await rateLimit(`forgot_password_${ip}`, 3, 60 * 1000);
 
     if (!limiter.success) {

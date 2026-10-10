@@ -1,4 +1,5 @@
 import { apiResponse } from "@/lib/api-utils";
+import { getAdminFromSession } from "@/lib/auth";
 import { NextRequest } from "next/server";
 import { getConversationHistory, clearConversationHistory, deleteConversation } from "@/lib/whatsapp-messages";
 
@@ -8,6 +9,11 @@ import { getConversationHistory, clearConversationHistory, deleteConversation } 
  */
 export async function GET(request: NextRequest) {
   try {
+    const admin = await getAdminFromSession();
+    if (!admin) {
+      return apiResponse.unauthorized();
+    }
+
     const { searchParams } = new URL(request.url);
     const phone = searchParams.get("phone");
     const limit = parseInt(searchParams.get("limit") || "100", 10);
@@ -36,6 +42,11 @@ export async function GET(request: NextRequest) {
  */
 export async function DELETE(request: NextRequest) {
   try {
+    const admin = await getAdminFromSession();
+    if (!admin) {
+      return apiResponse.unauthorized();
+    }
+
     const { searchParams } = new URL(request.url);
     const phone = searchParams.get("phone");
     const action = searchParams.get("action") || "clear";

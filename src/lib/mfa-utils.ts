@@ -35,8 +35,37 @@ export function verifyRecoveryCode(code: string, hashedCode: string): boolean {
   }
 }
 
-const MFA_TOKEN_SECRET =
-  process.env.JWT_SECRET || process.env.CRON_SECRET || "shero_mfa_token_secret_fallback_key";
+/**
+ * Reads stored recovery-code hashes. Older rows were written as a JSON string
+ * inside the jsonb column (double-encoded), so accept both shapes.
+ */
+export function parseRecoveryCodes(stored: unknown): string[] {
+  let value = stored;
+  if (typeof value === "string") {
+    try {
+      value = JSON.parse(value);
+    } catch {
+      return [];
+    }
+  }
+  return Array.isArray(value)
+    ? value.filter((v): v is string => typeof v === "string")
+    : [];
+}
+
+/**
+ * Secret used to sign MFA challenge tokens. A publicly known fallback would let
+ * anyone mint challenge tokens and skip the password step, so production must
+ * have a real secret configured.
+ */
+function getMfaTokenSecret(): string {
+  const secret = process.env.JWT_SECRET || process.env.CRON_SECRET;
+  if (secret) return secret;
+  if (process.env.NODE_ENV === "production") {
+    throw new Error("JWT_SECRET must be set to sign MFA challenge tokens");
+  }
+  return "shero_mfa_token_dev_only_secret";
+}
 
 /**
  * Generates a signed, short-lived (5-minute) MFA challenge token.
@@ -52,7 +81,7 @@ export function generateMfaChallengeToken(
     nonce: randomBytes(16).toString("hex"),
   };
   const payloadB64 = Buffer.from(JSON.stringify(payload)).toString("base64url");
-  const sig = createHmac("sha256", MFA_TOKEN_SECRET)
+  const sig = createHmac("sha256", getMfaTokenSecret())
     .update(payloadB64)
     .digest("base64url");
   return `${payloadB64}.${sig}`;
@@ -70,7 +99,7 @@ export function verifyMfaChallengeToken(
     if (parts.length !== 2) return null;
     const [payloadB64, sig] = parts;
 
-    const expectedSig = createHmac("sha256", MFA_TOKEN_SECRET)
+    const expectedSig = createHmac("sha256", getMfaTokenSecret())
       .update(payloadB64)
       .digest("base64url");
 

@@ -3,7 +3,15 @@ import { db } from "@/lib/db";
 import { reviews, products } from "@/lib/drizzle/schema";
 import { eq, desc, sql } from "drizzle-orm";
 import { v4 as uuidv4 } from "uuid";
-import { apiResponse } from "@/lib/api-utils";
+import { apiResponse, validateBody } from "@/lib/api-utils";
+import { rateLimit, getClientIp } from "@/lib/rate-limit";
+import { z } from "zod";
+
+const ReviewSchema = z.object({
+  userName: z.string().trim().min(1).max(80),
+  rating: z.coerce.number().int().min(1).max(5),
+  comment: z.string().trim().max(2000).optional(),
+});
 
 export async function GET(
   request: NextRequest,
@@ -28,9 +36,22 @@ export async function POST(
 ) {
   try {
     const productId = (await params).id;
-    const { userName, rating, comment } = await request.json();
 
-    if (!userName || !rating) return apiResponse.error("Username and rating required", 400);
+    // Reviews are anonymous, so cap submissions per IP to limit rating stuffing.
+    const limiter = await rateLimit(`review_${getClientIp(request)}`, 5, 60 * 60_000);
+    if (!limiter.success) {
+      return apiResponse.error("Too many reviews submitted. Please try again later.", 429);
+    }
+
+    const { data, error } = await validateBody(request, ReviewSchema);
+    if (error) return error;
+    const { userName, rating, comment } = data!;
+
+    const product = await db.query.products.findFirst({
+      where: eq(products.id, productId),
+      columns: { id: true },
+    });
+    if (!product) return apiResponse.notFound("Product not found");
 
     const reviewId = uuidv4();
     await db.insert(reviews).values({

@@ -69,7 +69,12 @@ export async function POST(request: NextRequest) {
         );
       }
     } else if (process.env.NODE_ENV === "production") {
-      console.warn("WHATSAPP_APP_SECRET is not configured in production!");
+      // Without the app secret, anyone could inject fake inbound messages.
+      console.error("WHATSAPP_APP_SECRET is not configured; rejecting webhook");
+      return NextResponse.json(
+        { error: "Webhook signature verification not configured" },
+        { status: 503 }
+      );
     }
 
     const body = JSON.parse(rawBody);

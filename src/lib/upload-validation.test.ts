@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { validateUploadedFile } from "./upload-validation";
+import { validateUploadedFile, validateResumeFile } from "./upload-validation";
 
 function makeFile(name: string, type: string, size: number): File {
   return new File(["x".repeat(size)], name, { type });
@@ -31,5 +31,24 @@ describe("validateUploadedFile", () => {
 
     expect(result.ok).toBe(true);
     if (!result.ok) expect(result.error).toBeUndefined();
+  });
+});
+
+describe("validateResumeFile", () => {
+  it("rejects non-document types", () => {
+    const result = validateResumeFile(makeFile("cv.html", "text/html", 100));
+    expect(result.ok).toBe(false);
+  });
+
+  it("rejects oversized files", () => {
+    const result = validateResumeFile(
+      makeFile("cv.pdf", "application/pdf", 6 * 1024 * 1024),
+    );
+    expect(result.ok).toBe(false);
+  });
+
+  it("accepts PDF resumes", () => {
+    const result = validateResumeFile(makeFile("cv.pdf", "application/pdf", 1024));
+    expect(result.ok).toBe(true);
   });
 });
