@@ -35,7 +35,7 @@ const LandingAbout = () => {
                     empower people, businesses and communities to expand their possibilities.
                   </p>
                   <p>
-                    We focus is on solutions that are  accessible,
+                    Our focus is on solutions that are accessible,
                     and grounded in the everyday needs of people and local enterprises.
                   </p>
                 </div>

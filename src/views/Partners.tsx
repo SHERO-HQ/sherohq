@@ -40,7 +40,7 @@ const Partners = () => {
     },
     {
       title: "Discovery",
-      desc: "Our team reviews your operational context to determine the best technical and commercial approach.",
+      desc: "SHERO reviews your operational context to determine the best technical and commercial approach.",
     },
     {
       title: "Onboarding",

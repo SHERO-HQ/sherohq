@@ -71,7 +71,7 @@ export function useNavigationState() {
               name: "Our Work",
               icon: Package,
               desc: "Products & projects",
-              href: "/solutions",
+              href: "/work",
             },
           ]),
       {

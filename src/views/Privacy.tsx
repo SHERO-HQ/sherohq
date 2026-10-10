@@ -39,6 +39,11 @@ const Privacy = () => {
                     book a consultation, or submit a service inquiry.
                   </li>
                   <li>
+                    <strong>Feedback and profile picture:</strong> If you send
+                    feedback, you may add your name and an optional profile
+                    picture. Both are optional, and you can stay anonymous.
+                  </li>
+                  <li>
                     <strong>Financial Data:</strong> Payment information stored
                     by our payment processors (we do not store full credit card
                     numbers).

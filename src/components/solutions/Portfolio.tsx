@@ -1,47 +1,17 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { createPortal } from "react-dom";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useProjects } from "@/hooks/queries/useProjects";
 import { m } from "motion/react";
 import { Wrench } from "lucide-react";
-import { type Project } from "@/services/api";
 import { SectionBadge } from "@/components/common/SectionBadge";
 import { PortfolioCard } from "./PortfolioCard";
-import { PortfolioDrawer } from "./PortfolioDrawer";
 
-const Portfolio = () => {
+const Portfolio = ({ hideWhenEmpty = true }: { hideWhenEmpty?: boolean } = {}) => {
   const [activeCategory, setActiveCategory] = useState("All");
-  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  useEffect(() => {
-    if (selectedProject) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [selectedProject]);
-
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        setSelectedProject(null);
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, []);
+  const router = useRouter();
 
   const allCategoryDefinitions = [
     "All",
@@ -70,7 +40,7 @@ const Portfolio = () => {
   });
 
   // Nothing uploaded yet: show no empty section and no filter row.
-  if (!isLoading && projects.length === 0 && activeCategory === "All") {
+  if (hideWhenEmpty && !isLoading && projects.length === 0 && activeCategory === "All") {
     return null;
   }
 
@@ -144,19 +114,11 @@ const Portfolio = () => {
                 key={project.id}
                 project={project}
                 idx={idx}
-                onSelect={(p) => setSelectedProject(p)}
+                onSelect={(p) => router.push(`/work/${p.id}`)}
               />
             ))}
         </div>
 
-        {mounted &&
-          createPortal(
-            <PortfolioDrawer
-              selectedProject={selectedProject}
-              onClose={() => setSelectedProject(null)}
-            />,
-            document.body,
-          )}
       </div>
     </section>
   );

@@ -2,7 +2,6 @@ import ServicesGrid from "@/components/solutions/ServicesGrid";
 import SolutionsHero from "@/components/solutions/SolutionsHero";
 import Process from "@/components/solutions/Process";
 import FinalCTA from "@/components/landing/LandingFinalCTA";
-import Portfolio from "@/components/solutions/Portfolio";
 
 const Solutions = () => {
  return (
@@ -10,7 +9,6 @@ const Solutions = () => {
  <SolutionsHero />
  <ServicesGrid />
  <Process />
- <Portfolio />
  <FinalCTA />
  </>
  );

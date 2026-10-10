@@ -20,7 +20,7 @@ const nodes = [
   {
     id: 3,
     title: "Unified IT Support",
-    desc: "On-site troubleshooting, routine maintenance, and direct support by the team who knows your setup.",
+    desc: "On-site troubleshooting, routine maintenance, and direct support from SHERO.",
     icon: Shield,
   },
 ];

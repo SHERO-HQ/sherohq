@@ -77,7 +77,7 @@ const Footer = () => {
             <NavLink href={getAbsoluteUrl("/")} className="inline-block mb-3 shrink-0">
               <img
                 src="/assets/logo/shero-light.svg"
-                alt="Shero Logo"
+                alt="SHERO"
                 width={163}
                 height={57}
                 className="h-10 w-auto object-contain shrink-0 dark:block hidden"
@@ -85,7 +85,8 @@ const Footer = () => {
               />
               <img
                 src="/assets/logo/shero-dark.svg"
-                alt="Shero Logo"
+                alt=""
+                aria-hidden="true"
                 width={163}
                 height={57}
                 className="h-10 w-auto object-contain shrink-0 dark:hidden block"

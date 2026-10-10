@@ -155,7 +155,7 @@ ${formData.message}`;
             Message Transmitted!
           </h3>
           <p className="text-sm text-slate-600 dark:text-slate-400 max-w-sm mx-auto leading-relaxed">
-            Thank you for reaching out. We have logged your request and our team will get back to you within 2 hours.
+            Thank you for reaching out. We have logged your request and we will get back to you.
           </p>
           <Button
             onClick={() => setStatus("idle")}

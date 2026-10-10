@@ -4,7 +4,7 @@ import Consultation from "@/views/Consultation";
 export const metadata: Metadata = {
  title: "Book a Consultation",
  description:
- "Schedule a free consultation with SHERO's technology experts. Let's discuss your project and how we can help.",
+ "Book a consultation with SHERO. Tell us about your project and how we can help.",
 };
 
 export default function ConsultationPage() {

@@ -23,7 +23,7 @@ const steps = [
   {
     title: "Strategy & Design",
     description:
-      "Our experts craft a tailored solution covering hardware, software and network setup.",
+      "SHERO designs a tailored solution covering hardware, software and network setup.",
     icon: Lightbulb,
   },
   {
