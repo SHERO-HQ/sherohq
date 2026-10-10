@@ -9,7 +9,7 @@ interface WorkDetailProps {
     id: string;
     title: string;
     category: string;
-    status: "live" | "in_development";
+    status: "live" | "in_development" | "paused";
     client: string | null;
     description: string | null;
     useCase: string | null;
@@ -46,6 +46,12 @@ const WorkDetail = ({ project }: WorkDetailProps) => {
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-700 dark:text-amber-400 text-xs font-semibold">
                 <Clock className="w-3.5 h-3.5" />
                 In development
+              </span>
+            )}
+            {project.status === "paused" && (
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-500/10 border border-slate-500/30 text-slate-700 dark:text-slate-300 text-xs font-semibold">
+                <Clock className="w-3.5 h-3.5" />
+                Paused
               </span>
             )}
           </div>

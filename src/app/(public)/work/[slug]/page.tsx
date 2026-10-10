@@ -63,7 +63,10 @@ export default async function WorkDetailPage({
         id: project.id,
         title: project.title,
         category: project.category,
-        status: project.status === "in_development" ? "in_development" : "live",
+        status:
+          project.status === "in_development" || project.status === "paused"
+            ? project.status
+            : "live",
         client: project.client,
         description: project.description,
         useCase: project.useCase,

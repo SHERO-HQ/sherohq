@@ -41,6 +41,9 @@ export async function PUT(
 
     const id = (await params).id;
     const body = await request.json();
+    if (body.status !== undefined && !["live", "in_development", "paused"].includes(body.status)) {
+      body.status = "live";
+    }
 
     const allowedFields = ["title", "category", "status", "client", "description", "useCase", "technologies", "image", "link"];
     const updates: Record<string, any> = {};
@@ -88,6 +91,9 @@ export async function DELETE(
     return apiResponse.success({ message: "Project deleted successfully" });
   } catch (error) {
     console.error("Delete project error:", error);
-    return apiResponse.error("Failed to delete project");
+    // Admin-only endpoint: pass the database reason on so it shows in the toast.
+    const reason = error instanceof Error ? error.message : String(error);
+    const detail = (error as { detail?: string })?.detail;
+    return apiResponse.error(`Failed to delete project: ${reason}${detail ? ` (${detail})` : ""}`);
   }
 }

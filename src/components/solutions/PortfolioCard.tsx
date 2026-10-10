@@ -47,6 +47,11 @@ export function PortfolioCard({ project, href }: PortfolioCardProps) {
               In development
             </span>
           )}
+          {project.status === "paused" && (
+            <span className="inline-flex items-center rounded bg-slate-200 px-2 py-0.5 text-[10px] font-bold uppercase text-slate-700 dark:bg-slate-800 dark:text-slate-300">
+              Paused
+            </span>
+          )}
           {project.client && (
             <span className="text-[10px] font-medium text-slate-500">
               for {project.client}

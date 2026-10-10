@@ -1,4 +1,6 @@
 "use client";
+import { getAbsoluteUrl } from "@/utils/subdomain";
+import { slugify } from "@/lib/slug";
 import { useState, useMemo } from "react";
 import Link from "next/link";
 import { useNotifications } from "@/hooks/useNotifications";
@@ -87,6 +89,7 @@ export default function AdminProjects() {
  "Mobile Apps",
  "Infrastructure",
  "Custom Software",
+ "Products",
  ];
 
  return (
@@ -260,7 +263,7 @@ export default function AdminProjects() {
  asChild
  >
  <a
- href={`/products`}
+ href={getAbsoluteUrl(`/work/${slugify(project.title) || project.id}`)}
  target="_blank"
  rel="noreferrer"
  >

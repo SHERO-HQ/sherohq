@@ -100,6 +100,7 @@ export default function ProjectSidebarMeta({
             >
               <option value="live">Live</option>
               <option value="in_development">In development</option>
+              <option value="paused">Paused</option>
             </select>
           </div>
 
