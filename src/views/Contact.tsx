@@ -150,12 +150,12 @@ const faqs = [
   {
     question: "What is your typical project timeline?",
     answer:
-      "Project timelines vary based on scope and complexity. A standard web application might take 8-12 weeks, while larger enterprise solutions can take 4-6 months from kickoff to launch.",
+      "It depends on scope and complexity. After an initial conversation we agree a plan and timeline with you before work starts.",
   },
   {
     question: "Do you provide ongoing support after launch?",
     answer:
-      "Yes, we offer flexible maintenance and support packages to ensure your software remains secure, up-to-date, and optimized as your business grows.",
+      "Yes. We can keep supporting and improving what we build for you. Tell us what you need and we will agree how.",
   },
   {
     question: "What is your development process like?",
