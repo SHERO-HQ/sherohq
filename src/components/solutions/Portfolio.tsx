@@ -11,9 +11,9 @@ const GROUPS = [
   { type: "client", title: "Built for clients" },
 ] as const;
 
-// Columns are at most 20rem wide, so cards stay a sensible size on every screen.
+// Phone: one full-width compact row per card. Tablet and up: 2, 3, then 4 columns.
 const CARD_GRID =
-  "grid grid-cols-[repeat(auto-fill,minmax(16rem,20rem))] justify-center sm:justify-start gap-5";
+  "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4";
 
 const Portfolio = ({ hideWhenEmpty = true }: { hideWhenEmpty?: boolean } = {}) => {
   const { data: projects = [], isLoading } = useProjects();
@@ -40,7 +40,7 @@ const Portfolio = ({ hideWhenEmpty = true }: { hideWhenEmpty?: boolean } = {}) =
             {[1, 2, 3].map((i) => (
               <div
                 key={`project-skeleton-${i}`}
-                className="h-64 bg-slate-100 dark:bg-slate-900 animate-pulse rounded border border-slate-200 dark:border-slate-800"
+                className="h-28 sm:h-64 bg-slate-100 dark:bg-slate-900 animate-pulse rounded border border-slate-200 dark:border-slate-800"
               />
             ))}
           </div>
