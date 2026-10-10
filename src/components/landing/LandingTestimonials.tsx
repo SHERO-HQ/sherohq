@@ -5,19 +5,21 @@ import { SectionBadge } from "@/components/common/SectionBadge";
 import { useProjects } from "@/hooks/queries/useProjects";
 import { slugify } from "@/lib/slug";
 import Link from "next/link";
-
 // Clients that have given permission to be shown. Anyone else is not listed.
-// The fallback line is the product we built for them, used until a project
-// with a description is uploaded in the admin.
-const SHOWN_CLIENTS: { name: string; fallback?: string }[] = [
-  { name: "TrustCircle", fallback: "Samakose" },
-  { name: "Tastea" },
-  { name: "Dajrim" },
-];
+// Clients that agreed to be shown. Each line is the first sentence of the
+// project's "Challenge / Overview" from the admin.
+const SHOWN_CLIENTS = ["TrustCircle", "Tastea", "Dajrim"];
+
+const normalize = (text?: string | null) =>
+  (text ?? "").toLowerCase().replace(/[^a-z0-9]/g, "");
 
 const firstSentence = (text: string) => {
-  const match = text.trim().match(/^.*?[.!?](\s|$)/);
-  const line = (match ? match[0] : text).trim();
+  const flat = text
+    .replace(/\s+/g, " ")
+    .replace(/^\s*(the\s+)?challenge\s*[:\-–]\s*/i, "")
+    .trim();
+  const match = flat.match(/^.*?[.!?](\s|$)/);
+  const line = (match ? match[0] : flat).trim();
   return line.length > 140 ? `${line.slice(0, 137).trimEnd()}...` : line;
 };
 
@@ -26,16 +28,15 @@ const LandingTestimonials = (_props: { limit?: number } = {}) => {
 
   const items = useMemo(
     () =>
-      SHOWN_CLIENTS.map(({ name, fallback }) => {
-        const project = projects.find((p) =>
-          p.client?.toLowerCase().includes(name.toLowerCase()),
+      SHOWN_CLIENTS.map((name) => {
+        const key = normalize(name);
+        // The project is found by its title or its client name ("Trust Circle" matches TrustCircle)
+        const project = projects.find(
+          (p) => normalize(p.title).includes(key) || normalize(p.client).includes(key),
         );
-        const line = project?.description?.trim()
-          ? firstSentence(project.description)
-          : fallback || project?.title || "";
         return {
           name,
-          line,
+          line: project?.description?.trim() ? firstSentence(project.description) : "",
           href: project ? `/work/${slugify(project.title) || project.id}` : null,
         };
       }),
