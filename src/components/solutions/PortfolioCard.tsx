@@ -2,16 +2,12 @@ import Link from "next/link";
 import { ArrowUpRight, ExternalLink } from "lucide-react";
 import type { Project } from "@/services/api";
 import AppImage from "@/components/common/AppImage";
+import { statusLabel } from "@/lib/project-status";
 
 interface PortfolioCardProps {
   project: Project;
   href: string;
 }
-
-const STATUS_LABEL: Record<string, string> = {
-  in_development: "In development",
-  paused: "Paused",
-};
 
 // Static card: no entrance animation, blur or scale, so nothing repaints
 // or flashes while scrolling.
@@ -21,7 +17,7 @@ export function PortfolioCard({ project, href }: PortfolioCardProps) {
     (project.image.startsWith("http") ||
       project.image.startsWith("/") ||
       project.image.includes("."));
-  const statusLabel = STATUS_LABEL[project.status];
+  const status = statusLabel(project.status);
   const technologies = project.technologies ?? [];
 
   return (
@@ -46,11 +42,9 @@ export function PortfolioCard({ project, href }: PortfolioCardProps) {
             </span>
           </div>
         )}
-        {statusLabel && (
-          <span className="absolute left-3 top-3 rounded-full bg-white/95 px-2.5 py-1 text-xs font-semibold text-slate-800 shadow-sm dark:bg-slate-900/95 dark:text-slate-100">
-            {statusLabel}
-          </span>
-        )}
+        <span className="absolute left-3 top-3 rounded-full bg-white/95 px-2.5 py-1 text-xs font-semibold text-slate-800 shadow-sm dark:bg-slate-900/95 dark:text-slate-100">
+          {status}
+        </span>
       </div>
 
       {/* Text */}

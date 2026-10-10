@@ -106,6 +106,7 @@ export const projects = pgTable("projects", {
 	title: text().notNull(),
 	category: text().notNull(),
 	status: text().default('live').notNull(),
+	type: text().default('client').notNull(),
 	client: text(),
 	description: text(),
 	useCase: text(),

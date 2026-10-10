@@ -41,11 +41,14 @@ export async function PUT(
 
     const id = (await params).id;
     const body = await request.json();
-    if (body.status !== undefined && !["live", "in_development", "paused"].includes(body.status)) {
+    if (body.status !== undefined && !["live", "in_development", "in_validation", "paused"].includes(body.status)) {
       body.status = "live";
     }
+    if (body.type !== undefined && !["client", "product"].includes(body.type)) {
+      body.type = "client";
+    }
 
-    const allowedFields = ["title", "category", "status", "client", "description", "useCase", "technologies", "image", "link"];
+    const allowedFields = ["title", "category", "status", "type", "client", "description", "useCase", "technologies", "image", "link"];
     const updates: Record<string, any> = {};
 
     for (const field of allowedFields) {

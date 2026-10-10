@@ -116,10 +116,10 @@ export default async function WorkDetailPage({
         id: project.id,
         title: project.title,
         category: project.category,
-        status:
-          project.status === "in_development" || project.status === "paused"
-            ? project.status
-            : "live",
+        status: ["in_development", "in_validation", "paused"].includes(project.status)
+          ? (project.status as "in_development" | "in_validation" | "paused")
+          : "live",
+        type: project.type === "product" ? "product" : "client",
         client: project.client,
         description: project.description,
         useCase: project.useCase,

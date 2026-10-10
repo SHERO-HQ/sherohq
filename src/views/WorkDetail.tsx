@@ -3,14 +3,15 @@
 import Link from "next/link";
 import { ArrowLeft, Clock, ExternalLink } from "lucide-react";
 import AppImage from "@/components/common/AppImage";
-import { slugify } from "@/lib/slug";
+import { statusLabel } from "@/lib/project-status";
 
 interface WorkDetailProps {
   project: {
     id: string;
     title: string;
     category: string;
-    status: "live" | "in_development" | "paused";
+    status: "live" | "in_development" | "in_validation" | "paused";
+    type: "client" | "product";
     client: string | null;
     description: string | null;
     useCase: string | null;
@@ -20,9 +21,9 @@ interface WorkDetailProps {
   };
 }
 
-// Button text for projects with a specific call to action.
-const CTA_LABELS: Record<string, string> = {
-  merchander: "Join the free pilot",
+// Where "Join the free pilot" goes when a product has no link saved.
+const PRODUCT_LINKS: Record<string, string> = {
+  merchander: "https://merchander.app",
 };
 
 const BULLET = /^\s*(?:[-*•]\s+)/;
@@ -65,7 +66,12 @@ function FormattedText({ text }: { text: string }) {
 }
 
 const WorkDetail = ({ project }: WorkDetailProps) => {
-  const ctaLabel = CTA_LABELS[slugify(project.title)] ?? "Visit";
+  const isProduct = project.type === "product";
+  const ctaLabel = isProduct ? "Join the free pilot" : "Visit";
+  const ctaHref =
+    project.link ||
+    (isProduct ? PRODUCT_LINKS[project.title.trim().toLowerCase()] : null) ||
+    null;
   const hasImage =
     !!project.image &&
     (project.image.startsWith("http") ||
@@ -111,18 +117,10 @@ const WorkDetail = ({ project }: WorkDetailProps) => {
             <span className="px-2.5 py-1 rounded bg-brand-secondary-100 dark:bg-brand-secondary-900/30 text-brand-secondary-700 dark:text-brand-secondary-400 text-xs font-bold uppercase">
               {project.category}
             </span>
-            {project.status === "in_development" && (
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-700 dark:text-amber-400 text-xs font-semibold">
-                <Clock className="w-3.5 h-3.5" />
-                In development
-              </span>
-            )}
-            {project.status === "paused" && (
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-500/10 border border-slate-500/30 text-slate-700 dark:text-slate-300 text-xs font-semibold">
-                <Clock className="w-3.5 h-3.5" />
-                Paused
-              </span>
-            )}
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-500/10 border border-slate-500/30 text-slate-700 dark:text-slate-300 text-xs font-semibold">
+              <Clock className="w-3.5 h-3.5" />
+              {statusLabel(project.status)}
+            </span>
           </div>
 
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight leading-tight">
@@ -150,11 +148,7 @@ const WorkDetail = ({ project }: WorkDetailProps) => {
           <div>
             <h2 className="text-xl font-bold mb-3">Status</h2>
             <p className="text-muted-foreground">
-              {project.status === "in_development"
-                ? "In development"
-                : project.status === "paused"
-                  ? "Paused"
-                  : "Live"}
+              {statusLabel(project.status)}
             </p>
           </div>
 
@@ -175,9 +169,9 @@ const WorkDetail = ({ project }: WorkDetailProps) => {
           )}
 
           <div className="flex flex-wrap gap-3 pt-2">
-            {project.link && (
+            {ctaHref && (
               <a
-                href={project.link}
+                href={ctaHref}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 px-6 py-3 rounded bg-brand-secondary-800 hover:bg-brand-secondary-700 text-white font-medium text-sm transition-all"

@@ -84,6 +84,25 @@ export default function ProjectSidebarMeta({
             )}
           </div>
 
+          {/* Type */}
+          <div className="space-y-2">
+            <label
+              htmlFor="type"
+              className="text-xs font-semibold text-muted-foreground uppercase tracking-wider"
+            >
+              Type
+            </label>
+            <select
+              id="type"
+              value={projectData.type || "client"}
+              onChange={(e) => handleInputChange("type", e.target.value)}
+              className="w-full bg-muted border border-border text-foreground rounded px-3 py-2 text-sm outline-none focus:ring-1 focus:ring-brand-secondary-500/50"
+            >
+              <option value="client">Client work</option>
+              <option value="product">SHERO product</option>
+            </select>
+          </div>
+
           {/* Status */}
           <div className="space-y-2">
             <label
@@ -100,7 +119,8 @@ export default function ProjectSidebarMeta({
             >
               <option value="live">Live</option>
               <option value="in_development">In development</option>
-              <option value="paused">Paused</option>
+              <option value="in_validation">In validation</option>
+              {projectData.status === "paused" && <option value="paused">Paused</option>}
             </select>
           </div>
 

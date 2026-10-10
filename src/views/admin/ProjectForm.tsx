@@ -38,6 +38,7 @@ export default function ProjectForm() {
     title: "",
     category: "",
     status: "live",
+    type: "client",
     client: "",
     description: "",
     useCase: "",
