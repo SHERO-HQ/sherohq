@@ -293,12 +293,7 @@ function handleFallback(message: string, safeHistory: ChatHistoryMessage[]) {
   const lowerMessage = message.toLowerCase();
   
   if (lowerMessage.includes("track") && lowerMessage.includes("order")) {
-    const match = message.match(/(?:order(?:\s*id)?[:#\s-]*)([a-zA-Z0-9-]{5})/i);
-    if (match?.[1]) {
-      metadata.trackOrder = match[1];
-    } else {
-      replyContent = "Please share your order ID so I can track it for you.";
-    }
+    // Reply text from buildFallbackReply points to WhatsApp; no order lookup while the shop is off.
   } else if (shouldEscalateToSupport(message, safeHistory)) {
     metadata.supportAction = "ticket";
     replyContent = "I see those troubleshooting steps didn't resolve the issue. I can help you open a support ticket directly from this chat.";

@@ -69,7 +69,7 @@ const LandingEcosystem = () => {
             className="mt-6 text-sm text-slate-600 dark:text-slate-300 leading-relaxed"
           >
             Custom software engineered around your operational hardware, supported
-            directly by the team that built and deployed it. When your systems work
+            by SHERO. When your systems work
             together seamlessly, businesses move forward faster.
           </m.p>
         </div>

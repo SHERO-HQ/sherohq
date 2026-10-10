@@ -75,6 +75,12 @@ export function useNavigationState() {
             },
           ]),
       {
+        name: "Merchander",
+        icon: ShoppingBag,
+        desc: "In development",
+        href: "/merchander",
+      },
+      {
         name: "Consultation",
         icon: MessageSquare,
         desc: "Expert tech advice",

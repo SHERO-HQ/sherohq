@@ -23,7 +23,7 @@ const steps = [
   {
     title: "Strategy & Design",
     description:
-      "Our experts craft a tailored solution encompassing hardware, software, network infrastructure, and security architecture.",
+      "Our experts craft a tailored solution covering hardware, software and network setup.",
     icon: Lightbulb,
   },
   {
@@ -35,7 +35,7 @@ const steps = [
   {
     title: "Integration & Testing",
     description:
-      "Thorough testing ensures seamless integration across all systems, with security checks, functional validation, and performance optimization.",
+      "Thorough testing ensures seamless integration across all systems, with functional checks before anything goes live.",
     icon: Wrench,
   },
   {
@@ -47,7 +47,7 @@ const steps = [
   {
     title: "Support & Maintenance",
     description:
-      "Ongoing monitoring, updates, hardware maintenance, and IT support to keep your systems running optimally.",
+      "Updates, hardware help, and IT support after launch.",
     icon: Shield,
   },
 ];

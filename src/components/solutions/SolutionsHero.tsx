@@ -1,5 +1,5 @@
 "use client";
-import { ArrowRight, Code, Shield, Zap, Server } from "lucide-react";
+import { ArrowRight, Code, Shield, Zap } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
@@ -34,8 +34,7 @@ const heroItem = {
 
 const features = [
   { label: "Custom Software", icon: Code },
-  { label: "Cloud Solutions", icon: Server },
-  { label: "Managed IT", icon: Shield },
+  { label: "IT Setup & Support", icon: Shield },
   { label: "API Integrations", icon: Zap },
 ];
 
@@ -81,8 +80,8 @@ const SolutionsHero = () => {
           <p
             className="sm:text-lg text-base text-slate-600 dark:text-slate-300/95 max-w-2xl leading-relaxed mx-auto "
           >
-            From high-performance custom platforms to managed enterprise
-            infrastructure, we engineer systems that grow with your business.
+            Custom software and practical IT help for growing businesses.
+            Support hours: Mon–Fri, 8:00 AM–6:00 PM.
           </p>
 
           <div

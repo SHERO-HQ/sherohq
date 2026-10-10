@@ -1,7 +1,7 @@
 # SHERO TECHNOLOGIES Security Policy
 # https://securitytxt.org/
 
-Contact: mailto:security@sherohq.com
+Contact: mailto:info@sherohq.com
 Contact: mailto:ibeevpersie@gmail.com
 Expires: 2027-04-15T00:00:00.000Z
 Preferred-Languages: en

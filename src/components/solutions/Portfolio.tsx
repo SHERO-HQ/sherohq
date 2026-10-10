@@ -69,6 +69,11 @@ const Portfolio = () => {
     return p.category === activeCategory;
   });
 
+  // Nothing uploaded yet: show no empty section and no filter row.
+  if (!isLoading && projects.length === 0 && activeCategory === "All") {
+    return null;
+  }
+
   return (
     <section className="relative w-full py-10 bg-slate-50 dark:bg-slate-950">
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -93,6 +98,7 @@ const Portfolio = () => {
         </m.div>
 
         {/* Category Filters */}
+        {categories.length > 1 && (
         <div className="flex justify-center mb-8">
           <Tabs
             value={activeCategory}
@@ -112,6 +118,7 @@ const Portfolio = () => {
             </TabsList>
           </Tabs>
         </div>
+        )}
 
         {/* Projects Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

@@ -58,7 +58,7 @@ const ConsultationHero = () => {
               challenges into actionable roadmaps.
             </p>
 
-            <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300 fill-mode-both">
+            <div className="flex flex-wrap items-center gap-3 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300 fill-mode-both">
               <button
                 onClick={scrollToScheduler}
                 className="group inline-flex items-center justify-center gap-2 px-8 py-3 text-base font-medium text-white bg-slate-900 dark:bg-white dark:text-slate-900 rounded shadow hover:shadow-xl hover:bg-slate-800 dark:hover:bg-slate-100 hover:-translate-y-0.5 transition-all duration-300"
@@ -66,6 +66,14 @@ const ConsultationHero = () => {
                 Book a Session
                 <ArrowRight className="size-5 group-hover:translate-x-1 transition-transform" />
               </button>
+              <a
+                href="https://wa.me/233548711582"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-2 px-8 py-3 text-base font-medium text-emerald-700 dark:text-emerald-400 border border-emerald-600 rounded hover:bg-emerald-50 dark:hover:bg-emerald-950/30 transition-colors"
+              >
+                WhatsApp
+              </a>
             </div>
           </div>
 

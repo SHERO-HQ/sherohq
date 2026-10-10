@@ -272,10 +272,7 @@ export function buildFallbackReply(
   );
 
   if (normalized.includes("track") && normalized.includes("order")) {
-    if (orderIdMatch?.[1]) {
-      return `Got it. I would track your order ${orderIdMatch[1]} now, but my live tracking system is currently offline. Please check your email for updates.`;
-    }
-    return "Sure. Share your order ID and I will track it for you.";
+    return "We are not taking online orders right now. For anything about hardware or an existing request, message us on WhatsApp: https://wa.me/233548711582";
   }
 
   if (normalized.includes("track") && normalized.includes("ticket")) {

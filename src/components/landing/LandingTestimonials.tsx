@@ -1,54 +1,65 @@
 "use client";
 import { useMemo } from "react";
-import { UserCheck } from "lucide-react";
+import { Briefcase } from "lucide-react";
 import { SectionBadge } from "@/components/common/SectionBadge";
-import { useTestimonials } from "@/hooks/queries/useTestimonials";
-import { TestimonialCarousel } from "./testimonials/TestimonialCarousel";
+import { useProjects } from "@/hooks/queries/useProjects";
 
-interface LandingTestimonialsProps {
-  limit?: number;
-}
+// Clients that have given permission to be shown. Anyone else is not listed.
+const SHOWN_CLIENTS = ["TrustCircle", "Tastea", "Dajrim"];
 
-const LandingTestimonials = ({ limit }: LandingTestimonialsProps = {}) => {
-  const { data, isLoading } = useTestimonials();
+const firstSentence = (text: string) => {
+  const match = text.trim().match(/^.*?[.!?](\s|$)/);
+  const line = (match ? match[0] : text).trim();
+  return line.length > 140 ? `${line.slice(0, 137).trimEnd()}...` : line;
+};
 
-  const displayTestimonials = useMemo(() => {
-    const t = data || [];
-    return limit ? t.slice(0, limit) : t;
-  }, [data, limit]);
+const LandingTestimonials = (_props: { limit?: number } = {}) => {
+  const { data: projects = [] } = useProjects();
 
-  if (!isLoading && displayTestimonials.length === 0) {
-    return null;
-  }
+  const items = useMemo(
+    () =>
+      SHOWN_CLIENTS.map((name) => {
+        const project = projects.find(
+          (p) =>
+            p.client?.toLowerCase().includes(name.toLowerCase()) &&
+            p.description?.trim(),
+        );
+        return {
+          name,
+          line: project?.description
+            ? firstSentence(project.description)
+            : "A SHERO client.",
+        };
+      }),
+    [projects],
+  );
 
   return (
-    <section className="py-16 md:py-24 bg-white dark:bg-slate-950 overflow-hidden relative border-t border-slate-200 dark:border-white/5 transition-colors ">
-
-      <div className="absolute inset-0 pattern-dots opacity-80 pointer-events-none" />
-
-      <div className="container px-4 md:px-6 relative z-10 w-full mx-auto md:w-11/12 max-w-7xl">
-        {(isLoading || displayTestimonials.length > 0) && (
-          <div className="flex flex-col items-center justify-center gap-12 lg:gap-16">
-            <div className="text-center max-w-3xl mx-auto">
-              <SectionBadge icon={UserCheck} className="mb-2">
-                Client Voices
-              </SectionBadge>
-              <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100 mb-6 transition-colors leading-tight">
-                Empowering Businesses, Innovators & Communities.
-              </h2>
-              <p className="text-slate-600 dark:text-slate-400 text-sm mb-3 transition-colors leading-relaxed">
-                We believe technology exists to expand what's possible. See how
-                we've partnered with forward-thinking organizations to build reliable
-                infrastructure that removes barriers and creates opportunities.
+    <section className="py-16 md:py-20 bg-white dark:bg-slate-950 relative border-t border-slate-200 dark:border-white/5 transition-colors">
+      <div className="container px-4 md:px-6 relative z-10 w-full mx-auto md:w-11/12 max-w-5xl">
+        <div className="text-center max-w-2xl mx-auto mb-10">
+          <SectionBadge icon={Briefcase} className="mb-2">
+            Work we&apos;ve done
+          </SectionBadge>
+          <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100 leading-tight">
+            Work we&apos;ve done
+          </h2>
+        </div>
+        <ul className="grid gap-4 sm:grid-cols-3">
+          {items.map((item) => (
+            <li
+              key={item.name}
+              className="rounded border border-slate-200 dark:border-slate-800 bg-card p-5"
+            >
+              <p className="font-semibold text-slate-900 dark:text-slate-100">
+                {item.name}
               </p>
-            </div>
-
-            <TestimonialCarousel 
-              isLoading={isLoading} 
-              displayTestimonials={displayTestimonials} 
-            />
-          </div>
-        )}
+              <p className="mt-1 text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                {item.line}
+              </p>
+            </li>
+          ))}
+        </ul>
       </div>
     </section>
   );

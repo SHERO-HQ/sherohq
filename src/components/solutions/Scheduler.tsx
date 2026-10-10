@@ -28,7 +28,7 @@ import { formatLocalEquivalent } from "@/lib/consultation-time";
 const services: ServiceType[] = [
   {
     id: "it-support",
-    title: "Managed IT Support",
+    title: "IT Support",
     description:
       "Helpdesk and hands-on system support.",
     icon: <MessageSquare className="w-6 h-6" />,
@@ -37,7 +37,7 @@ const services: ServiceType[] = [
     id: "infrastructure",
     title: "Infrastructure & Systems",
     description:
-      "Server setups, secure network design, and infrastructure audits.",
+      "Server and network setup.",
     icon: <BarChart className="w-6 h-6" />,
   },
   {

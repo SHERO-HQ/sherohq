@@ -18,15 +18,14 @@ import { COMPANY_CONTACTS } from "@/constants/contacts";
 import { getAbsoluteUrl } from "@/utils/subdomain";
 import { SOCIAL_LINKS } from "@/constants/socials";
 import PaymentIcons from "./PaymentIcons";
-import FooterNewsletter from "./FooterNewsletter";
 import { HiringBadge } from "@/components/common/HiringBadge";
 import { SHOP_ENABLED } from "@/constants/features";
 import { ThemeToggle3Button } from "./toggle-theme";
 
 // Static Data
 const companyLinks = SHOP_ENABLED
-  ? ["Shop", "About Us", "Careers", "Contact Us"]
-  : ["Solutions", "About Us", "Careers", "Contact Us"];
+  ? ["Shop", "Merchander", "About Us", "Careers", "Contact Us"]
+  : ["Solutions", "Merchander", "About Us", "Careers", "Contact Us"];
 
 const allResourceLinks = [
   { label: "Consultation", href: "/consultation" },
@@ -214,11 +213,6 @@ const Footer = () => {
                 </a>
               ))}
             </div>
-          </div>
-
-          {/* Newsletter (Desktop Col 3, Row 2 | Mobile 5th) */}
-          <div className="lg:col-span-4 lg:col-start-9 lg:row-start-2 lg:mt-10 order-5">
-            <FooterNewsletter />
           </div>
         </div>
 

@@ -44,13 +44,13 @@ const Partners = () => {
     },
     {
       title: "Onboarding",
-      desc: "Agree on scope, working terms, and a direct line to our engineers.",
+      desc: "Agree on scope, working terms, and a direct line to SHERO.",
     },
   ];
 
   const benefits = [
     "Custom software development and systems integration tailored to your operations",
-    "Direct contact with the engineers building your product",
+    "Direct contact with SHERO",
     "Hardware sourced on request for your team",
   ];
 

@@ -32,7 +32,7 @@ const ServicesGrid = () => {
         "High-performance laptops configured for your workflow",
         "Rigorous battery and thermal quality benchmarks",
         "Ready-to-use workstations with zero setup friction",
-        "Honest specs backed by local support",
+        "Honest specs and local support",
       ],
       gradient: "",
       textClass: "text-blue-600 dark:text-blue-400",
@@ -45,7 +45,7 @@ const ServicesGrid = () => {
       features: [
         "Modern web applications and cloud architectures",
         "Internal operations software and automation dashboards",
-        "High-reliability database design and API services",
+        "Database design and API services",
         "Clean, maintainable codebases with full client ownership",
       ],
       gradient: "",
@@ -58,8 +58,8 @@ const ServicesGrid = () => {
         "Infrastructure setup and hands-on support for your business tools and workstations.",
       features: [
         "Workspace environment & toolchain deployment",
-        "Local network security & automated data backups",
-        "Direct technical support and rapid issue resolution",
+        "Local network setup and data backups",
+        "Direct technical support",
       ],
       gradient: "",
       textClass: "text-brand-primary-600 dark:text-brand-primary-400",
@@ -72,7 +72,7 @@ const ServicesGrid = () => {
       features: [
         "Payment gateway and checkout workflow integration",
         "Real-time inventory and database synchronization",
-        "Secure REST & webhook data pipelines",
+        "REST and webhook data pipelines",
         "Multi-platform automation connecting mobile and web tools",
       ],
       gradient: "",

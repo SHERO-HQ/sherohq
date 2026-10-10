@@ -92,7 +92,7 @@ export function TemplatePreview({
                   SHERO Tech
                 </span>
                 <span className="text-[11px] text-muted-foreground">
-                  hello@sherohq.com
+                  info@sherohq.com
                 </span>
               </div>
             </div>
