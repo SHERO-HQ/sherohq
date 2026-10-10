@@ -7,9 +7,13 @@ import { PortfolioCard } from "./PortfolioCard";
 import { slugify } from "@/lib/slug";
 
 const GROUPS = [
+  { type: "product", title: "SHERO Products" },
   { type: "client", title: "Built for clients" },
-  { type: "product", title: "Built by SHERO" },
 ] as const;
+
+// Columns are at most 20rem wide, so cards stay a sensible size on every screen.
+const CARD_GRID =
+  "grid grid-cols-[repeat(auto-fill,minmax(16rem,20rem))] justify-center sm:justify-start gap-5";
 
 const Portfolio = ({ hideWhenEmpty = true }: { hideWhenEmpty?: boolean } = {}) => {
   const { data: projects = [], isLoading } = useProjects();
@@ -32,11 +36,11 @@ const Portfolio = ({ hideWhenEmpty = true }: { hideWhenEmpty?: boolean } = {}) =
         </div>
 
         {isLoading && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className={CARD_GRID}>
             {[1, 2, 3].map((i) => (
               <div
                 key={`project-skeleton-${i}`}
-                className="h-80 bg-slate-100 dark:bg-slate-900 animate-pulse rounded border border-slate-200 dark:border-slate-800"
+                className="h-64 bg-slate-100 dark:bg-slate-900 animate-pulse rounded border border-slate-200 dark:border-slate-800"
               />
             ))}
           </div>
@@ -59,7 +63,7 @@ const Portfolio = ({ hideWhenEmpty = true }: { hideWhenEmpty?: boolean } = {}) =
                 <h3 className="mb-5 text-lg font-bold text-slate-900 dark:text-slate-100">
                   {group.title}
                 </h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className={CARD_GRID}>
                   {items.map((project) => (
                     <PortfolioCard
                       key={project.id}

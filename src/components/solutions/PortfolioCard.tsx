@@ -23,7 +23,7 @@ export function PortfolioCard({ project, href }: PortfolioCardProps) {
   return (
     <article className="group relative flex h-full flex-col overflow-hidden rounded-lg border border-slate-200 bg-white transition-shadow hover:shadow-md dark:border-slate-800 dark:bg-slate-900">
       {/* Image, with the status on top of it */}
-      <div className="relative aspect-[16/10] shrink-0 overflow-hidden bg-slate-100 dark:bg-slate-950">
+      <div className="relative aspect-[16/9] shrink-0 overflow-hidden bg-slate-100 dark:bg-slate-950">
         {hasImage ? (
           <AppImage
             src={project.image as string}
@@ -48,31 +48,31 @@ export function PortfolioCard({ project, href }: PortfolioCardProps) {
       </div>
 
       {/* Text */}
-      <div className="flex flex-1 flex-col p-5">
+      <div className="flex flex-1 flex-col p-4">
         <p className="text-xs font-semibold uppercase tracking-wide text-brand-secondary-700 dark:text-brand-secondary-400">
           {project.category}
+          {project.client && (
+            <span className="font-normal normal-case tracking-normal text-slate-500 dark:text-slate-400">
+              {" "}
+              · For {project.client}
+            </span>
+          )}
         </p>
 
-        <h3 className="mt-2 font-sora text-lg font-bold leading-snug text-slate-900 dark:text-white">
+        <h3 className="mt-1.5 font-sora text-base font-bold leading-snug text-slate-900 dark:text-white">
           {/* Stretched link makes the whole card clickable */}
           <Link href={href} className="after:absolute after:inset-0">
             {project.title}
           </Link>
         </h3>
 
-        {project.client && (
-          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-            For {project.client}
-          </p>
-        )}
-
         {project.description && (
-          <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
+          <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
             {project.description}
           </p>
         )}
 
-        <div className="mt-auto flex items-end justify-between gap-3 pt-5">
+        <div className="mt-auto flex items-end justify-between gap-3 pt-3">
           <p className="min-w-0 truncate text-xs text-slate-500 dark:text-slate-400">
             {technologies.slice(0, 3).join(" · ")}
             {technologies.length > 3 ? ` · +${technologies.length - 3}` : ""}
