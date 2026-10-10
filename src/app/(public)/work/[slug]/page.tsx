@@ -1,16 +1,20 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { eq } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { projects } from "@/lib/drizzle/schema";
 import WorkDetail from "@/views/WorkDetail";
+import { slugify } from "@/lib/slug";
 
 export const dynamic = "force-dynamic";
 
-async function getProject(id: string) {
+async function getProject(slug: string) {
   try {
-    const [row] = await db.select().from(projects).where(eq(projects.id, id)).limit(1);
-    return row ?? null;
+    const rows = await db.select().from(projects);
+    const bySlug = rows.find((r) => slugify(r.title) === slug);
+    if (bySlug) return { project: bySlug, legacyId: false };
+    const byId = rows.find((r) => r.id === slug);
+    return byId ? { project: byId, legacyId: true } : null;
   } catch {
     return null;
   }
@@ -19,11 +23,12 @@ async function getProject(id: string) {
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ id: string }>;
+  params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
-  const { id } = await params;
-  const project = await getProject(id);
-  if (!project) return { title: "Our Work" };
+  const { slug: id } = await params;
+  const found = await getProject(id);
+  if (!found) return { title: "Our Work" };
+  const project = found.project;
   return {
     title: project.title,
     description: project.description?.slice(0, 155) || `${project.title} by SHERO.`,
@@ -33,11 +38,14 @@ export async function generateMetadata({
 export default async function WorkDetailPage({
   params,
 }: {
-  params: Promise<{ id: string }>;
+  params: Promise<{ slug: string }>;
 }) {
-  const { id } = await params;
-  const project = await getProject(id);
-  if (!project) notFound();
+  const { slug: id } = await params;
+  const found = await getProject(id);
+  if (!found) notFound();
+  const { project, legacyId } = found;
+  // Old links that used the id go to the readable address.
+  if (legacyId) redirect(`/work/${slugify(project.title) || project.id}`);
 
   let technologies: string[] = [];
   const raw = project.technologies as unknown;

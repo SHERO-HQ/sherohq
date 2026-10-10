@@ -8,6 +8,7 @@ import { m } from "motion/react";
 import { Wrench } from "lucide-react";
 import { SectionBadge } from "@/components/common/SectionBadge";
 import { PortfolioCard } from "./PortfolioCard";
+import { slugify } from "@/lib/slug";
 
 const Portfolio = ({ hideWhenEmpty = true }: { hideWhenEmpty?: boolean } = {}) => {
   const [activeCategory, setActiveCategory] = useState("All");
@@ -114,7 +115,7 @@ const Portfolio = ({ hideWhenEmpty = true }: { hideWhenEmpty?: boolean } = {}) =
                 key={project.id}
                 project={project}
                 idx={idx}
-                onSelect={(p) => router.push(`/work/${p.id}`)}
+                onSelect={(p) => router.push(`/work/${slugify(p.title) || p.id}`)}
               />
             ))}
         </div>
