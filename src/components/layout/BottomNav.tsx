@@ -1,5 +1,5 @@
 "use client";
-import { Home, ShoppingBag, ShoppingCart, Heart, Cpu, MessageSquare, Package, Info } from "lucide-react";
+import { Home, ShoppingBag, ShoppingCart, Heart, MessageSquare, Package, Info } from "lucide-react";
 import NavLink from "@/components/common/NavLink";
 import { useCart } from "@/hooks/queries/useCartQuery";
 import { useWishlist } from "@/hooks/queries/useWishlistQuery";

@@ -9,7 +9,6 @@ import {
   ArrowRight,
   ArrowLeft,
   Server,
-  Shield,
   Zap,
   LifeBuoy
 } from "lucide-react";
