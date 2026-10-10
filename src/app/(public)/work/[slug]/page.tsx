@@ -8,6 +8,26 @@ import { slugify } from "@/lib/slug";
 
 export const dynamic = "force-dynamic";
 
+// A complete sentence or word-boundary cut, never mid-word.
+function summarize(text: string | null, max = 155): string {
+  const clean = (text ?? "").replace(/\s+/g, " ").trim();
+  if (clean.length <= max) return clean;
+  const cut = clean.slice(0, max);
+  const lastStop = Math.max(cut.lastIndexOf(". "), cut.lastIndexOf("! "), cut.lastIndexOf("? "));
+  if (lastStop > 60) return cut.slice(0, lastStop + 1);
+  return `${cut.slice(0, cut.lastIndexOf(" ")).replace(/[,;:\-–]+$/, "")}...`;
+}
+
+function absoluteImage(image: string | null): string | null {
+  if (!image) return null;
+  if (image.startsWith("http")) return image;
+  if (image.startsWith("/")) {
+    const base = process.env.NEXT_PUBLIC_SITE_URL || "https://sherohq.com";
+    return `${base}${image}`;
+  }
+  return null;
+}
+
 async function getProject(slug: string) {
   try {
     const rows = await db.select().from(projects);
@@ -29,9 +49,26 @@ export async function generateMetadata({
   const found = await getProject(id);
   if (!found) return { title: "Our Work" };
   const project = found.project;
+  const description = summarize(project.description) || `${project.title} by SHERO.`;
+  const image = absoluteImage(project.image);
   return {
     title: project.title,
-    description: project.description?.slice(0, 155) || `${project.title} by SHERO.`,
+    description,
+    keywords: [project.title, project.category, project.client, "SHERO", "Tamale"].filter(
+      (k): k is string => !!k,
+    ),
+    openGraph: {
+      title: project.title,
+      description,
+      type: "website",
+      ...(image ? { images: [{ url: image, alt: `${project.title} preview` }] } : {}),
+    },
+    twitter: {
+      card: image ? "summary_large_image" : "summary",
+      title: project.title,
+      description,
+      ...(image ? { images: [image] } : {}),
+    },
   };
 }
 

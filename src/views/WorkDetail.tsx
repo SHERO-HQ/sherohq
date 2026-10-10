@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { ArrowLeft, Clock, ExternalLink } from "lucide-react";
 import AppImage from "@/components/common/AppImage";
+import { slugify } from "@/lib/slug";
 
 interface WorkDetailProps {
   project: {
@@ -19,7 +20,52 @@ interface WorkDetailProps {
   };
 }
 
+// Button text for projects with a specific call to action.
+const CTA_LABELS: Record<string, string> = {
+  merchander: "Join the free pilot",
+};
+
+const BULLET = /^\s*(?:[-*•]\s+)/;
+
+// Turns plain text from the admin into paragraphs and bullet lists.
+// A bullet that runs on from the intro sentence ("... • Feature") is split out.
+function FormattedText({ text }: { text: string }) {
+  const lines = text
+    .replace(/\r\n/g, "\n")
+    .replace(/([^\n])\s+•\s+/g, "$1\n• ")
+    .split("\n");
+  const blocks: { type: "p" | "ul"; items: string[] }[] = [];
+  for (const raw of lines) {
+    const line = raw.trim();
+    if (!line) continue;
+    if (BULLET.test(line)) {
+      const item = line.replace(BULLET, "");
+      const last = blocks[blocks.length - 1];
+      if (last?.type === "ul") last.items.push(item);
+      else blocks.push({ type: "ul", items: [item] });
+    } else {
+      blocks.push({ type: "p", items: [line] });
+    }
+  }
+  return (
+    <div className="space-y-3 text-muted-foreground leading-relaxed">
+      {blocks.map((block, i) =>
+        block.type === "ul" ? (
+          <ul key={i} className="list-disc space-y-1.5 pl-6">
+            {block.items.map((item, j) => (
+              <li key={j}>{item}</li>
+            ))}
+          </ul>
+        ) : (
+          <p key={i}>{block.items[0]}</p>
+        ),
+      )}
+    </div>
+  );
+}
+
 const WorkDetail = ({ project }: WorkDetailProps) => {
+  const ctaLabel = CTA_LABELS[slugify(project.title)] ?? "Visit";
   const hasImage =
     !!project.image &&
     (project.image.startsWith("http") ||
@@ -47,11 +93,16 @@ const WorkDetail = ({ project }: WorkDetailProps) => {
             <div className="relative aspect-video rounded overflow-hidden border border-border">
               <AppImage
                 src={project.image as string}
-                alt={project.title}
+                alt={`${project.title} preview`}
                 fill
                 sizes="(max-width: 1024px) 100vw, 896px"
                 className="object-cover"
               />
+              {project.status !== "live" && (
+                <span className="absolute left-3 top-3 rounded-full bg-white/95 px-2.5 py-1 text-xs font-semibold text-slate-800 shadow-sm dark:bg-slate-900/95 dark:text-slate-100">
+                  Preview
+                </span>
+              )}
             </div>
           )}
 
@@ -85,18 +136,14 @@ const WorkDetail = ({ project }: WorkDetailProps) => {
           {project.description && (
             <div>
               <h2 className="text-xl font-bold mb-3">About</h2>
-              <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
-                {project.description}
-              </p>
+              <FormattedText text={project.description} />
             </div>
           )}
 
           {project.useCase && (
             <div>
               <h2 className="text-xl font-bold mb-3">What it&apos;s for</h2>
-              <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
-                {project.useCase}
-              </p>
+              <FormattedText text={project.useCase} />
             </div>
           )}
 
@@ -124,7 +171,7 @@ const WorkDetail = ({ project }: WorkDetailProps) => {
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 px-6 py-3 rounded bg-brand-secondary-800 hover:bg-brand-secondary-700 text-white font-medium text-sm transition-all"
               >
-                Visit
+                {ctaLabel}
                 <ExternalLink className="w-4 h-4" />
               </a>
             )}

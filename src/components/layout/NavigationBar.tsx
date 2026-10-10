@@ -62,7 +62,7 @@ const Nav = () => {
               <div className="md:hidden">
                 <img
                   src="/assets/logo/shero.svg"
-                  alt="SHERO Logo"
+                  alt="SHERO"
                   width={40}
                   height={40}
                   fetchPriority="high"
@@ -75,7 +75,8 @@ const Nav = () => {
               <div className="hidden md:block">
                 <img
                   src="/assets/logo/shero-light.svg"
-                  alt="SHERO Logo"
+                  alt=""
+                  aria-hidden="true"
                   width={163}
                   height={57}
                   fetchPriority="high"
@@ -85,7 +86,8 @@ const Nav = () => {
                 />
                 <img
                   src="/assets/logo/shero-dark.svg"
-                  alt="SHERO Logo"
+                  alt=""
+                  aria-hidden="true"
                   width={163}
                   height={57}
                   fetchPriority="high"
