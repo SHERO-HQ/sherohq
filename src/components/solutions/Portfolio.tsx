@@ -1,10 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useProjects } from "@/hooks/queries/useProjects";
-import { m } from "motion/react";
 import { Wrench } from "lucide-react";
 import { SectionBadge } from "@/components/common/SectionBadge";
 import { PortfolioCard } from "./PortfolioCard";
@@ -12,8 +10,6 @@ import { slugify } from "@/lib/slug";
 
 const Portfolio = ({ hideWhenEmpty = true }: { hideWhenEmpty?: boolean } = {}) => {
   const [activeCategory, setActiveCategory] = useState("All");
-  const router = useRouter();
-
   const allCategoryDefinitions = [
     "All",
     "Web Development",
@@ -23,9 +19,7 @@ const Portfolio = ({ hideWhenEmpty = true }: { hideWhenEmpty?: boolean } = {}) =
     "Products",
   ];
 
-  const { data: projects = [], isLoading } = useProjects(
-    activeCategory === "All" ? undefined : activeCategory,
-  );
+  const { data: projects = [], isLoading } = useProjects();
 
   const activeProjects = projects;
 
@@ -49,11 +43,7 @@ const Portfolio = ({ hideWhenEmpty = true }: { hideWhenEmpty?: boolean } = {}) =
     <section className="relative w-full py-10 bg-slate-50 dark:bg-slate-950">
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <m.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
+        <div
           className="text-center mb-8"
         >
           <SectionBadge icon={Wrench} className="mb-4">
@@ -66,7 +56,7 @@ const Portfolio = ({ hideWhenEmpty = true }: { hideWhenEmpty?: boolean } = {}) =
             Explore our portfolio of successful projects and see how we've
             helped businesses transform digitally
           </p>
-        </m.div>
+        </div>
 
         {/* Category Filters */}
         {categories.length > 1 && (
@@ -110,12 +100,11 @@ const Portfolio = ({ hideWhenEmpty = true }: { hideWhenEmpty?: boolean } = {}) =
           )}
 
           {!isLoading &&
-            filteredProjects.map((project, idx) => (
+            filteredProjects.map((project) => (
               <PortfolioCard
                 key={project.id}
                 project={project}
-                idx={idx}
-                onSelect={(p) => router.push(`/work/${slugify(p.title) || p.id}`)}
+                href={`/work/${slugify(project.title) || project.id}`}
               />
             ))}
         </div>
