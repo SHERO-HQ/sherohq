@@ -9,7 +9,7 @@ interface HeroContentDef {
 
 const HERO_CONTENT: HeroContentDef = {
   mainHeader:
-    "Solutions for People, \n Businesses and Communities",
+    "Solutions for People,\nBusinesses and Communities",
   subHeader:
     "We build software, deliver reliable hardware, and provide the technology services businesses need to innovate, operate, and grow."
 } as const;
