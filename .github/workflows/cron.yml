@@ -26,6 +26,13 @@ jobs:
           # Strip trailing slash from base URL
           CLEAN_BASE_URL="${SITE_URL%/}"
           TARGET_URL="${CLEAN_BASE_URL}${ENDPOINT}"
+
+          # The domain redirects (apex <-> www, HTTP 307). Resolve the final URL first,
+          # without the secret, so the Authorization header is only ever sent to the final host.
+          RESOLVED_URL=$(curl -s -o /dev/null -L -w '%{url_effective}' "$TARGET_URL" || true)
+          if [ -n "$RESOLVED_URL" ]; then
+            TARGET_URL="$RESOLVED_URL"
+          fi
           
           echo "Triggering Cron Endpoint: $TARGET_URL"
 
