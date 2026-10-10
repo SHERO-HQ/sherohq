@@ -142,10 +142,21 @@ const WorkDetail = ({ project }: WorkDetailProps) => {
 
           {project.useCase && (
             <div>
-              <h2 className="text-xl font-bold mb-3">What it&apos;s for</h2>
+              <h2 className="text-xl font-bold mb-3">Use case</h2>
               <FormattedText text={project.useCase} />
             </div>
           )}
+
+          <div>
+            <h2 className="text-xl font-bold mb-3">Status</h2>
+            <p className="text-muted-foreground">
+              {project.status === "in_development"
+                ? "In development"
+                : project.status === "paused"
+                  ? "Paused"
+                  : "Live"}
+            </p>
+          </div>
 
           {project.technologies.length > 0 && (
             <div>

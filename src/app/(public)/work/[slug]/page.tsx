@@ -8,6 +8,19 @@ import { slugify } from "@/lib/slug";
 
 export const dynamic = "force-dynamic";
 
+const KEYWORDS_BY_SLUG: Record<string, string[]> = {
+  merchander: [
+    "sell on social media Ghana",
+    "WhatsApp orders",
+    "Instagram orders",
+    "order tracking for merchants",
+    "stock management",
+    "MoMo payment records",
+    "pre-order tracking",
+    "merchants in Ghana",
+  ],
+};
+
 // A complete sentence or word-boundary cut, never mid-word.
 function summarize(text: string | null, max = 155): string {
   const clean = (text ?? "").replace(/\s+/g, " ").trim();
@@ -54,18 +67,21 @@ export async function generateMetadata({
   return {
     title: project.title,
     description,
-    keywords: [project.title, project.category, project.client, "SHERO", "Tamale"].filter(
-      (k): k is string => !!k,
-    ),
+    keywords: [
+      project.title,
+      ...(KEYWORDS_BY_SLUG[slugify(project.title)] ?? [project.category, project.client]),
+      "SHERO",
+      "Tamale",
+    ].filter((k): k is string => !!k),
     openGraph: {
-      title: project.title,
+      title: `${project.title} | SHERO`,
       description,
       type: "website",
       ...(image ? { images: [{ url: image, alt: `${project.title} preview` }] } : {}),
     },
     twitter: {
       card: image ? "summary_large_image" : "summary",
-      title: project.title,
+      title: `${project.title} | SHERO`,
       description,
       ...(image ? { images: [image] } : {}),
     },
