@@ -9,9 +9,9 @@ const Consultation = () => {
       <ConsultationHero />
 
       {/* Trust/Process Section */}
-      <section className="py-24 bg-white dark:bg-slate-900 border-y border-slate-200 dark:border-slate-800 relative z-30 overflow-hidden">
+      <section className="py-14 bg-white dark:bg-slate-900 border-y border-slate-200 dark:border-slate-800 relative z-30 overflow-hidden">
         <div className="container max-w-7xl mx-auto px-4">
-          <div className="max-w-3xl mb-16 px-1">
+          <div className="max-w-3xl mb-10 px-1">
             <SectionBadge icon={Target} className="mb-4">
               The Framework
             </SectionBadge>
@@ -45,9 +45,9 @@ const Consultation = () => {
         </div>
       </section>
 
-      <section id="scheduler-section" className="py-16 px-4 bg-slate-50 dark:bg-slate-950 relative z-20">
+      <section id="scheduler-section" className="py-12 px-4 bg-slate-50 dark:bg-slate-950 relative z-20">
         <div className="container max-w-7xl mx-auto">
-          <div className="text-center mb-16">
+          <div className="text-center mb-10">
             <SectionBadge icon={CalendarCheckIcon} className="mb-4">
               Book Time
             </SectionBadge>

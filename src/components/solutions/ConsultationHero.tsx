@@ -25,7 +25,7 @@ const ConsultationHero = () => {
   };
 
   return (
-    <section className="relative w-full py-24 overflow-hidden bg-slate-50 dark:bg-slate-950">
+    <section className="relative w-full py-14 overflow-hidden bg-slate-50 dark:bg-slate-950">
       {/* Dot Pattern Background (muted) */}
       <div className="absolute inset-0 pattern-dots opacity-80 pointer-events-none" />
 

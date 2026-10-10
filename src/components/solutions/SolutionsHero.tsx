@@ -49,7 +49,7 @@ const SolutionsHero = () => {
 
   return (
     <header
-      className="relative w-full flex flex-col items-center justify-center  py-24 overflow-hidden bg-slate-50 dark:bg-slate-950"
+      className="relative w-full flex flex-col items-center justify-center  py-14 overflow-hidden bg-slate-50 dark:bg-slate-950"
     >
       <HeroBackground />
 

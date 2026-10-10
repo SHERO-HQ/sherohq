@@ -63,7 +63,7 @@ const Profile = () => {
 
  if (authLoading) {
  return (
- <div className="min-h-screen pt-32 pb-16 flex items-center justify-center bg-slate-50 dark:bg-slate-950">
+ <div className="min-h-screen pt-10 pb-12 flex items-center justify-center bg-slate-50 dark:bg-slate-950">
  <Loader2 className="w-10 h-10 animate-spin text-brand-secondary-600" />
  </div>
  );
@@ -72,7 +72,7 @@ const Profile = () => {
  if (!user) return null;
 
  return (
- <div className="min-h-screen pt-32 pb-16 bg-slate-50 dark:bg-slate-950">
+ <div className="min-h-screen pt-10 pb-12 bg-slate-50 dark:bg-slate-950">
  <div className="container max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
  {/* Email Verification Banner */}
  <VerificationBanner

@@ -98,7 +98,7 @@ export default function Careers() {
   return (
     <div className="min-h-screen bg-background text-foreground transition-colors ">
       {/* Hero Section */}
-      <section className="relative pt-32 pb-20 overflow-hidden lg:pt-48 lg:pb-32">
+      <section className="relative pt-12 pb-12 overflow-hidden lg:pt-16 lg:pb-16">
         <div className="absolute inset-0 bg-muted/30 -z-10" />
 
         <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
