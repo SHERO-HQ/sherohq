@@ -55,8 +55,8 @@ const BottomNav = () => {
         },
         {
           icon: Package,
-          label: "Products",
-          path: getAbsoluteUrl("/products"),
+          label: "Our Work",
+          path: getAbsoluteUrl("/solutions"),
           end: false,
           iconClassName: "w-6 h-6",
         },

@@ -1,20 +1,11 @@
 import LandingHero from "@/components/landing/LandingHero";
 import dynamic from "next/dynamic";
 
-const LandingValueProps = dynamic(
-  () => import("@/components/landing/LandingValueProps"),
-);
 const LandingAbout = dynamic(
   () => import("@/components/landing/LandingAbout"),
 );
-const LandingPillars = dynamic(
-  () => import("@/components/landing/LandingPillars"),
-);
 const LandingEcosystem = dynamic(
   () => import("@/components/landing/LandingEcosystem"),
-);
-const LandingSecurity = dynamic(
-  () => import("@/components/landing/LandingSecurity"),
 );
 const LandingProducts = dynamic(
   () => import("@/components/landing/LandingProducts"),
@@ -39,12 +30,9 @@ const Home = () => {
   return (
     <>
       <LandingHero />
-      {SHOP_ENABLED && <LandingValueProps />}
       <LandingAbout />
       <ClientLogoBar />
-      {/* <LandingPillars /> */}
       <LandingEcosystem />
-      {SHOP_ENABLED && <LandingSecurity />}
       {SHOP_ENABLED ? <LandingProducts /> : <HardwareServiceLine />}
       <LandingTestimonials limit={5} />
       <LandingFinalCTA />

@@ -68,10 +68,10 @@ export function useNavigationState() {
           ]
         : [
             {
-              name: "Products",
+              name: "Our Work",
               icon: Package,
-              desc: "Computers & hardware",
-              href: "/products",
+              desc: "Products & projects",
+              href: "/solutions",
             },
           ]),
       {

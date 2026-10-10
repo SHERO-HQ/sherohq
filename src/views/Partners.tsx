@@ -44,15 +44,14 @@ const Partners = () => {
     },
     {
       title: "Onboarding",
-      desc: "Establish clear service terms, preferred supply channels, and direct engineering support.",
+      desc: "Agree on scope, working terms, and a direct line to our engineers.",
     },
   ];
 
   const benefits = [
-    "Commercial laptops, workstations, and servers on dependable B2B terms",
-    "Priority technical support and direct engineering contact",
     "Custom software development and systems integration tailored to your operations",
-    "Proactive equipment maintenance and rapid regional replacement support",
+    "Direct contact with the engineers building your product",
+    "Hardware sourced on request for your team",
   ];
 
   return (

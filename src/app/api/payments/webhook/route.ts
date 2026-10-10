@@ -128,15 +128,8 @@ export async function POST(request: NextRequest) {
 
         verifiedAmount = confirmedAmount;
 
-        const hasValidHubtelTokens = Boolean(
-          nested?.CheckoutId || nested?.SalesInvoiceId,
-        );
-
-        if (
-          !verified &&
-          !hasValidHubtelTokens &&
-          process.env.NODE_ENV === "production"
-        ) {
+        // Never trust IDs in the payload: in production Hubtel's own API must confirm.
+        if (!verified && process.env.NODE_ENV === "production") {
           console.warn("[payment:webhook]", {
             provider: "hubtel",
             orderId,

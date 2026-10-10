@@ -53,14 +53,13 @@ const ServicesGrid = () => {
     },
     {
       icon: <ShieldCheck className="w-5 h-5" />,
-      title: "Systems Reliability & IT Operations",
+      title: "IT Setup & Support",
       description:
-        "Dependable infrastructure setup and proactive system maintenance. We keep your business tools, workstations, and operational data secure, stable, and ready to perform.",
+        "Infrastructure setup and hands-on support for your business tools and workstations.",
       features: [
         "Workspace environment & toolchain deployment",
         "Local network security & automated data backups",
         "Direct technical support and rapid issue resolution",
-        "Proactive system health checks without corporate bloat",
       ],
       gradient: "",
       textClass: "text-brand-primary-600 dark:text-brand-primary-400",

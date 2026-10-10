@@ -22,7 +22,7 @@ export const supportNotifications = {
         <p style="margin: 0 0 6px; font-size: 12px; color: #64748b; text-transform: uppercase;">Category: ${ticket.category}</p>
         <p style="margin: 0; color: #334155; line-height: 1.5; white-space: pre-wrap;">${ticket.message}</p>
       </div>
-      <p>Our support team is reviewing your ticket and will respond as soon as possible, typically within 24 hours.</p>
+      <p>Our support team is reviewing your ticket and will respond as soon as possible.</p>
       <p style="text-align: center; margin-top: 24px;">
         <a href="${trackUrl}/support/track/${ticket.ticket_no}" style="display: inline-block; padding: 12px 28px; background: #059669; color: #fff; text-decoration: none; border-radius: 6px; font-weight: bold;">Track Ticket Status</a>
       </p>

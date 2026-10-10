@@ -33,7 +33,6 @@ TROUBLESHOOTING GUIDES
 COMMON QUESTIONS
 - Warranty: All SHERO products include a minimum 3-month warranty. Extended warranties available on request.
 - Returns: 7-day return policy for defective items. Contact support with your order ID.
-- Delivery: Accra same-day or next-day delivery. Other Ghana regions 2-5 business days.
 - Payment: Mobile Money (MTN, Vodafone, AirtelTigo), bank transfer, and cash on delivery available.
 - Business hours: Mon-Fri 9AM-6PM, Sat 10AM-3PM (GMT).
 

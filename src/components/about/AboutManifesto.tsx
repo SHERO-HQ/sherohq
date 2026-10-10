@@ -33,7 +33,7 @@ const pillars = [
     title: "Managed IT",
     badge: "Operations",
     description:
-      "Reliable IT management and proactive infrastructure support so your team focuses on growth.",
+      "Hands-on IT support so your team can focus on growth.",
     color: "secondary",
     href: "/consultation?service=managed-it",
     linkText: "Consult Managed IT",
@@ -66,7 +66,7 @@ const AboutManifesto = () => {
                 Technology should expand what&apos;s possible, remove operational barriers, and create real opportunities for sustainable growth.
               </p>
               <p>
-                From custom software engineering to dependable commercial hardware and proactive IT support, we build infrastructure your organization can rely on every single day.
+                From custom software engineering to hardware sourcing and IT support, we build infrastructure your organization can rely on every single day.
               </p>
             </div>
 

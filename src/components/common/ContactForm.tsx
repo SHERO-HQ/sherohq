@@ -66,7 +66,6 @@ const ContactForm = () => {
       const serviceLabel = {
         software: "Custom Software Development",
         cloud: "Cloud & Infrastructure Solutions",
-        mit: "Managed IT Support & SLA",
         hardware: "Hardware Supply & POS Setup"}[formData.proposalService] || formData.proposalService;
 
       formattedMessage = `[Custom Project Proposal Request]
@@ -203,7 +202,7 @@ ${formData.message}`;
                         <ArrowRight className="w-4 h-4 text-slate-400 dark:text-slate-600 group-hover:text-brand-primary-600 dark:group-hover:text-brand-primary-400 transition-all group-hover:translate-x-1 shrink-0" />
                       </h3>
                       <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
-                        Get a custom quote for software dev, cloud migration, or managed IT SLAs.
+                        Get a custom quote for software dev, or cloud migration.
                       </p>
                     </div>
                   </button>
@@ -243,7 +242,7 @@ ${formData.message}`;
                         <ArrowRight className="w-4 h-4 text-slate-400 dark:text-slate-600 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-all group-hover:translate-x-1 shrink-0" />
                       </h3>
                       <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
-                        Get help with existing software deployments, infrastructure, or SLAs.
+                        Get help with existing software deployments or infrastructure.
                       </p>
                     </div>
                   </button>
@@ -287,7 +286,6 @@ ${formData.message}`;
                         {[
                           { id: "software", label: "Custom Software", icon: Code },
                           { id: "cloud", label: "Cloud Systems", icon: Server },
-                          { id: "mit", label: "Managed IT SLA", icon: Shield },
                           { id: "hardware", label: "Hardware & POS", icon: Zap },
                         ].map((serv) => (
                           <button

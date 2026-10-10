@@ -30,7 +30,7 @@ const services: ServiceType[] = [
     id: "it-support",
     title: "Managed IT Support",
     description:
-      "Proactive monitoring, helpdesk, and ongoing system maintenance.",
+      "Helpdesk and hands-on system support.",
     icon: <MessageSquare className="w-6 h-6" />,
   },
   {

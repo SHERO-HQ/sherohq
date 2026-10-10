@@ -26,7 +26,7 @@ import { ThemeToggle3Button } from "./toggle-theme";
 // Static Data
 const companyLinks = SHOP_ENABLED
   ? ["Shop", "About Us", "Careers", "Contact Us"]
-  : ["Products", "About Us", "Careers", "Contact Us"];
+  : ["Solutions", "About Us", "Careers", "Contact Us"];
 
 const allResourceLinks = [
   { label: "Consultation", href: "/consultation" },

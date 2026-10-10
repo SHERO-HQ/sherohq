@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { NextRequest } from "next/server";
+import { SHOP_ENABLED } from "@/constants/features";
 
 const UNSAFE_METHODS = new Set(["POST", "PUT", "PATCH", "DELETE"]);
 
@@ -194,6 +195,9 @@ function handleProxy(request: NextRequest) {
   }
 
   // 2. Shop Subdomain
+  if (subdomain === "shop" && !SHOP_ENABLED) {
+    return NextResponse.redirect(new URL("/#services", "https://sherohq.com"), 301);
+  }
   if (subdomain === "shop") {
     // If the path starts with /products, map it to the actual shop route structure in Next.js:
     // - /products -> /shop
