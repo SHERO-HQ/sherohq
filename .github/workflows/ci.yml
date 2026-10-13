@@ -12,6 +12,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       
+      - name: Enable Corepack (Yarn 4)
+        run: corepack enable
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -19,7 +22,7 @@ jobs:
           cache: 'yarn'
           
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: yarn install --immutable
         
       - name: Lint
         run: yarn lint
@@ -32,6 +35,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       
+      - name: Enable Corepack (Yarn 4)
+        run: corepack enable
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -39,7 +45,7 @@ jobs:
           cache: 'yarn'
           
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: yarn install --immutable
         
       - name: Run unit tests
         run: yarn test
@@ -49,6 +55,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       
+      - name: Enable Corepack (Yarn 4)
+        run: corepack enable
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -56,7 +65,7 @@ jobs:
           cache: 'yarn'
           
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: yarn install --immutable
         
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
