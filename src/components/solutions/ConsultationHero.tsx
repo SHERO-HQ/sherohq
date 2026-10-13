@@ -97,7 +97,7 @@ const ConsultationHero = () => {
                 </div>
                 <div>
                   <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Strategy Session</h2>
-                  <div className="flex items-center gap-4 text-sm font-medium text-slate-500 dark:text-slate-400">
+                  <div className="flex items-center gap-4 text-sm font-medium text-slate-600 dark:text-slate-300">
                     <span className="flex items-center gap-1.5"><Clock className="size-4" /> 30 Min</span>
                     <span className="flex items-center gap-1.5"><Video className="size-4" /> Video Call</span>
                   </div>
