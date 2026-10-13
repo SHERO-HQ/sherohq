@@ -9,7 +9,7 @@ export function TextLink({ href, children, className }: { href: string; children
     <Link
       href={href}
       className={cn(
-        "group inline-flex items-center gap-1.5 font-medium text-primary underline-offset-4 hover:text-primary-hover hover:underline",
+        "group inline-flex items-center gap-1.5 font-medium text-link underline-offset-4 hover:text-link-hover hover:underline",
         className,
       )}
     >

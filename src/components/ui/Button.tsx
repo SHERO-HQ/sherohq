@@ -5,7 +5,7 @@ import { cn } from "@/lib/cn";
 type Variant = "primary" | "secondary" | "inverse";
 
 const base =
-  "inline-flex min-h-11 items-center justify-center gap-2 rounded-control px-5 text-[15px] font-medium leading-none transition-colors duration-150";
+  "inline-flex h-9 items-center justify-center gap-2 rounded-control px-4 text-sm font-medium leading-none whitespace-nowrap transition-colors duration-150";
 
 const variants: Record<Variant, string> = {
   primary: "bg-primary text-on-primary hover:bg-primary-hover",

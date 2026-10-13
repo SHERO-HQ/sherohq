@@ -35,7 +35,7 @@ export function ContactOptions({
             {c.title}
           </h2>
           <p className="mt-2 text-ink-secondary">{c.body}</p>
-          <a href={c.href} className="mt-6 inline-flex min-h-11 items-center font-medium text-primary underline underline-offset-4 hover:text-primary-hover">
+          <a href={c.href} className="mt-6 inline-flex min-h-11 items-center font-medium text-link underline underline-offset-4 hover:text-link-hover">
             {c.cta}
           </a>
         </section>

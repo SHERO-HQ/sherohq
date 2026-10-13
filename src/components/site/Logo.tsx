@@ -7,7 +7,7 @@ export function Logo({ height = 28 }: { height?: number }) {
   return (
     <Link href="/" aria-label="SHERO home" className="inline-flex items-center">
       <img src="/brand/shero-full.svg" alt="" width={width} height={height} className="light-only" />
-      <img src="/brand/shero-ondark.svg" alt="" width={width} height={height} className="dark-only" />
+      <img src="/brand/shero-light.svg" alt="" width={width} height={height} className="dark-only" />
     </Link>
   );
 }

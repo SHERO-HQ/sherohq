@@ -38,4 +38,4 @@ Rules of thumb:
 
 ## Themes
 
-Light (white and slate) and dark (charcoal) follow the system setting; the header toggle saves a choice.
+Light (white and slate) and dark (the previous site's navy) follow the system setting; the footer toggle saves a choice.

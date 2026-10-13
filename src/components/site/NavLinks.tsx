@@ -17,7 +17,7 @@ export function NavLinks({ items }: { items: readonly NavItem[] }) {
               href={item.href}
               aria-current={active ? "page" : undefined}
               className={cn(
-                "inline-flex min-h-11 items-center rounded-control px-3 text-[15px] transition-colors hover:text-ink",
+                "inline-flex h-9 items-center rounded-control px-3 text-[15px] transition-colors hover:text-ink",
                 active ? "text-ink" : "text-ink-secondary",
               )}
             >

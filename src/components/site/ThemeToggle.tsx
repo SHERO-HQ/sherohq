@@ -2,6 +2,7 @@
 
 import { Moon, Sun } from "lucide-react";
 import { useSyncExternalStore } from "react";
+import { cn } from "@/lib/cn";
 import { THEME_STORAGE_KEY } from "./ThemeScript";
 
 type Theme = "light" | "dark";
@@ -23,7 +24,7 @@ function subscribe(onChange: () => void) {
   };
 }
 
-export function ThemeToggle() {
+export function ThemeToggle({ className }: { className?: string }) {
   const theme = useSyncExternalStore(subscribe, currentTheme, () => null);
   const next: Theme = theme === "dark" ? "light" : "dark";
 
@@ -41,13 +42,17 @@ export function ThemeToggle() {
       type="button"
       onClick={toggle}
       aria-label={theme ? `Switch to ${next} theme` : "Switch theme"}
-      className="inline-flex size-11 items-center justify-center rounded-control text-ink-secondary transition-colors hover:bg-surface hover:text-ink"
+      className={cn(
+        "inline-flex h-9 items-center gap-2 rounded-control px-3 text-sm transition-colors",
+        className,
+      )}
     >
       {theme === "dark" ? (
-        <Sun aria-hidden="true" size={18} strokeWidth={1.5} />
+        <Sun aria-hidden="true" size={16} strokeWidth={1.5} />
       ) : (
-        <Moon aria-hidden="true" size={18} strokeWidth={1.5} />
+        <Moon aria-hidden="true" size={16} strokeWidth={1.5} />
       )}
+      <span aria-hidden="true">{theme === "dark" ? "Light theme" : "Dark theme"}</span>
     </button>
   );
 }

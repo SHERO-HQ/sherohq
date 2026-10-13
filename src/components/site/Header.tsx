@@ -4,7 +4,6 @@ import { Container } from "@/components/ui/Container";
 import { Logo } from "./Logo";
 import { MobileMenu } from "./MobileMenu";
 import { NavLinks } from "./NavLinks";
-import { ThemeToggle } from "./ThemeToggle";
 
 export function Header() {
   return (
@@ -14,8 +13,7 @@ export function Header() {
         <nav aria-label="Main" className="hidden md:absolute md:left-1/2 md:block md:-translate-x-1/2">
           <NavLinks items={mainNav} />
         </nav>
-        <div className="flex items-center gap-1">
-          <ThemeToggle />
+        <div className="flex items-center gap-2">
           <ButtonLink href={talkToUs.href} className="hidden md:inline-flex">
             {talkToUs.label}
           </ButtonLink>

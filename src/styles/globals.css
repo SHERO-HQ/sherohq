@@ -2,8 +2,8 @@
 
 /*
  * Design tokens. Source: "SHERO — Master Brand" design system, with the
- * agreed overrides (charcoal dark theme, white/slate light theme, rounded
- * buttons and cards). Components use the semantic names only, never raw hex.
+ * agreed overrides: white/slate light theme, the previous site's navy dark
+ * theme, rounded 36px buttons and rounded cards. Components use the semantic names only, never raw hex.
  */
 :root {
   color-scheme: light;
@@ -19,6 +19,8 @@
   --heading: #043284;
   --primary: #043284;
   --primary-hover: #16459f;
+  --link: #043284;
+  --link-hover: #16459f;
   --on-primary: #ffffff;
   --accent: #05735a;
   --accent-subtle: #e9f7f2;
@@ -34,25 +36,27 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     color-scheme: dark;
-    --page: #161618;
-    --surface: #1e1f22;
-    --surface-raised: #232428;
-    --surface-inverse: #0e0e10;
-    --ink: #f1f4f9;
-    --ink-secondary: #b4bdcb;
-    --ink-muted: #8a94a6;
-    --heading: #dce6f8;
-    --primary: #86a7e3;
-    --primary-hover: #b6cbf0;
-    --on-primary: #0a0f1a;
-    --accent: #62c3a4;
-    --accent-subtle: #10261f;
+    --page: #010a14;
+    --surface: #09131a;
+    --surface-raised: #121c23;
+    --surface-inverse: #00050d;
+    --ink: #f8f8f8;
+    --ink-secondary: #9aa7b0;
+    --ink-muted: #88949d;
+    --heading: #f8f8f8;
+    --primary: #275fdd;
+    --primary-hover: #1244b1;
+    --on-primary: #fafafa;
+    --link: #85acff;
+    --link-hover: #b7cdff;
+    --accent: #34d399;
+    --accent-subtle: #022c22;
     --warning: #f3c06b;
     --warning-subtle: #2b1d08;
-    --border: #2e2f33;
-    --border-strong: #5a6070;
-    --focus: #86a7e3;
-    --placeholder: #45464c;
+    --border: #2a343c;
+    --border-strong: #59656e;
+    --focus: #4f82f7;
+    --placeholder: #3a454d;
   }
   :root:not([data-theme="light"]) .light-only {
     display: none;
@@ -64,25 +68,27 @@
 
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --page: #161618;
-  --surface: #1e1f22;
-  --surface-raised: #232428;
-  --surface-inverse: #0e0e10;
-  --ink: #f1f4f9;
-  --ink-secondary: #b4bdcb;
-  --ink-muted: #8a94a6;
-  --heading: #dce6f8;
-  --primary: #86a7e3;
-  --primary-hover: #b6cbf0;
-  --on-primary: #0a0f1a;
-  --accent: #62c3a4;
-  --accent-subtle: #10261f;
+  --page: #010a14;
+  --surface: #09131a;
+  --surface-raised: #121c23;
+  --surface-inverse: #00050d;
+  --ink: #f8f8f8;
+  --ink-secondary: #9aa7b0;
+  --ink-muted: #88949d;
+  --heading: #f8f8f8;
+  --primary: #275fdd;
+  --primary-hover: #1244b1;
+  --on-primary: #fafafa;
+  --link: #85acff;
+  --link-hover: #b7cdff;
+  --accent: #34d399;
+  --accent-subtle: #022c22;
   --warning: #f3c06b;
   --warning-subtle: #2b1d08;
-  --border: #2e2f33;
-  --border-strong: #5a6070;
-  --focus: #86a7e3;
-  --placeholder: #45464c;
+  --border: #2a343c;
+  --border-strong: #59656e;
+  --focus: #4f82f7;
+  --placeholder: #3a454d;
 }
 
 .dark-only {
@@ -108,6 +114,8 @@
   --color-heading: var(--heading);
   --color-primary: var(--primary);
   --color-primary-hover: var(--primary-hover);
+  --color-link: var(--link);
+  --color-link-hover: var(--link-hover);
   --color-on-primary: var(--on-primary);
   --color-accent: var(--accent);
   --color-accent-subtle: var(--accent-subtle);

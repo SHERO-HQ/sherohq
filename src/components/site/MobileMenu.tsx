@@ -29,7 +29,7 @@ export function MobileMenu({ items, cta }: { items: readonly NavItem[]; cta: Nav
         aria-controls={menuId}
         aria-label={open ? "Close menu" : "Open menu"}
         onClick={() => setOpen(!open)}
-        className="inline-flex size-11 items-center justify-center rounded-control text-ink hover:bg-surface"
+        className="inline-flex size-9 items-center justify-center rounded-control text-ink hover:bg-surface"
       >
         {open ? <X aria-hidden="true" size={20} strokeWidth={1.5} /> : <Menu aria-hidden="true" size={20} strokeWidth={1.5} />}
       </button>
@@ -54,7 +54,7 @@ export function MobileMenu({ items, cta }: { items: readonly NavItem[]; cta: Nav
         </ul>
         <Link
           href={cta.href}
-          className="mt-6 flex min-h-12 items-center justify-center rounded-control bg-primary font-medium text-on-primary"
+          className="mt-6 flex h-9 items-center justify-center rounded-control bg-primary text-sm font-medium text-on-primary hover:bg-primary-hover"
         >
           {cta.label}
         </Link>

@@ -4,7 +4,7 @@ import { cn } from "@/lib/cn";
 
 const tone: Record<ProductStatus, string> = {
   "in-development": "bg-warning-subtle text-warning",
-  "in-validation": "bg-surface text-primary",
+  "in-validation": "bg-surface text-link",
   live: "bg-accent-subtle text-accent",
 };
 

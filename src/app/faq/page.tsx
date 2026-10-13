@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   description: "Answers to common questions about SHERO.",
 };
 
-const link = "font-medium text-primary underline underline-offset-4 hover:text-primary-hover";
+const link = "font-medium text-link underline underline-offset-4 hover:text-link-hover";
 
 const faqs: { q: string; a: ReactNode }[] = [
   { q: "Where are you based?", a: `In ${site.location}. We work with businesses across Ghana, on site or remotely.` },

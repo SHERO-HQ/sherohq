@@ -49,7 +49,7 @@ export default function SolutionsPage() {
                 <dt className="font-mono text-xs text-ink-muted">How it starts</dt>
                 <dd className="mt-2">
                   {s.howItStarts}{" "}
-                  <Link href={s.href ?? "/consultation"} className="font-medium text-primary underline underline-offset-4 hover:text-primary-hover">
+                  <Link href={s.href ?? "/consultation"} className="font-medium text-link underline underline-offset-4 hover:text-link-hover">
                     {s.href ? "Go to Merchander" : "Book a free consultation"}
                   </Link>
                 </dd>

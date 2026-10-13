@@ -13,7 +13,7 @@ export function ProductCard({ product, headingLevel = "h3" }: { product: Product
       </p>
       <Link
         href={`/${product.slug}`}
-        className="mt-auto inline-flex min-h-11 items-center font-medium text-primary underline-offset-4 hover:underline"
+        className="mt-auto inline-flex min-h-11 items-center font-medium text-link underline-offset-4 hover:underline"
       >
         Join the {product.name} waitlist
       </Link>
