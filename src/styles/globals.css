@@ -1,0 +1,175 @@
+@import "tailwindcss";
+
+/*
+ * Design tokens. Source: "SHERO — Master Brand" design system, with the
+ * agreed overrides (charcoal dark theme, white/slate light theme, rounded
+ * buttons and cards). Components use the semantic names only, never raw hex.
+ */
+:root {
+  color-scheme: light;
+  --page: #ffffff;
+  --surface: #f5f7fa;
+  --surface-raised: #ffffff;
+  --surface-inverse: #161618;
+  --ink: #0b1220;
+  --ink-secondary: #4b5563;
+  --ink-muted: #5f6877;
+  --ink-inverse: #f1f4f9;
+  --ink-inverse-muted: #a9b4c8;
+  --heading: #043284;
+  --primary: #043284;
+  --primary-hover: #16459f;
+  --on-primary: #ffffff;
+  --accent: #05735a;
+  --accent-subtle: #e9f7f2;
+  --warning: #8a4b08;
+  --warning-subtle: #fdf3e3;
+  --border: #dde2ea;
+  --border-strong: #7f8898;
+  --focus: #2f5ebc;
+  --placeholder: #c4cad4;
+}
+
+/* Dark theme: charcoal grounds, lifted brand tints for contrast. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --page: #161618;
+    --surface: #1e1f22;
+    --surface-raised: #232428;
+    --surface-inverse: #0e0e10;
+    --ink: #f1f4f9;
+    --ink-secondary: #b4bdcb;
+    --ink-muted: #8a94a6;
+    --heading: #dce6f8;
+    --primary: #86a7e3;
+    --primary-hover: #b6cbf0;
+    --on-primary: #0a0f1a;
+    --accent: #62c3a4;
+    --accent-subtle: #10261f;
+    --warning: #f3c06b;
+    --warning-subtle: #2b1d08;
+    --border: #2e2f33;
+    --border-strong: #5a6070;
+    --focus: #86a7e3;
+    --placeholder: #45464c;
+  }
+  :root:not([data-theme="light"]) .light-only {
+    display: none;
+  }
+  :root:not([data-theme="light"]) .dark-only {
+    display: revert;
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --page: #161618;
+  --surface: #1e1f22;
+  --surface-raised: #232428;
+  --surface-inverse: #0e0e10;
+  --ink: #f1f4f9;
+  --ink-secondary: #b4bdcb;
+  --ink-muted: #8a94a6;
+  --heading: #dce6f8;
+  --primary: #86a7e3;
+  --primary-hover: #b6cbf0;
+  --on-primary: #0a0f1a;
+  --accent: #62c3a4;
+  --accent-subtle: #10261f;
+  --warning: #f3c06b;
+  --warning-subtle: #2b1d08;
+  --border: #2e2f33;
+  --border-strong: #5a6070;
+  --focus: #86a7e3;
+  --placeholder: #45464c;
+}
+
+.dark-only {
+  display: none;
+}
+:root[data-theme="dark"] .light-only {
+  display: none;
+}
+:root[data-theme="dark"] .dark-only {
+  display: revert;
+}
+
+@theme inline {
+  --color-page: var(--page);
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --color-surface-inverse: var(--surface-inverse);
+  --color-ink: var(--ink);
+  --color-ink-secondary: var(--ink-secondary);
+  --color-ink-muted: var(--ink-muted);
+  --color-ink-inverse: var(--ink-inverse);
+  --color-ink-inverse-muted: var(--ink-inverse-muted);
+  --color-heading: var(--heading);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-on-primary: var(--on-primary);
+  --color-accent: var(--accent);
+  --color-accent-subtle: var(--accent-subtle);
+  --color-warning: var(--warning);
+  --color-warning-subtle: var(--warning-subtle);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-focus: var(--focus);
+  --color-placeholder: var(--placeholder);
+
+  --font-sans: var(--font-text), system-ui, sans-serif;
+  --font-display: var(--font-text), system-ui, sans-serif;
+  --font-mono: var(--font-code), ui-monospace, monospace;
+
+  --radius-control: 8px;
+  --radius-card: 12px;
+
+  --container-site: 1200px;
+  --container-measure: 640px;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    background: var(--page);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    color: var(--heading);
+    font-weight: 600;
+    text-wrap: balance;
+  }
+  p {
+    text-wrap: pretty;
+  }
+  :focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+  ::selection {
+    background: var(--primary);
+    color: var(--on-primary);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
