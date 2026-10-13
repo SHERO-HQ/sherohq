@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ClosingCta } from "@/components/site/ClosingCta";
 import { Container } from "@/components/ui/Container";
-import { IllustrationSlot } from "@/components/ui/IllustrationSlot";
+import { serviceArt } from "@/components/illustrations";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { services } from "@/content/services";
 
@@ -27,7 +27,7 @@ export default function SolutionsPage() {
                 {s.name}
               </h2>
               <p className="mt-3 text-lg text-ink-secondary">{s.summary}</p>
-              <IllustrationSlot label={s.name.toLowerCase()} className="mt-8 aspect-[4/3] max-w-sm" />
+              <ServiceArt id={s.id} />
             </div>
             <dl className="grid gap-8 self-center">
               <div>
@@ -59,5 +59,14 @@ export default function SolutionsPage() {
       </Container>
       <ClosingCta title="Tell us what's slowing you down." />
     </>
+  );
+}
+
+function ServiceArt({ id }: { id: keyof typeof serviceArt }) {
+  const ArtFor = serviceArt[id];
+  return (
+    <div className="mt-8 max-w-sm rounded-card border border-border bg-surface p-4">
+      <ArtFor />
+    </div>
   );
 }

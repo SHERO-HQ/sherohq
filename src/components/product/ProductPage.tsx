@@ -1,7 +1,7 @@
 import { Check } from "lucide-react";
 import { ButtonLink } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
-import { IllustrationSlot } from "@/components/ui/IllustrationSlot";
+import { productArt } from "@/components/illustrations";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { StatusBadge } from "@/components/ui/StatusBadge";
 import { site, whatsappLink } from "@/content/site";
@@ -9,6 +9,7 @@ import type { Product } from "@/content/types";
 
 /** Shared layout for SHERO's own products: status, problem, who, what, waitlist. */
 export function ProductPage({ product }: { product: Product }) {
+  const ProductArt = productArt[product.slug];
   return (
     <>
       <PageHeader title={product.name} intro={product.forWho}>
@@ -32,7 +33,7 @@ export function ProductPage({ product }: { product: Product }) {
             </ul>
           </section>
         </div>
-        <IllustrationSlot label={`${product.name} product scene`} className="aspect-square w-full max-w-md justify-self-center" />
+        <ProductArt className="w-full max-w-md justify-self-center" />
       </Container>
       <section aria-labelledby="waitlist" className="pb-16 sm:pb-24">
         <Container>

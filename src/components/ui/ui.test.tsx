@@ -1,7 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { ButtonLink } from "./Button";
-import { IllustrationSlot } from "./IllustrationSlot";
 import { StatusBadge } from "./StatusBadge";
 
 describe("ButtonLink", () => {
@@ -27,9 +26,3 @@ describe("StatusBadge", () => {
   });
 });
 
-describe("IllustrationSlot", () => {
-  it("is hidden from assistive technology", () => {
-    const { container } = render(<IllustrationSlot label="hero" />);
-    expect(container.firstChild).toHaveAttribute("aria-hidden", "true");
-  });
-});

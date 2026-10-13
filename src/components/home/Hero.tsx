@@ -1,6 +1,6 @@
 import { ButtonLink } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
-import { IllustrationSlot } from "@/components/ui/IllustrationSlot";
+import { HeroArt } from "@/components/illustrations";
 import { talkToUs } from "@/content/navigation";
 import { site } from "@/content/site";
 
@@ -28,7 +28,7 @@ export function Hero() {
             {site.location} · {site.hours.days} {site.hours.open}–{site.hours.close}
           </p>
         </div>
-        <IllustrationSlot label="hero scene built around the slanted SHERO shapes" className="aspect-square w-full max-w-md justify-self-center lg:justify-self-end" />
+        <HeroArt className="w-full max-w-md justify-self-center lg:justify-self-end" />
       </Container>
     </section>
   );

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Code2, Compass, Flag, Gauge, Laptop, LifeBuoy, ShieldCheck } from "lucide-react";
 import { ButtonLink } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
-import { IllustrationSlot } from "@/components/ui/IllustrationSlot";
+import { StoryArt } from "@/components/illustrations";
 import { Section } from "@/components/ui/Section";
 import { TextLink } from "@/components/ui/TextLink";
 import { about } from "@/content/about";
@@ -68,7 +68,9 @@ export default function AboutPage() {
 
       <Section id="story" tone="surface">
         <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
-          <IllustrationSlot label="SHERO's story" className="aspect-[4/3] w-full bg-page" />
+          <div className="rounded-card border border-border bg-page p-6 sm:p-10">
+            <StoryArt />
+          </div>
           <div>
             <h2 id="story-title" className="text-[26px] leading-tight tracking-[-0.015em] sm:text-4xl">
               {about.story.title}
