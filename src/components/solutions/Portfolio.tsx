@@ -11,9 +11,9 @@ const GROUPS = [
   { type: "client", title: "Built for clients" },
 ] as const;
 
-// Phone: one full-width compact row per card. Tablet and up: 2, 3, then 4 columns.
-const CARD_GRID =
-  "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4";
+// Phone: one full-width compact row per card. Tablet: 2 columns, desktop: 3,
+// so each screenshot is large enough to read.
+const CARD_GRID = "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6";
 
 const Portfolio = ({ hideWhenEmpty = true }: { hideWhenEmpty?: boolean } = {}) => {
   const { data: projects = [], isLoading } = useProjects();
@@ -24,15 +24,19 @@ const Portfolio = ({ hideWhenEmpty = true }: { hideWhenEmpty?: boolean } = {}) =
   }
 
   return (
-    <section className="relative w-full py-10 bg-slate-50 dark:bg-slate-950">
+    <section className="relative w-full py-12 md:py-16 bg-slate-50 dark:bg-slate-950">
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-10">
+        <div className="text-center mb-12">
           <SectionBadge icon={Wrench} className="mb-4">
             Our Work
           </SectionBadge>
-          <h2 className="text-xl md:text-2xl font-bold text-slate-900 dark:text-slate-100 mb-4 transition-colors">
+          <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-slate-900 dark:text-slate-100 transition-colors">
             What We&apos;ve Built
-          </h2>
+          </h1>
+          <p className="mx-auto mt-4 max-w-2xl text-base md:text-lg text-slate-600 dark:text-slate-300">
+            Software we built for our clients, and the products SHERO is building.
+            Open a project to see the problem it solves and what we built.
+          </p>
         </div>
 
         {isLoading && (
@@ -40,7 +44,7 @@ const Portfolio = ({ hideWhenEmpty = true }: { hideWhenEmpty?: boolean } = {}) =
             {[1, 2, 3].map((i) => (
               <div
                 key={`project-skeleton-${i}`}
-                className="h-28 sm:h-64 bg-slate-100 dark:bg-slate-900 animate-pulse rounded border border-slate-200 dark:border-slate-800"
+                className="h-28 sm:h-96 bg-slate-100 dark:bg-slate-900 animate-pulse rounded border border-slate-200 dark:border-slate-800"
               />
             ))}
           </div>
@@ -60,9 +64,9 @@ const Portfolio = ({ hideWhenEmpty = true }: { hideWhenEmpty?: boolean } = {}) =
             if (items.length === 0) return null;
             return (
               <div key={group.type} className="mb-12 last:mb-0">
-                <h3 className="mb-5 text-lg font-bold text-slate-900 dark:text-slate-100">
+                <h2 className="mb-5 text-xl font-bold text-slate-900 dark:text-slate-100">
                   {group.title}
-                </h3>
+                </h2>
                 <div className={CARD_GRID}>
                   {items.map((project) => (
                     <PortfolioCard
