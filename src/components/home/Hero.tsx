@@ -1,7 +1,8 @@
 import { ButtonLink } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { IllustrationSlot } from "@/components/ui/IllustrationSlot";
-import { site, whatsappLink } from "@/content/site";
+import { talkToUs } from "@/content/navigation";
+import { site } from "@/content/site";
 
 export function Hero() {
   return (
@@ -18,9 +19,9 @@ export function Hero() {
             products of our own, in the making.
           </p>
           <div className="mt-10 flex flex-wrap gap-3">
-            <ButtonLink href="/contact">Book a free consultation</ButtonLink>
-            <ButtonLink href={whatsappLink()} variant="secondary">
-              WhatsApp us
+            <ButtonLink href={talkToUs.href}>{talkToUs.label}</ButtonLink>
+            <ButtonLink href="/consultation" variant="secondary">
+              Book a free consultation
             </ButtonLink>
           </div>
           <p className="mt-6 font-mono text-xs text-ink-muted">

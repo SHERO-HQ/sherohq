@@ -12,13 +12,13 @@ export function ServicesOverview() {
       eyebrow="what we do"
       title="Plain technology work, done properly."
       intro="No pricing guesswork. Tell us what you need and we'll quote."
-      action={<TextLink href="/services">All services</TextLink>}
+      action={<TextLink href="/solutions">All solutions</TextLink>}
     >
       <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {services.map((s) => (
           <li key={s.id}>
             <Link
-              href={s.href ?? `/services#${s.id}`}
+              href={s.href ?? `/solutions#${s.id}`}
               className="group flex h-full flex-col rounded-card border border-border bg-surface-raised p-5 transition-colors hover:border-border-strong"
             >
               <IllustrationSlot label={s.name.toLowerCase()} className="mb-5 aspect-[4/3] p-3" />

@@ -13,7 +13,7 @@ test.describe("every page", () => {
 });
 
 test("unknown pages return a helpful 404", async ({ page }) => {
-  const res = await page.goto("/shop");
+  const res = await page.goto("/does-not-exist");
   expect(res?.status()).toBe(404);
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("This page doesn't exist.");
 });
@@ -38,6 +38,22 @@ test("theme toggle switches and remembers the theme", async ({ page }) => {
   await expect(page.getByRole("button", { name: "Switch to light theme" })).toBeVisible();
 });
 
+test("header keeps the old menu and a Talk to us button", async ({ page, isMobile }) => {
+  test.skip(isMobile, "desktop header");
+  await page.goto("/");
+  const nav = page.getByRole("navigation", { name: "Main" });
+  await expect(nav.getByRole("link")).toHaveText(["Our Work", "Consultation", "About Us"]);
+  await page.getByRole("banner").getByRole("link", { name: "Talk to us" }).click();
+  await expect(page).toHaveURL(/\/contact-us$/);
+});
+
+test("old URLs redirect to their new homes", async ({ page }) => {
+  await page.goto("/shop");
+  await expect(page).toHaveURL(/\/merchander$/);
+  await page.goto("/services");
+  await expect(page).toHaveURL(/\/solutions$/);
+});
+
 test("waitlist buttons open WhatsApp with a prefilled message", async ({ page }) => {
   await page.goto("/merchander");
   const join = page.getByRole("link", { name: "Join on WhatsApp" });
@@ -54,8 +70,8 @@ test.describe("mobile navigation", () => {
     await toggle.click();
     const menu = page.getByRole("navigation", { name: "Mobile" });
     await expect(menu).toBeVisible();
-    await menu.getByRole("link", { name: "Services" }).click();
-    await expect(page).toHaveURL(/\/services$/);
+    await menu.getByRole("link", { name: "Our Work" }).click();
+    await expect(page).toHaveURL(/\/work$/);
     await expect(menu).toBeHidden();
   });
 

@@ -1,6 +1,7 @@
 import { ButtonLink } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
-import { site, whatsappLink } from "@/content/site";
+import { talkToUs } from "@/content/navigation";
+import { site } from "@/content/site";
 
 export function ClosingCta({ title = "Got something in mind?" }: { title?: string }) {
   return (
@@ -14,9 +15,9 @@ export function ClosingCta({ title = "Got something in mind?" }: { title?: strin
             <p className="mt-3 text-ink-secondary">A real person replies, {site.hours.long}.</p>
           </div>
           <div className="flex flex-wrap gap-3">
-            <ButtonLink href="/contact">Book a free consultation</ButtonLink>
-            <ButtonLink href={whatsappLink()} variant="secondary">
-              WhatsApp us
+            <ButtonLink href={talkToUs.href}>{talkToUs.label}</ButtonLink>
+            <ButtonLink href="/consultation" variant="secondary">
+              Book a free consultation
             </ButtonLink>
           </div>
         </div>

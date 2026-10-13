@@ -7,9 +7,9 @@ import { StatusBadge } from "./StatusBadge";
 
 describe("ButtonLink", () => {
   it("renders an internal link without target", () => {
-    render(<ButtonLink href="/contact">Book</ButtonLink>);
+    render(<ButtonLink href="/contact-us">Book</ButtonLink>);
     const link = screen.getByRole("link", { name: "Book" });
-    expect(link).toHaveAttribute("href", "/contact");
+    expect(link).toHaveAttribute("href", "/contact-us");
     expect(link).not.toHaveAttribute("target");
   });
 

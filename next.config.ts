@@ -10,6 +10,17 @@ const securityHeaders = [
 const config: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
+  // Old URLs that moved or now live elsewhere.
+  async redirects() {
+    return [
+      { source: "/services", destination: "/solutions", permanent: true },
+      { source: "/about", destination: "/about-us", permanent: true },
+      { source: "/contact", destination: "/contact-us", permanent: true },
+      { source: "/shop/:path*", destination: "/merchander", permanent: false },
+      { source: "/products/:path*", destination: "/merchander", permanent: false },
+      { source: "/track/:path*", destination: "/support", permanent: false },
+    ];
+  },
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];
   },

@@ -7,15 +7,15 @@ import { PageHeader } from "@/components/ui/PageHeader";
 import { services } from "@/content/services";
 
 export const metadata: Metadata = {
-  title: "Services",
+  title: "Solutions",
   description: "Custom software, managed IT, integrations and refurbished hardware from SHERO in Tamale, Ghana.",
 };
 
-export default function ServicesPage() {
+export default function SolutionsPage() {
   return (
     <>
       <PageHeader
-        eyebrow="services"
+        eyebrow="solutions"
         title="What we can do for your business"
         intro="Every engagement starts with a conversation. No prices until we understand what you need, and then a clear quote."
       />
@@ -49,7 +49,7 @@ export default function ServicesPage() {
                 <dt className="font-mono text-xs text-ink-muted">How it starts</dt>
                 <dd className="mt-2">
                   {s.howItStarts}{" "}
-                  <Link href={s.href ?? "/contact"} className="font-medium text-primary underline underline-offset-4 hover:text-primary-hover">
+                  <Link href={s.href ?? "/consultation"} className="font-medium text-primary underline underline-offset-4 hover:text-primary-hover">
                     {s.href ? "Go to Merchander" : "Book a free consultation"}
                   </Link>
                 </dd>

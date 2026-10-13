@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useId, useState } from "react";
 import type { NavItem } from "@/content/types";
 
-export function MobileMenu({ items }: { items: readonly NavItem[] }) {
+export function MobileMenu({ items, cta }: { items: readonly NavItem[]; cta: NavItem }) {
   const pathname = usePathname();
   // The menu belongs to the page it was opened on, so navigating closes it.
   const [openOn, setOpenOn] = useState<string | null>(null);
@@ -53,10 +53,10 @@ export function MobileMenu({ items }: { items: readonly NavItem[] }) {
           ))}
         </ul>
         <Link
-          href="/contact"
+          href={cta.href}
           className="mt-6 flex min-h-12 items-center justify-center rounded-control bg-primary font-medium text-on-primary"
         >
-          Book a free consultation
+          {cta.label}
         </Link>
       </nav>
     </div>

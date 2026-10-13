@@ -9,6 +9,13 @@ export const site = {
   email: "info@sherohq.com",
   whatsapp: { number: "233548711582", display: "+233 54 871 1582" },
   legalLine: "SHERO HQ is a brand of SHERO FINTECH.",
+  mapLink: "https://maps.app.goo.gl/7JaqnYf5twcrpfDZ6",
+  socials: [
+    { name: "X (Twitter)", href: "https://x.com/sherohq" },
+    { name: "TikTok", href: "https://tiktok.com/@sherohq" },
+    { name: "Facebook", href: "https://web.facebook.com/profile.php?id=61583887925479" },
+    { name: "Instagram", href: "https://instagram.com/sherohq" },
+  ],
 } as const;
 
 /** WhatsApp click-to-chat link with an optional prefilled message. */
