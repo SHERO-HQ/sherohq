@@ -3,6 +3,7 @@ import { products } from "./products";
 import { services } from "./services";
 import { site, whatsappLink } from "./site";
 import { work } from "./work";
+import { booking } from "./booking";
 
 /** Guards the brand's truth rules (PRODUCT.md) so a content edit can't break them silently. */
 describe("content truth rules", () => {
@@ -10,11 +11,11 @@ describe("content truth rules", () => {
     expect(work.map((w) => w.name).sort()).toEqual(["Dajrim", "Tastea", "TrustCircle"]);
   });
 
-  it("never invents client text", () => {
+  it("gives every project the owner's write-up and a live link", () => {
     for (const w of work) {
-      for (const field of [w.summary, w.challenge, w.whatWeBuilt]) {
-        expect(field === null || field.length > 0).toBe(true);
-      }
+      expect(w.challenge.length).toBeGreaterThan(0);
+      expect(w.whatWeBuilt.length).toBeGreaterThan(0);
+      expect(w.link).toMatch(/^https:\/\//);
     }
   });
 
@@ -38,7 +39,7 @@ describe("content truth rules", () => {
   });
 
   it("avoids team language for a single-operator company", () => {
-    const all = JSON.stringify({ site, services, products });
+    const all = JSON.stringify({ site, services, products, booking });
     expect(all).not.toMatch(/\bteam of\b|\bour team\b/i);
   });
 

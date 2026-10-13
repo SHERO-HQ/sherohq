@@ -63,7 +63,7 @@ const faqs: { q: string; a: ReactNode }[] = [
 export default function FaqPage() {
   return (
     <>
-      <PageHeader eyebrow="faq" title="Questions, answered" />
+      <PageHeader title="Questions, answered" />
       <Container className="max-w-3xl py-14 sm:py-20">
         <div className="divide-y divide-border border-y border-border">
           {faqs.map((f) => (

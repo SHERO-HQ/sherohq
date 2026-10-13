@@ -12,7 +12,6 @@ export default function FeedbackPage() {
   return (
     <>
       <PageHeader
-        eyebrow="feedback"
         title="Tell us how we're doing"
         intro="Good or bad, we read every message. It's how we get better."
       />

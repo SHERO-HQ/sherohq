@@ -8,7 +8,7 @@ export const metadata: Metadata = { title: "Terms of use" };
 export default function Page() {
   return (
     <>
-      <PageHeader eyebrow="legal" title="Terms of use" />
+      <PageHeader title="Terms of use" />
       <Container className="max-w-measure py-14 sm:py-20">
         <p className="text-ink-secondary">[Terms of use text, from SHERO]</p>
         <p className="mt-6 text-ink-secondary">

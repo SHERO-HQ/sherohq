@@ -13,7 +13,6 @@ export default function ContactUsPage() {
   return (
     <>
       <PageHeader
-        eyebrow="contact us"
         title="Talk to us"
         intro={`Tell us what's slowing your business down. A real person replies, ${site.hours.long}.`}
       />

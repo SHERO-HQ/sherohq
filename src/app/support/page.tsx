@@ -20,7 +20,6 @@ export default function SupportPage() {
   return (
     <>
       <PageHeader
-        eyebrow="support"
         title="Get help"
         intro={`Something not working with software, IT or hardware from SHERO? Message us and a real person will help, ${site.hours.long}.`}
       />

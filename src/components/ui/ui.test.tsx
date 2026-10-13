@@ -1,7 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { ButtonLink } from "./Button";
-import { Eyebrow } from "./Eyebrow";
 import { IllustrationSlot } from "./IllustrationSlot";
 import { StatusBadge } from "./StatusBadge";
 
@@ -25,13 +24,6 @@ describe("StatusBadge", () => {
   it("names the status in text, not colour alone", () => {
     render(<StatusBadge status="in-development" />);
     expect(screen.getByText("In development")).toBeInTheDocument();
-  });
-});
-
-describe("Eyebrow", () => {
-  it("prefixes the label with //", () => {
-    render(<Eyebrow>what we do</Eyebrow>);
-    expect(screen.getByText("// what we do")).toBeInTheDocument();
   });
 });
 

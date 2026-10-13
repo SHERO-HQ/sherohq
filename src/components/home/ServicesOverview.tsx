@@ -9,7 +9,6 @@ export function ServicesOverview() {
     <Section
       id="services"
       tone="surface"
-      eyebrow="what we do"
       title="Plain technology work, done properly."
       intro="No pricing guesswork. Tell us what you need and we'll quote."
       action={<TextLink href="/solutions">All solutions</TextLink>}

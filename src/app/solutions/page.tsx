@@ -15,7 +15,6 @@ export default function SolutionsPage() {
   return (
     <>
       <PageHeader
-        eyebrow="solutions"
         title="What we can do for your business"
         intro="Every engagement starts with a conversation. No prices until we understand what you need, and then a clear quote."
       />

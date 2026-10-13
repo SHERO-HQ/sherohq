@@ -10,6 +10,12 @@ const securityHeaders = [
 const config: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
+  images: {
+    // Project screenshots are served from SHERO's existing storage bucket.
+    remotePatterns: [
+      { protocol: "https", hostname: "uydnijaimlpxqwnabfce.supabase.co", pathname: "/storage/v1/object/public/**" },
+    ],
+  },
   // Old URLs that moved or now live elsewhere.
   async redirects() {
     return [

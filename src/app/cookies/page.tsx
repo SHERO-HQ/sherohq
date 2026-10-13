@@ -8,7 +8,7 @@ export const metadata: Metadata = { title: "Cookie policy" };
 export default function Page() {
   return (
     <>
-      <PageHeader eyebrow="legal" title="Cookie policy" />
+      <PageHeader title="Cookie policy" />
       <Container className="max-w-measure py-14 sm:py-20">
         <p className="text-ink-secondary">[Cookie policy text, from SHERO]</p>
         <p className="mt-6 text-ink-secondary">

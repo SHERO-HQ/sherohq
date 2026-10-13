@@ -6,7 +6,6 @@ export function Building() {
   return (
     <Section
       id="building"
-      eyebrow="in the workshop"
       title="What we're building"
       intro="Our own products, made for how business really runs here. Neither is released yet."
     >

@@ -27,12 +27,17 @@ export type Product = {
 export type WorkItem = {
   slug: string;
   name: string;
-  client?: string;
-  /** Owner-supplied one-liner. `null` until supplied; never invented. */
-  summary: string | null;
-  challenge: string | null;
-  whatWeBuilt: string | null;
-  link?: string;
+  client: string;
+  category: string;
+  status: "live";
+  /** Public site of the project. */
+  link: string;
+  stack: readonly string[];
+  /** Screenshot or mark supplied by the owner. */
+  image: { src: string; alt: string; fit?: "cover" | "contain" };
+  /** Owner-written text, copied from the current site. Never invented. */
+  challenge: string;
+  whatWeBuilt: string;
 };
 
 export type NavItem = { label: string; href: string };

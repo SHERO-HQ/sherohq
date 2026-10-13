@@ -11,7 +11,7 @@ import type { Product } from "@/content/types";
 export function ProductPage({ product }: { product: Product }) {
   return (
     <>
-      <PageHeader eyebrow={`product · ${product.name.toLowerCase()}`} title={product.name} intro={product.forWho}>
+      <PageHeader title={product.name} intro={product.forWho}>
         <StatusBadge status={product.status} className="mt-6" />
       </PageHeader>
       <Container className="grid gap-12 py-14 sm:py-20 lg:grid-cols-2">

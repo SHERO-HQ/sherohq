@@ -8,7 +8,7 @@ export const metadata: Metadata = { title: "Careers" };
 export default function Page() {
   return (
     <>
-      <PageHeader eyebrow="careers" title="Work with SHERO" intro="[Open roles and how to apply, from SHERO]" />
+      <PageHeader title="Work with SHERO" intro="[Open roles and how to apply, from SHERO]" />
       <Container className="py-14 sm:py-20">
         <ContactOptions message="Hi SHERO, I'd like to ask about working with you." subject="Careers" />
       </Container>

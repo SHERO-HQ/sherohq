@@ -1,13 +1,11 @@
 import type { ReactNode } from "react";
 import { cn } from "@/lib/cn";
 import { Container } from "./Container";
-import { Eyebrow } from "./Eyebrow";
 
 type Tone = "page" | "surface";
 
 type Props = {
   id?: string;
-  eyebrow?: string;
   title?: string;
   intro?: ReactNode;
   action?: ReactNode;
@@ -17,7 +15,7 @@ type Props = {
 };
 
 /** A page band with an optional heading block. Owns vertical rhythm. */
-export function Section({ id, eyebrow, title, intro, action, tone = "page", children, className }: Props) {
+export function Section({ id, title, intro, action, tone = "page", children, className }: Props) {
   const headingId = id && title ? `${id}-title` : undefined;
   return (
     <section
@@ -30,10 +28,9 @@ export function Section({ id, eyebrow, title, intro, action, tone = "page", chil
       )}
     >
       <Container>
-        {(eyebrow || title || action) && (
+        {(title || action) && (
           <div className="mb-8 flex flex-wrap items-end justify-between gap-6 sm:mb-12">
             <div className="max-w-measure">
-              {eyebrow && <Eyebrow className="mb-3">{eyebrow}</Eyebrow>}
               {title && (
                 <h2 id={headingId} className="text-[26px] leading-tight tracking-[-0.015em] sm:text-4xl">
                   {title}
