@@ -127,7 +127,7 @@
   --color-placeholder: var(--placeholder);
 
   --font-sans: var(--font-text), system-ui, sans-serif;
-  --font-display: var(--font-text), system-ui, sans-serif;
+  --font-display: var(--font-heading), system-ui, sans-serif;
   --font-mono: var(--font-code), ui-monospace, monospace;
 
   --radius-control: 8px;

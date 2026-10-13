@@ -5,7 +5,7 @@ import { Header } from "@/components/site/Header";
 import { SkipLink } from "@/components/site/SkipLink";
 import { ThemeScript } from "@/components/site/ThemeScript";
 import { site } from "@/content/site";
-import { codeFont, textFont } from "@/fonts";
+import { codeFont, headingFont, textFont } from "@/fonts";
 import "@/styles/globals.css";
 
 export const metadata: Metadata = {
@@ -25,7 +25,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en-GH" className={`${textFont.variable} ${codeFont.variable}`} suppressHydrationWarning>
+    <html lang="en-GH" className={`${headingFont.variable} ${textFont.variable} ${codeFont.variable}`} suppressHydrationWarning>
       <head>
         <ThemeScript />
       </head>

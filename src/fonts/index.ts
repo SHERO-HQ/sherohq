@@ -1,21 +1,26 @@
 import localFont from "next/font/local";
 
 /**
- * Typefaces in one place. Swapping the brand font is a change to this file only:
- * components use the `--font-text` and `--font-code` variables via Tailwind.
+ * Typefaces in one place: the Master Brand's Red Hat family. Components use the
+ * `--font-heading`, `--font-text` and `--font-code` variables via Tailwind.
  */
+export const headingFont = localFont({
+  src: "./RedHatDisplay-Variable.woff2",
+  weight: "300 900",
+  variable: "--font-heading",
+  display: "swap",
+});
+
 export const textFont = localFont({
-  src: "./InstrumentSans-Variable.woff2",
-  weight: "400 700",
+  src: "./RedHatText-Variable.woff2",
+  weight: "300 700",
   variable: "--font-text",
   display: "swap",
 });
 
 export const codeFont = localFont({
-  src: [
-    { path: "./IBMPlexMono-Regular.woff2", weight: "400" },
-    { path: "./IBMPlexMono-Medium.woff2", weight: "500" },
-  ],
+  src: "./RedHatMono-Variable.woff2",
+  weight: "300 700",
   variable: "--font-code",
   display: "swap",
 });
