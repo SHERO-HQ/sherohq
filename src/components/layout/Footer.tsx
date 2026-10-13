@@ -74,7 +74,7 @@ const Footer = () => {
 
           {/* Branding (Desktop Col 1, Row 1 | Mobile 1st) */}
           <div className="lg:col-span-4 lg:col-start-1 lg:row-start-1 order-1">
-            <NavLink href={getAbsoluteUrl("/")} className="inline-block mb-3 shrink-0">
+            <NavLink href={getAbsoluteUrl("/")} aria-label="SHERO home" className="inline-block mb-3 shrink-0">
               <img
                 src="/assets/logo/shero-light.svg"
                 alt="SHERO"

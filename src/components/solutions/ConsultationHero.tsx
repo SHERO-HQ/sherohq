@@ -113,7 +113,7 @@ const ConsultationHero = () => {
                  <div className="flex items-center gap-4">
                     <div className="flex -space-x-3">
                       <div className="size-10 rounded-full border-2 border-white dark:border-slate-900 bg-brand-secondary-100 dark:bg-brand-secondary-800 flex items-center justify-center text-sm font-bold text-brand-secondary-600 dark:text-brand-secondary-200 shadow-sm z-10">S</div>
-                      <div className="size-10 rounded-full border-2 border-white dark:border-slate-900 bg-blue-100 dark:bg-blue-900 flex items-center justify-center text-sm font-bold text-blue-600 dark:text-blue-200 shadow-sm z-0">You</div>
+                      <div className="size-10 rounded-full border-2 border-white dark:border-slate-900 bg-blue-100 dark:bg-blue-900 flex items-center justify-center text-sm font-bold text-blue-700 dark:text-blue-200 shadow-sm z-0">You</div>
                     </div>
                     <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">Aligning on architecture...</span>
                  </div>

@@ -204,8 +204,8 @@ const Support = () => {
                   Still need help?
                 </h2>
                 <p className="text-muted-foreground text-sm mb-10 max-w-xl">
-                  Can't find what you're looking for? Our support team is
-                  available Monday through Friday, 9am to 6pm GMT.
+                  Can't find what you're looking for? We're available
+                  Monday to Friday, 8:00 to 18:00 GMT.
                 </p>
 
                 <div className="flex flex-col gap-6 w-full items-center lg:items-start">
