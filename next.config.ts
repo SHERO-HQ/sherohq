@@ -45,70 +45,12 @@ const nextConfig: NextConfig = {
   // Optimise production builds
   productionBrowserSourceMaps: false,
 
-  // Redirect old checkout complete URLs to the new success page, and shop routes to /#services
+  // The shop now lives in Merchander: old shop, cart, checkout and tracking URLs go there.
   async redirects() {
-    return [
-      {
-        source: "/products",
-        destination: "/#services",
-        permanent: true,
-      },
-      {
-        source: "/products/:path*",
-        destination: "/#services",
-        permanent: true,
-      },
-      {
-        source: "/shop",
-        destination: "/#services",
-        permanent: true,
-      },
-      {
-        source: "/shop/:path*",
-        destination: "/#services",
-        permanent: true,
-      },
-      {
-        source: "/cart",
-        destination: "/#services",
-        permanent: true,
-      },
-      {
-        source: "/cart/:path*",
-        destination: "/#services",
-        permanent: true,
-      },
-      {
-        source: "/checkout",
-        destination: "/#services",
-        permanent: true,
-      },
-      {
-        source: "/checkout/:path*",
-        destination: "/#services",
-        permanent: true,
-      },
-      {
-        source: "/track",
-        destination: "/#services",
-        permanent: true,
-      },
-      {
-        source: "/track/:path*",
-        destination: "/#services",
-        permanent: true,
-      },
-      {
-        source: "/checkout/complete",
-        destination: "/shop/checkout/success",
-        permanent: true,
-      },
-      {
-        source: "/shop/checkout/complete",
-        destination: "/shop/checkout/success",
-        permanent: true,
-      },
-    ];
+    return ["/products", "/shop", "/cart", "/checkout", "/track"].flatMap((base) => [
+      { source: base, destination: "/merchander", permanent: true },
+      { source: `${base}/:path*`, destination: "/merchander", permanent: true },
+    ]);
   },
 
   // Cache headers for static assets and security headers

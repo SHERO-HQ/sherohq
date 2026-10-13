@@ -7,12 +7,9 @@ test.describe("Smoke Tests", () => {
     await expect(page.getByText(/Technology Solutions/i)).toBeVisible();
   });
 
-  test("shop page loads correctly", async ({ page }) => {
+  test("old shop links go to Merchander", async ({ page }) => {
     await page.goto("/shop");
-    // Wait for products to load - use first() to avoid strict mode violation
-    await expect(
-      page.getByText(/All Products|Laptops|Accessories|Filter/i).first(),
-    ).toBeVisible({ timeout: 10000 });
+    await expect(page).toHaveURL(/\/merchander$/);
   });
 
   test("support page loads correctly", async ({ page }) => {
