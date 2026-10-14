@@ -41,7 +41,7 @@ const AboutCTA = () => {
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto">
                 <Link
                   href="/contact-us"
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-brand-secondary-600 hover:bg-brand-secondary-700 active:bg-brand-secondary-800 text-white rounded font-semibold text-sm transition-all shadow-sm hover:shadow hover:-translate-y-0.5 group focus:outline-none focus:ring-2 focus:ring-brand-secondary-500 focus:ring-offset-2 dark:focus:ring-offset-slate-900"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-brand-secondary-700 hover:bg-brand-secondary-800 active:bg-brand-secondary-900 text-white rounded font-semibold text-sm transition-all shadow-sm hover:shadow hover:-translate-y-0.5 group focus:outline-none focus:ring-2 focus:ring-brand-secondary-500 focus:ring-offset-2 dark:focus:ring-offset-slate-900"
                 >
                   <span>Let's Build Together</span>
                   <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />

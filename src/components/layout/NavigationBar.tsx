@@ -56,6 +56,7 @@ const Nav = () => {
             {/* Logo */}
             <NavLink
               href={homeHref}
+              aria-label="SHERO home"
               className="flex items-center z-50"
               onClick={() => setIsOpen(false)}
             >
@@ -141,7 +142,8 @@ const Nav = () => {
                 ))}
 
                 {activeNavIndex !== null && activeNavIndex >= 0 && (
-                  <m.div
+                  <m.li
+                    aria-hidden="true"
                     className="absolute bottom-0 h-1 bg-brand-secondary-500 rounded-t-full shadow-[0_-1px_4px_rgba(16,185,129,0.2)]"
                     initial={false}
                     animate={{

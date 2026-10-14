@@ -90,7 +90,7 @@ const AboutValues = () => {
                     >
                       <item.icon className="w-6 h-6" />
                     </div>
-                    <span className="text-[10px] font-mono text-slate-400 dark:text-slate-500 font-semibold tracking-wider">
+                    <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400 font-semibold tracking-wider">
                       0{index + 1}
                     </span>
                   </div>

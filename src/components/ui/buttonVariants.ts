@@ -5,7 +5,7 @@ export const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/90",
+        default: "bg-primary text-primary-foreground hover:bg-primary/90 dark:bg-brand-primary-600 dark:hover:bg-brand-primary-700",
         destructive:
           "bg-destructive text-destructive-foreground hover:bg-destructive/90",
         outline:
@@ -14,7 +14,7 @@ export const buttonVariants = cva(
           "bg-secondary text-secondary-foreground hover:bg-secondary/80 dark:bg-slate-800 dark:hover:bg-slate-700",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
-        brand: "bg-primary text-primary-foreground hover:bg-primary/90",
+        brand: "bg-primary text-primary-foreground hover:bg-primary/90 dark:bg-brand-primary-600 dark:hover:bg-brand-primary-700",
         brandPrimary:
           "bg-brand-primary-700 text-white hover:bg-brand-primary-600",
         brandSecondary:

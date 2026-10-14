@@ -18,11 +18,11 @@ const NAV_LINK_STYLES = {
     "px-3 py-1.5",
     "rounded",
     "transition-all ease-in-out",
-    // Focus states
-    // "focus:ring-2 focus:ring-brand-secondary-500/50",
+    // Focus states: a visible ring for keyboard users only
     "focus:outline-none",
+    "focus-visible:ring-2 focus-visible:ring-brand-primary-500",
   ],
-  active: ["text-brand-secondary-600 dark:text-brand-secondary-400", "font-semibold"],
+  active: ["text-brand-secondary-700 dark:text-brand-secondary-400", "font-semibold"],
   inactive: [
     "bg-transparent",
     "text-slate-600 dark:text-slate-400",

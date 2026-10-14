@@ -97,7 +97,7 @@ const ConsultationHero = () => {
                 </div>
                 <div>
                   <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Strategy Session</h2>
-                  <div className="flex items-center gap-4 text-sm font-medium text-slate-500 dark:text-slate-400">
+                  <div className="flex items-center gap-4 text-sm font-medium text-slate-600 dark:text-slate-300">
                     <span className="flex items-center gap-1.5"><Clock className="size-4" /> 30 Min</span>
                     <span className="flex items-center gap-1.5"><Video className="size-4" /> Video Call</span>
                   </div>
@@ -113,7 +113,7 @@ const ConsultationHero = () => {
                  <div className="flex items-center gap-4">
                     <div className="flex -space-x-3">
                       <div className="size-10 rounded-full border-2 border-white dark:border-slate-900 bg-brand-secondary-100 dark:bg-brand-secondary-800 flex items-center justify-center text-sm font-bold text-brand-secondary-600 dark:text-brand-secondary-200 shadow-sm z-10">S</div>
-                      <div className="size-10 rounded-full border-2 border-white dark:border-slate-900 bg-blue-100 dark:bg-blue-900 flex items-center justify-center text-sm font-bold text-blue-600 dark:text-blue-200 shadow-sm z-0">You</div>
+                      <div className="size-10 rounded-full border-2 border-white dark:border-slate-900 bg-blue-100 dark:bg-blue-900 flex items-center justify-center text-sm font-bold text-blue-700 dark:text-blue-200 shadow-sm z-0">You</div>
                     </div>
                     <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">Aligning on architecture...</span>
                  </div>

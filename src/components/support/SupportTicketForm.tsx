@@ -126,20 +126,25 @@ const SupportTicketForm = ({
             className="fixed inset-0 bg-black/50  z-50"
           />
           <m.div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="support-ticket-title"
             initial={{ opacity: 0, y: 100, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 100, scale: 0.95 }}
             className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-lg bg-white dark:bg-slate-900 rounded shadow z-50 p-6 border border-slate-200 dark:border-slate-800 max-h-[90vh] overflow-y-auto"
           >
             <button
+              type="button"
               onClick={onClose}
+              aria-label="Close"
               className="absolute top-4 right-4 p-2 text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 transition-colors z-10"
             >
               <X className="w-5 h-5" />
             </button>
 
             <div className="mb-6 pr-8">
-              <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">
+              <h2 id="support-ticket-title" className="text-2xl font-bold text-slate-900 dark:text-white mb-2">
                 Submit a Support Ticket
               </h2>
               <p className="text-slate-600 dark:text-slate-400">

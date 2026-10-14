@@ -75,7 +75,7 @@ const AboutManifesto = () => {
               <Button
                 variant="brand"
                 size="lg"
-                className="w-full sm:w-auto group text-sm sm:text-base px-8 py-3 bg-brand-secondary-600 hover:bg-brand-secondary-700 text-white rounded font-semibold transition-all shadow-sm hover:shadow hover:-translate-y-0.5 cursor-pointer"
+                className="w-full sm:w-auto group text-sm sm:text-base px-8 py-3 bg-brand-secondary-700 hover:bg-brand-secondary-800 text-white rounded font-semibold transition-all shadow-sm hover:shadow hover:-translate-y-0.5 cursor-pointer"
                 asChild
               >
                 <NavLink href={getAbsoluteUrl("/contact-us")}>
@@ -121,7 +121,7 @@ const AboutManifesto = () => {
                   <div className="mt-6 pt-4 border-t border-slate-200/60 dark:border-slate-800/60">
                     <NavLink
                       href={getAbsoluteUrl(pillar.href)}
-                      className="inline-flex items-center text-xs font-bold text-brand-secondary-600 dark:text-brand-secondary-400 hover:text-brand-secondary-700 dark:hover:text-brand-secondary-300 group/link transition-colors"
+                      className="inline-flex items-center text-xs font-bold text-brand-secondary-700 dark:text-brand-secondary-400 hover:text-brand-secondary-800 dark:hover:text-brand-secondary-300 group/link transition-colors"
                     >
                       {pillar.linkText}
                       <ArrowRight className="ml-1 size-3.5 group-hover/link:translate-x-1 transition-transform" />
@@ -138,7 +138,7 @@ const AboutManifesto = () => {
           <p className="text-xs md:text-sm text-slate-500 dark:text-slate-400 italic max-w-xl mx-auto">
             &ldquo;Every interaction with SHERO should leave you with more possibilities than you had before.&rdquo;
           </p>
-          <span className="inline-block text-[10px] font-mono text-slate-400 dark:text-slate-500 uppercase tracking-widest font-semibold">
+          <span className="inline-block text-[10px] font-mono text-slate-500 dark:text-slate-400 uppercase tracking-widest font-semibold">
             SHERO HQ · EXPANDING WHAT&apos;S POSSIBLE
           </span>
         </div>

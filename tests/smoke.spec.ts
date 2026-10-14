@@ -1,27 +1,31 @@
 import { test, expect } from "@playwright/test";
 
+// Each public page loads and shows its main heading.
+const PAGES: { path: string; title: RegExp; heading: RegExp }[] = [
+  { path: "/", title: /SHERO/, heading: /Solutions for People/i },
+  { path: "/work", title: /Our Work/, heading: /What We've Built/i },
+  { path: "/consultation", title: /Consultation/, heading: /Accelerate Your Technical Vision/i },
+  { path: "/about-us", title: /About/, heading: /./ },
+  { path: "/merchander", title: /Merchander/, heading: /sells on social media/i },
+  { path: "/support", title: /Support/, heading: /Help When You Need It/i },
+  { path: "/faq", title: /FAQ/, heading: /Answers to common/i },
+];
+
 test.describe("Smoke Tests", () => {
-  test("homepage loads correctly", async ({ page }) => {
-    await page.goto("/");
-    await expect(page).toHaveTitle(/Shero/i);
-    await expect(page.getByText(/Technology Solutions/i)).toBeVisible();
-  });
+  for (const { path, title, heading } of PAGES) {
+    test(`${path} loads`, async ({ page }) => {
+      const response = await page.goto(path);
+      expect(response?.status()).toBe(200);
+      await expect(page).toHaveTitle(title);
+      await expect(page.getByRole("heading", { level: 1, name: heading }).or(
+        page.getByRole("heading", { name: heading }).first(),
+      ).first()).toBeVisible();
+    });
+  }
 
-  test("shop page loads correctly", async ({ page }) => {
-    await page.goto("/shop");
-    // Wait for products to load - use first() to avoid strict mode violation
-    await expect(
-      page.getByText(/All Products|Laptops|Accessories|Filter/i).first(),
-    ).toBeVisible({ timeout: 10000 });
-  });
-
-  test("support page loads correctly", async ({ page }) => {
-    await page.goto("/support");
-    await expect(page.getByText(/Get Help in Minutes/i)).toBeVisible();
-  });
-
-  test("FAQ page loads correctly", async ({ page }) => {
-    await page.goto("/faq");
-    await expect(page.getByText(/Answers to common/i)).toBeVisible();
+  test("an unknown page shows Page Not Found", async ({ page }) => {
+    const response = await page.goto("/this-page-does-not-exist");
+    expect(response?.status()).toBe(404);
+    await expect(page.getByRole("heading", { name: /Page Not Found/i })).toBeVisible();
   });
 });
