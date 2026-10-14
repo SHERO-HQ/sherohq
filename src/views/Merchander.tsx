@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { Clock, ArrowRight, CheckCircle2, AlertCircle, Send } from "lucide-react";
 import { getCsrfToken } from "@/services/client";
+import { MerchanderArt } from "@/components/illustrations";
 
 const ROWS = [
   {
@@ -77,6 +78,7 @@ export const MerchanderView: React.FC = () => {
               <ArrowRight className="w-4 h-4" />
             </a>
           </div>
+          <MerchanderArt className="mx-auto mt-10 max-w-xs sm:max-w-sm" />
         </div>
       </section>
 

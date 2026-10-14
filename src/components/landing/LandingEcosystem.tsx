@@ -3,6 +3,7 @@ import { useRef } from "react";
 import { m, useScroll, useTransform } from "motion/react";
 import { Cpu, Code, Shield, Network } from "lucide-react";
 import { SectionBadge } from "@/components/common/SectionBadge";
+import { HardwareArt, ManagedItArt, SoftwareArt } from "@/components/illustrations";
 
 const nodes = [
   {
@@ -10,18 +11,21 @@ const nodes = [
     title: "Supportive Hardware",
     desc: "We supply, configure, and maintain hardware to support your operations.",
     icon: Cpu,
+    art: HardwareArt,
   },
   {
     id: 2,
     title: "Custom Software",
     desc: "Tailored business applications and web systems engineered to eliminate operational bottlenecks.",
     icon: Code,
+    art: SoftwareArt,
   },
   {
     id: 3,
     title: "Unified IT Support",
     desc: "On-site troubleshooting, routine maintenance, and direct support from SHERO.",
     icon: Shield,
+    art: ManagedItArt,
   },
 ];
 
@@ -121,6 +125,7 @@ const LandingEcosystem = () => {
           <div className="flex flex-col md:grid md:grid-cols-3 gap-12 md:gap-8 relative z-10">
             {nodes.map((node, index) => {
               const Icon = node.icon;
+              const Art = node.art;
 
               return (
                 <m.div
@@ -143,6 +148,7 @@ const LandingEcosystem = () => {
 
                   {/* Content Card */}
                   <div className="group flex-1 w-full relative z-10 p-4 md:p-6 rounded bg-white/60 dark:bg-slate-900/40 backdrop-blur-md border border-slate-200/80 dark:border-slate-800/80 transition-all hover:-translate-y-1 hover:shadow-lg shadow-sm md:text-center">
+                    <Art className="mb-4 max-w-56 md:mx-auto" />
                     <h3 className="sm:text-lg text-base font-bold text-slate-900 dark:text-white mb-2 group-hover:text-brand-secondary-600 dark:group-hover:text-brand-secondary-400 transition-colors">
                       {node.title}
                     </h3>
