@@ -1,4 +1,4 @@
-# SheroTech Solutions & Showcase Platform
+# Shero  
 
 A modern, responsive platform built for **SHERO HQ Technologies**. This website showcases reliable hardware, custom systems configuration, managed software solutions, and expert consultation services, all backed by a high-performance Next.js Native Architecture.
 
