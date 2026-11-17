@@ -14,6 +14,11 @@ export const metadata: Metadata = {
   description: site.description,
   openGraph: { siteName: site.name, type: "website", locale: "en_GH" },
   icons: { icon: [{ url: "/favicon.svg", type: "image/svg+xml" }, { url: "/favicon.ico" }], apple: "/apple-touch-icon.png" },
+  verification: {
+    other: {
+      "facebook-domain-verification": "xlh7wp3nec8ojv6x1n74pqjwfu8yyt",
+    },
+  },
 };
 
 export const viewport: Viewport = {
